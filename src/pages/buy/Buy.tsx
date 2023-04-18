@@ -102,7 +102,7 @@ const Buy = (): JSX.Element => {
     try {
       if (auth?.authenticated && auth?.token) {
         const tradePayload = {
-          address: selectedSigner.evmAddress,
+          address: selectedSigner.address,
           fiatCurrency: selectedPair?.fiatCurrency,
           cryptoCurrency: selectedPair?.cryptoCurrency,
           orderAmount: +fiatAmount,
