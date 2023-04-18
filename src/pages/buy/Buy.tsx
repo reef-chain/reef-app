@@ -24,7 +24,7 @@ const { InputAmount } = InputModule;
 const { Button } = ButtonModule;
 
 const Buy = (): JSX.Element => {
-  const FIAT_NAME = 'USD';
+  const FIAT_NAME = 'EUR'; // 'USD';
   const TOKEN_NAME = 'REEF';
   const iconUrl = {
     REEF: 'https://s2.coinmarketcap.com/static/img/coins/64x64/6951.png',
@@ -42,7 +42,9 @@ const Buy = (): JSX.Element => {
   useEffect(() => {
     api.getPairs()
       .then((pairs) => {
+        console.log('PARSSS', pairs);
         const pair = pairs.filter((item: BuyPair) => item.fiatCurrency === FIAT_NAME && item.cryptoCurrency === TOKEN_NAME);
+
         if (pair.length === 0) {
           throw new Error();
         }
