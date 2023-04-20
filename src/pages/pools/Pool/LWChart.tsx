@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { createChart, IChartApi, UTCTimestamp } from 'lightweight-charts';
+import { createChart, IChartApi } from 'lightweight-charts';
 import './lw-chart.css';
 
 export interface BusinessDay {
@@ -241,11 +241,9 @@ const formatData = (type: Type, data: Data = []): Data => {
         close: item.close,
         high: item.high,
         low: item.low,
-        time: item.timeframe ? new Date(item.timeframe).getTime() / 1000 as UTCTimestamp : item.time,
+        time: item.time,
       });
     }
-
-    // console.log("formatData", output)
 
     return output;
   }
@@ -281,7 +279,6 @@ const LWChart = ({
 
   useEffect(() => {
     if (!isRendered && data?.length) {
-      console.log("LWChart", data)
       renderChart({
         el: chartWrapper.current,
         type,
