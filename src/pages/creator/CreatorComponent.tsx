@@ -15,6 +15,7 @@ import { DeployContractData, deployTokens } from './tokensDeployData';
 import './creator.css';
 import IconUpload from './IconUpload';
 import ConfirmToken from './ConfirmToken';
+import {getAppNetworkOverride} from "../../environment";
 
 interface CreatorComponent {
   signer: ReefSigner | undefined;
@@ -87,6 +88,8 @@ const createToken = async ({
   setVerifiedContract,
   setDeployedContract,
 }: CreateToken): Promise<void> => {
+  // eslint-disable-next-line no-param-reassign
+  network = getAppNetworkOverride(network);
   if (!signer) {
     console.log('signer not set ');
     return;
