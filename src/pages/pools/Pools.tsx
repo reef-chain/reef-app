@@ -39,12 +39,12 @@ const Pools = (): JSX.Element => {
             <Uik.Text type="headline">
               $
               {' '}
-              {Uik.utils.formatHumanAmount(totalLiquidity)}
+              {totalLiquidity === 'NaN' ? '0' : Uik.utils.formatHumanAmount(totalLiquidity)}
             </Uik.Text>
             <Uik.Trend
               type={percentage >= 0 ? 'good' : 'bad'}
               direction={percentage >= 0 ? 'up' : 'down'}
-              text={`${percentage.toFixed(2)}%`}
+              text={`${isNaN(percentage) ? '0' : percentage.toFixed(2)}%`}
             />
           </div>
         </div>

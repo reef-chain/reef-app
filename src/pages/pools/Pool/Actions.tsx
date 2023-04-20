@@ -1,7 +1,7 @@
 import {
   appState,
   Components,
-  hooks, store,
+  hooks, store, Token,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-defi/ui-kit';
 import React, { useContext, useReducer, useState } from 'react';
@@ -20,12 +20,12 @@ const {
 export type ActionTabs = 'stake' | 'unstake' | 'trade';
 
 interface ActionsProps {
-  address1: string;
-  address2: string;
+  token1: Token;
+  token2: Token;
   tab: ActionTabs;
 }
 
-const Actions = ({ address1, address2, tab }: ActionsProps): JSX.Element => {
+const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
   const [finalized, setFinalized] = useState(true);
@@ -45,8 +45,8 @@ const Actions = ({ address1, address2, tab }: ActionsProps): JSX.Element => {
   );
 
   hooks.useSwapState({
-    address1,
-    address2,
+    address1: token1.address,
+    address2: token2.address,
     dispatch: tradeDispatch,
     state: tradeState,
     tokenPrices,
@@ -79,8 +79,8 @@ const Actions = ({ address1, address2, tab }: ActionsProps): JSX.Element => {
   );
 
   hooks.useAddLiquidity({
-    address1,
-    address2,
+    address1: token1.address,
+    address2: token2.address,
     dispatch: provideDispatch,
     state: provideState,
     tokens,
@@ -110,8 +110,8 @@ const Actions = ({ address1, address2, tab }: ActionsProps): JSX.Element => {
   hooks.useRemoveLiquidity({
     tokens,
     network,
-    address1,
-    address2,
+    address1: token1.address,
+    address2: token2.address,
     tokenPrices,
     state: withdrawState,
     signer: signer || undefined,
@@ -130,6 +130,13 @@ const Actions = ({ address1, address2, tab }: ActionsProps): JSX.Element => {
   });
 
   if (!finalized) return <Finalizing />;
+
+  // Add tokens not owned by user to the list
+  const existingToken1 = tokens.find((token) => token.address === token1.address);
+  if (!existingToken1) tokens.push(token1);
+
+  const existingToken2 = tokens.find((token) => token.address === token2.address);
+  if (!existingToken2) tokens.push(token2);
 
   // If finalized is false action will be 'false-void'
   const action = `${finalized}-${finalized ? tab : 'void'}`;
@@ -185,7 +192,7 @@ interface ActionsWrapperProps extends ActionsProps {
   poolAddress: string;
 }
 const ActionsWrapper = ({
-  address1, address2, poolAddress, tab,
+  token1, token2, poolAddress, tab,
 }: ActionsWrapperProps): JSX.Element => {
   const history = useHistory();
 
@@ -211,8 +218,8 @@ const ActionsWrapper = ({
         />
       </div>
       <Actions
-        address1={address1}
-        address2={address2}
+        token1={token1}
+        token2={token2}
         tab={tab}
       />
     </div>

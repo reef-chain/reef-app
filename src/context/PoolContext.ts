@@ -1,4 +1,4 @@
 import { createContext } from 'react';
-import { LastPoolReserves } from '@reef-defi/react-lib';
+import { PoolWithReserves } from '@reef-defi/react-lib';
 
-export default createContext<LastPoolReserves[]>([]);
+export default createContext<PoolWithReserves[]>([]);
