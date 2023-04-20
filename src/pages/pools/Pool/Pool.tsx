@@ -1,13 +1,14 @@
 import { appState, graphql, hooks, ReefSigner } from '@reef-defi/react-lib';
 import Uik from '@reef-defi/ui-kit';
-import React, { useContext } from 'react';
 // import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import Actions, { ActionTabs } from './Actions';
 // import Chart, { TimeData, Timeframe } from './Chart';
 import './pool.css';
 import Stats from './Stats';
+import { BigNumber } from 'ethers';
 
 interface Params {
   address: string;
@@ -17,7 +18,7 @@ interface Params {
 //   time: Date;
 // }
 
-// eslint-disable-next-line
+// // eslint-disable-next-line
 // const timeToNumber = <T extends Time>(obj: T) => ({
 //   ...obj,
 //   time: obj.time.toLocaleDateString('en-CA'),
@@ -58,8 +59,8 @@ const Pool = (): JSX.Element => {
 
   const tokenPrice1 = (poolInfo ? tokenPrices[poolInfo.firstToken.address] : 0) || 0;
   const tokenPrice2 = (poolInfo ? tokenPrices[poolInfo.secondToken.address] : 0) || 0;
-  // const decimal1 = 18; // TODO(poolInfo ? poolInfo.firstToken.] : 0) || 0;
-  // const decimal2 = 18; // TODO(poolInfo ? poolInfo.firstToken.] : 0) || 0;
+  const decimal1 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
+  const decimal2 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
 
   // const [timeframe, setTimeframe] = useState<Timeframe>('day');
 
@@ -90,8 +91,22 @@ const Pool = (): JSX.Element => {
         <Actions
           tab={action}
           poolAddress={address}
-          address1={poolInfo.firstToken.address}
-          address2={poolInfo.secondToken.address}
+          token1={{
+            address: poolInfo.firstToken.address,
+            name: poolInfo.firstToken.name,
+            symbol: poolInfo.firstToken.symbol,
+            iconUrl: poolInfo.firstToken.icon,
+            balance: BigNumber.from(0),
+            decimals: decimal1
+          }}
+          token2={{
+            address: poolInfo.secondToken.address,
+            name: poolInfo.secondToken.name,
+            symbol: poolInfo.secondToken.symbol,
+            iconUrl: poolInfo.secondToken.icon,
+            balance: BigNumber.from(0),
+            decimals: decimal2
+          }}
         />
         {/* <Chart
           tokens={{

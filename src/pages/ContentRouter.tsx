@@ -1,5 +1,5 @@
 import {
-  AddressToNumber, appState, hooks, TokenWithAmount,
+  AddressToNumber, appState, graphql, hooks, TokenWithAmount,
 } from '@reef-defi/react-lib';
 import React, { useMemo } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -39,8 +39,8 @@ const ContentRouter = (): JSX.Element => {
 
   const tokens = hooks.useObservableState<TokenWithAmount[]|null>(appState.tokenPrices$, []);
   const [nfts, nftsLoading] = hooks.useAllNfts();
-  const pools = hooks.useObservableState(appState.poolReserves$, []);
-  // TODO use when we have pools graphql - const pools = hooks.useAllPools();
+  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
+  const pools = hooks.useAllPools(apolloDex);
   const tokenPrices = useMemo(
     () => (tokens ? tokens.reduce((prices: AddressToNumber<number>, tkn) => {
       prices[tkn.address] = tkn.price;// eslint-disable-line
