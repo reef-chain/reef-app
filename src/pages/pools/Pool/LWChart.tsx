@@ -234,14 +234,14 @@ const formatData = (type: Type, data: Data = []): Data => {
       const item: CandlestickData = data[i];
       const prevItem: CandlestickData = data[i - 1];
 
-      const open = prevItem?.close || item.open;
+      const open = prevItem ? Number(prevItem?.close) : Number(item.open);
 
       output.push({
         open,
-        close: item.close,
-        high: item.high,
-        low: item.low,
-        time: item.time,
+        close: Number(item.close),
+        high: Number(item.high),
+        low: Number(item.low),
+        time: Number(item.time),
       });
     }
 

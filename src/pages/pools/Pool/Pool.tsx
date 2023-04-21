@@ -21,7 +21,6 @@ interface Time {
 // eslint-disable-next-line
 const timeToNumber = <T extends Time>(obj: T) => ({
   ...obj,
-  // time: obj.time.toLocaleDateString('en-CA'),
   time: obj.time.getTime() / 1000,
 });
 

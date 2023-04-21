@@ -105,7 +105,7 @@ const Chart = ({
           !!getData.length
           && (
           <LWChart
-            key={tab}
+            key={`${tab}-${timeframe}`}
             // @ts-ignore-next-line
             type={chartTypes[tab]}
             data={getData}
