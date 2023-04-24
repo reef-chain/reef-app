@@ -15,7 +15,7 @@ import { DeployContractData, deployTokens } from './tokensDeployData';
 import './creator.css';
 import IconUpload from './IconUpload';
 import ConfirmToken from './ConfirmToken';
-import {getAppNetworkOverride} from "../../environment";
+import { getAppNetworkOverride } from '../../environment';
 
 interface CreatorComponent {
   signer: ReefSigner | undefined;

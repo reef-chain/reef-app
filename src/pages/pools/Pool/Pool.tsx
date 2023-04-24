@@ -1,14 +1,16 @@
-import { appState, graphql, hooks, ReefSigner } from '@reef-defi/react-lib';
+import {
+  appState, graphql, hooks, ReefSigner,
+} from '@reef-defi/react-lib';
 import Uik from '@reef-defi/ui-kit';
 // import React, { useContext, useState } from 'react';
 import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
+import { BigNumber } from 'ethers';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import Actions, { ActionTabs } from './Actions';
 // import Chart, { TimeData, Timeframe } from './Chart';
 import './pool.css';
 import Stats from './Stats';
-import { BigNumber } from 'ethers';
 
 interface Params {
   address: string;
@@ -49,12 +51,12 @@ const Pool = (): JSX.Element => {
 
   const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
   const network = hooks.useObservableState(appState.currentNetwork$);
-  
+
   const [poolInfo] = hooks.usePoolInfo(
     address,
     signer?.address || '',
     tokenPrices,
-    apolloDex
+    apolloDex,
   );
 
   const tokenPrice1 = (poolInfo ? tokenPrices[poolInfo.firstToken.address] : 0) || 0;
@@ -79,12 +81,12 @@ const Pool = (): JSX.Element => {
 
   return (
     <div className="pool">
-      <Stats 
-        data={poolInfo} 
-        price1={tokenPrice1} 
-        price2={tokenPrice2} 
+      <Stats
+        data={poolInfo}
+        price1={tokenPrice1}
+        price2={tokenPrice2}
         reefscanUrl={network.reefscanUrl}
-        dexClient={apolloDex} 
+        dexClient={apolloDex}
       />
 
       <div className="pool__content">
@@ -97,7 +99,7 @@ const Pool = (): JSX.Element => {
             symbol: poolInfo.firstToken.symbol,
             iconUrl: poolInfo.firstToken.icon,
             balance: BigNumber.from(0),
-            decimals: decimal1
+            decimals: decimal1,
           }}
           token2={{
             address: poolInfo.secondToken.address,
@@ -105,7 +107,7 @@ const Pool = (): JSX.Element => {
             symbol: poolInfo.secondToken.symbol,
             iconUrl: poolInfo.secondToken.icon,
             balance: BigNumber.from(0),
-            decimals: decimal2
+            decimals: decimal2,
           }}
         />
         {/* <Chart
@@ -130,7 +132,7 @@ const Pool = (): JSX.Element => {
               },
               firstToken: poolData.firstToken.map(timeToNumber),
               secondToken: poolData.secondToken.map(timeToNumber),
-            } 
+            }
             : undefined
           }
           timeframe={timeframe}

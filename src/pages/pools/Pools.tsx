@@ -44,7 +44,7 @@ const Pools = (): JSX.Element => {
             <Uik.Trend
               type={percentage >= 0 ? 'good' : 'bad'}
               direction={percentage >= 0 ? 'up' : 'down'}
-              text={`${isNaN(percentage) ? '0' : percentage.toFixed(2)}%`}
+              text={`${Number.isNaN(percentage) ? '0' : percentage.toFixed(2)}%`}
             />
           </div>
         </div>
