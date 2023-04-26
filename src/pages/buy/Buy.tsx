@@ -5,6 +5,7 @@ import React, {
   useEffect, useState,
 } from 'react';
 import './Buy.css';
+import { InputAmountValidity } from '@reef-defi/react-lib/dist/components/common/Input';
 import { AuthenticationResponse, BuyPair, BuyPayload } from './models';
 import * as api from './api-access';
 
@@ -80,8 +81,8 @@ const Buy = (): JSX.Element => {
     setTokenAmount(amount);
   };
 
-  const onFiatValidityChange = (validity: any): void => {
-    setError(validity.valid ? '' : validity.errorMessage);
+  const onFiatValidityChange = (validity: InputAmountValidity): void => {
+    setError(validity.valid ? '' : validity.errorMessage || 'fiat validity error');
   };
 
   const buy = async (): Promise<void> => {
