@@ -2,12 +2,12 @@ import {
   appState, Components, hooks, store, Token,
 } from '@reef-defi/react-lib';
 import React, { useContext, useReducer, useState } from 'react';
+import { BigNumber } from 'ethers';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
 import TokenPricesContext from '../context/TokenPricesContext';
 import { notify } from '../utils/utils';
 import './overlay-swap.css';
-import { BigNumber } from 'ethers';
 
 const { Trade, OverlayAction, Finalizing } = Components;
 
@@ -41,21 +41,21 @@ const OverlaySwap = ({
   // Add tokens not owned by user to the list of tokens
   const tokenPools = pools.filter((pool) => pool.token1 === tokenAddress || pool.token2 === tokenAddress);
   tokenPools.forEach((pool) => {
-    const otherToken: Token = pool.token1 === tokenAddress ? 
-     {
-      address: pool.token2,
-      decimals: pool.decimal2,
-      name: pool.name2,
-      symbol: pool.symbol2,
-      iconUrl: pool.icon2,
-      balance: BigNumber.from(0)
-     } : {
-      address: pool.token1,
-      decimals: pool.decimal1,
-      name: pool.name1,
-      symbol: pool.symbol1,
-      iconUrl: pool.icon1,
-      balance: BigNumber.from(0)
+    const otherToken: Token = pool.token1 === tokenAddress
+      ? {
+        address: pool.token2,
+        decimals: pool.decimal2,
+        name: pool.name2,
+        symbol: pool.symbol2,
+        iconUrl: pool.icon2,
+        balance: BigNumber.from(0),
+      } : {
+        address: pool.token1,
+        decimals: pool.decimal1,
+        name: pool.name1,
+        symbol: pool.symbol1,
+        iconUrl: pool.icon1,
+        balance: BigNumber.from(0),
       };
     const existingToken = tokens.find((token) => token.address === otherToken.address);
     if (!existingToken) tokens.push(otherToken);
@@ -115,7 +115,7 @@ const OverlaySwap = ({
                   setPercentage: (amount: number) => tradeDispatch(store.setPercentageAction(amount)),
                   setToken1Amount: (amount: string): void => tradeDispatch(store.setToken1AmountAction(amount)),
                   setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),
-                  setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({...tradeState.settings, percentage: slippage})),
+                  setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({ ...tradeState.settings, percentage: slippage })),
                 }}
               />
             )

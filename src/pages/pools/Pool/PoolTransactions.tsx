@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Components, hooks } from '@reef-defi/react-lib';
 import './pool-transactions.css';
 import Uik from '@reef-defi/ui-kit';
-import Transactions from './Transactions';
 import { ApolloClient } from '@apollo/client';
+import Transactions from './Transactions';
 
 const { OverlayAction } = Components;
 
@@ -16,7 +16,7 @@ export interface Props {
   tokens?: Tokens,
   address: string,
   reefscanUrl: string,
-  dexClient: ApolloClient<any>,
+  dexClient: ApolloClient<unknown>,
   isOpen: boolean,
   onClose: () => void
 }

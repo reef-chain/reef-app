@@ -48,7 +48,7 @@ const priceFormatter = (price: any): string => {
   return parseFloat(price).toFixed(2);
 };
 
-const chartOptions = (timeVisible: boolean) => ({
+const chartOptions = (timeVisible: boolean): unknown => ({
   layout: {
     textColor: '#898e9c',
     fontSize: 12,
@@ -63,7 +63,7 @@ const chartOptions = (timeVisible: boolean) => ({
   },
   timeScale: {
     borderColor: '#b7becf',
-    timeVisible: timeVisible,
+    timeVisible,
   },
   crosshair: {
     vertLine: {
@@ -186,7 +186,7 @@ const processSubData = (data: CandlestickData[], subdata: HistogramData[]): Hist
 };
 
 const renderChart = ({
-  el, type, data, subData, timeVisible
+  el, type, data, subData, timeVisible,
 }: {
  el: HTMLElement | null,
  type: Type,
@@ -281,7 +281,7 @@ const LWChart = ({
 
   useEffect(() => {
     if (!isRendered && data?.length) {
-      console.log("LWChart", data)
+      console.log('LWChart', data);
       renderChart({
         el: chartWrapper.current,
         type,
