@@ -134,7 +134,7 @@ const Buy = (): JSX.Element => {
           <FlexRow>
             <Icons.TokenIcon src={iconUrl.FROM_CURRENCY} />
             <MX size="1" />
-            <span className="pair--name">USD</span>
+            <span className="pair--name">{FROM_FIAT_SYMBOL}</span>
             <InputAmount
               amount={fiatAmount}
               placeholder="0.0"
