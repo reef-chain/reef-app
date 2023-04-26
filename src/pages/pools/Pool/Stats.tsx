@@ -4,16 +4,16 @@ import React, { useState } from 'react';
 import { hooks } from '@reef-defi/react-lib';
 import { faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
+import { ApolloClient } from '@apollo/client';
 import PoolSelect from './PoolSelect';
 import PoolTransactions from './PoolTransactions';
-import { ApolloClient } from '@apollo/client';
 
 interface StatsProps {
   data: hooks.PoolStats;
   price1: number;
   price2: number;
   reefscanUrl: string;
-  dexClient: ApolloClient<any>;
+  dexClient: ApolloClient<unknown>;
 }
 interface TokenStatsProps {
   token: hooks.TokenStats;
@@ -53,7 +53,7 @@ const Token = ({ token, price }: TokenStatsProps): JSX.Element => (
       <div>
         <div className="pool-stats__token-price">
           $
-          {isNaN(price) ? '?' : price.toFixed(4)}
+          {Number.isNaN(price) ? '?' : price.toFixed(4)}
         </div>
         <div className="pool-stats__token-value-ratio">
           {displayAmount(token.ratio.amount)}
@@ -86,7 +86,13 @@ interface UrlParams {
   address: string;
 }
 
-const Stats = ({ data, price1, price2, reefscanUrl, dexClient }: StatsProps): JSX.Element => {
+const Stats = ({
+  data,
+  price1,
+  price2,
+  reefscanUrl,
+  dexClient,
+}: StatsProps): JSX.Element => {
   const [isSelectOpen, setSelectOpen] = useState(false);
   const [isTransactionsOpen, setTransactionsOpen] = useState(false);
 

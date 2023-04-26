@@ -10,7 +10,7 @@ import './Dashboard.css';
 import { Staking } from './Staking';
 import { Nfts } from './Nfts';
 import { TokenBalances } from './TokenBalances';
-import {Activity} from "./Activity/Activity";
+import { Activity } from './Activity/Activity';
 
 const Dashboard = (): JSX.Element => {
   const { nfts } = useContext(NftContext);
@@ -33,7 +33,7 @@ const Dashboard = (): JSX.Element => {
     (acc, { balance, decimals, address }) => acc.plus(
       new BigNumber(balance.toString())
         .div(new BigNumber(10).pow(decimals))
-        .multipliedBy(tokenPrices[address] || 0),
+        .multipliedBy(Number.isNaN(+tokenPrices[address]) ? 0 : tokenPrices[address]),
     ),
     new BigNumber(0),
   ).toNumber(),
@@ -66,7 +66,7 @@ const Dashboard = (): JSX.Element => {
         </div>
 
         <div className="dashboard__right">
-           <Activity />
+          <Activity />
         </div>
       </div>
     </div>

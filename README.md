@@ -1,9 +1,6 @@
-# Reef-App
+# Reef App
 
-
-## Developer section
-
-When developing add `*` in .eslintignore. Do not forget to remove it before you create a new pull request!
+# Developer section
 
 ## Developing with @reef-defi/react-lib
 

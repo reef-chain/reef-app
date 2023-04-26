@@ -45,13 +45,6 @@ export const Nfts = ({ nfts }: Nfts): JSX.Element => (
         )}
       </div>
     )}
-     {/*{!nfts && (
-      <div className="col-12">
-        <Skeleton />
-        <Skeleton />
-        <Skeleton />
-      </div>
-    ) } */}
   </div>
 
 );

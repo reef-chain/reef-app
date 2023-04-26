@@ -1,5 +1,7 @@
 import { faArrowUpFromBracket, faCoins, faRepeat } from '@fortawesome/free-solid-svg-icons';
-import { appState, graphql, hooks, Token } from '@reef-defi/react-lib';
+import {
+  appState, graphql, hooks, Token,
+} from '@reef-defi/react-lib';
 import Uik from '@reef-defi/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -37,7 +39,7 @@ const MyPoolsList = ({ tokens }: Props): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
 
   const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
-  
+
   const signer = hooks.useObservableState(
     appState.selectedSigner$,
   );
