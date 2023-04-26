@@ -25,11 +25,11 @@ const { InputAmount } = InputModule;
 const { Button } = ButtonModule;
 
 const Buy = (): JSX.Element => {
-  const FIAT_NAME = 'EUR'; // 'USD';
+  const FROM_FIAT_SYMBOL = 'EUR'; // 'USD';
   const TOKEN_NAME = 'REEF';
   const iconUrl = {
     REEF: 'https://s2.coinmarketcap.com/static/img/coins/64x64/6951.png',
-    USD: 'https://s2.coinmarketcap.com/static/cloud/img/fiat-flags/USD.svg',
+    FROM_CURRENCY: 'https://s2.coinmarketcap.com/static/cloud/img/fiat-flags/EUR.svg',
   };
   const selectedSigner: ReefSigner | undefined | null = hooks.useObservableState(appState.selectedSigner$);
 
@@ -43,8 +43,8 @@ const Buy = (): JSX.Element => {
   useEffect(() => {
     api.getPairs()
       .then((pairs) => {
-        console.log('PARSSS', pairs);
-        const pair = pairs.filter((item: BuyPair) => item.fiatCurrency === FIAT_NAME && item.cryptoCurrency === TOKEN_NAME);
+        console.log('pairs', pairs);
+        const pair = pairs.filter((item: BuyPair) => item.fiatCurrency === FROM_FIAT_SYMBOL && item.cryptoCurrency === TOKEN_NAME);
 
         if (pair.length === 0) {
           throw new Error();
@@ -132,7 +132,7 @@ const Buy = (): JSX.Element => {
         <SubCard>
           <MT size="1" />
           <FlexRow>
-            <Icons.TokenIcon src={iconUrl.USD} />
+            <Icons.TokenIcon src={iconUrl.FROM_CURRENCY} />
             <MX size="1" />
             <span className="pair--name">USD</span>
             <InputAmount
