@@ -25,7 +25,7 @@ const { InputAmount } = InputModule;
 const { Button } = ButtonModule;
 
 const Buy = (): JSX.Element => {
-  const FROM_FIAT_SYMBOL = 'EUR'; // 'USD';
+  const FROM_FIAT_SYMBOL = 'EUR';
   const TOKEN_NAME = 'REEF';
   const iconUrl = {
     REEF: 'https://s2.coinmarketcap.com/static/img/coins/64x64/6951.png',
@@ -69,14 +69,14 @@ const Buy = (): JSX.Element => {
 
   const onFiatAmountChange = (amount: string): void => {
     const coefficient = selectedPair?.quotation ?? 0;
-    const calculated = amount ? +amount * coefficient : amount;
+    const calculated = amount ? (+amount / coefficient).toFixed(2) : amount;
     setTokenAmount(calculated.toString());
     setFiatAmount(amount);
   };
 
   const onTokenAmountChange = (amount: string): void => {
     const coefficient = selectedPair?.quotation ?? 1;
-    const calculated = amount ? (+amount / coefficient).toFixed(2) : amount;
+    const calculated = amount ? (+amount * coefficient).toFixed(2) : amount;
     setFiatAmount(calculated.toString());
     setTokenAmount(amount);
   };
