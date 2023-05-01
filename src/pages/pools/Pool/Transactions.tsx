@@ -3,8 +3,8 @@ import Uik from '@reef-defi/ui-kit';
 import { utils, hooks } from '@reef-defi/react-lib';
 import { faRepeat, faCoins, faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import Identicon from '@polkadot/react-identicon';
-import { Tabs, Tokens } from './PoolTransactions';
 import { ApolloClient } from '@apollo/client';
+import { Tabs, Tokens } from './PoolTransactions';
 
 const { formatAgoDate, formatAmount, shortAddress } = utils;
 const {
@@ -16,7 +16,7 @@ export interface Props {
   tab: Tabs,
   address: string,
   reefscanUrl: string,
-  dexClient: ApolloClient<any>,
+  dexClient: ApolloClient<unknown>,
   tokens?: Tokens
 }
 
@@ -36,7 +36,7 @@ const icons = {
 };
 
 const Transactions = ({
-  tab, address, reefscanUrl, dexClient, tokens
+  tab, address, reefscanUrl, dexClient, tokens,
 }: Props): JSX.Element => {
   const [pageIndex, setPageIndex] = useState(0);
 
@@ -109,56 +109,50 @@ const Transactions = ({
               amountIn2,
               signerAddress,
               pool: {
-                decimal1,
-                decimal2,
-                symbol1,
-                symbol2,
+                decimal1 = 18,
+                decimal2 = 18,
+                symbol1 = '?',
+                symbol2 = '?',
               },
-            }) => {
-              symbol1 = symbol1 || '?';
-              decimal1 = decimal1 || 18;
-              symbol2 = symbol2 || '?';
-              decimal2 = decimal2 || 18;
+            }) => (
+              <Uik.Tr
+                key={id}
+                onClick={() => window.open(`${reefscanUrl}/extrinsic/${blockHeight}/${indexInBlock}`)}
+              >
+                <Uik.Td>
+                  <Uik.Icon
+                    icon={icons[transactionType].icon}
+                    className={`
+                      pool-transactions__transaction-icon
+                      pool-transactions__transaction-icon--${icons[transactionType].type}
+                    `}
+                  />
+                  <span>{ getType(transactionType, amount1, symbol1, symbol2) }</span>
+                </Uik.Td>
 
-              return (
-                <Uik.Tr
-                  key={id}
-                  onClick={() => window.open(`${reefscanUrl}/extrinsic/${blockHeight}/${indexInBlock}`)}
-                >
-                  <Uik.Td>
-                    <Uik.Icon
-                      icon={icons[transactionType].icon}
-                      className={`
-                        pool-transactions__transaction-icon
-                        pool-transactions__transaction-icon--${icons[transactionType].type}
-                      `}
-                    />
-                    <span>{ getType(transactionType, amount1, symbol1, symbol2) }</span>
-                  </Uik.Td>
-
-                  <Uik.Td>
-                    <a
-                      href={`${reefscanUrl}/account/${toAddress || senderAddress || signerAddress}`}
-                      target="_blank"
-                      onClick={(e) => e.stopPropagation()}
-                      rel="noreferrer"
-                    >
-                      <Identicon value={signerAddress} size={18} className="pool-transactions__transaction-account-identicon" />
-                      <span>{ toAddress || senderAddress || signerAddress 
-                        ? shortAddress(toAddress || senderAddress || signerAddress) 
+                <Uik.Td>
+                  <a
+                    href={`${reefscanUrl}/account/${toAddress || senderAddress || signerAddress}`}
+                    target="_blank"
+                    onClick={(e) => e.stopPropagation()}
+                    rel="noreferrer"
+                  >
+                    <Identicon value={signerAddress} size={18} className="pool-transactions__transaction-account-identicon" />
+                    <span>
+                      { toAddress || senderAddress || signerAddress
+                        ? shortAddress(toAddress || senderAddress || signerAddress)
                         : 'Unknown' }
-                      </span>
-                    </a>
-                  </Uik.Td>
+                    </span>
+                  </a>
+                </Uik.Td>
 
-                  <Uik.Td align="center">{ formatAgoDate(timestamp) }</Uik.Td>
+                <Uik.Td align="center">{ formatAgoDate(timestamp) }</Uik.Td>
 
-                  <Uik.Td align="right">{formatAmount(amount1 > 0 ? amount1 : amountIn1, decimal1)}</Uik.Td>
+                <Uik.Td align="right">{formatAmount(amount1 > 0 ? amount1 : amountIn1, decimal1)}</Uik.Td>
 
-                  <Uik.Td align="right">{formatAmount(amount2 > 0 ? amount2 : amountIn2, decimal2)}</Uik.Td>
-                </Uik.Tr>
-              );
-            })
+                <Uik.Td align="right">{formatAmount(amount2 > 0 ? amount2 : amountIn2, decimal2)}</Uik.Td>
+              </Uik.Tr>
+            ))
           }
       </Uik.TBody>
     </Uik.Table>

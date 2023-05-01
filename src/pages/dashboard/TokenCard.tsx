@@ -42,6 +42,10 @@ const TokenCard = ({
     .toNumber();
 
   const balance = useMemo(() => {
+    if (Number.isNaN(balanceValue)) {
+      return 'N/A';
+    }
+
     if (balanceValue >= 1000000) {
       return `$${displayBalance(balanceValue)}`;
     }
@@ -80,13 +84,14 @@ const TokenCard = ({
               type="button"
             >
               {
-                !!price
-                && (
-                <>
-                  $
-                  { Uik.utils.formatAmount(Uik.utils.maxDecimals(price, 4)) }
-                </>
-                )
+                !!price && !Number.isNaN(+price)
+                  ? (
+                    <>
+                      $
+                      { Uik.utils.formatAmount(Uik.utils.maxDecimals(price, 4)) }
+                    </>
+                  )
+                  : 'N/A'
               }
             </button>
           </div>
