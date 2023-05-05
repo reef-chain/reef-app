@@ -153,24 +153,30 @@ const Buy = (): JSX.Element => {
                 isOpen={isOpen}
                 onClose={() => setOpen(false)}
               >
-                {allPairs.map((pair:BuyPair) => (
-                  <div
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => {
-                      setSelectedPair(pair);
-                      setSelectedFiatCurrency(pair.fiatCurrency);
-                      setOpen(false);
-                    }}
-                  >
-                    <FlexRow key={pair.fiatCurrency}>
-                      <MX size="2" />
-                      <Icons.TokenIcon src={`https://s2.coinmarketcap.com/static/cloud/img/fiat-flags/${pair.fiatCurrency}.svg`} />
-                      <MX size="3" />
-                      <span className="pair--name">{pair.fiatCurrency}</span>
-                    </FlexRow>
-                  </div>
-                ))}
+                {allPairs.length === 0 ? (
+                  <Uik.Container vertical>
+                    <Uik.Loading size="small" />
+                  </Uik.Container>
+                ) : (
+                  allPairs.map((pair: BuyPair) => (
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => {
+                        setSelectedPair(pair);
+                        setSelectedFiatCurrency(pair.fiatCurrency);
+                        setOpen(false);
+                      }}
+                    >
+                      <FlexRow key={pair.fiatCurrency}>
+                        <MX size="2" />
+                        <Icons.TokenIcon src={`https://s2.coinmarketcap.com/static/cloud/img/fiat-flags/${pair.fiatCurrency}.svg`} />
+                        <MX size="3" />
+                        <span className="pair--name">{pair.fiatCurrency}</span>
+                      </FlexRow>
+                    </div>
+                  ))
+                )}
               </Uik.Dropdown>
             </div>
             <InputAmount
