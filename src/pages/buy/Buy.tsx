@@ -165,6 +165,10 @@ const Buy = (): JSX.Element => {
                       onClick={() => {
                         setSelectedPair(pair);
                         setSelectedFiatCurrency(pair.fiatCurrency);
+                        // this will change the value of reef tokens for newly selected currency
+                        const coefficient = pair?.quotation ?? 0;
+                        const calculated = fiatAmount ? (+fiatAmount / coefficient).toFixed(2) : fiatAmount;
+                        setTokenAmount(calculated.toString());
                         setOpen(false);
                       }}
                     >
