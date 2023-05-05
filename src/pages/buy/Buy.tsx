@@ -32,7 +32,6 @@ const Buy = (): JSX.Element => {
   const TOKEN_NAME = 'REEF';
   const iconUrl = {
     REEF: 'https://s2.coinmarketcap.com/static/img/coins/64x64/6951.png',
-    FROM_CURRENCY: 'https://s2.coinmarketcap.com/static/cloud/img/fiat-flags/EUR.svg',
   };
   const selectedSigner: ReefSigner | undefined | null = hooks.useObservableState(appState.selectedSigner$);
 
@@ -163,6 +162,12 @@ const Buy = (): JSX.Element => {
                       role="button"
                       tabIndex={0}
                       onClick={() => {
+                        console.log(pair);
+                        if (parseInt(fiatAmount, 10) < pair.minLimit) {
+                          setError(`Amount is too low. The lowest allowed value is ${pair.minLimit}`);
+                        } else if (parseInt(fiatAmount, 10) > pair.maxLimit) {
+                          setError(`Amount is too big. The highest allowed value is ${pair.maxLimit}`);
+                        } else setError('');
                         setSelectedPair(pair);
                         setSelectedFiatCurrency(pair.fiatCurrency);
                         // this will change the value of reef tokens for newly selected currency
