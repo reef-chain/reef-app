@@ -162,7 +162,6 @@ const Buy = (): JSX.Element => {
                       role="button"
                       tabIndex={0}
                       onClick={() => {
-                        console.log(pair);
                         if (parseInt(fiatAmount, 10) < pair.minLimit) {
                           setError(`Amount is too low. The lowest allowed value is ${pair.minLimit}`);
                         } else if (parseInt(fiatAmount, 10) > pair.maxLimit) {
