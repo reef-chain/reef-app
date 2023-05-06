@@ -8,6 +8,17 @@ import './Buy.css';
 import { InputAmountValidity } from '@reef-defi/react-lib/dist/components/common/Input';
 import { AuthenticationResponse, BuyPair, BuyPayload } from './models';
 import * as api from './api-access';
+import LocalizedStrings from 'react-localization';
+
+let strings = new LocalizedStrings({
+ en:{
+   can_not_retrieve:'Can not retrieve trading pair information',
+   fiat_validity_error:'fiat validity error',
+   error_occured_while_authorizing:'Error occurred while authorizing',
+   error_occured_while_creating_a_trade:'Error occured while creating a trade',
+   buy_reef_tokens:"Buy Reef tokens",
+ },
+});
 
 const {
   Button: ButtonModule,
@@ -52,7 +63,7 @@ const Buy = (): JSX.Element => {
         setSelectedPair(pair[0]);
       })
       .catch(() => {
-        setError('Can not retrieve trading pair information');
+        setError(strings.can_not_retrieve);
         setDisableInputs(true);
       });
   }, []);
@@ -82,7 +93,7 @@ const Buy = (): JSX.Element => {
   };
 
   const onFiatValidityChange = (validity: InputAmountValidity): void => {
-    setError(validity.valid ? '' : validity.errorMessage || 'fiat validity error');
+    setError(validity.valid ? '' : validity.errorMessage || strings.fiat_validity_error);
   };
 
   const buy = async (): Promise<void> => {
@@ -97,7 +108,7 @@ const Buy = (): JSX.Element => {
         throw new Error();
       }
     } catch (_) {
-      setError('Error occurred while authorizing');
+      setError(strings.error_occured_while_authorizing);
     }
 
     try {
@@ -116,7 +127,7 @@ const Buy = (): JSX.Element => {
         }
       }
     } catch (_) {
-      setError('Error occurred while creating a trade');
+      setError(strings.error_occured_while_creating_a_trade);
     }
   };
 
@@ -125,7 +136,7 @@ const Buy = (): JSX.Element => {
       <Card>
         <CardHeader>
           <CardHeaderBlank />
-          <CardTitle title="Buy Reef tokens" />
+          <CardTitle title={strings.buy_reef_tokens} />
           <CardHeaderBlank />
         </CardHeader>
 
