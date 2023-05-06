@@ -6,19 +6,9 @@ import React, {
 } from 'react';
 import './Buy.css';
 import { InputAmountValidity } from '@reef-defi/react-lib/dist/components/common/Input';
-import LocalizedStrings from 'react-localization';
 import { AuthenticationResponse, BuyPair, BuyPayload } from './models';
 import * as api from './api-access';
-
-const strings = new LocalizedStrings({
-  en: {
-    can_not_retrieve: 'Can not retrieve trading pair information',
-    fiat_validity_error: 'fiat validity error',
-    error_occured_while_authorizing: 'Error occurred while authorizing',
-    error_occured_while_creating_a_trade: 'Error occured while creating a trade',
-    buy_reef_tokens: 'Buy Reef tokens',
-  },
-});
+import { localizedStrings as strings } from './l10n';
 
 const {
   Button: ButtonModule,
