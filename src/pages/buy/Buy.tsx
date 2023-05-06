@@ -6,8 +6,11 @@ import React, {
 } from 'react';
 import './Buy.css';
 import { InputAmountValidity } from '@reef-defi/react-lib/dist/components/common/Input';
-import { AuthenticationResponse, BuyPair, BuyPayload } from './models';
+import Uik from '@reef-defi/ui-kit';
+import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as api from './api-access';
+import { AuthenticationResponse, BuyPair, BuyPayload } from './models';
 
 const {
   Button: ButtonModule,
@@ -29,23 +32,25 @@ const Buy = (): JSX.Element => {
   const TOKEN_NAME = 'REEF';
   const iconUrl = {
     REEF: 'https://s2.coinmarketcap.com/static/img/coins/64x64/6951.png',
-    FROM_CURRENCY: 'https://s2.coinmarketcap.com/static/cloud/img/fiat-flags/EUR.svg',
   };
   const selectedSigner: ReefSigner | undefined | null = hooks.useObservableState(appState.selectedSigner$);
 
   const [tokenAmount, setTokenAmount] = useState<string>('');
+  const [allPairs, setAllPairs] = useState<BuyPair[]>([]);
   const [fiatAmount, setFiatAmount] = useState<string>('');
   const [selectedPair, setSelectedPair] = useState<BuyPair>();
+  const [selectedFiatCurrency, setSelectedFiatCurrency] = useState<string>('EUR');
   const [disableBuy, setDisableBuy] = useState<boolean>(true);
   const [disableInputs, setDisableInputs] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+  const [isOpen, setOpen] = useState(false);
 
   useEffect(() => {
     api.getPairs()
       .then((pairs) => {
         console.log('pairs', pairs);
+        setAllPairs(pairs);
         const pair = pairs.filter((item: BuyPair) => item.fiatCurrency === FROM_FIAT_SYMBOL && item.cryptoCurrency === TOKEN_NAME);
-
         if (pair.length === 0) {
           throw new Error();
         }
@@ -132,9 +137,56 @@ const Buy = (): JSX.Element => {
         <SubCard>
           <MT size="1" />
           <FlexRow>
-            <Icons.TokenIcon src={iconUrl.FROM_CURRENCY} />
-            <MX size="1" />
-            <span className="pair--name">{FROM_FIAT_SYMBOL}</span>
+            <MT size="2" />
+            <FontAwesomeIcon className="chevronDown" icon={faChevronDown} fontSize={10} onClick={() => setOpen(true)} />
+            <MT size="2" />
+
+            <Icons.TokenIcon src={`https://s2.coinmarketcap.com/static/cloud/img/fiat-flags/${selectedFiatCurrency}.svg`} />
+            <MX size="2" />
+            <span className="pair--name">
+              {selectedFiatCurrency}
+              {' '}
+            </span>
+            <div className="pair--dropdown">
+              <Uik.Dropdown
+                isOpen={isOpen}
+                onClose={() => setOpen(false)}
+              >
+                {allPairs.length === 0 ? (
+                  <Uik.Container vertical>
+                    <Uik.Loading size="small" />
+                  </Uik.Container>
+                ) : (
+                  allPairs.map((pair: BuyPair) => (
+                    <div
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => {
+                        if (parseInt(fiatAmount, 10) < pair.minLimit) {
+                          setError(`Amount is too low. The lowest allowed value is ${pair.minLimit}`);
+                        } else if (parseInt(fiatAmount, 10) > pair.maxLimit) {
+                          setError(`Amount is too big. The highest allowed value is ${pair.maxLimit}`);
+                        } else setError('');
+                        setSelectedPair(pair);
+                        setSelectedFiatCurrency(pair.fiatCurrency);
+                        // this will change the value of reef tokens for newly selected currency
+                        const coefficient = pair?.quotation ?? 0;
+                        const calculated = fiatAmount ? (+fiatAmount / coefficient).toFixed(2) : fiatAmount;
+                        setTokenAmount(calculated.toString());
+                        setOpen(false);
+                      }}
+                    >
+                      <FlexRow key={pair.fiatCurrency}>
+                        <MX size="2" />
+                        <Icons.TokenIcon src={`https://s2.coinmarketcap.com/static/cloud/img/fiat-flags/${pair.fiatCurrency}.svg`} />
+                        <MX size="3" />
+                        <span className="pair--name">{pair.fiatCurrency}</span>
+                      </FlexRow>
+                    </div>
+                  ))
+                )}
+              </Uik.Dropdown>
+            </div>
             <InputAmount
               amount={fiatAmount}
               placeholder="0.0"
@@ -167,6 +219,7 @@ const Buy = (): JSX.Element => {
         <MT size="3" />
         <Button className="w-100" disabled={disableBuy} onClick={buy}>{ error || 'Buy'}</Button>
       </Card>
+
     </ComponentCenter>
   );
 };
