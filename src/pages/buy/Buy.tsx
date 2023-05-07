@@ -130,19 +130,19 @@ const Buy = (): JSX.Element => {
       <Card>
         <CardHeader>
           <CardHeaderBlank />
-          <CardTitle title="Buy Reef tokens" />
+          <CardTitle title="Buy Reef" />
           <CardHeaderBlank />
         </CardHeader>
+        <p className="text-center"><small>Simply fill up Reef account with credit card</small></p>
 
         <SubCard>
           <MT size="1" />
           <FlexRow>
             <MT size="2" />
+            <Icons.TokenIcon src={`https://s2.coinmarketcap.com/static/cloud/img/fiat-flags/${selectedFiatCurrency}.svg`} />
             <FontAwesomeIcon className="chevronDown" icon={faChevronDown} fontSize={10} onClick={() => setOpen(true)} />
             <MT size="2" />
 
-            <Icons.TokenIcon src={`https://s2.coinmarketcap.com/static/cloud/img/fiat-flags/${selectedFiatCurrency}.svg`} />
-            <MX size="2" />
             <span className="pair--name">
               {selectedFiatCurrency}
               {' '}
