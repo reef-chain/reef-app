@@ -5,6 +5,7 @@ import { faRepeat, faCoins, faArrowUpFromBracket } from '@fortawesome/free-solid
 import Identicon from '@polkadot/react-identicon';
 import { ApolloClient } from '@apollo/client';
 import { Tabs, Tokens } from './PoolTransactions';
+import { localizedStrings as strings } from '../../../l10n/l10n';
 
 const { formatAgoDate, formatAmount, shortAddress } = utils;
 const {
@@ -77,18 +78,18 @@ const Transactions = ({
     >
       <Uik.THead>
         <Uik.Tr>
-          <Uik.Th>Type</Uik.Th>
-          <Uik.Th>Account</Uik.Th>
-          <Uik.Th align="center">Time</Uik.Th>
+          <Uik.Th>{strings.type}</Uik.Th>
+          <Uik.Th>{strings.account}</Uik.Th>
+          <Uik.Th align="center">{strings.time}</Uik.Th>
           <Uik.Th align="right">
             { tokens?.firstToken?.symbol }
             {' '}
-            Amount
+            {strings.amount}
           </Uik.Th>
           <Uik.Th align="right">
             { tokens?.secondToken?.symbol }
             {' '}
-            Amount
+            {strings.amount}
           </Uik.Th>
         </Uik.Tr>
       </Uik.THead>

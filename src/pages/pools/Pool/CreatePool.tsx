@@ -11,6 +11,7 @@ import TokenPricesContext from '../../../context/TokenPricesContext';
 import { notify } from '../../../utils/utils';
 import '../../../common/overlay-swap.css';
 import './create-pool.css';
+import { localizedStrings } from '../../../l10n/l10n';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
@@ -83,7 +84,7 @@ const CreatePool = ({
   return (
     <OverlayAction
       isOpen={isOpen}
-      title="Create Pool"
+      title={localizedStrings.create_pool}
       onClose={onClose}
       onClosed={onClosed}
       onOpened={onOpened}
@@ -104,7 +105,7 @@ const CreatePool = ({
                   setToken1Amount: (amount: string) => provideDispatch(store.setToken1AmountAction(amount)),
                   setToken2Amount: (amount: string) => provideDispatch(store.setToken2AmountAction(amount)),
                 }}
-                confirmText="Create Pool"
+                confirmText={localizedStrings.create_pool}
               />
             )
             : <Finalizing />

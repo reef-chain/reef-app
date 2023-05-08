@@ -6,6 +6,7 @@ import React from 'react';
 import './activity.css';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem, { Skeleton } from './ActivityItem';
+import { localizedStrings as strings } from '../../../l10n/l10n';
 
 const noActivityTokenDisplay = createEmptyTokenWithAmount();
 noActivityTokenDisplay.address = '0x';
@@ -28,7 +29,7 @@ export const Activity = (): JSX.Element => {
           <Uik.Button
             size="small"
             icon={faArrowUpRightFromSquare}
-            text="Open Explorer"
+            text={strings.open_explorer}
             onClick={() => window.open(`${network?.reefscanUrl}/account/${signer.address}`)}
           />
           )

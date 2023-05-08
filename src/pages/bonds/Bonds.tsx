@@ -6,7 +6,7 @@ import Uik from '@reef-defi/ui-kit';
 import { BondsComponent } from './BondsComponent';
 import { bonds, IBond } from './utils/bonds';
 import './bonds.css';
-import { localizedStrings as strings } from './l10n';
+import { localizedStrings as strings } from '../../l10n/l10n';
 
 export const Bonds = (): JSX.Element => {
   const selectedSigner: ReefSigner | undefined | null = hooks.useObservableState(appState.selectedSigner$);

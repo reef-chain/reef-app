@@ -2,6 +2,7 @@ import React from 'react';
 import Uik from '@reef-defi/ui-kit';
 import { faSearch, faXmark } from '@fortawesome/free-solid-svg-icons';
 import './pools.css';
+import { localizedStrings as strings } from '../../l10n/l10n';
 
 export interface PoolsSearch {
   value?: string,
@@ -27,7 +28,7 @@ const PoolsSearch = ({
           // @ts-ignore-next-line
           onInput(e.target.value);
         }}
-        placeholder="Search"
+        placeholder={strings.search}
       />
 
       {

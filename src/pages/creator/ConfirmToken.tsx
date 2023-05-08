@@ -1,6 +1,7 @@
 import React from 'react';
 import './confirm-token.css';
 import Uik from '@reef-defi/ui-kit';
+import { localizedStrings as strings } from '../../l10n/l10n';
 
 export interface SummaryItemProps {
   label?: string
@@ -61,7 +62,7 @@ const openIcon = (src?: string, name?: string): void => {
   const tab = window.open('');
   if (tab) {
     tab.document.write(image.outerHTML);
-    tab.document.title = `${name} Logo`;
+    tab.document.title = `${name} ${strings.logo}`;
   }
 };
 
@@ -78,12 +79,12 @@ const ConfirmToken = ({
 }: Props): JSX.Element => (
   <Uik.Modal
     className="confirm-token"
-    title="Confirm Your Token"
+    title={strings.confirm_your_token}
     isOpen={isOpen}
     onClose={onClose}
     footer={(
       <Uik.Button
-        text="Create Token"
+        text={strings.create_token}
         fill
         size="large"
         onClick={() => {
@@ -96,27 +97,27 @@ const ConfirmToken = ({
     <div className="confirm-token__container">
       <div className="confirm-token-summary">
         <SummaryItem
-          label="Token name"
+          label={strings.token_name}
           value={name}
         />
         <SummaryItem
-          label="Token symbol"
+          label={strings.token_symbol}
           value={(symbol || '').toUpperCase()}
         />
         <SummaryItem
-          label="Initial supply"
+          label={strings.initial_supply}
           value={Uik.utils.formatAmount(supply || '')}
         />
         <SummaryItem
-          label="Burnable"
+          label={strings.burnable}
           value={isBurnable ? 'Yes' : 'No'}
         />
         <SummaryItem
-          label="Mintable"
+          label={strings.mintable}
           value={isMintable ? 'Yes' : 'No'}
         />
         <SummaryItem
-          label="Token logo"
+          label={strings.token_logo}
           value={icon ? 'Custom' : 'Generated'}
           action={icon ? () => openIcon(icon, name) : undefined}
           className={!icon ? 'confirm-token-summary-item--faded' : ''}

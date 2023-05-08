@@ -8,7 +8,7 @@ import './Buy.css';
 import { InputAmountValidity } from '@reef-defi/react-lib/dist/components/common/Input';
 import { AuthenticationResponse, BuyPair, BuyPayload } from './models';
 import * as api from './api-access';
-import { localizedStrings as strings } from './l10n';
+import { localizedStrings as strings } from '../../l10n/l10n';
 
 const {
   Button: ButtonModule,

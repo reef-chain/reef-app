@@ -3,6 +3,7 @@ import { Components } from '@reef-defi/react-lib';
 import PoolsList from '../PoolsList';
 import './pool-select.css';
 import TokenContext from '../../../context/TokenContext';
+import { localizedStrings } from '../../../l10n/l10n';
 
 const { OverlayAction } = Components;
 
@@ -16,7 +17,7 @@ const PoolSelect = ({ isOpen, onClose }: Props): JSX.Element => {
 
   return (
     <OverlayAction
-      title="Select Pool"
+      title={localizedStrings.select_pool}
       className="pool-select"
       isOpen={isOpen}
       onClose={onClose}

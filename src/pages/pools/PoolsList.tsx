@@ -10,6 +10,7 @@ import TokenPricesContext from '../../context/TokenPricesContext';
 import { POOL_CHART_URL } from '../../urls';
 import './pools.css';
 import PoolsSearch from './PoolsSearch';
+import { localizedStrings } from '../../l10n/l10n';
 
 export interface Props {
   tokens: Token[]
@@ -85,7 +86,7 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
   return (
     <div className="pools__list pools__list--all">
       <div className="pools__table-top">
-        <Uik.Text type="title">Pools</Uik.Text>
+        <Uik.Text type="title">{localizedStrings.pools}</Uik.Text>
         <PoolsSearch
           value={search}
           onInput={(value) => { setSearch(value); }}
@@ -102,10 +103,10 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
       >
         <Uik.THead>
           <Uik.Tr>
-            <Uik.Th>Pair</Uik.Th>
-            <Uik.Th align="right">TVL</Uik.Th>
-            <Uik.Th align="right">24h Vol.</Uik.Th>
-            <Uik.Th align="right">24h Vol. %</Uik.Th>
+            <Uik.Th>{localizedStrings.pair}</Uik.Th>
+            <Uik.Th align="right">{localizedStrings.tvl}</Uik.Th>
+            <Uik.Th align="right">{localizedStrings.vol}</Uik.Th>
+            <Uik.Th align="right">{localizedStrings.vol_percentage}</Uik.Th>
             <Uik.Th />
           </Uik.Tr>
         </Uik.THead>
@@ -152,7 +153,7 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
                         !!item.myLiquidity
                         && (
                         <Uik.Button
-                          text="Unstake"
+                          text={localizedStrings.unstake}
                           icon={faArrowUpFromBracket}
                           fill
                           onClick={(e) => {
@@ -166,7 +167,7 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
                         canStake(item)
                         && (
                           <Uik.Button
-                            text="Stake"
+                            text={localizedStrings.stake}
                             icon={faCoins}
                             fill
                             onClick={(e) => {

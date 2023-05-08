@@ -1,15 +1,16 @@
 import React from 'react';
 import Bubbles from './Bubbles';
 import './css/index.css';
+import { localizedStrings as strings } from '../../l10n/l10n';
 
 const NoAccount = (): JSX.Element => (
   <div className="no-extension">
     <header className="header">
       <div className="header__content">
         <div className="header__main-content">
-          <h1 className="header__title">Create Your Account</h1>
+          <h1 className="header__title">{strings.create_your_account}</h1>
         </div>
-        <div className="header__sub-content">Use Reef Chain Extension to create your account and refresh the page.</div>
+        <div className="header__sub-content">{strings.use_reef_chain_extension}</div>
       </div>
 
       <Bubbles />
