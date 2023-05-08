@@ -3,7 +3,6 @@ import {
 } from '@reef-defi/react-lib';
 import Uik from '@reef-defi/ui-kit';
 import React, { useContext, useState } from 'react';
-// import React, { useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';
 import TokenPricesContext from '../../../context/TokenPricesContext';
@@ -35,7 +34,7 @@ const timeframeToTimeData = (timeframe: Timeframe): TimeData => {
     case 'week':
       return { timeUnit: 'Hour', timeSpan: 7 * 24 };
     case 'month':
-      return { timeUnit: 'Day', timeSpan: 31 };
+      return { timeUnit: 'Day', timeSpan: 30 };
     default:
       return { timeUnit: 'Hour', timeSpan: 24 };
   }
@@ -130,8 +129,7 @@ const Pool = (): JSX.Element => {
                 secondToken: poolData.secondTokenVolume.map(timeToNumber),
                 total: poolData.volume.map(timeToNumber),
               },
-              firstToken: poolData.firstToken.map(timeToNumber),
-              secondToken: poolData.secondToken.map(timeToNumber),
+              price: poolData.price.map(timeToNumber),
             }
             : undefined
           }

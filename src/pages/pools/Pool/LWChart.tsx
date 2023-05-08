@@ -37,6 +37,7 @@ export interface Props {
   data: Data,
   subData?: HistogramData[],
   timeVisible?: boolean,
+  currency?: string,
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,7 +49,7 @@ const priceFormatter = (price: any): string => {
   return parseFloat(price).toFixed(2);
 };
 
-const chartOptions = (timeVisible: boolean): unknown => ({
+const chartOptions = (timeVisible: boolean, currency: string): unknown => ({
   layout: {
     textColor: '#898e9c',
     fontSize: 12,
@@ -84,7 +85,9 @@ const chartOptions = (timeVisible: boolean): unknown => ({
     },
   },
   localization: {
-    priceFormatter: (price: number) => `$${priceFormatter(price)}`,
+    priceFormatter: (price: number) => currency === '$' 
+      ? `$${priceFormatter(price)}` 
+      : `${priceFormatter(price)} ${currency}`,
   },
 });
 
@@ -186,18 +189,19 @@ const processSubData = (data: CandlestickData[], subdata: HistogramData[]): Hist
 };
 
 const renderChart = ({
-  el, type, data, subData, timeVisible,
+  el, type, data, subData, timeVisible, currency
 }: {
  el: HTMLElement | null,
  type: Type,
  data: Data,
  subData?: HistogramData[],
- timeVisible: boolean
+ timeVisible: boolean,
+ currency: string,
 }): void => {
   if (!el) return;
 
   const { height } = el.getBoundingClientRect();
-  const options = chartOptions(timeVisible);
+  const options = chartOptions(timeVisible, currency);
 
   // @ts-ignore-next-line
   const chart: IChartApi = createChart(el, { height, ...options });
@@ -271,8 +275,9 @@ const Licence = (): JSX.Element => (
 const LWChart = ({
   type = 'histogram',
   data,
-  subData,
+  // subData,
   timeVisible = true,
+  currency = '$'
 }: Props): JSX.Element => {
   const chartWrapper = useRef(null);
   const [isRendered, setRendered] = useState(false);
@@ -283,8 +288,9 @@ const LWChart = ({
         el: chartWrapper.current,
         type,
         data: formatData(type, data),
-        subData,
+        // subData,
         timeVisible,
+        currency
       });
       setRendered(true);
     }
