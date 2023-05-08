@@ -120,7 +120,7 @@ const Pool = (): JSX.Element => {
               image: poolInfo.secondToken.icon,
             },
           }}
-          data = {
+          data={
             poolData ? {
               fees: poolData.fees.map(timeToNumber),
               tvl: poolData.tvl.map(timeToNumber),
@@ -131,7 +131,7 @@ const Pool = (): JSX.Element => {
               },
               price: poolData.price.map(timeToNumber),
             }
-            : undefined
+              : undefined
           }
           timeframe={timeframe}
           setTimeframe={setTimeframe}

@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Uik from '@reef-defi/ui-kit';
 import './chart.css';
-import LWChart, { HistogramData, CandlestickData } from './LWChart';
+import LWChart, { HistogramData } from './LWChart';
 
 export interface Volume {
   firstToken: HistogramData[],
