@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { createChart, IChartApi, UTCTimestamp } from 'lightweight-charts';
+import { createChart, IChartApi } from 'lightweight-charts';
 import './lw-chart.css';
 
 export interface BusinessDay {
@@ -35,8 +35,9 @@ export type Data = HistogramData[] | CandlestickData[] | AreaData[]
 export interface Props {
   type: Type,
   data: Data,
-  subData?: HistogramData[],
+  // subData?: HistogramData[],
   timeVisible?: boolean,
+  currency?: string,
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -48,7 +49,7 @@ const priceFormatter = (price: any): string => {
   return parseFloat(price).toFixed(2);
 };
 
-const chartOptions = (timeVisible: boolean): unknown => ({
+const chartOptions = (timeVisible: boolean, currency: string): unknown => ({
   layout: {
     textColor: '#898e9c',
     fontSize: 12,
@@ -84,7 +85,9 @@ const chartOptions = (timeVisible: boolean): unknown => ({
     },
   },
   localization: {
-    priceFormatter: (price: number) => `$${priceFormatter(price)}`,
+    priceFormatter: (price: number) => (currency === '$'
+      ? `$${priceFormatter(price)}`
+      : `${priceFormatter(price)} ${currency}`),
   },
 });
 
@@ -186,18 +189,19 @@ const processSubData = (data: CandlestickData[], subdata: HistogramData[]): Hist
 };
 
 const renderChart = ({
-  el, type, data, subData, timeVisible,
+  el, type, data, subData, timeVisible, currency,
 }: {
  el: HTMLElement | null,
  type: Type,
  data: Data,
  subData?: HistogramData[],
- timeVisible: boolean
+ timeVisible: boolean,
+ currency: string,
 }): void => {
   if (!el) return;
 
   const { height } = el.getBoundingClientRect();
-  const options = chartOptions(timeVisible);
+  const options = chartOptions(timeVisible, currency);
 
   // @ts-ignore-next-line
   const chart: IChartApi = createChart(el, { height, ...options });
@@ -234,18 +238,16 @@ const formatData = (type: Type, data: Data = []): Data => {
       const item: CandlestickData = data[i];
       const prevItem: CandlestickData = data[i - 1];
 
-      const open = prevItem?.close || item.open;
+      const open = prevItem ? Number(prevItem?.close) : Number(item.open);
 
       output.push({
         open,
-        close: item.close,
-        high: item.high,
-        low: item.low,
-        time: item.timeframe ? new Date(item.timeframe).getTime() / 1000 as UTCTimestamp : item.time,
+        close: Number(item.close),
+        high: Number(item.high),
+        low: Number(item.low),
+        time: Number(item.time),
       });
     }
-
-    // console.log("formatData", output)
 
     return output;
   }
@@ -273,21 +275,22 @@ const Licence = (): JSX.Element => (
 const LWChart = ({
   type = 'histogram',
   data,
-  subData,
+  // subData,
   timeVisible = true,
+  currency = '$',
 }: Props): JSX.Element => {
   const chartWrapper = useRef(null);
   const [isRendered, setRendered] = useState(false);
 
   useEffect(() => {
     if (!isRendered && data?.length) {
-      console.log('LWChart', data);
       renderChart({
         el: chartWrapper.current,
         type,
         data: formatData(type, data),
-        subData,
+        // subData,
         timeVisible,
+        currency,
       });
       setRendered(true);
     }

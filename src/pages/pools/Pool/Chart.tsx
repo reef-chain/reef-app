@@ -1,7 +1,7 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import Uik from '@reef-defi/ui-kit';
 import './chart.css';
-import LWChart, { HistogramData, CandlestickData } from './LWChart';
+import LWChart, { HistogramData } from './LWChart';
 
 export interface Volume {
   firstToken: HistogramData[],
@@ -10,8 +10,7 @@ export interface Volume {
 }
 
 export interface Data {
-  firstToken: CandlestickData[],
-  secondToken: CandlestickData[],
+  price: HistogramData[],
   tvl: HistogramData[],
   volume: Volume,
   fees: HistogramData[]
@@ -43,8 +42,7 @@ export interface Props {
 }
 
 const chartTypes = {
-  firstToken: 'candlestick',
-  secondToken: 'candlestick',
+  price: 'area',
   tvl: 'area',
   volume: 'histogram',
   fees: 'histogram',
@@ -56,7 +54,7 @@ const Chart = ({
   timeframe,
   setTimeframe,
 }: Props): JSX.Element => {
-  const [tab, setTab] = useState('firstToken');
+  const [tab, setTab] = useState('price');
 
   const getData = useMemo(() => {
     // @ts-ignore-next-line
@@ -65,13 +63,13 @@ const Chart = ({
     return chartData;
   }, [data, tab]);
 
-  const getSubData = useMemo(() => {
-    if (tab === 'firstToken' || tab === 'secondToken') {
-      return data?.volume?.[tab] || [];
-    }
+  // const getSubData = useMemo(() => {
+  //   if (tab === 'firstToken' || tab === 'secondToken') {
+  //     return data?.volume?.[tab] || [];
+  //   }
 
-    return undefined;
-  }, [data, tab]);
+  //   return undefined;
+  // }, [data, tab]);
 
   return (
     <div className="pool-chart">
@@ -81,8 +79,7 @@ const Chart = ({
             value={tab}
             onChange={(value) => setTab(value)}
             options={[
-              { value: 'firstToken', text: tokens.firstToken?.name || '' },
-              { value: 'secondToken', text: tokens.secondToken?.name || '' },
+              { value: 'price', text: `${tokens.secondToken.name}/${tokens.firstToken.name}` },
               { value: 'tvl', text: 'Liquidity' },
               { value: 'volume', text: 'Volume' },
               { value: 'fees', text: 'Fees' },
@@ -105,12 +102,13 @@ const Chart = ({
           !!getData.length
           && (
           <LWChart
-            key={tab}
+            key={`${tab}-${timeframe}`}
             // @ts-ignore-next-line
             type={chartTypes[tab]}
             data={getData}
-            subData={getSubData}
+            // subData={getSubData}
             timeVisible={timeframe !== 'month'}
+            currency={tab === 'price' ? tokens.firstToken.name : '$'}
           />
           )
         }
