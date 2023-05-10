@@ -35,7 +35,7 @@ export type Data = HistogramData[] | CandlestickData[] | AreaData[]
 export interface Props {
   type: Type,
   data: Data,
-  subData?: HistogramData[],
+  // subData?: HistogramData[],
   timeVisible?: boolean,
   currency?: string,
 }
@@ -85,9 +85,9 @@ const chartOptions = (timeVisible: boolean, currency: string): unknown => ({
     },
   },
   localization: {
-    priceFormatter: (price: number) => currency === '$' 
-      ? `$${priceFormatter(price)}` 
-      : `${priceFormatter(price)} ${currency}`,
+    priceFormatter: (price: number) => (currency === '$'
+      ? `$${priceFormatter(price)}`
+      : `${priceFormatter(price)} ${currency}`),
   },
 });
 
@@ -189,7 +189,7 @@ const processSubData = (data: CandlestickData[], subdata: HistogramData[]): Hist
 };
 
 const renderChart = ({
-  el, type, data, subData, timeVisible, currency
+  el, type, data, subData, timeVisible, currency,
 }: {
  el: HTMLElement | null,
  type: Type,
@@ -277,7 +277,7 @@ const LWChart = ({
   data,
   // subData,
   timeVisible = true,
-  currency = '$'
+  currency = '$',
 }: Props): JSX.Element => {
   const chartWrapper = useRef(null);
   const [isRendered, setRendered] = useState(false);
@@ -290,7 +290,7 @@ const LWChart = ({
         data: formatData(type, data),
         // subData,
         timeVisible,
-        currency
+        currency,
       });
       setRendered(true);
     }
