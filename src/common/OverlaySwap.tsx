@@ -1,5 +1,5 @@
 import {
-  appState, Components, hooks, store, Token,
+  appState, Components, graphql, hooks, store, Token,
 } from '@reef-defi/react-lib';
 import React, { useContext, useReducer, useState } from 'react';
 import { BigNumber } from 'ethers';
@@ -31,6 +31,7 @@ const OverlaySwap = ({
 
   const network = hooks.useObservableState(appState.currentNetwork$);
   const signer = hooks.useObservableState(appState.selectedSigner$);
+  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
@@ -69,7 +70,7 @@ const OverlaySwap = ({
     tokenPrices,
     tokens,
     account: signer || undefined,
-    network,
+    dexClient: apolloDex,
   });
 
   const onSwap = hooks.onSwap({

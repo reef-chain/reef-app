@@ -1,5 +1,6 @@
 import {
   appState, Components,
+  graphql,
   hooks, Network,
   ReefSigner, store, Token,
 } from '@reef-defi/react-lib';
@@ -27,6 +28,7 @@ const AddPoolLiquidity = (): JSX.Element => {
   const network: Network | undefined = hooks.useObservableState(
     appState.currentNetwork$,
   );
+  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
 
   const [state, dispatch] = useReducer(store.addLiquidityReducer, store.initialAddLiquidityState);
   hooks.useAddLiquidity({
@@ -36,7 +38,7 @@ const AddPoolLiquidity = (): JSX.Element => {
     state,
     tokens,
     signer: signer || undefined,
-    network,
+    dexClient: apolloDex,
     tokenPrices,
   });
 

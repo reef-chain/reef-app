@@ -49,7 +49,7 @@ const MyPoolsList = ({ tokens }: Props): JSX.Element => {
     offset: (currentPage - 1) * perPage,
     dexClient: apolloDex,
     search,
-    signer: signer?.address || '',
+    signerAddress: signer?.address || '',
     tokenPrices,
     queryType: 'User',
   });

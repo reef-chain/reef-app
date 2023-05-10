@@ -32,7 +32,7 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
     offset: (currentPage - 1) * pageCount,
     dexClient: apolloDex,
     search,
-    signer: signer?.address || '',
+    signerAddress: signer?.address || '',
     tokenPrices,
     queryType: 'All',
   });
