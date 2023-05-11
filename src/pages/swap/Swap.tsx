@@ -1,5 +1,5 @@
 import {
-  appState, Components, hooks, Network, ReefSigner, Settings, store, Token,
+  appState, Components, graphql, hooks, Network, ReefSigner, Settings, store, Token,
 } from '@reef-defi/react-lib';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
@@ -18,6 +18,7 @@ const Swap = (): JSX.Element => {
 
   const network: Network|undefined = hooks.useObservableState(appState.currentNetwork$);
   const signer: ReefSigner|undefined | null = hooks.useObservableState(appState.selectedSigner$);
+  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
 
   const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);
   // hook manages all necessary swap updates
@@ -25,7 +26,7 @@ const Swap = (): JSX.Element => {
     address1,
     address2,
     dispatch,
-    network,
+    dexClient: apolloDex,
     state,
     tokens,
     tokenPrices,

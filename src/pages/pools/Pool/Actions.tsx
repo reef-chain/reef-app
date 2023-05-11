@@ -1,6 +1,7 @@
 import {
   appState,
   Components,
+  graphql,
   hooks, store, Token,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-defi/ui-kit';
@@ -37,6 +38,10 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const network = hooks.useObservableState(
     appState.currentNetwork$,
   );
+  const apolloDex = hooks.useObservableState(
+    graphql.apolloDexClientInstance$
+  );
+
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
@@ -52,7 +57,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     tokenPrices,
     tokens,
     account: signer || undefined,
-    network,
+    dexClient: apolloDex,
   });
 
   const onSwap = hooks.onSwap({
@@ -85,7 +90,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     state: provideState,
     tokens,
     signer: signer || undefined,
-    network,
+    dexClient: apolloDex,
     tokenPrices,
   });
 
@@ -109,7 +114,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
 
   hooks.useRemoveLiquidity({
     tokens,
-    network,
+    dexClient: apolloDex,
     address1: token1.address,
     address2: token2.address,
     tokenPrices,
