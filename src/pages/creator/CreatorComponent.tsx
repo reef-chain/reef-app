@@ -375,7 +375,7 @@ export const CreatorComponent = ({
                     </Uik.Text>
                   </Uik.Container>
                   <Uik.Text type="mini">
-                   {strings.existing_tokens}
+                    {strings.existing_tokens}
                     {' '}
                     { tokenOptions.burnable ? 'can' : 'cannot' }
                     {' '}
