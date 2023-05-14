@@ -2,6 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Uik from '@reef-defi/ui-kit';
 import './buy-reef-button.css';
+import { BUY_URL } from '../../urls';
 
 const Shape = (): JSX.Element => (
   <svg
@@ -235,24 +236,12 @@ C226.3,333.5,225.4,331.3,224.1,329.3z"
 const BuyReefButton = (): JSX.Element => {
   const history = useHistory();
   console.log('h', history);
-  /*
   const navigate = (): void => {
     history.push(BUY_URL);
-  }; */
+  };
 
   return (
-    <a
-      className="buy-reef-btn"
-      href="https://www.binance.com/en/trade/REEF_USDT?theme=dark&type=spot"
-      target="_blank"
-      rel="noreferrer"
-    >
-      <Uik.ReefSign className="buy-reef-btn__icon" />
-      <span className="buy-reef-btn__text">Buy Reef</span>
-      <Uik.Bubbles />
-      <Shape />
-    </a>
-  /* <button
+    <button
       type="button"
       className="buy-reef-btn"
       onClick={navigate}
@@ -261,7 +250,7 @@ const BuyReefButton = (): JSX.Element => {
       <span className="buy-reef-btn__text">Buy Reef</span>
       <Uik.Bubbles />
       <Shape />
-    </button> */
+    </button>
   );
 };
 
