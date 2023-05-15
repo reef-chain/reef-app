@@ -1,7 +1,7 @@
 import {
   appState, Components, graphql, hooks, store, Token,
 } from '@reef-defi/react-lib';
-import React, { useContext, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { BigNumber } from 'ethers';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
@@ -10,6 +10,7 @@ import { notify } from '../utils/utils';
 import './overlay-swap.css';
 
 const { Trade, OverlayAction, Finalizing } = Components;
+const REEF_ADDRESS = '0x0000000000000000000000000000000001000000';
 
 export interface OverlaySwap {
   isOpen: boolean;
@@ -39,28 +40,37 @@ const OverlaySwap = ({
     store.initialSwapState,
   );
 
-  // Add tokens not owned by user to the list of tokens
-  const tokenPools = pools.filter((pool) => pool.token1 === tokenAddress || pool.token2 === tokenAddress);
-  tokenPools.forEach((pool) => {
-    const otherToken: Token = pool.token1 === tokenAddress
-      ? {
-        address: pool.token2,
-        decimals: pool.decimal2,
-        name: pool.name2,
-        symbol: pool.symbol2,
-        iconUrl: pool.icon2,
-        balance: BigNumber.from(0),
-      } : {
-        address: pool.token1,
-        decimals: pool.decimal1,
-        name: pool.name1,
-        symbol: pool.symbol1,
-        iconUrl: pool.icon1,
-        balance: BigNumber.from(0),
-      };
-    const existingToken = tokens.find((token) => token.address === otherToken.address);
-    if (!existingToken) tokens.push(otherToken);
-  });
+  useEffect(() => {
+    if (!pools || !tokenAddress || !tokens) return;
+
+    // Add tokens not owned by user to the list of tokens and check if REEF is available for swapping
+    const tokenPools = pools.filter((pool) => pool.token1 === tokenAddress || pool.token2 === tokenAddress);
+    let reefAvailable = false;
+    tokenPools.forEach((pool) => {
+      const otherToken: Token = pool.token1 === tokenAddress
+        ? {
+          address: pool.token2,
+          decimals: pool.decimal2,
+          name: pool.name2,
+          symbol: pool.symbol2,
+          iconUrl: pool.icon2,
+          balance: BigNumber.from(0),
+        } : {
+          address: pool.token1,
+          decimals: pool.decimal1,
+          name: pool.name1,
+          symbol: pool.symbol1,
+          iconUrl: pool.icon1,
+          balance: BigNumber.from(0),
+        };
+      const existingToken = tokens.find((token) => token.address === otherToken.address);
+      if (!existingToken) tokens.push(otherToken);
+      if (!reefAvailable && otherToken.address === REEF_ADDRESS) reefAvailable = true;
+    });
+
+    // Set default buy token
+    setAddress2(reefAvailable ? REEF_ADDRESS : tokens[0].address === REEF_ADDRESS ? tokens[1].address || '0x' : tokens[0].address);
+  }, [pools, tokenAddress, tokens]);
 
   hooks.useSwapState({
     address1,
