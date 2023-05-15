@@ -96,8 +96,7 @@ const OverlaySwap = ({
     batchTxs: network?.name === 'mainnet',
     dispatch: tradeDispatch,
     notify,
-    updateTokenState: async () => {
-        }, // eslint-disable-line
+    updateTokenState: async () => Promise.resolve(), // eslint-disable-line
     onSuccess: () => setFinalized(false),
     onFinalized: () => {
       setFinalized(true);
