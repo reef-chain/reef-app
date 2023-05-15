@@ -7,7 +7,7 @@ export const localizedStrings = new LocalizedStrings({
     fiat_validity_error: 'fiat validity error',
     error_occured_while_authorizing: 'Error occurred while authorizing',
     error_occured_while_creating_a_trade: 'Error occured while creating a trade',
-    buy_reef_tokens: 'Buy Reef tokens',
+    buy_reef_tokens: 'Buy Reef',
     confirm_your_token: 'Confirm Your Token',
     create_token: 'Create Token',
     token_name: 'Token name',
