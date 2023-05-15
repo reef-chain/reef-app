@@ -1,7 +1,9 @@
 import {
   appState, Components, graphql, hooks, store, Token,
 } from '@reef-defi/react-lib';
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import React, {
+  useContext, useEffect, useReducer, useState,
+} from 'react';
 import { BigNumber } from 'ethers';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
@@ -13,9 +15,9 @@ const { Trade, OverlayAction, Finalizing } = Components;
 const REEF_ADDRESS = '0x0000000000000000000000000000000001000000';
 
 export interface OverlaySwap {
-  isOpen: boolean;
-  tokenAddress: string;
-  onClose?: () => void;
+    isOpen: boolean;
+    tokenAddress: string;
+    onClose?: () => void;
 }
 
 const OverlaySwap = ({
@@ -68,8 +70,12 @@ const OverlaySwap = ({
       if (!reefAvailable && otherToken.address === REEF_ADDRESS) reefAvailable = true;
     });
 
+    let addr2 = REEF_ADDRESS;
+    if (!reefAvailable) {
+      addr2 = tokens[0].address === REEF_ADDRESS ? tokens[1].address || '0x' : tokens[0].address;
+    }
     // Set default buy token
-    setAddress2(reefAvailable ? REEF_ADDRESS : tokens[0].address === REEF_ADDRESS ? tokens[1].address || '0x' : tokens[0].address);
+    setAddress2(addr2);
   }, [pools, tokenAddress, tokens]);
 
   hooks.useSwapState({
@@ -90,7 +96,8 @@ const OverlaySwap = ({
     batchTxs: network?.name === 'mainnet',
     dispatch: tradeDispatch,
     notify,
-    updateTokenState: async () => {}, // eslint-disable-line
+    updateTokenState: async () => {
+        }, // eslint-disable-line
     onSuccess: () => setFinalized(false),
     onFinalized: () => {
       setFinalized(true);
@@ -112,26 +119,29 @@ const OverlaySwap = ({
     >
       <div className="uik-pool-actions pool-actions">
         {
-          finalized
-            ? (
-              <Trade
-                pools={pools}
-                tokens={tokens}
-                state={tradeState}
-                actions={{
-                  onSwap,
-                  onSwitch,
-                  selectToken1: (token: Token): void => setAddress1(token.address),
-                  selectToken2: (token: Token): void => setAddress2(token.address),
-                  setPercentage: (amount: number) => tradeDispatch(store.setPercentageAction(amount)),
-                  setToken1Amount: (amount: string): void => tradeDispatch(store.setToken1AmountAction(amount)),
-                  setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),
-                  setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({ ...tradeState.settings, percentage: slippage })),
-                }}
-              />
-            )
-            : <Finalizing />
-        }
+                    finalized
+                      ? (
+                        <Trade
+                          pools={pools}
+                          tokens={tokens}
+                          state={tradeState}
+                          actions={{
+                            onSwap,
+                            onSwitch,
+                            selectToken1: (token: Token): void => setAddress1(token.address),
+                            selectToken2: (token: Token): void => setAddress2(token.address),
+                            setPercentage: (amount: number) => tradeDispatch(store.setPercentageAction(amount)),
+                            setToken1Amount: (amount: string): void => tradeDispatch(store.setToken1AmountAction(amount)),
+                            setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),
+                            setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({
+                              ...tradeState.settings,
+                              percentage: slippage,
+                            })),
+                          }}
+                        />
+                      )
+                      : <Finalizing />
+                }
       </div>
     </OverlayAction>
   );
