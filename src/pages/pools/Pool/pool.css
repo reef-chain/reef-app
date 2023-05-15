@@ -1,10 +1,7 @@
 .pool {
-  padding: 0;
+  padding: 0 0 20px 0;
   width: 100%;
   max-width: 100%;
-  min-height: calc(100vh - 60px);
-  max-height: calc(100vh - 60px);
-  overflow: hidden;
   background-color: #ded9ed;
   display: flex;
   flex-flow: column nowrap;
