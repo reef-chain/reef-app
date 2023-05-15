@@ -11391,6 +11391,11 @@ loader-utils@^3.2.0:
   resolved "https://registry.yarnpkg.com/loader-utils/-/loader-utils-3.2.1.tgz#4fb104b599daafd82ef3e1a41fb9265f87e1f576"
   integrity sha512-ZvFw1KWS3GVyYBYb7qkmRM/WwL2TQQBxgCK62rlvm4WpVQ23Nb4tYjApUlfjrEGvOs7KHEsmyUn75OHZrJMWPw==
 
+localized-strings@0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/localized-strings/-/localized-strings-0.0.4.tgz#c6d88b7eb180ef5cc862d77814873a5ccf7d88f0"
+  integrity sha512-pu8nld52jPwinmRHWbyTSqW4p6Z+wcqU+Jg3d2pohZ1PleB1UVkPRmvgPzYPs5yUY3K9AMd8+rh/+Aoq4iozQA==
+
 locate-path@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/locate-path/-/locate-path-3.0.0.tgz#dbec3b3ab759758071b58fe59fc41871af21400e"
@@ -13663,6 +13668,14 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
+react-localization@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-localization/-/react-localization-1.0.0.tgz#c27d8a1380a05e2862a1eda11ecc74679927f8ec"
+  integrity sha512-KXcAHdBwf5bHNQdRwvQqWWqTlhqj9NPC4f8NE5yL2F7n8zh/WUrIaGSts3zkpGAiES98MeEukUG/Z0tDvXEqug==
+  dependencies:
+    localized-strings "0.0.4"
+    react "^16.0.0"
+
 react-refresh@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-refresh/-/react-refresh-0.11.0.tgz#77198b944733f0f1f1a90e791de4541f9f074046"
@@ -13785,6 +13798,15 @@ react-transition-group@^4.4.2:
     "@babel/runtime" "^7.5.5"
     dom-helpers "^5.0.1"
     loose-envify "^1.4.0"
+    prop-types "^15.6.2"
+
+react@^16.0.0:
+  version "16.14.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
+  integrity sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
     prop-types "^15.6.2"
 
 react@^17.0.2:

@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { ApolloClient } from '@apollo/client';
 import PoolSelect from './PoolSelect';
 import PoolTransactions from './PoolTransactions';
+import { localizedStrings } from '../../../l10n/l10n';
 
 interface StatsProps {
   data: hooks.PoolStats;
@@ -132,7 +133,7 @@ const Stats = ({
             <Uik.Button
               className="pool-stats__transactions-btn"
               size="small"
-              text="Show Transactions"
+              text={localizedStrings.show_transactions}
               icon={faRightLeft}
               onClick={() => setTransactionsOpen(true)}
             />

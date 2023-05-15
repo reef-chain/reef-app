@@ -10,6 +10,7 @@ import Uik from '@reef-defi/ui-kit';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as api from './api-access';
+import { localizedStrings as strings } from '../../l10n/l10n';
 import { AuthenticationResponse, BuyPair, BuyPayload } from './models';
 
 const {
@@ -57,7 +58,7 @@ const Buy = (): JSX.Element => {
         setSelectedPair(pair[0]);
       })
       .catch(() => {
-        setError('Can not retrieve trading pair information');
+        setError(strings.can_not_retrieve);
         setDisableInputs(true);
       });
   }, []);
@@ -87,7 +88,7 @@ const Buy = (): JSX.Element => {
   };
 
   const onFiatValidityChange = (validity: InputAmountValidity): void => {
-    setError(validity.valid ? '' : validity.errorMessage || 'fiat validity error');
+    setError(validity.valid ? '' : validity.errorMessage || strings.fiat_validity_error);
   };
 
   const buy = async (): Promise<void> => {
@@ -102,7 +103,7 @@ const Buy = (): JSX.Element => {
         throw new Error();
       }
     } catch (_) {
-      setError('Error occurred while authorizing');
+      setError(strings.error_occured_while_authorizing);
     }
 
     try {
@@ -121,7 +122,7 @@ const Buy = (): JSX.Element => {
         }
       }
     } catch (_) {
-      setError('Error occurred while creating a trade');
+      setError(strings.error_occured_while_creating_a_trade);
     }
   };
 
@@ -130,7 +131,7 @@ const Buy = (): JSX.Element => {
       <Card>
         <CardHeader>
           <CardHeaderBlank />
-          <CardTitle title="Buy Reef" />
+          <CardTitle title={strings.buy_reef_tokens} />
           <CardHeaderBlank />
         </CardHeader>
         <p className="text-center"><small>Simply fill up Reef account with credit card</small></p>

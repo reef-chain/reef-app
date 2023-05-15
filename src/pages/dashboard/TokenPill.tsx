@@ -4,6 +4,7 @@ import React, { useContext, useMemo } from 'react';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { toCurrencyFormat } from '../../utils/utils';
 import './TokenPill.css';
+import { localizedStrings as strings } from '../../l10n/l10n';
 
 const { showBalance } = utils;
 
@@ -35,7 +36,7 @@ export const TokenPill = ({ token }: TokenPill): JSX.Element => {
 
                 <span className="token-balance-item__price">
                   {price && toCurrencyFormat(price, { maximumFractionDigits: price! < 1 ? 4 : 2 }) }
-                  {!price && <span>No pool data</span> }
+                  {!price && <span>{strings.no_pool_data}</span> }
                   {/* TODO {!isDataSet(token.price) && token.price === DataProgress.LOADING && <Loading />} */}
                   {/* TODO {!isDataSet(token.price) && token.price === DataProgress.NO_DATA && ' - '} */}
                 </span>

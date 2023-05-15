@@ -16,6 +16,7 @@ import './creator.css';
 import IconUpload from './IconUpload';
 import ConfirmToken from './ConfirmToken';
 import { getAppNetworkOverride } from '../../environment';
+import { localizedStrings as strings } from '../../l10n/l10n';
 
 interface CreatorComponent {
   signer: ReefSigner | undefined;
@@ -96,8 +97,8 @@ const createToken = async ({
   }
   setResultMessage({
     complete: false,
-    title: 'Deploying token',
-    message: 'Sending token contract to blockchain.',
+    title: strings.deploying_token,
+    message: strings.sending_token_contract,
   });
   const args = [
     tokenName,
@@ -147,8 +148,8 @@ const createToken = async ({
   if (!contract) {
     setResultMessage({
       complete: true,
-      title: 'Error creating token',
-      message: 'Deploying contract failed.',
+      title: strings.error_creating_token,
+      message: strings.deploying_contract_failed,
     });
     return;
   }
@@ -168,8 +169,8 @@ const createToken = async ({
   try {
     setResultMessage({
       complete: false,
-      title: 'Verifying deployed token',
-      message: 'Smart contract bytecode is being validated.',
+      title: strings.verifying_deployed_token,
+      message: strings.smart_contract_bytecode_validated,
     });
     verified = await verify(contract, args, network, deployContractData);
   } catch (err) {
@@ -179,7 +180,7 @@ const createToken = async ({
     setVerifiedContract(contract);
     setResultMessage({
       complete: true,
-      title: 'Token created',
+      title: strings.token_created,
       message: `Success, your new token ${tokenName} is deployed. Innitial supply is ${initialSupply} ${symbol.toUpperCase()}. Next step is to create a pool so users can start trading.`,
       contract,
     });
@@ -228,7 +229,7 @@ export const CreatorComponent = ({
     }
 
     if (initialSupply.trim().length < 1) {
-      setValidationMsg('Set innitial supply');
+      setValidationMsg('Set initial supply');
       return;
     }
     const iSupply = parseInt(initialSupply, 10);
@@ -270,8 +271,8 @@ export const CreatorComponent = ({
             <div className="creator__form">
               <Uik.Container flow="spaceBetween">
                 <Uik.Container vertical flow="start">
-                  <Uik.Text type="headline">Create Your Token</Uik.Text>
-                  <Uik.Text type="lead">Use Reef chain to create your own token.</Uik.Text>
+                  <Uik.Text type="headline">{strings.create_your_token}</Uik.Text>
+                  <Uik.Text type="lead">{strings.create_own_token}</Uik.Text>
                 </Uik.Container>
                 <IconUpload
                   value={icon}
@@ -282,8 +283,8 @@ export const CreatorComponent = ({
               <Uik.Form>
                 <Uik.Container className="creator__form-main">
                   <Uik.Input
-                    label="Token Name"
-                    placeholder="My Token"
+                    label={strings.token_name}
+                    placeholder={strings.my_token}
                     value={tokenName}
                     maxLength={42}
                     onInput={(e) => setTokenName(e.target.value)}
@@ -291,7 +292,7 @@ export const CreatorComponent = ({
 
                   <Uik.Input
                     className="creator__token-symbol-input"
-                    label="Token Symbol"
+                    label={strings.token_symbol}
                     placeholder="MYTKN"
                     value={symbol}
                     maxLength={42}
@@ -300,7 +301,7 @@ export const CreatorComponent = ({
                 </Uik.Container>
 
                 <Uik.Input
-                  label="Initial Supply"
+                  label={strings.initial_supply}
                   placeholder="0"
                   value={initialSupply}
                   min={1}
@@ -309,7 +310,7 @@ export const CreatorComponent = ({
 
                 <Uik.Container className="creator__form-bottom">
                   <Uik.Toggle
-                    label="Burnable"
+                    label={strings.burnable}
                     onText="Yes"
                     offText="No"
                     value={tokenOptions.burnable}
@@ -320,7 +321,7 @@ export const CreatorComponent = ({
                   />
 
                   <Uik.Toggle
-                    label="Mintable"
+                    label={strings.mintable}
                     onText="Yes"
                     offText="No"
                     value={tokenOptions.mintable}
@@ -334,7 +335,7 @@ export const CreatorComponent = ({
             </div>
             <div className="creator__preview">
               <div className="creator__preview-wrapper">
-                <Uik.Text type="lead" className="creator__preview-title">Token Preview</Uik.Text>
+                <Uik.Text type="lead" className="creator__preview-title">{strings.token_preview}</Uik.Text>
 
                 <div className="creator__preview-token">
                   <div className="creator__preview-token-image">
@@ -343,7 +344,7 @@ export const CreatorComponent = ({
                       && (
                       <img
                         src={icon}
-                        alt="Token icon"
+                        alt={strings.token_icon}
                         key={icon}
                       />
                       )
@@ -370,15 +371,15 @@ export const CreatorComponent = ({
                     <Uik.Icon icon={tokenOptions.burnable ? faCheckCircle : faXmarkCircle} />
                     <Uik.Text>
                       { !tokenOptions.burnable && 'Not ' }
-                      Burnable
+                      {strings.burnable}
                     </Uik.Text>
                   </Uik.Container>
                   <Uik.Text type="mini">
-                    Existing tokens
+                    {strings.existing_tokens}
                     {' '}
                     { tokenOptions.burnable ? 'can' : 'cannot' }
                     {' '}
-                    be destroyed to decrease the total supply.
+                    {strings.be_destroyed}
                   </Uik.Text>
                 </div>
 
@@ -392,20 +393,20 @@ export const CreatorComponent = ({
                     <Uik.Icon icon={tokenOptions.mintable ? faCheckCircle : faXmarkCircle} />
                     <Uik.Text>
                       { !tokenOptions.mintable && 'Not ' }
-                      Mintable
+                      {strings.mintable}
                     </Uik.Text>
                   </Uik.Container>
                   <Uik.Text type="mini">
-                    New tokens
+                    {strings.new_tokens}
                     {' '}
                     { tokenOptions.mintable ? 'can' : 'cannot' }
                     {' '}
-                    be created and added to the total supply.
+                    {strings.be_created}
                   </Uik.Text>
                 </div>
                 <Uik.Button
                   disabled={!!validationMsg}
-                  text="Create Token"
+                  text={strings.create_token}
                   fill={!validationMsg}
                   size="large"
                   onClick={() => setConfirmOpen(true)}
@@ -455,7 +456,7 @@ export const CreatorComponent = ({
               && (
               <div className="creator__creating-cta">
                 <Uik.Button
-                  text="View in Explorer"
+                  text={strings.view_in_explorer}
                   icon={faArrowUpRightFromSquare}
                   size="large"
                   onClick={() => window.open(`${network.reefscanUrl}/contract/${resultMessage.contract?.address}`)}
@@ -463,7 +464,7 @@ export const CreatorComponent = ({
 
                 <Uik.Button
                   fill
-                  text="Create a Pool"
+                  text={strings.create_a_pool}
                   icon={faCoins}
                   size="large"
                   onClick={() => history.push('/pools')}
@@ -473,11 +474,11 @@ export const CreatorComponent = ({
             }
 
             {
-              resultMessage.title === 'Error creating token'
+              resultMessage.title === strings.create_a_pool
               && (
               <div className="creator__creating-cta">
                 <Uik.Button
-                  text="Return to Creator"
+                  text={strings.return_to_creator}
                   size="large"
                   onClick={init}
                 />

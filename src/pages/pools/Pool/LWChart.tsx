@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { createChart, IChartApi } from 'lightweight-charts';
 import './lw-chart.css';
+import { localizedStrings } from '../../../l10n/l10n';
 
 export interface BusinessDay {
   day: number,
@@ -265,7 +266,7 @@ const Licence = (): JSX.Element => (
     </div>
 
     <div className="lw-chart__licence-text">
-      TradingView Lightweight Charts
+      {localizedStrings.tradingview_lightweight}
       <br />
       Copyright (&copy;) 2023 TradingView, Inc. https://www.tradingview.com/
     </div>

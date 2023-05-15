@@ -5,6 +5,7 @@ import {
 } from '@reef-defi/react-lib';
 import { BondsComponent } from '../bonds/BondsComponent';
 import { bonds, IBond } from '../bonds/utils/bonds';
+import { localizedStrings as strings } from '../../l10n/l10n';
 
 export const Staking = (): JSX.Element => {
   const selectedSigner: ReefSigner | undefined | null = hooks.useObservableState(appState.selectedSigner$);
@@ -32,7 +33,7 @@ export const Staking = (): JSX.Element => {
               </>
             </div>
           )
-          : <div>No bonds available.</div>
+          : <div>{strings.no_bonds_available}</div>
       }
     </div>
   );

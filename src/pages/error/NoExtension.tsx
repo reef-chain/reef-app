@@ -2,6 +2,7 @@
 import React from 'react';
 import Bubbles from './Bubbles';
 import './css/index.css';
+import { localizedStrings as strings } from '../../l10n/l10n';
 
 const NoExtension = (): JSX.Element => (
   <div className="no-extension">
@@ -12,9 +13,9 @@ const NoExtension = (): JSX.Element => (
           <h1 className="header__title">Chain Extension</h1>
         </div>
         <div className="header__sub-content">
-          App uses browser extension to get accounts and securely sign transactions.
+          {strings.app_uses_browser_extension}
           <br />
-          Please install the extension and refresh the page.
+          {strings.please_install_extension}
         </div>
       </div>
 
@@ -38,10 +39,7 @@ const NoExtension = (): JSX.Element => (
       </div>
 
       <p className="text">
-        This browser extension manages accounts and allows signing of
-        transactions. Besides that it enables easy overview and transfers of
-        native REEF and other tokens. With swap you can access the Reefswap
-        pools and exchange tokens.
+        {strings.this_browser_extension}
       </p>
 
       <div className="download">
@@ -66,7 +64,7 @@ const NoExtension = (): JSX.Element => (
               className=""
             />
           </svg>
-          <span>Download for Chrome</span>
+          <span>{strings.download_for_chrome}</span>
         </a>
 
         <a
@@ -90,21 +88,21 @@ const NoExtension = (): JSX.Element => (
               className=""
             />
           </svg>
-          <span>Download for Firefox</span>
+          <span>{strings.download_for_firefox}</span>
         </a>
       </div>
     </main>
 
     <footer className="footer">
       <p className="text">
-        The code is open-source and available on
+        {strings.open_source}
         {' '}
         <a
           href="https://github.com/reef-defi/browser-extension"
           target="_blank"
           rel="noreferrer"
         >
-          GitHub
+          {strings.github}
         </a>
         .
       </p>

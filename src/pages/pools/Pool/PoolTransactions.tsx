@@ -4,6 +4,7 @@ import './pool-transactions.css';
 import Uik from '@reef-defi/ui-kit';
 import { ApolloClient } from '@apollo/client';
 import Transactions from './Transactions';
+import { localizedStrings } from '../../../l10n/l10n';
 
 const { OverlayAction } = Components;
 
@@ -35,7 +36,7 @@ const PoolSelect = ({
 
   return (
     <OverlayAction
-      title="Transactions"
+      title={localizedStrings.transactions}
       className="pool-transactions"
       isOpen={isOpen}
       onClose={onClose}

@@ -2,6 +2,7 @@ import React from 'react';
 import './icon-upload.css';
 import Uik from '@reef-defi/ui-kit';
 import { faImage } from '@fortawesome/free-regular-svg-icons';
+import { localizedStrings as strings } from '../../l10n/l10n';
 
 export interface Props {
   value?: string,
@@ -42,7 +43,7 @@ const IconUpload = ({
               <img
                 className="icon-upload__image"
                 src={value}
-                alt="Token icon"
+                alt={strings.token_icon}
                 key={value}
               />
             )
