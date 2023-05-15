@@ -235,7 +235,6 @@ C226.3,333.5,225.4,331.3,224.1,329.3z"
 
 const BuyReefButton = (): JSX.Element => {
   const history = useHistory();
-  console.log('h', history);
   const navigate = (): void => {
     history.push(BUY_URL);
   };
