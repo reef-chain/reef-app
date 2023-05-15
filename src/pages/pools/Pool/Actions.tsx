@@ -1,6 +1,7 @@
 import {
   appState,
   Components,
+  graphql,
   hooks, store, Token,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-defi/ui-kit';
@@ -37,6 +38,9 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const network = hooks.useObservableState(
     appState.currentNetwork$,
   );
+  const apolloDex = hooks.useObservableState(
+    graphql.apolloDexClientInstance$,
+  );
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
@@ -52,7 +56,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     tokenPrices,
     tokens,
     account: signer || undefined,
-    network,
+    dexClient: apolloDex,
   });
 
   const onSwap = hooks.onSwap({
@@ -85,7 +89,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     state: provideState,
     tokens,
     signer: signer || undefined,
-    network,
+    dexClient: apolloDex,
     tokenPrices,
   });
 
@@ -109,7 +113,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
 
   hooks.useRemoveLiquidity({
     tokens,
-    network,
+    dexClient: apolloDex,
     address1: token1.address,
     address2: token2.address,
     tokenPrices,
@@ -144,11 +148,14 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     case 'false-void':
       return <Finalizing />;
     case 'true-trade':
+      // eslint-disable-next-line no-case-declarations
+      const maxSlippage = 20;
       return (
         <Trade
           pools={pools}
           tokens={tokens}
           state={tradeState}
+          maxSlippage={maxSlippage}
           actions={{
             onSwap,
             onSwitch,
@@ -157,6 +164,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
             setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),
             // selectToken1: (token: Token): void => tradeDispatch(store.setToken1Action(token)),
             // selectToken2: (token: Token): void => tradeDispatch(store.setToken2Action(token)),
+            setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({ ...tradeState.settings, percentage: (maxSlippage * slippage) / 100 })),
           }}
         />
       );

@@ -2,13 +2,12 @@ import {
   appState, graphql, hooks, ReefSigner,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-defi/ui-kit';
-// import React, { useContext, useState } from 'react';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import Actions, { ActionTabs } from './Actions';
-// import Chart, { TimeData, Timeframe } from './Chart';
+import Chart, { TimeData, Timeframe } from './Chart';
 import './pool.css';
 import Stats from './Stats';
 
@@ -16,30 +15,30 @@ interface Params {
   address: string;
   action: ActionTabs;
 }
-// interface Time {
-//   time: Date;
-// }
+interface Time {
+  time: Date;
+}
 
-// // eslint-disable-next-line
-// const timeToNumber = <T extends Time>(obj: T) => ({
-//   ...obj,
-//   time: obj.time.toLocaleDateString('en-CA'),
-// });
+// eslint-disable-next-line
+const timeToNumber = <T extends Time>(obj: T) => ({
+  ...obj,
+  time: obj.time.getTime() / 1000,
+});
 
-// const timeframeToTimeData = (timeframe: Timeframe): TimeData => {
-//   switch (timeframe) {
-//     case 'hour':
-//       return { timeUnit: 'Minute', timeSpan: 60 };
-//     case 'day':
-//       return { timeUnit: 'Hour', timeSpan: 24 };
-//     case 'week':
-//       return { timeUnit: 'Hour', timeSpan: 7 * 24 };
-//     case 'month':
-//       return { timeUnit: 'Day', timeSpan: 31 };
-//     default:
-//       return { timeUnit: 'Hour', timeSpan: 24 };
-//   }
-// };
+const timeframeToTimeData = (timeframe: Timeframe): TimeData => {
+  switch (timeframe) {
+    case 'hour':
+      return { timeUnit: 'Minute', timeSpan: 60 };
+    case 'day':
+      return { timeUnit: 'Hour', timeSpan: 24 };
+    case 'week':
+      return { timeUnit: 'Hour', timeSpan: 7 * 24 };
+    case 'month':
+      return { timeUnit: 'Day', timeSpan: 30 };
+    default:
+      return { timeUnit: 'Hour', timeSpan: 24 };
+  }
+};
 
 const Pool = (): JSX.Element => {
   const { address, action } = useParams<Params>();
@@ -64,16 +63,16 @@ const Pool = (): JSX.Element => {
   const decimal1 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
   const decimal2 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
 
-  // const [timeframe, setTimeframe] = useState<Timeframe>('day');
+  const [timeframe, setTimeframe] = useState<Timeframe>('day');
 
-  // const [poolData] = hooks.usePoolData({
-  //   address,
-  //   decimal1,
-  //   decimal2,
-  //   price1: tokenPrice1,
-  //   price2: tokenPrice2,
-  //   timeData: timeframeToTimeData(timeframe),
-  // }, apolloDex);
+  const [poolData] = hooks.usePoolData({
+    address,
+    decimal1,
+    decimal2,
+    price1: tokenPrice1,
+    price2: tokenPrice2,
+    timeData: timeframeToTimeData(timeframe),
+  }, apolloDex);
 
   if (!poolInfo) {
     return <Uik.Loading />;
@@ -110,7 +109,7 @@ const Pool = (): JSX.Element => {
             decimals: decimal2,
           }}
         />
-        {/* <Chart
+        <Chart
           tokens={{
             firstToken: {
               name: poolInfo.firstToken.symbol,
@@ -121,7 +120,7 @@ const Pool = (): JSX.Element => {
               image: poolInfo.secondToken.icon,
             },
           }}
-          data = {
+          data={
             poolData ? {
               fees: poolData.fees.map(timeToNumber),
               tvl: poolData.tvl.map(timeToNumber),
@@ -130,14 +129,13 @@ const Pool = (): JSX.Element => {
                 secondToken: poolData.secondTokenVolume.map(timeToNumber),
                 total: poolData.volume.map(timeToNumber),
               },
-              firstToken: poolData.firstToken.map(timeToNumber),
-              secondToken: poolData.secondToken.map(timeToNumber),
+              price: poolData.price.map(timeToNumber),
             }
-            : undefined
+              : undefined
           }
           timeframe={timeframe}
           setTimeframe={setTimeframe}
-        /> */}
+        />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import {
   appState,
   Components,
+  graphql,
   hooks,
   store,
   Token,
@@ -39,6 +40,10 @@ const CreatePool = ({
     appState.currentNetwork$,
   );
 
+  const apolloDex = hooks.useObservableState(
+    graphql.apolloDexClientInstance$,
+  );
+
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,
     store.initialAddLiquidityState,
@@ -51,7 +56,7 @@ const CreatePool = ({
     state: provideState,
     tokens,
     signer: signer || undefined,
-    network,
+    dexClient: apolloDex,
     tokenPrices,
   });
 
