@@ -39,9 +39,8 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     appState.currentNetwork$,
   );
   const apolloDex = hooks.useObservableState(
-    graphql.apolloDexClientInstance$
+    graphql.apolloDexClientInstance$,
   );
-
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
@@ -149,6 +148,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     case 'false-void':
       return <Finalizing />;
     case 'true-trade':
+      // eslint-disable-next-line no-case-declarations
       const maxSlippage = 20;
       return (
         <Trade

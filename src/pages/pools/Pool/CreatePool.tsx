@@ -40,7 +40,7 @@ const CreatePool = ({
   );
 
   const apolloDex = hooks.useObservableState(
-    graphql.apolloDexClientInstance$
+    graphql.apolloDexClientInstance$,
   );
 
   const [provideState, provideDispatch] = useReducer(
