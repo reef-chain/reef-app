@@ -12,6 +12,7 @@ import {
 import { appAvailableNetworks } from '../environment';
 import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
+import { localizedStrings } from '../l10n/l10n';
 
 export interface Nav {
     display: boolean;
@@ -48,6 +49,11 @@ const Nav = ({ display }: Nav): JSX.Element => {
       appState.setCurrentNetwork(toSelect);
     }
   };
+
+  const selectLanguage = (key: 'en'|'hi'):void=>{
+    localizedStrings.setLanguage(key);
+    localStorage.setItem('app-language',key); 
+  }
 
   const menuItemsView = menuItems
     .map((item) => {
@@ -96,6 +102,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
               selectedNetwork={selectedNetwork}
               isBalanceHidden={hideBalance.isHidden}
               showBalance={hideBalance.toggle}
+              onLanguageSelect={selectLanguage}
             />
             )}
           </nav>
