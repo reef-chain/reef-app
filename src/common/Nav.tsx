@@ -50,10 +50,10 @@ const Nav = ({ display }: Nav): JSX.Element => {
     }
   };
 
-  const selectLanguage = (key: 'en'|'hi'):void=>{
+  const selectLanguage = (key: 'en'|'hi'):void => {
     localizedStrings.setLanguage(key);
-    localStorage.setItem('app-language',key); 
-  }
+    localStorage.setItem('app-language', key);
+  };
 
   const menuItemsView = menuItems
     .map((item) => {
