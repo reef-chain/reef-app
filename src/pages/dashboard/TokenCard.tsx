@@ -1,6 +1,6 @@
 import { faPaperPlane, faRepeat } from '@fortawesome/free-solid-svg-icons';
 import { Token } from '@reef-defi/react-lib';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo, useState } from 'react';
 import OverlaySwap from '../../common/OverlaySwap';

@@ -1,7 +1,7 @@
 import { NFT as NFTData } from '@reef-defi/react-lib';
 import React from 'react';
 import './Nfts.css';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import NFT from './NFT';
 import SqwidButton from './SqwidButton/SqwidButton';
 

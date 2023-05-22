@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import './chart.css';
 import LWChart, { HistogramData } from './LWChart';
 
