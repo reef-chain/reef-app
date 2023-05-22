@@ -1,6 +1,6 @@
 import React from 'react';
 import './icon-upload.css';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import { faImage } from '@fortawesome/free-regular-svg-icons';
 import { localizedStrings as strings } from '../../l10n/l10n';
 

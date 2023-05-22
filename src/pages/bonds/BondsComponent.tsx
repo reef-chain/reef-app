@@ -13,7 +13,7 @@ import {
 import { Contract, ethers, Signer } from 'ethers';
 import React, { useEffect, useState, useMemo } from 'react';
 import './bonds.css';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import BondData from './utils/bond-contract';
 import { IBond } from './utils/bonds';
 

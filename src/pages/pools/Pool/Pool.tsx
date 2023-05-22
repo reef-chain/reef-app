@@ -1,7 +1,7 @@
 import {
   appState, graphql, hooks, ReefSigner,
 } from '@reef-defi/react-lib';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';

@@ -4,7 +4,7 @@ import {
 } from '@reef-defi/react-lib';
 import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import { saveSignerLocalPointer } from '../store/internalStore';
 import {
   BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL,
@@ -12,6 +12,7 @@ import {
 import { appAvailableNetworks } from '../environment';
 import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
+import { localizedStrings } from '../l10n/l10n';
 
 export interface Nav {
     display: boolean;
@@ -47,6 +48,11 @@ const Nav = ({ display }: Nav): JSX.Element => {
     if (toSelect) {
       appState.setCurrentNetwork(toSelect);
     }
+  };
+
+  const selectLanguage = (key: 'en'|'hi'):void => {
+    localizedStrings.setLanguage(key);
+    localStorage.setItem('app-language', key);
   };
 
   const menuItemsView = menuItems
@@ -96,6 +102,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
               selectedNetwork={selectedNetwork}
               isBalanceHidden={hideBalance.isHidden}
               showBalance={hideBalance.toggle}
+              onLanguageSelect={selectLanguage}
             />
             )}
           </nav>

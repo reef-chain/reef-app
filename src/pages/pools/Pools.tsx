@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { graphql, hooks } from '@reef-defi/react-lib';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 
 import TokenPricesContext from '../../context/TokenPricesContext';
 import MyPoolsList from './MyPoolsList';

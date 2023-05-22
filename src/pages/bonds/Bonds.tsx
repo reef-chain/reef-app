@@ -2,7 +2,7 @@ import React from 'react';
 import {
   appState, hooks, Network, ReefSigner,
 } from '@reef-defi/react-lib';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import { BondsComponent } from './BondsComponent';
 import { bonds, IBond } from './utils/bonds';
 import './bonds.css';

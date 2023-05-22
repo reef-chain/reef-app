@@ -1,6 +1,6 @@
 import React from 'react';
 import './confirm-token.css';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import { localizedStrings as strings } from '../../l10n/l10n';
 
 export interface SummaryItemProps {

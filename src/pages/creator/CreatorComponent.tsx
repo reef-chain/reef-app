@@ -9,7 +9,7 @@ import { faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icon
 import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-icons';
 import { Contract, ContractFactory, utils } from 'ethers';
 import { useHistory } from 'react-router-dom';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import { verifyContract } from '../../utils/contract';
 import { DeployContractData, deployTokens } from './tokensDeployData';
 import './creator.css';
