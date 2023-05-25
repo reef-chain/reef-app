@@ -107,7 +107,7 @@ const Chart = ({
             type={chartTypes[tab]}
             data={getData}
             // subData={getSubData}
-            timeVisible={timeframe == 'hour' || timeframe == 'day'}
+            timeVisible={timeframe === 'hour' || timeframe === 'day'}
             currency={tab === 'price' ? tokens.firstToken.name : '$'}
           />
           )

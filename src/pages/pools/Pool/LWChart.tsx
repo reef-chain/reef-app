@@ -50,8 +50,7 @@ const priceFormatter = (price: any): string => {
   return parseFloat(price).toFixed(2);
 };
 
-const timeFormatter = (time: number): string => 
-  new Date(time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+const timeFormatter = (time: number): string => new Date(time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 
 const chartOptions = (timeVisible: boolean, currency: string): unknown => ({
   layout: {
@@ -69,9 +68,9 @@ const chartOptions = (timeVisible: boolean, currency: string): unknown => ({
   timeScale: {
     borderColor: '#b7becf',
     timeVisible,
-    tickMarkFormatter: timeVisible 
+    tickMarkFormatter: timeVisible
       ? (time: number) => timeFormatter(time)
-      : undefined
+      : undefined,
   },
   crosshair: {
     vertLine: {
@@ -95,9 +94,9 @@ const chartOptions = (timeVisible: boolean, currency: string): unknown => ({
     priceFormatter: (price: number) => (currency === '$'
       ? `$${priceFormatter(price)}`
       : `${priceFormatter(price)} ${currency}`),
-    timeFormatter: timeVisible 
+    timeFormatter: timeVisible
       ? (time: number) => timeFormatter(time)
-      : undefined
+      : undefined,
   },
 });
 
