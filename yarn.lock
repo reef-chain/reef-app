@@ -3453,22 +3453,20 @@
   dependencies:
     "@babel/runtime" "^7.16.0"
 
-"@reef-defi/react-lib@1.7.1":
-  version "1.7.1"
-  resolved "https://registry.yarnpkg.com/@reef-defi/react-lib/-/react-lib-1.7.1.tgz#0c9c242e2576c0780dd815455557a435cd7e0dac"
-  integrity sha512-WHaOPWFc+gsrLc6nG3Ym+avC4zya5mMVyYsfwa505qITYc/tA4NxBxtI+ZjuOP5n6jK0dQzYA626QYnbun/l8A==
+"@reef-defi/react-lib@file:.yalc/@reef-defi/react-lib":
+  version "1.6.2"
   dependencies:
     "@apollo/client" "^3.6.2"
     "@fortawesome/free-regular-svg-icons" "^6.1.0"
     "@fortawesome/free-solid-svg-icons" "^6.1.0"
     "@polkadot/extension-dapp" "^0.40.4"
     "@polkadot/react-identicon" "^0.86.4"
-    "@reef-chain/ui-kit" "^1.1.1"
     "@reef-chain/util-lib" "^0.6.0"
     "@reef-defi/evm-provider" "^1.0.9"
     "@reef-defi/extension-base" "^1.0.14"
     "@reef-defi/extension-dapp" "^1.0.14"
     "@reef-defi/extension-inject" "^1.0.14"
+    "@reef-defi/ui-kit" "^1.0.8"
     "@types/react-router-dom" "^5.3.0"
     axios "^0.21.4"
     bignumber.js "^9.0.2"
@@ -3502,6 +3500,25 @@
     "@polkadot/api" "~6.4.2"
     "@polkadot/typegen" "~6.4.2"
     "@polkadot/types" "~6.4.2"
+
+"@reef-defi/ui-kit@^1.0.8":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@reef-defi/ui-kit/-/ui-kit-1.1.0.tgz#87890998381fdbafd7a7502c8ab5c62e6905d04f"
+  integrity sha512-IghxYyQgaZrPdW6xCF7uGe1HTZkaO+KX06ONFLLFlJkmEemvx/xBwtxOnDNftXqZl4cdVvMRnyjKoEmRAD5TGQ==
+  dependencies:
+    "@fortawesome/fontawesome-svg-core" "^6.1.0"
+    "@fortawesome/free-regular-svg-icons" "^6.1.0"
+    "@fortawesome/free-solid-svg-icons" "^6.1.0"
+    "@fortawesome/react-fontawesome" "^0.1.17"
+    "@polkadot/react-identicon" "^2.0.1"
+    "@types/jest" "^27.4.1"
+    "@types/node" "^17.0.21"
+    "@types/react" "^17.0.0"
+    "@types/react-dom" "^17.0.0"
+    bignumber.js "^9.0.2"
+    qrcode.react "^3.0.1"
+    react-syntax-highlighter "^15.5.0"
+    react-transition-group "^4.4.2"
 
 "@reef-defi/util-crypto@7.8.2", "@reef-defi/util-crypto@^7.8.2":
   version "7.8.2"
