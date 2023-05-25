@@ -1,5 +1,5 @@
 import { NFT, Token, utils } from '@reef-defi/react-lib';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useMemo } from 'react';
 import './activity-item.css';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
