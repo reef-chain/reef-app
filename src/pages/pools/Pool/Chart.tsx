@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import Uik from '@reef-chain/ui-kit';
 import './chart.css';
-import LWChart, { HistogramData } from './LWChart';
+import LWChart, { CandlestickData, HistogramData } from './LWChart';
 
 export interface Volume {
   firstToken: HistogramData[],
@@ -10,7 +10,7 @@ export interface Volume {
 }
 
 export interface Data {
-  price: HistogramData[],
+  price: CandlestickData[],
   tvl: HistogramData[],
   volume: Volume,
   fees: HistogramData[]
@@ -42,7 +42,7 @@ export interface Props {
 }
 
 const chartTypes = {
-  price: 'area',
+  price: 'candlestick',
   tvl: 'area',
   volume: 'histogram',
   fees: 'histogram',
@@ -107,7 +107,7 @@ const Chart = ({
             type={chartTypes[tab]}
             data={getData}
             // subData={getSubData}
-            timeVisible={timeframe !== 'month'}
+            timeVisible={timeframe === 'hour' || timeframe === 'day'}
             currency={tab === 'price' ? tokens.firstToken.name : '$'}
           />
           )

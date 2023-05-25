@@ -34,7 +34,7 @@ const timeframeToTimeData = (timeframe: Timeframe): TimeData => {
     case 'week':
       return { timeUnit: 'Hour', timeSpan: 7 * 24 };
     case 'month':
-      return { timeUnit: 'Day', timeSpan: 30 };
+      return { timeUnit: 'Day', timeSpan: 31 };
     default:
       return { timeUnit: 'Hour', timeSpan: 24 };
   }
