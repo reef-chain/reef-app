@@ -11,6 +11,7 @@ import { Staking } from './Staking';
 import { Nfts } from './Nfts';
 import { TokenBalances } from './TokenBalances';
 import { Activity } from './Activity/Activity';
+import { isReefswapUI } from '../../environment';
 
 const Dashboard = (): JSX.Element => {
   const { nfts } = useContext(NftContext);
@@ -53,12 +54,16 @@ const Dashboard = (): JSX.Element => {
 
       <div className="dashboard__main">
         <div className="dashboard__left">
+
+          {!isReefswapUI && (
           <Uik.Tabs
             className="dashboard__tabs "
             options={tabs}
             value={tab}
             onChange={(e) => setTab(e)}
           />
+          )}
+          {isReefswapUI && (<Uik.Text type="title" text="Tokens" className="tokens__title" />)}
 
           { tab === 'tokens' ? <TokenBalances tokens={tokens} /> : '' }
           { tab === 'bonds' ? <Staking /> : '' }
