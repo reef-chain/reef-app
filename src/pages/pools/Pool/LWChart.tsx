@@ -201,7 +201,7 @@ const processSubData = (data: CandlestickData[], subdata: HistogramData[]): Hist
   return output;
 };
 
-const getFirstDecimalDiff = (num1: number, num2: number) => {
+const getFirstDecimalDiff = (num1: number, num2: number): number => {
   if (Math.floor(num1) !== Math.floor(num2)) return 0;
 
   const str1 = num1.toString();
@@ -221,7 +221,7 @@ const getFirstDecimalDiff = (num1: number, num2: number) => {
     if (decimalStr1[decimalPosition] !== decimalStr2[decimalPosition]) {
       return decimalPosition + 1;
     }
-    decimalPosition++;
+    decimalPosition += 1;
   }
 
   return 0;
@@ -245,10 +245,10 @@ const renderChart = ({
     const candlesticks = data as CandlestickData[];
     let maxPrice = candlesticks[0].high!;
     let minPrice = candlesticks[0].low!;
-    for (let candlestick of candlesticks) {
+    candlesticks.forEach((candlestick) => {
       if (candlestick.high! > maxPrice) maxPrice = candlestick.high!;
       if (candlestick.low! < minPrice) minPrice = candlestick.low!;
-    }
+    });
     const firstDecimalDiff = getFirstDecimalDiff(maxPrice, minPrice);
     decimalPosition = firstDecimalDiff + 2;
   }
