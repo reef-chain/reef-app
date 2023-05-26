@@ -9,7 +9,7 @@ import { saveSignerLocalPointer } from '../store/internalStore';
 import {
   BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL,
 } from '../urls';
-import { appAvailableNetworks } from '../environment';
+import { appAvailableNetworks, isReefswapUI } from '../environment';
 import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
 import { localizedStrings } from '../l10n/l10n';
@@ -25,12 +25,15 @@ const Nav = ({ display }: Nav): JSX.Element => {
   const accounts: ReefSigner[]|undefined|null = hooks.useObservableState(appState.signers$);
   const network: Network|undefined = hooks.useObservableState(appState.currentNetwork$);
   const mainnetSelected = network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
-  const menuItems = [
+  let menuItems = [
     { title: 'Dashboard', url: DASHBOARD_URL },
     { title: 'Pools', url: POOLS_URL },
     { title: 'Bonds', url: BONDS_URL },
     { title: 'Creator', url: CREATE_ERC20_TOKEN_URL },
   ];
+  if (isReefswapUI) {
+    menuItems = menuItems.filter((mi) => mi.title !== 'Bonds');
+  }
 
   const hideBalance = useContext(HideBalance);
   const networkSwitch = useContext(NetworkSwitch);
@@ -85,6 +88,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
       <div className="navigation__wrapper">
         <button type="button" className="logo-btn" onClick={() => { history.push('/'); }}>
           { mainnetSelected ? <Uik.ReefLogo className="navigation__logo" /> : <Uik.ReefTestnetLogo className="navigation__logo" /> }
+          {isReefswapUI && <span className="navigation__logo-suffix">swap</span>}
         </button>
 
         {display && (

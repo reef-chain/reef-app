@@ -154,3 +154,7 @@
 span + .navigation__logo {
   transform: translateY(-3px);
 }
+
+.navigation__logo-suffix{
+  padding-top: 0.7em;
+}
