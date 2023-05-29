@@ -26,13 +26,13 @@ const Nav = ({ display }: Nav): JSX.Element => {
   const network: Network|undefined = hooks.useObservableState(appState.currentNetwork$);
   const mainnetSelected = network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
   let menuItems = [
-    { title: 'Dashboard', url: DASHBOARD_URL },
-    { title: 'Pools', url: POOLS_URL },
-    { title: 'Bonds', url: BONDS_URL },
-    { title: 'Creator', url: CREATE_ERC20_TOKEN_URL },
+    { title: localizedStrings.dashboard, url: DASHBOARD_URL },
+    { title: localizedStrings.pools, url: POOLS_URL },
+    { title: localizedStrings.bonds, url: BONDS_URL },
+    { title: localizedStrings.creator, url: CREATE_ERC20_TOKEN_URL },
   ];
   if (isReefswapUI) {
-    menuItems = menuItems.filter((mi) => mi.title !== 'Bonds');
+    menuItems = menuItems.filter((mi) => mi.title !== localizedStrings.bonds);
   }
 
   const hideBalance = useContext(HideBalance);

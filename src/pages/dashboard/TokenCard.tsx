@@ -9,6 +9,7 @@ import { toCurrencyFormat } from '../../utils/utils';
 import './token-card.css';
 import HideBalance from '../../context/HideBalance';
 import { displayBalance, displayBalanceFromToken } from '../../utils/displayBalance';
+import { localizedStrings } from '../../l10n/l10n';
 
 export interface TokenCard {
   price: number;
@@ -148,14 +149,14 @@ const TokenCard = ({
           </div>
 
           <Uik.Button
-            text="Swap"
+            text={localizedStrings.swap}
             icon={faRepeat}
             onClick={() => setSwapOpen(true)}
             size="small"
           />
 
           <Uik.Button
-            text="Send"
+            text={localizedStrings.send}
             icon={faPaperPlane}
             onClick={() => setSendOpen(true)}
             size="small"

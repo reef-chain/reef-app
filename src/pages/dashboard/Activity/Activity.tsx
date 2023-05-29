@@ -22,7 +22,7 @@ export const Activity = (): JSX.Element => {
   return (
     <div className="token-activity activity">
       <div className="activity__head">
-        <Uik.Text type="title" text="Activity" className="activity__title" />
+        <Uik.Text type="title" text={strings.activity} className="activity__title" />
         {
           !!signer?.address && !!network?.reefscanUrl
           && (
@@ -37,7 +37,7 @@ export const Activity = (): JSX.Element => {
       </div>
 
       <div className={`col-12 card  ${transfers?.length ? 'card-bg-light' : ''}`}>
-        {!!transfers && !transfers.length && <div className="no-token-activity">No recent transfer activity.</div>}
+        {!!transfers && !transfers.length && <div className="no-token-activity">{strings.no_recent_transfer}</div>}
         {!!transfers && !!transfers.length && (
         <div>
             {transfers.map((item, index) => (

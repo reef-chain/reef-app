@@ -110,15 +110,15 @@ const ConfirmToken = ({
         />
         <SummaryItem
           label={strings.burnable}
-          value={isBurnable ? 'Yes' : 'No'}
+          value={isBurnable ? strings.yes : strings.no}
         />
         <SummaryItem
           label={strings.mintable}
-          value={isMintable ? 'Yes' : 'No'}
+          value={isMintable ? strings.yes : strings.no}
         />
         <SummaryItem
           label={strings.token_logo}
-          value={icon ? 'Custom' : 'Generated'}
+          value={icon ? strings.custom : strings.generated}
           action={icon ? () => openIcon(icon, name) : undefined}
           className={!icon ? 'confirm-token-summary-item--faded' : ''}
         />
