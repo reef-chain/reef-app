@@ -25,6 +25,7 @@ const displayAmount = (amount: string | number): string => {
   if (
     typeof amount === 'number' && Number.isNaN(amount)
     || typeof amount === 'string' && amount === 'NaN'
+    || Number(amount) === 0
   ) return '0';
   return Uik.utils.formatHumanAmount(amount);
 };

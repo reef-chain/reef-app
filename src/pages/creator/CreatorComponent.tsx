@@ -357,7 +357,7 @@ export const CreatorComponent = ({
 
                   {
                     !!initialSupply
-                    && <Uik.Text className="creator__preview-token-supply" type="headline">{ Uik.utils.formatHumanAmount(initialSupply) }</Uik.Text>
+                    && <Uik.Text className="creator__preview-token-supply" type="headline">{ initialSupply ? Uik.utils.formatHumanAmount(initialSupply) : 0 }</Uik.Text>
                   }
                 </div>
 

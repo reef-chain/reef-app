@@ -40,7 +40,7 @@ const Pools = (): JSX.Element => {
             <Uik.Text type="headline">
               $
               {' '}
-              {totalLiquidity === 'NaN' ? '0' : Uik.utils.formatHumanAmount(totalLiquidity)}
+              { !totalLiquidity || totalLiquidity === 'NaN' ? '0' : Uik.utils.formatHumanAmount(totalLiquidity)}
             </Uik.Text>
             <Uik.Trend
               type={percentage >= 0 ? 'good' : 'bad'}

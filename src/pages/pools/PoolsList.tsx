@@ -134,12 +134,12 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
                     <Uik.Td align="right">
                       $
                       {' '}
-                      { Uik.utils.formatHumanAmount(item.tvl || '') }
+                      { item.tvl ? Uik.utils.formatHumanAmount(item.tvl || '') : '' }
                     </Uik.Td>
                     <Uik.Td align="right">
                       $
                       {' '}
-                      { Uik.utils.formatHumanAmount(item.volume24h || '') }
+                      { item.volume24h ? Uik.utils.formatHumanAmount(item.volume24h || '') : '' }
                     </Uik.Td>
                     <Uik.Td align="right">
                       <Uik.Trend
