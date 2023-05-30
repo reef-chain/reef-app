@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
 import './buy-reef-button.css';
 import { BUY_URL } from '../../urls';
+import { localizedStrings } from '../../l10n/l10n';
 
 const Shape = (): JSX.Element => (
   <svg
@@ -246,7 +247,7 @@ const BuyReefButton = (): JSX.Element => {
       onClick={navigate}
     >
       <Uik.ReefSign className="buy-reef-btn__icon" />
-      <span className="buy-reef-btn__text">Buy Reef</span>
+      <span className="buy-reef-btn__text">{localizedStrings.buy_reef_tokens}</span>
       <Uik.Bubbles />
       <Shape />
     </button>

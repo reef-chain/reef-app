@@ -4,6 +4,7 @@ import './Nfts.css';
 import Uik from '@reef-chain/ui-kit';
 import NFT from './NFT';
 import SqwidButton from './SqwidButton/SqwidButton';
+import { localizedStrings } from '../../l10n/l10n';
 
 // const { isDataSet, DataProgress } = utils;
 // const placeholderImage = 'https://cryptotelegram.com/wp-content/uploads/2021/04/reef-crypto-explained.jpg';
@@ -24,7 +25,7 @@ export const Nfts = ({ nfts }: Nfts): JSX.Element => (
 
     {nfts.length === 0 && (
     <div className="nfts__empty">
-      <Uik.Text type="light">Your wallet doesn&apos;t own any NFTs.</Uik.Text>
+      <Uik.Text type="light">{localizedStrings.does_not_hold}</Uik.Text>
       <SqwidButton />
     </div>
     )}

@@ -12,14 +12,15 @@ import { Nfts } from './Nfts';
 import { TokenBalances } from './TokenBalances';
 import { Activity } from './Activity/Activity';
 import { isReefswapUI } from '../../environment';
+import { localizedStrings } from '../../l10n/l10n';
 
 const Dashboard = (): JSX.Element => {
   const { nfts } = useContext(NftContext);
   const tabs = (() => {
     const list = [
-      { value: 'tokens', text: 'Tokens' },
-      { value: 'bonds', text: 'Bonds' },
-      { value: 'nfts', text: 'NFTs' },
+      { value: 'tokens', text: localizedStrings.tokens_pill || 'Tokens' },
+      { value: 'bonds', text: localizedStrings.bonds || 'Bonds' },
+      { value: 'nfts', text: localizedStrings.nfts || 'NFTs' },
     ];
 
     return list;

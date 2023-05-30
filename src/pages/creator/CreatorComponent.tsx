@@ -293,7 +293,7 @@ export const CreatorComponent = ({
                   <Uik.Input
                     className="creator__token-symbol-input"
                     label={strings.token_symbol}
-                    placeholder="MYTKN"
+                    placeholder={strings.token_symbol_name}
                     value={symbol}
                     maxLength={42}
                     onInput={(e) => setSymbol(e.target.value)}
@@ -311,8 +311,8 @@ export const CreatorComponent = ({
                 <Uik.Container className="creator__form-bottom">
                   <Uik.Toggle
                     label={strings.burnable}
-                    onText="Yes"
-                    offText="No"
+                    onText={strings.yes}
+                    offText={strings.no}
                     value={tokenOptions.burnable}
                     onChange={() => setTokenOptions({
                       ...tokenOptions,
@@ -322,8 +322,8 @@ export const CreatorComponent = ({
 
                   <Uik.Toggle
                     label={strings.mintable}
-                    onText="Yes"
-                    offText="No"
+                    onText={strings.yes}
+                    offText={strings.no}
                     value={tokenOptions.mintable}
                     onChange={() => setTokenOptions({
                       ...tokenOptions,
@@ -370,14 +370,14 @@ export const CreatorComponent = ({
                   <Uik.Container flow="start">
                     <Uik.Icon icon={tokenOptions.burnable ? faCheckCircle : faXmarkCircle} />
                     <Uik.Text>
-                      { !tokenOptions.burnable && 'Not ' }
+                      { !tokenOptions.burnable && `${strings.not} `}
                       {strings.burnable}
                     </Uik.Text>
                   </Uik.Container>
                   <Uik.Text type="mini">
                     {strings.existing_tokens}
                     {' '}
-                    { tokenOptions.burnable ? 'can' : 'cannot' }
+                    { tokenOptions.burnable ? strings.can : `${strings.can} ${strings.not}` }
                     {' '}
                     {strings.be_destroyed}
                   </Uik.Text>
@@ -392,14 +392,14 @@ export const CreatorComponent = ({
                   <Uik.Container flow="start">
                     <Uik.Icon icon={tokenOptions.mintable ? faCheckCircle : faXmarkCircle} />
                     <Uik.Text>
-                      { !tokenOptions.mintable && 'Not ' }
+                      { !tokenOptions.mintable && `${strings.not} ` }
                       {strings.mintable}
                     </Uik.Text>
                   </Uik.Container>
                   <Uik.Text type="mini">
                     {strings.new_tokens}
                     {' '}
-                    { tokenOptions.mintable ? 'can' : 'cannot' }
+                    { tokenOptions.mintable ? strings.can : `${strings.can} ${strings.not}` }
                     {' '}
                     {strings.be_created}
                   </Uik.Text>

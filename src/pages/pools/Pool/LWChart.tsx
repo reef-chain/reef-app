@@ -53,8 +53,7 @@ const priceFormatter = (price: any, decimalPosition = 0): string => {
   return parseFloat(price).toFixed(2);
 };
 
-const timeFormatter = (time: number): string => 
-  new Date(time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+const timeFormatter = (time: number): string => new Date(time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 
 const chartOptions = (timeVisible: boolean, currency: string, decimalPosition: number): unknown => ({
   layout: {
@@ -72,9 +71,9 @@ const chartOptions = (timeVisible: boolean, currency: string, decimalPosition: n
   timeScale: {
     borderColor: '#b7becf',
     timeVisible,
-    tickMarkFormatter: timeVisible 
+    tickMarkFormatter: timeVisible
       ? (time: number) => timeFormatter(time)
-      : undefined
+      : undefined,
   },
   crosshair: {
     vertLine: {
@@ -98,9 +97,9 @@ const chartOptions = (timeVisible: boolean, currency: string, decimalPosition: n
     priceFormatter: (price: number) => (currency === '$'
       ? `$${priceFormatter(price, decimalPosition)}`
       : `${priceFormatter(price, decimalPosition)} ${currency}`),
-    timeFormatter: timeVisible 
+    timeFormatter: timeVisible
       ? (time: number) => timeFormatter(time)
-      : undefined
+      : undefined,
   },
 });
 
@@ -225,7 +224,7 @@ const getFirstDecimalDiff = (num1: number, num2: number): number => {
   }
 
   return 0;
-}
+};
 
 const renderChart = ({
   el, type, data, subData, timeVisible, currency, isPriceChart,
@@ -345,7 +344,7 @@ const LWChart = ({
         // subData,
         timeVisible,
         currency,
-        isPriceChart
+        isPriceChart,
       });
       setRendered(true);
     }

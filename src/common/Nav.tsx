@@ -6,9 +6,7 @@ import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
 import { saveSignerLocalPointer } from '../store/internalStore';
-import {
-  BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL,
-} from '../urls';
+import { BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL } from '../urls';
 import { appAvailableNetworks, isReefswapUI } from '../environment';
 import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
@@ -26,13 +24,13 @@ const Nav = ({ display }: Nav): JSX.Element => {
   const network: Network|undefined = hooks.useObservableState(appState.currentNetwork$);
   const mainnetSelected = network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
   let menuItems = [
-    { title: 'Dashboard', url: DASHBOARD_URL },
-    // { title: 'Pools', url: POOLS_URL },
-    { title: 'Bonds', url: BONDS_URL },
-    { title: 'Creator', url: CREATE_ERC20_TOKEN_URL },
+    { title: localizedStrings.dashboard, url: DASHBOARD_URL },
+    // { title: localizedStrings.pools, url: POOLS_URL },
+    { title: localizedStrings.bonds, url: BONDS_URL },
+    { title: localizedStrings.creator, url: CREATE_ERC20_TOKEN_URL },
   ];
   if (isReefswapUI) {
-    menuItems = menuItems.filter((mi) => mi.title !== 'Bonds');
+    menuItems = menuItems.filter((mi) => mi.title !== localizedStrings.bonds);
   }
 
   const hideBalance = useContext(HideBalance);
