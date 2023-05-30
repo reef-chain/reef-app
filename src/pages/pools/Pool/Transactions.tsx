@@ -110,10 +110,14 @@ const Transactions = ({
               amountIn2,
               signerAddress,
               pool: {
-                decimals1 = 18,
-                decimals2 = 18,
-                symbol1 = '?',
-                symbol2 = '?',
+                token1: {
+                  decimals: decimals1,
+                  symbol: symbol1,
+                },
+                token2: {
+                  decimals: decimals2,
+                  symbol: symbol2,
+                },
               },
             }) => (
               <Uik.Tr
