@@ -3329,6 +3329,26 @@
     react-syntax-highlighter "^15.5.0"
     react-transition-group "^4.4.2"
 
+"@reef-chain/ui-kit@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@reef-chain/ui-kit/-/ui-kit-1.1.2.tgz#6bbc1803704b2fb4df2a000a4eef534afed82dbb"
+  integrity sha512-jYn/1OSmnrOUkeCxEYtjnJHsU6GJgxGsUFE77O8KqARnSO+TazUSeoIykYq1EfLr1L7vue0UbmPbGCg3MpgmQg==
+  dependencies:
+    "@fortawesome/fontawesome-svg-core" "^6.1.0"
+    "@fortawesome/free-regular-svg-icons" "^6.1.0"
+    "@fortawesome/free-solid-svg-icons" "^6.1.0"
+    "@fortawesome/react-fontawesome" "^0.1.17"
+    "@polkadot/react-identicon" "^2.0.1"
+    "@types/jest" "^27.4.1"
+    "@types/node" "^17.0.21"
+    "@types/react" "^17.0.0"
+    "@types/react-dom" "^17.0.0"
+    bignumber.js "^9.0.2"
+    qrcode.react "^3.0.1"
+    react-localization "^1.0.19"
+    react-syntax-highlighter "^15.5.0"
+    react-transition-group "^4.4.2"
+
 "@reef-chain/util-lib@^0.4.0":
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/@reef-chain/util-lib/-/util-lib-0.4.2.tgz#5782af19bc8f1dc120f82ed7da92220c630f6dbc"
@@ -3453,10 +3473,8 @@
   dependencies:
     "@babel/runtime" "^7.16.0"
 
-"@reef-defi/react-lib@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@reef-defi/react-lib/-/react-lib-1.7.3.tgz#aa558a0a378649d504343e3c15bb166e65c4b9ad"
-  integrity sha512-Tu9ljUKYjtB0Dx97e4+EdrJr90AX3T9vVxWsAvam483nRjqOBe3mTmZz547Kogu3ehNoNLQjUFNFIR4DkmVQtQ==
+"@reef-defi/react-lib@file:.yalc/@reef-defi/react-lib":
+  version "1.7.4"
   dependencies:
     "@apollo/client" "^3.6.2"
     "@fortawesome/free-regular-svg-icons" "^6.1.0"
@@ -13638,7 +13656,7 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
-react-localization@1.0.0:
+react-localization@1.0.0, react-localization@^1.0.19:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-localization/-/react-localization-1.0.0.tgz#c27d8a1380a05e2862a1eda11ecc74679927f8ec"
   integrity sha512-KXcAHdBwf5bHNQdRwvQqWWqTlhqj9NPC4f8NE5yL2F7n8zh/WUrIaGSts3zkpGAiES98MeEukUG/Z0tDvXEqug==
