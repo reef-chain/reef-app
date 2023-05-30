@@ -60,15 +60,15 @@ const Pool = (): JSX.Element => {
 
   const tokenPrice1 = (poolInfo ? tokenPrices[poolInfo.firstToken.address] : 0) || 0;
   const tokenPrice2 = (poolInfo ? tokenPrices[poolInfo.secondToken.address] : 0) || 0;
-  const decimal1 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
-  const decimal2 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
+  const decimals1 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
+  const decimals2 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
 
   const [timeframe, setTimeframe] = useState<Timeframe>('day');
 
   const [poolData] = hooks.usePoolData({
     address,
-    decimal1,
-    decimal2,
+    decimals1,
+    decimals2,
     price1: tokenPrice1,
     price2: tokenPrice2,
     timeData: timeframeToTimeData(timeframe),
@@ -98,7 +98,7 @@ const Pool = (): JSX.Element => {
             symbol: poolInfo.firstToken.symbol,
             iconUrl: poolInfo.firstToken.icon,
             balance: BigNumber.from(0),
-            decimals: decimal1,
+            decimals: decimals1,
           }}
           token2={{
             address: poolInfo.secondToken.address,
@@ -106,7 +106,7 @@ const Pool = (): JSX.Element => {
             symbol: poolInfo.secondToken.symbol,
             iconUrl: poolInfo.secondToken.icon,
             balance: BigNumber.from(0),
-            decimals: decimal2,
+            decimals: decimals2,
           }}
         />
         <Chart

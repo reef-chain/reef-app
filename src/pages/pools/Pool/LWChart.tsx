@@ -39,10 +39,13 @@ export interface Props {
   // subData?: HistogramData[],
   timeVisible?: boolean,
   currency?: string,
+  isPriceChart?: boolean,
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const priceFormatter = (price: any): string => {
+const priceFormatter = (price: any, decimalPosition = 0): string => {
+  if (decimalPosition) return parseFloat(price).toFixed(decimalPosition);
+
   const base = Math.max(price, price * -1);
   if (base > 0 && base < 0.001) return parseFloat(price).toFixed(8);
   if (base >= 0.001 && base < 0.01) return parseFloat(price).toFixed(6);
@@ -50,9 +53,10 @@ const priceFormatter = (price: any): string => {
   return parseFloat(price).toFixed(2);
 };
 
-const timeFormatter = (time: number): string => new Date(time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+const timeFormatter = (time: number): string => 
+  new Date(time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
 
-const chartOptions = (timeVisible: boolean, currency: string): unknown => ({
+const chartOptions = (timeVisible: boolean, currency: string, decimalPosition: number): unknown => ({
   layout: {
     textColor: '#898e9c',
     fontSize: 12,
@@ -68,9 +72,9 @@ const chartOptions = (timeVisible: boolean, currency: string): unknown => ({
   timeScale: {
     borderColor: '#b7becf',
     timeVisible,
-    tickMarkFormatter: timeVisible
+    tickMarkFormatter: timeVisible 
       ? (time: number) => timeFormatter(time)
-      : undefined,
+      : undefined
   },
   crosshair: {
     vertLine: {
@@ -92,11 +96,11 @@ const chartOptions = (timeVisible: boolean, currency: string): unknown => ({
   },
   localization: {
     priceFormatter: (price: number) => (currency === '$'
-      ? `$${priceFormatter(price)}`
-      : `${priceFormatter(price)} ${currency}`),
-    timeFormatter: timeVisible
+      ? `$${priceFormatter(price, decimalPosition)}`
+      : `${priceFormatter(price, decimalPosition)} ${currency}`),
+    timeFormatter: timeVisible 
       ? (time: number) => timeFormatter(time)
-      : undefined,
+      : undefined
   },
 });
 
@@ -197,8 +201,34 @@ const processSubData = (data: CandlestickData[], subdata: HistogramData[]): Hist
   return output;
 };
 
+const getFirstDecimalDiff = (num1: number, num2: number): number => {
+  if (Math.floor(num1) !== Math.floor(num2)) return 0;
+
+  const str1 = num1.toString();
+  const str2 = num2.toString();
+
+  let decimalStr1 = str1.split('.')[1] || '';
+  let decimalStr2 = str2.split('.')[1] || '';
+
+  if (decimalStr1.length > decimalStr2.length) {
+    decimalStr2 = decimalStr2.padEnd(decimalStr1.length, '0');
+  } else if (decimalStr1.length < decimalStr2.length) {
+    decimalStr1 = decimalStr1.padEnd(decimalStr2.length, '0');
+  }
+
+  let decimalPosition = 0;
+  while (decimalPosition < decimalStr1.length) {
+    if (decimalStr1[decimalPosition] !== decimalStr2[decimalPosition]) {
+      return decimalPosition + 1;
+    }
+    decimalPosition += 1;
+  }
+
+  return 0;
+}
+
 const renderChart = ({
-  el, type, data, subData, timeVisible, currency,
+  el, type, data, subData, timeVisible, currency, isPriceChart,
 }: {
  el: HTMLElement | null,
  type: Type,
@@ -206,11 +236,25 @@ const renderChart = ({
  subData?: HistogramData[],
  timeVisible: boolean,
  currency: string,
+ isPriceChart: boolean,
 }): void => {
   if (!el) return;
 
+  let decimalPosition = 0;
+  if (isPriceChart && data.length) {
+    const candlesticks = data as CandlestickData[];
+    let maxPrice = candlesticks[0].high!;
+    let minPrice = candlesticks[0].low!;
+    candlesticks.forEach((candlestick) => {
+      if (candlestick.high! > maxPrice) maxPrice = candlestick.high!;
+      if (candlestick.low! < minPrice) minPrice = candlestick.low!;
+    });
+    const firstDecimalDiff = getFirstDecimalDiff(maxPrice, minPrice);
+    decimalPosition = firstDecimalDiff + 2;
+  }
+
   const { height } = el.getBoundingClientRect();
-  const options = chartOptions(timeVisible, currency);
+  const options = chartOptions(timeVisible, currency, decimalPosition);
 
   // @ts-ignore-next-line
   const chart: IChartApi = createChart(el, { height, ...options });
@@ -287,6 +331,7 @@ const LWChart = ({
   // subData,
   timeVisible = true,
   currency = '$',
+  isPriceChart = false,
 }: Props): JSX.Element => {
   const chartWrapper = useRef(null);
   const [isRendered, setRendered] = useState(false);
@@ -300,6 +345,7 @@ const LWChart = ({
         // subData,
         timeVisible,
         currency,
+        isPriceChart
       });
       setRendered(true);
     }

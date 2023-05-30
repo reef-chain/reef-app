@@ -109,6 +109,7 @@ const Chart = ({
             // subData={getSubData}
             timeVisible={timeframe === 'hour' || timeframe === 'day'}
             currency={tab === 'price' ? tokens.firstToken.name : '$'}
+            isPriceChart={tab === 'price'}
           />
           )
         }

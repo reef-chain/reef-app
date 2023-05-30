@@ -110,10 +110,14 @@ const Transactions = ({
               amountIn2,
               signerAddress,
               pool: {
-                decimal1 = 18,
-                decimal2 = 18,
-                symbol1 = '?',
-                symbol2 = '?',
+                token1: {
+                  decimals: decimals1,
+                  symbol: symbol1,
+                },
+                token2: {
+                  decimals: decimals2,
+                  symbol: symbol2,
+                },
               },
             }) => (
               <Uik.Tr
@@ -149,9 +153,9 @@ const Transactions = ({
 
                 <Uik.Td align="center">{ formatAgoDate(timestamp) }</Uik.Td>
 
-                <Uik.Td align="right">{formatAmount(amount1 > 0 ? amount1 : amountIn1, decimal1)}</Uik.Td>
+                <Uik.Td align="right">{formatAmount(amount1 > 0 ? amount1 : amountIn1, decimals1)}</Uik.Td>
 
-                <Uik.Td align="right">{formatAmount(amount2 > 0 ? amount2 : amountIn2, decimal2)}</Uik.Td>
+                <Uik.Td align="right">{formatAmount(amount2 > 0 ? amount2 : amountIn2, decimals2)}</Uik.Td>
               </Uik.Tr>
             ))
           }

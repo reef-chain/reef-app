@@ -27,7 +27,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
   const mainnetSelected = network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
   let menuItems = [
     { title: localizedStrings.dashboard, url: DASHBOARD_URL },
-    { title: localizedStrings.pools, url: POOLS_URL },
+    // { title: localizedStrings.pools, url: POOLS_URL },
     { title: localizedStrings.bonds, url: BONDS_URL },
     { title: localizedStrings.creator, url: CREATE_ERC20_TOKEN_URL },
   ];
@@ -56,6 +56,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
   const selectLanguage = (key: 'en'|'hi'):void => {
     localizedStrings.setLanguage(key);
     localStorage.setItem('app-language', key);
+    history.push(DASHBOARD_URL);
   };
 
   const menuItemsView = menuItems
