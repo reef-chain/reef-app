@@ -19,7 +19,7 @@ const Dashboard = (): JSX.Element => {
   const tabs = (() => {
     const list = [
       { value: 'tokens', text: localizedStrings.tokens_pill || 'Tokens' },
-      { value: 'bonds', text: localizedStrings.bonds || 'Bonds'},
+      { value: 'bonds', text: localizedStrings.bonds || 'Bonds' },
       { value: 'nfts', text: localizedStrings.nfts || 'NFTs' },
     ];
 

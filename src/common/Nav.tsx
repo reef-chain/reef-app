@@ -6,9 +6,7 @@ import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
 import { saveSignerLocalPointer } from '../store/internalStore';
-import {
-  BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL,
-} from '../urls';
+import { BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL } from '../urls';
 import { appAvailableNetworks, isReefswapUI } from '../environment';
 import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
