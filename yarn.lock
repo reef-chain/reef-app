@@ -3310,10 +3310,10 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.7.tgz#ccab5c8f7dc557a52ca3288c10075c9ccd37fff7"
   integrity sha512-Cr4OjIkipTtcXKjAsm8agyleBuDHvxzeBoa1v543lbv1YaIwQjESsVcmjiWiPEbC1FIeHOG/Op9kdCmAmiS3Kw==
 
-"@reef-chain/ui-kit@^1.1.1":
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/@reef-chain/ui-kit/-/ui-kit-1.1.1.tgz#1fa1a9a35e396b339e10807a45da48a2180ff170"
-  integrity sha512-MuGNxNp0VTYbYDE+r2npmemaIqTiJVpAlpPbME6CwydySOack4n/pDeXJjo200/U8JmTdpnykQSH7B6tqbqnIg==
+"@reef-chain/ui-kit@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@reef-chain/ui-kit/-/ui-kit-1.1.2.tgz#6bbc1803704b2fb4df2a000a4eef534afed82dbb"
+  integrity sha512-jYn/1OSmnrOUkeCxEYtjnJHsU6GJgxGsUFE77O8KqARnSO+TazUSeoIykYq1EfLr1L7vue0UbmPbGCg3MpgmQg==
   dependencies:
     "@fortawesome/fontawesome-svg-core" "^6.1.0"
     "@fortawesome/free-regular-svg-icons" "^6.1.0"
@@ -3326,6 +3326,7 @@
     "@types/react-dom" "^17.0.0"
     bignumber.js "^9.0.2"
     qrcode.react "^3.0.1"
+    react-localization "^1.0.19"
     react-syntax-highlighter "^15.5.0"
     react-transition-group "^4.4.2"
 
@@ -3453,17 +3454,17 @@
   dependencies:
     "@babel/runtime" "^7.16.0"
 
-"@reef-defi/react-lib@1.7.3":
-  version "1.7.3"
-  resolved "https://registry.yarnpkg.com/@reef-defi/react-lib/-/react-lib-1.7.3.tgz#aa558a0a378649d504343e3c15bb166e65c4b9ad"
-  integrity sha512-Tu9ljUKYjtB0Dx97e4+EdrJr90AX3T9vVxWsAvam483nRjqOBe3mTmZz547Kogu3ehNoNLQjUFNFIR4DkmVQtQ==
+"@reef-defi/react-lib@1.7.5":
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/@reef-defi/react-lib/-/react-lib-1.7.5.tgz#75df69026ca20474d0b92e2bedb07b2d0099e55e"
+  integrity sha512-Uldw8jqLTSsf7ryMnrvKaAgjcl+w1et8J7mVwSFQGYBda6b0oJ3SNAF4U8a/Ay+vs+vF213lYB/lo5WRHW8otw==
   dependencies:
     "@apollo/client" "^3.6.2"
     "@fortawesome/free-regular-svg-icons" "^6.1.0"
     "@fortawesome/free-solid-svg-icons" "^6.1.0"
     "@polkadot/extension-dapp" "^0.40.4"
     "@polkadot/react-identicon" "^0.86.4"
-    "@reef-chain/ui-kit" "^1.1.1"
+    "@reef-chain/ui-kit" "^1.1.2"
     "@reef-chain/util-lib" "^0.6.0"
     "@reef-defi/evm-provider" "^1.0.9"
     "@reef-defi/extension-base" "^1.0.14"
@@ -11388,6 +11389,11 @@ localized-strings@0.0.4:
   resolved "https://registry.yarnpkg.com/localized-strings/-/localized-strings-0.0.4.tgz#c6d88b7eb180ef5cc862d77814873a5ccf7d88f0"
   integrity sha512-pu8nld52jPwinmRHWbyTSqW4p6Z+wcqU+Jg3d2pohZ1PleB1UVkPRmvgPzYPs5yUY3K9AMd8+rh/+Aoq4iozQA==
 
+localized-strings@^0.2.0:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/localized-strings/-/localized-strings-0.2.4.tgz#9d61c06b60cc7b5edf7c46e6c7f2d1ecb84aeb2c"
+  integrity sha512-TKDhqFPkIIN/if2FSvVVZTaM/GP9TzfgdQ2uY65mr32xgFu5nqkKXprXbzy5rfx32DF5LDvS/y1UqYF/mAscYA==
+
 locate-path@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/locate-path/-/locate-path-3.0.0.tgz#dbec3b3ab759758071b58fe59fc41871af21400e"
@@ -13638,13 +13644,20 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
-react-localization@1.0.0:
+react-localization@1.0.0, react-localization@^1.0.19:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-localization/-/react-localization-1.0.0.tgz#c27d8a1380a05e2862a1eda11ecc74679927f8ec"
   integrity sha512-KXcAHdBwf5bHNQdRwvQqWWqTlhqj9NPC4f8NE5yL2F7n8zh/WUrIaGSts3zkpGAiES98MeEukUG/Z0tDvXEqug==
   dependencies:
     localized-strings "0.0.4"
     react "^16.0.0"
+
+react-localization@^1.0.0:
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/react-localization/-/react-localization-1.0.19.tgz#b65a7fa58096cff6aa38bc3a0c4817ec97469ef0"
+  integrity sha512-f4E6T8xRis19K8qMOnnhjGV2quy1YH2lrSsnAiytvgt7uOSp6WgDhrZH6XZEaEFqupTOCFSf8uagIoIAkjl4JA==
+  dependencies:
+    localized-strings "^0.2.0"
 
 react-refresh@^0.11.0:
   version "0.11.0"
