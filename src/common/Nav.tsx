@@ -56,6 +56,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
   const selectLanguage = (key: 'en'|'hi'):void => {
     localizedStrings.setLanguage(key);
     localStorage.setItem('app-language', key);
+    history.push(DASHBOARD_URL);
   };
 
   const menuItemsView = menuItems
