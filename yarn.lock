@@ -11406,6 +11406,11 @@ localized-strings@0.0.4:
   resolved "https://registry.yarnpkg.com/localized-strings/-/localized-strings-0.0.4.tgz#c6d88b7eb180ef5cc862d77814873a5ccf7d88f0"
   integrity sha512-pu8nld52jPwinmRHWbyTSqW4p6Z+wcqU+Jg3d2pohZ1PleB1UVkPRmvgPzYPs5yUY3K9AMd8+rh/+Aoq4iozQA==
 
+localized-strings@^0.2.0:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/localized-strings/-/localized-strings-0.2.4.tgz#9d61c06b60cc7b5edf7c46e6c7f2d1ecb84aeb2c"
+  integrity sha512-TKDhqFPkIIN/if2FSvVVZTaM/GP9TzfgdQ2uY65mr32xgFu5nqkKXprXbzy5rfx32DF5LDvS/y1UqYF/mAscYA==
+
 locate-path@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/locate-path/-/locate-path-3.0.0.tgz#dbec3b3ab759758071b58fe59fc41871af21400e"
@@ -13656,13 +13661,20 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
-react-localization@1.0.0, react-localization@^1.0.19:
+react-localization@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-localization/-/react-localization-1.0.0.tgz#c27d8a1380a05e2862a1eda11ecc74679927f8ec"
   integrity sha512-KXcAHdBwf5bHNQdRwvQqWWqTlhqj9NPC4f8NE5yL2F7n8zh/WUrIaGSts3zkpGAiES98MeEukUG/Z0tDvXEqug==
   dependencies:
     localized-strings "0.0.4"
     react "^16.0.0"
+
+react-localization@^1.0.19:
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/react-localization/-/react-localization-1.0.19.tgz#b65a7fa58096cff6aa38bc3a0c4817ec97469ef0"
+  integrity sha512-f4E6T8xRis19K8qMOnnhjGV2quy1YH2lrSsnAiytvgt7uOSp6WgDhrZH6XZEaEFqupTOCFSf8uagIoIAkjl4JA==
+  dependencies:
+    localized-strings "^0.2.0"
 
 react-refresh@^0.11.0:
   version "0.11.0"
