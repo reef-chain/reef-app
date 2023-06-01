@@ -19,8 +19,10 @@ import {
   SPECIFIED_SWAP_URL,
   TRANSFER_TOKEN,
   BUY_URL,
+  BIND_CUSTOM_URL,
 } from '../urls';
 import Bind from './bind/Bind';
+import BindCustom from './bind/BindCustom';
 import { Bonds } from './bonds/Bonds';
 import { Creator } from './creator/Creator';
 import Dashboard from './dashboard/Dashboard';
@@ -75,6 +77,7 @@ const tokenPrices = useMemo(
                 <Route exact path={CREATE_ERC20_TOKEN_URL} component={Creator} />
                 <Route exact path={BONDS_URL} component={Bonds} />
                 <Route path={BIND_URL} component={Bind} />
+                <Route path={BIND_CUSTOM_URL} component={BindCustom} />
                 <Route path={BUY_URL} component={Buy} />
                 <Route path="/" render={() => (<Redirect to={DASHBOARD_URL} />)} />
               </Switch>
