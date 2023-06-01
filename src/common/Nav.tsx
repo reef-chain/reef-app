@@ -4,14 +4,13 @@ import {
 } from '@reef-defi/react-lib';
 import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import { saveSignerLocalPointer } from '../store/internalStore';
-import {
-  BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL,
-} from '../urls';
-import { appAvailableNetworks } from '../environment';
+import { BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL } from '../urls';
+import { appAvailableNetworks, isReefswapUI } from '../environment';
 import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
+import { localizedStrings } from '../l10n/l10n';
 
 export interface Nav {
     display: boolean;
@@ -24,12 +23,15 @@ const Nav = ({ display }: Nav): JSX.Element => {
   const accounts: ReefSigner[]|undefined|null = hooks.useObservableState(appState.signers$);
   const network: Network|undefined = hooks.useObservableState(appState.currentNetwork$);
   const mainnetSelected = network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
-  const menuItems = [
-    { title: 'Dashboard', url: DASHBOARD_URL },
-    { title: 'Pools', url: POOLS_URL },
-    { title: 'Bonds', url: BONDS_URL },
-    { title: 'Creator', url: CREATE_ERC20_TOKEN_URL },
+  let menuItems = [
+    { title: localizedStrings.dashboard, url: DASHBOARD_URL },
+    // { title: localizedStrings.pools, url: POOLS_URL },
+    { title: localizedStrings.bonds, url: BONDS_URL },
+    { title: localizedStrings.creator, url: CREATE_ERC20_TOKEN_URL },
   ];
+  if (isReefswapUI) {
+    menuItems = menuItems.filter((mi) => mi.title !== localizedStrings.bonds);
+  }
 
   const hideBalance = useContext(HideBalance);
   const networkSwitch = useContext(NetworkSwitch);
@@ -47,6 +49,12 @@ const Nav = ({ display }: Nav): JSX.Element => {
     if (toSelect) {
       appState.setCurrentNetwork(toSelect);
     }
+  };
+
+  const selectLanguage = (key: 'en'|'hi'):void => {
+    localizedStrings.setLanguage(key);
+    localStorage.setItem('app-language', key);
+    history.push(DASHBOARD_URL);
   };
 
   const menuItemsView = menuItems
@@ -79,6 +87,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
       <div className="navigation__wrapper">
         <button type="button" className="logo-btn" onClick={() => { history.push('/'); }}>
           { mainnetSelected ? <Uik.ReefLogo className="navigation__logo" /> : <Uik.ReefTestnetLogo className="navigation__logo" /> }
+          {isReefswapUI && <span className="navigation__logo-suffix">swap</span>}
         </button>
 
         {display && (
@@ -96,6 +105,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
               selectedNetwork={selectedNetwork}
               isBalanceHidden={hideBalance.isHidden}
               showBalance={hideBalance.toggle}
+              onLanguageSelect={selectLanguage}
             />
             )}
           </nav>

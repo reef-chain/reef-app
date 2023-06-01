@@ -4,7 +4,7 @@ import {
   graphql,
   hooks, store, Token,
 } from '@reef-defi/react-lib';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import PoolContext from '../../../context/PoolContext';

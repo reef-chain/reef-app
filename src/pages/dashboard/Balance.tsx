@@ -1,9 +1,10 @@
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useMemo } from 'react';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { toCurrencyFormat } from '../../utils/utils';
 import HideBalance from '../../context/HideBalance';
 import { displayBalance } from '../../utils/displayBalance';
+import { localizedStrings } from '../../l10n/l10n';
 
 interface Balance {
   balance: number;
@@ -48,7 +49,7 @@ export const Balance = ({
     `}
     >
       <div className="dashboard__balance-label">
-        <Uik.Text type="lead">Balance</Uik.Text>
+        <Uik.Text type="lead">{localizedStrings.balance}</Uik.Text>
         <button
           key={String(isHidden)}
           type="button"

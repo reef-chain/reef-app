@@ -1,10 +1,11 @@
 import { NFT, Token, utils } from '@reef-defi/react-lib';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useMemo } from 'react';
 import './activity-item.css';
 import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import HideBalance from '../../../context/HideBalance';
 import { displayBalanceFromToken } from '../../../utils/displayBalance';
+import { localizedStrings as strings } from '../../../l10n/l10n';
 
 const { showBalance } = utils;
 
@@ -37,8 +38,8 @@ const TokenActivityItem = ({
 
   const title = useMemo(() => {
     const actionMap = {
-      receive: 'Received',
-      send: 'Sent',
+      receive: strings.received,
+      send: strings.sent,
     };
 
     const action = actionMap[type];

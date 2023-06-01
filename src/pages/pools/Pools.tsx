@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { graphql, hooks } from '@reef-defi/react-lib';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 
 import TokenPricesContext from '../../context/TokenPricesContext';
 import MyPoolsList from './MyPoolsList';
@@ -40,7 +40,7 @@ const Pools = (): JSX.Element => {
             <Uik.Text type="headline">
               $
               {' '}
-              {totalLiquidity === 'NaN' ? '0' : Uik.utils.formatHumanAmount(totalLiquidity)}
+              { !totalLiquidity || totalLiquidity === 'NaN' ? '0' : Uik.utils.formatHumanAmount(totalLiquidity)}
             </Uik.Text>
             <Uik.Trend
               type={percentage >= 0 ? 'good' : 'bad'}
