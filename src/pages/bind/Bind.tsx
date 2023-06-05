@@ -25,7 +25,7 @@ const onTxUpdate = (state: TxStatusUpdate): void => {
     } else {
       updateActions = [{ type: appState.UpdateDataType.ACCOUNT_EVM_BINDING }, { type: appState.UpdateDataType.ACCOUNT_NATIVE_BALANCE }];
     }
-  } else {
+  } else if (state.componentTxType === Components.EvmBindComponentTxType.TRANSFER) {
     // transaction
     updateActions = state.addresses && state.addresses.length
       ? state.addresses.map((address) => ({
@@ -33,6 +33,9 @@ const onTxUpdate = (state: TxStatusUpdate): void => {
         type: appState.UpdateDataType.ACCOUNT_NATIVE_BALANCE,
       } as appState.UpdateAction))
       : [{ type: appState.UpdateDataType.ACCOUNT_NATIVE_BALANCE }];
+  } else {
+    // sign evm message
+    return;
   }
 
   appState.onTxUpdateResetSigners(state, updateActions);
