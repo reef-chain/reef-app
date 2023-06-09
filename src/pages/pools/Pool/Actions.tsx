@@ -163,7 +163,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
             setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),
             // selectToken1: (token: Token): void => tradeDispatch(store.setToken1Action(token)),
             // selectToken2: (token: Token): void => tradeDispatch(store.setToken2Action(token)),
-            setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({ ...tradeState.settings, percentage: (maxSlippage * slippage) / 100 })),
+            setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({ ...tradeState.settings, percentage: (MAX_SLIPPAGE * slippage) / 100 })),
           }}
         />
       );
