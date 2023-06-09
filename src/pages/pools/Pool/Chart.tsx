@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import './chart.css';
 import LWChart, { CandlestickData, HistogramData } from './LWChart';
 
@@ -107,8 +107,9 @@ const Chart = ({
             type={chartTypes[tab]}
             data={getData}
             // subData={getSubData}
-            timeVisible={timeframe == 'hour' || timeframe == 'day'}
+            timeVisible={timeframe === 'hour' || timeframe === 'day'}
             currency={tab === 'price' ? tokens.firstToken.name : '$'}
+            isPriceChart={tab === 'price'}
           />
           )
         }

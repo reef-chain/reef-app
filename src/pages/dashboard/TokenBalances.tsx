@@ -1,5 +1,5 @@
 import { Token } from '@reef-defi/react-lib';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import React, { useContext } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import TokenCard from './TokenCard';
 import { CREATE_ERC20_TOKEN_URL } from '../../urls';
+import { localizedStrings } from '../../l10n/l10n';
 
 interface TokenBalances {
   tokens: Token[];
@@ -35,7 +36,7 @@ const CreateTokenButton = (): JSX.Element => (
     className="dashboard__tokens-create-btn"
   >
     <Uik.Icon icon={faPlus} />
-    <span>Create Own Token</span>
+    <span>{localizedStrings.create_token_db}</span>
   </Link>
 );
 

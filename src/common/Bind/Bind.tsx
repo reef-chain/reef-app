@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import {
   appState, hooks, ReefSigner, Components,
 } from '@reef-defi/react-lib';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import './bind.css';
 import { TxStatusUpdate } from '@reef-defi/react-lib/dist/utils';
 

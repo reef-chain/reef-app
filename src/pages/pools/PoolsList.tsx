@@ -2,7 +2,7 @@ import { faArrowUpFromBracket, faCoins, faRepeat } from '@fortawesome/free-solid
 import {
   appState, graphql, hooks, Token,
 } from '@reef-defi/react-lib';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import BigNumber from 'bignumber.js';

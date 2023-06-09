@@ -52,17 +52,17 @@ const OverlaySwap = ({
       const otherToken: Token = pool.token1 === tokenAddress
         ? {
           address: pool.token2,
-          decimals: pool.decimal2,
+          decimals: pool.decimals2,
           name: pool.name2,
           symbol: pool.symbol2,
-          iconUrl: pool.icon2,
+          iconUrl: pool.iconUrl2,
           balance: BigNumber.from(0),
         } : {
           address: pool.token1,
-          decimals: pool.decimal1,
+          decimals: pool.decimals1,
           name: pool.name1,
           symbol: pool.symbol1,
-          iconUrl: pool.icon1,
+          iconUrl: pool.iconUrl1,
           balance: BigNumber.from(0),
         };
       const existingToken = tokens.find((token) => token.address === otherToken.address);
