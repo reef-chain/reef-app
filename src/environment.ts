@@ -11,3 +11,16 @@ export const appAvailableNetworks = [availableNetworks.mainnet, testnetOverride]
 export const getAppNetworkOverride = (network: Network): Network => appAvailableNetworks.find((net) => net.name === network.name) || network;
 // export const appAvailableNetworks = [availableNetworks.mainnet, availableNetworks.testnet];
 export const binanceConnectApiUrl = 'https://onramp.reefscan.info';
+
+export const whitelistedAddresses = ['5EnY9eFwEDcEJ62dJWrTXhTucJ4pzGym4WZ2xcDKiT3eJecP'];
+
+export const isAddressWhitelisted = (addr: string | undefined, network: Network) => {
+  if (!addr || !network) {
+    return false;
+  }
+  const isRsUI = isReefswapUI;
+  if (addr && network && isRsUI && network?.name === availableNetworks.testnet.name) {
+    return whitelistedAddresses.some((a) => a === addr);
+  }
+  return true;
+};
