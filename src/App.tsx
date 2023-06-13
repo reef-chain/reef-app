@@ -10,7 +10,7 @@ import ContentRouter from './pages/ContentRouter';
 import NoAccount from './pages/error/NoAccount';
 import NoExtension from './pages/error/NoExtension';
 import { notify } from './utils/utils';
-import HideBalance, { toggleHidden, getStoredPref } from './context/HideBalance';
+import HideBalance, { getStoredPref, toggleHidden } from './context/HideBalance';
 import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
