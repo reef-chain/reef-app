@@ -11,7 +11,7 @@ import PoolContext from '../../../context/PoolContext';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import { POOL_CHART_URL } from '../../../urls';
-import { notify } from '../../../utils/utils';
+import { MAX_SLIPPAGE, notify } from '../../../utils/utils';
 import './actions.css';
 
 const {
@@ -149,13 +149,12 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
       return <Finalizing />;
     case 'true-trade':
       // eslint-disable-next-line no-case-declarations
-      const maxSlippage = 20;
       return (
         <Trade
           pools={pools}
           tokens={tokens}
           state={tradeState}
-          maxSlippage={maxSlippage}
+          maxSlippage={MAX_SLIPPAGE}
           actions={{
             onSwap,
             onSwitch,
@@ -164,7 +163,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
             setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),
             // selectToken1: (token: Token): void => tradeDispatch(store.setToken1Action(token)),
             // selectToken2: (token: Token): void => tradeDispatch(store.setToken2Action(token)),
-            setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({ ...tradeState.settings, percentage: (maxSlippage * slippage) / 100 })),
+            setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({ ...tradeState.settings, percentage: (MAX_SLIPPAGE * slippage) / 100 })),
           }}
         />
       );

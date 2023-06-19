@@ -8,7 +8,7 @@ import { BigNumber } from 'ethers';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
 import TokenPricesContext from '../context/TokenPricesContext';
-import { notify } from '../utils/utils';
+import { MAX_SLIPPAGE, notify } from '../utils/utils';
 import './overlay-swap.css';
 
 const { Trade, OverlayAction, Finalizing } = Components;
@@ -118,29 +118,30 @@ const OverlaySwap = ({
     >
       <div className="uik-pool-actions pool-actions">
         {
-                    finalized
-                      ? (
-                        <Trade
-                          pools={pools}
-                          tokens={tokens}
-                          state={tradeState}
-                          actions={{
-                            onSwap,
-                            onSwitch,
-                            selectToken1: (token: Token): void => setAddress1(token.address),
-                            selectToken2: (token: Token): void => setAddress2(token.address),
-                            setPercentage: (amount: number) => tradeDispatch(store.setPercentageAction(amount)),
-                            setToken1Amount: (amount: string): void => tradeDispatch(store.setToken1AmountAction(amount)),
-                            setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),
-                            setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({
-                              ...tradeState.settings,
-                              percentage: slippage,
-                            })),
-                          }}
-                        />
-                      )
-                      : <Finalizing />
-                }
+          finalized
+            ? (
+              <Trade
+                pools={pools}
+                tokens={tokens}
+                state={tradeState}
+                maxSlippage={MAX_SLIPPAGE}
+                actions={{
+                  onSwap,
+                  onSwitch,
+                  selectToken1: (token: Token): void => setAddress1(token.address),
+                  selectToken2: (token: Token): void => setAddress2(token.address),
+                  setPercentage: (amount: number) => tradeDispatch(store.setPercentageAction(amount)),
+                  setToken1Amount: (amount: string): void => tradeDispatch(store.setToken1AmountAction(amount)),
+                  setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),
+                  setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({
+                    ...tradeState.settings,
+                    percentage: (MAX_SLIPPAGE * slippage) / 100
+                  })),
+                }}
+              />
+            )
+            : <Finalizing />
+        }
       </div>
     </OverlayAction>
   );
