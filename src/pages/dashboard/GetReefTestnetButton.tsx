@@ -2,6 +2,7 @@ import React from 'react';
 import Uik from '@reef-chain/ui-kit';
 import './buy-reef-button.css';
 import { localizedStrings } from '../../l10n/l10n';
+import { isReefswapUI } from '../../environment';
 
 const Shape = (): JSX.Element => (
   <svg
@@ -234,7 +235,8 @@ C226.3,333.5,225.4,331.3,224.1,329.3z"
 
 const GetReefTestnetButton = (): JSX.Element => {
   const navigate = (): void => {
-    window.open('https://discord.com/channels/793946260171259904/1087737503550816396');
+    const url = isReefswapUI ? 'https://discord.com/channels/1116016091014123521/1120371707019010128' : 'https://discord.com/channels/793946260171259904/1087737503550816396';
+    window.open(url);
   };
 
   return (
