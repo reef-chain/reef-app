@@ -8,7 +8,7 @@ import { BigNumber } from 'ethers';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
 import TokenPricesContext from '../context/TokenPricesContext';
-import { notify } from '../utils/utils';
+import { MAX_SLIPPAGE, notify } from '../utils/utils';
 import './overlay-swap.css';
 
 const { Trade, OverlayAction, Finalizing } = Components;
@@ -168,6 +168,7 @@ const OverlaySwap = ({
                 pools={pools}
                 tokens={tokens}
                 state={tradeState}
+                maxSlippage={MAX_SLIPPAGE}
                 actions={{
                   onSwap,
                   onSwitch,
@@ -178,7 +179,7 @@ const OverlaySwap = ({
                   setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),
                   setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({
                     ...tradeState.settings,
-                    percentage: slippage,
+                    percentage: (MAX_SLIPPAGE * slippage) / 100
                   })),
                 }}
               />
