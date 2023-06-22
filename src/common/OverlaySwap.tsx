@@ -21,28 +21,28 @@ export interface OverlaySwap {
     onClose?: () => void;
 }
 
-const poolWithReservesToPool = (pool: PoolWithReserves): Pool => ({
+const poolWithReservesToPool = (p: PoolWithReserves): Pool => ({
   token1: {
-    address: pool.token1,
-    decimals: pool.decimals1,
-    name: pool.name1,
-    symbol: pool.symbol1,
-    iconUrl: pool.iconUrl1,
+    address: p.token1,
+    decimals: p.decimals1,
+    name: p.name1,
+    symbol: p.symbol1,
+    iconUrl: p.iconUrl1,
     balance: BigNumber.from(0),
   },
   token2: {
-    address: pool.token2,
-    decimals: pool.decimals2,
-    name: pool.name2,
-    symbol: pool.symbol2,
-    iconUrl: pool.iconUrl2,
+    address: p.token2,
+    decimals: p.decimals2,
+    name: p.name2,
+    symbol: p.symbol2,
+    iconUrl: p.iconUrl2,
     balance: BigNumber.from(0),
   },
   decimals: 0,
-  reserve1: pool.reserved1,
-  reserve2: pool.reserved2,
+  reserve1: p.reserved1,
+  reserve2: p.reserved2,
   totalSupply: '0',
-  poolAddress: pool.address,
+  poolAddress: p.address,
   userPoolBalance: '0',
 });
 
@@ -74,25 +74,25 @@ const OverlaySwap = ({
     if (!pools || !tokenAddress || !tokens) return;
 
     // Add tokens not owned by user to the list of tokens and check if REEF is available for swapping
-    const tokenPools = pools.filter((pool) => pool.token1 === tokenAddress || pool.token2 === tokenAddress);
+    const tokenPools = pools.filter((p) => p.token1 === tokenAddress || p.token2 === tokenAddress);
     if (!tokenPools.length) return;
 
     let reefAvailable = false;
-    tokenPools.forEach((pool) => {
-      const otherToken: Token = pool.token1 === tokenAddress
+    tokenPools.forEach((p) => {
+      const otherToken: Token = p.token1 === tokenAddress
         ? {
-          address: pool.token2,
-          decimals: pool.decimals2,
-          name: pool.name2,
-          symbol: pool.symbol2,
-          iconUrl: pool.iconUrl2,
+          address: p.token2,
+          decimals: p.decimals2,
+          name: p.name2,
+          symbol: p.symbol2,
+          iconUrl: p.iconUrl2,
           balance: BigNumber.from(0),
         } : {
-          address: pool.token1,
-          decimals: pool.decimals1,
-          name: pool.name1,
-          symbol: pool.symbol1,
-          iconUrl: pool.iconUrl1,
+          address: p.token1,
+          decimals: p.decimals1,
+          name: p.name1,
+          symbol: p.symbol1,
+          iconUrl: p.iconUrl1,
           balance: BigNumber.from(0),
         };
       const existingToken = tokens.find((token) => token.address === otherToken.address);
@@ -110,10 +110,10 @@ const OverlaySwap = ({
     // Find pool
     const t1 = tokenAddress < addr2 ? tokenAddress : addr2;
     const t2 = tokenAddress < addr2 ? addr2 : tokenAddress;
-    const p = pools.find((pool) => pool.token1 === t1 && pool.token2 === t2);
-    if (p) {
+    const poolFound = pools.find((p) => p.token1 === t1 && p.token2 === t2);
+    if (poolFound) {
       onPoolsLoaded(true);
-      setPool(poolWithReservesToPool(p));
+      setPool(poolWithReservesToPool(poolFound));
     } else {
       onPoolsLoaded(false);
       console.error('Pool not found');
@@ -179,7 +179,7 @@ const OverlaySwap = ({
                   setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),
                   setSlippage: (slippage: number) => tradeDispatch(store.setSettingsAction({
                     ...tradeState.settings,
-                    percentage: (MAX_SLIPPAGE * slippage) / 100
+                    percentage: (MAX_SLIPPAGE * slippage) / 100,
                   })),
                 }}
               />
