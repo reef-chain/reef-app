@@ -26,6 +26,7 @@ const TokenCard = ({
 }: TokenCard): JSX.Element => {
   const [isSwapOpen, setSwapOpen] = useState(false);
   const [isSendOpen, setSendOpen] = useState(false);
+  const [hasPool, setHasPool] = useState(false);
 
   const hideBalance = useContext(HideBalance);
 
@@ -153,6 +154,7 @@ const TokenCard = ({
             icon={faRepeat}
             onClick={() => setSwapOpen(true)}
             size="small"
+            disabled={!hasPool}
           />
 
           <Uik.Button
@@ -169,6 +171,7 @@ const TokenCard = ({
         tokenAddress={token.address}
         isOpen={isSwapOpen}
         onClose={() => setSwapOpen(false)}
+        onPoolsLoaded={setHasPool}
       />
 
       <OverlaySend
