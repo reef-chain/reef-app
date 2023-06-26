@@ -7,7 +7,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icons';
 import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-icons';
-import { Contract, ContractFactory, utils } from 'ethers';
+import {Contract, ContractFactory, ethers, utils} from 'ethers';
 import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
 import { verifyContract } from '../../utils/contract';
@@ -58,10 +58,14 @@ async function verify(
   const contractDataSettings = contractData.metadata.settings;
   const { compilationTarget } = contractDataSettings;
   const compTargetFileName = Object.keys(compilationTarget)[0];
+  //console.log('v111', contractData.sources, ' // ', compilationTarget[compTargetFileName], compTargetFileName, ' // t=', contractDataSettings.optimizer.enabled.toString());
+  // console.log('v222', compilationTarget[compTargetFileName], compTargetFileName, ' // t=', contractDataSettings.optimizer.enabled.toString());
+  const source = JSON.stringify(contractData.sources);
+  //console.log('SRCCCCC=', source);
   const verified = await verifyContract(
     contract,
     {
-      source: JSON.stringify(contractData.sources),
+      source,
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       contractName: compilationTarget[compTargetFileName],
       target: contractDataSettings.evmVersion,
@@ -100,6 +104,9 @@ const createToken = async ({
     title: strings.deploying_token,
     message: strings.sending_token_contract,
   });
+  /*const args = [
+    tokenName,
+  ];*/
   const args = [
     tokenName,
     symbol.toUpperCase(),
@@ -130,6 +137,9 @@ const createToken = async ({
   }
   try {
     contract = await reef20Contract.deploy(...args);
+    // console.log('DEPPPP=', contract.address);
+    // console.log('DEPPPP11=', deployContractData.bytecode.object.substr(0,200));
+    // contract = ethers.ContractFactory.getContract('0xbCd27ADa9592B11E6430782EC6Df99d50D8AD861', deployTokens.noMintNoBurn.metadata.output.abi, signer.signer);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (onTxUpdate) {
@@ -172,6 +182,7 @@ const createToken = async ({
       title: strings.verifying_deployed_token,
       message: strings.smart_contract_bytecode_validated,
     });
+    // console.log('vvvv', deployContractData)
     verified = await verify(contract, args, network, deployContractData);
   } catch (err) {
     console.log('verify err=', err);

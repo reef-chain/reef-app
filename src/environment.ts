@@ -10,7 +10,8 @@ if (isReefswapUI) {
 export const testnetOverride = {
   ...availableNetworks.testnet,
   rpcUrl: 'wss://rpc-testnet.reefscan.com/ws',
-  verificationApiUrl: 'https://api-testnet.reefscan.info',
+  verificationApiUrl: 'http://localhost:8080',
+  // verificationApiUrl: 'https://api-testnet.reefscan.info',
 } as Network;
 // export const mainnetOverride = { ...availableNetworks.testnet, rpcUrl: 'wss://rpc.reefscan.com/ws', verificationApiUrl: 'https://api-testnet.reefscan.info' } as Network;
 export const appAvailableNetworks = [availableNetworks.mainnet, testnetOverride];

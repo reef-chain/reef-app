@@ -37,8 +37,16 @@ const CONTRACT_EXISTS_GQL = gql`
         id
       }
   }
-          
-          
+`;
+const CONTRACT_EXISTS_GQL1 = gql`
+  subscription query ($address: String!) {
+      contracts(limit: 1, where: {id_eq: $address}) {
+        id
+        bytecode
+        bytecodeArguments
+        bytecodeContext
+      }
+  }
 `;
 
 const isContrIndexed = async (address: string): Promise<boolean> => new Promise(async (resolve) => {
@@ -49,13 +57,14 @@ const isContrIndexed = async (address: string): Promise<boolean> => new Promise(
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const apollo = await firstValueFrom(apolloClInst$ as Observable<ApolloClient<any>>);
   const subs = apollo.subscribe({
-    query: CONTRACT_EXISTS_GQL,
+    query: CONTRACT_EXISTS_GQL1,
     variables: { address },
     fetchPolicy: 'network-only',
   }).subscribe({
     next(result) {
       if (result.data.contracts && result.data.contracts.length) {
         clearTimeout(tmt);
+        console.log('REVERT GQL contract=', result.data.contracts[0].bytecode.substr(0, 200));
         resolve(true);
         subs.unsubscribe();
       }
@@ -96,6 +105,14 @@ export const verifyContract = async (deployedContract: Contract, contract: ReefC
       license: contract.license,
       runs: contract.runs,
     };
+    const src = JSON.parse(contract.source);
+    Object.keys(src).forEach((s) => {
+      console.log('#########################');
+      console.log('key=', s);
+      // @ts-ignore
+      console.log('VALUE=', src[s]);
+      console.log('#########################');
+    });
     await contractVerificatorApi.post<VerificationContractReq, AxiosResponse<string>>(`${url}${CONTRACT_VERIFICATION_URL}`, body);
     // (verification_test, body)
     return true;
