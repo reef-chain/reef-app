@@ -237,7 +237,14 @@ C226.3,333.5,225.4,331.3,224.1,329.3z"
 const BuyReefButton = (): JSX.Element => {
   const history = useHistory();
   const navigate = (): void => {
-    history.push(ONRAMP_URL);
+    fetch('https://ipapi.co/json/')
+      .then(response => response.json()).then(data=>{
+        if(data.country === 'IN' || data.country === 'AE' ||data.country === 'TR'){
+          history.push(ONRAMP_URL);
+        }else{
+          history.push(BUY_URL);
+        }
+      })
   };
 
   return (
