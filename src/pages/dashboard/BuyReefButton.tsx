@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
 import './buy-reef-button.css';
-import { BUY_URL } from '../../urls';
+import { BUY_URL, ONRAMP_URL } from '../../urls';
 import { localizedStrings } from '../../l10n/l10n';
 
 const Shape = (): JSX.Element => (
@@ -237,7 +237,7 @@ C226.3,333.5,225.4,331.3,224.1,329.3z"
 const BuyReefButton = (): JSX.Element => {
   const history = useHistory();
   const navigate = (): void => {
-    history.push(BUY_URL);
+    history.push(ONRAMP_URL);
   };
 
   return (

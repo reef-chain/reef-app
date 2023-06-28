@@ -19,6 +19,7 @@ import {
   SPECIFIED_SWAP_URL,
   TRANSFER_TOKEN,
   BUY_URL,
+  ONRAMP_URL
 } from '../urls';
 import Bind from './bind/Bind';
 import { Bonds } from './bonds/Bonds';
@@ -33,6 +34,7 @@ import Buy from './buy/Buy';
 import { Transfer } from './transfer/Transfer';
 import { isAddressWhitelisted, isReefswapUI } from '../environment';
 import { shortAddress } from '../utils/utils';
+import Onramp from './onramp/Onramp';
 
 const ContentRouter = (): JSX.Element => {
   const selectedAddress = hooks.useObservableState(appState.currentAddress$);
@@ -89,6 +91,7 @@ const tokenPrices = useMemo(
                 <Route exact path={BONDS_URL} component={Bonds} />
                 <Route path={BIND_URL} component={Bind} />
                 <Route path={BUY_URL} component={Buy} />
+                <Route path={ONRAMP_URL} component={Onramp} />
                 <Route path="/" render={() => (<Redirect to={DASHBOARD_URL} />)} />
               </Switch>
               )}
@@ -107,6 +110,7 @@ const tokenPrices = useMemo(
                 <Route exact path={BONDS_URL} component={Bonds} />
                 <Route path={BIND_URL} component={Bind} />
                 <Route path={BUY_URL} component={Buy} />
+                <Route path={ONRAMP_URL} component={Onramp} />
                 <Route path="/" render={() => (<Redirect to={DASHBOARD_URL} />)} />
               </Switch>
               )}
