@@ -42,6 +42,7 @@ interface CreateToken {
   tokenName: string;
   symbol: string;
   initialSupply: string;
+  icon?:string;
   tokenOptions: ITokenOptions;
   network: Network;
   onTxUpdate?: reefUtils.TxStatusHandler;
@@ -54,6 +55,7 @@ async function verify(
   args: string[],
   network: Network,
   contractData: DeployContractData,
+  icon:string,
 ): Promise<boolean> {
   const contractDataSettings = contractData.metadata.settings;
   const { compilationTarget } = contractDataSettings;
@@ -73,6 +75,7 @@ async function verify(
     },
     args,
     network.verificationApiUrl,
+    icon,
   );
   return verified;
 }
@@ -84,6 +87,7 @@ const createToken = async ({
   symbol,
   initialSupply,
   tokenOptions,
+  icon,
   onTxUpdate,
   setResultMessage,
   setVerifiedContract,
@@ -172,7 +176,7 @@ const createToken = async ({
       title: strings.verifying_deployed_token,
       message: strings.smart_contract_bytecode_validated,
     });
-    verified = await verify(contract, args, network, deployContractData);
+    verified = await verify(contract, args, network, deployContractData, icon!);
   } catch (err) {
     console.log('verify err=', err);
   }
@@ -432,6 +436,7 @@ export const CreatorComponent = ({
             symbol,
             initialSupply,
             tokenOptions,
+            icon,
             onTxUpdate,
             setResultMessage,
             setVerifiedContract,
