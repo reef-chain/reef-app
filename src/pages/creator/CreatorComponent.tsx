@@ -55,7 +55,7 @@ async function verify(
   args: string[],
   network: Network,
   contractData: DeployContractData,
-  icon:any
+  icon:string,
 ): Promise<boolean> {
   const contractDataSettings = contractData.metadata.settings;
   const { compilationTarget } = contractDataSettings;
@@ -75,7 +75,7 @@ async function verify(
     },
     args,
     network.verificationApiUrl,
-    icon
+    icon,
   );
   return verified;
 }
@@ -176,7 +176,7 @@ const createToken = async ({
       title: strings.verifying_deployed_token,
       message: strings.smart_contract_bytecode_validated,
     });
-    verified = await verify(contract, args, network, deployContractData,icon);
+    verified = await verify(contract, args, network, deployContractData, icon!);
   } catch (err) {
     console.log('verify err=', err);
   }
@@ -280,7 +280,7 @@ export const CreatorComponent = ({
                 </Uik.Container>
                 <IconUpload
                   value={icon}
-                  onChange={e=>setIcon(e)}
+                  onChange={(e) => setIcon(e)}
                 />
               </Uik.Container>
 
