@@ -83,6 +83,9 @@
   font-weight: 600;
   color: var(--text);
 }
+.nfts__item-name:hover {
+  cursor: pointer;
+}
 
 .nfts__item-name + .nfts__item-balance {
   margin-left: 15px;
@@ -154,4 +157,8 @@
     opacity: 0;
     transform: translateY(10px);
   }
+}
+
+.nfts__item:hover{
+  cursor: pointer;
 }
