@@ -13,7 +13,7 @@ const NFT = ({
 }: NFTData): JSX.Element => {
   const loading = false;
   return (
-    <div className="nfts__item">
+    <div className="nfts__item" onClick={()=>console.log('clicked')}>
       { mimetype && mimetype.indexOf('mp4') > -1
           && (
           <video className="nfts__item-video" autoPlay loop muted poster="">
