@@ -1,5 +1,6 @@
 .nfts {
   width: 100%;
+  overflow: auto;
 }
 
 .nfts__empty-nft-list {
