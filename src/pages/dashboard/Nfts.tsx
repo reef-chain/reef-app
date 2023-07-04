@@ -5,6 +5,7 @@ import Uik from '@reef-chain/ui-kit';
 import NFT from './NFT';
 import SqwidButton from './SqwidButton/SqwidButton';
 import { localizedStrings } from '../../l10n/l10n';
+import OverlayNFT from '../../common/OverlayNFT';
 
 export const Skeleton = (): JSX.Element => (
   <div className="nft-skeleton">
@@ -18,12 +19,8 @@ interface NftsProps {
 }
 
 export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
-  const [indexKey, setIndexKey] = useState(0);
-  const keyIndex = useMemo(() => indexKey, [indexKey]);
-
-  useEffect(() => {
-    // Do something when indexKey changes
-  }, [indexKey]);
+  const [nftDetails, setNftDetails] = useState(false);
+ const [nftIndex,setNftIndex] = useState(0);
 
   return (
     <div className="nfts">
@@ -38,16 +35,23 @@ export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
           {!!nfts.length && (
             <div className="nfts__container">
               {nfts.map((nft, index) => (
-                <NFT
-                  key={`${nft.address}-${nft.nftId}-${indexKey}`}
-                  iconUrl={nft.iconUrl}
-                  name={nft.name}
-                  balance={nft.balance}
-                  mimetype={nft.mimetype}
-                  setKeyIndex={setIndexKey}
-                  keyIndex={keyIndex}
-                />
+                <div key={`${nft.address}-${nft.nftId}`} onClick={()=>{
+                  setNftDetails(true)
+                  setNftIndex(index)
+                  }}>
+                  <NFT
+                    iconUrl={nft.iconUrl}
+                    name={nft.name}
+                    balance={nft.balance}
+                    mimetype={nft.mimetype}
+                  />
+                </div>
               ))}
+             <OverlayNFT
+                  isOpen={nftDetails}
+                  onClose={()=>setNftDetails(false)}
+                 nftName={nfts[nftIndex].name} 
+                  />
             </div>
           )}
         </div>

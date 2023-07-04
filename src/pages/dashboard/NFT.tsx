@@ -8,28 +8,14 @@ interface NFTData {
   name: string;
   balance: BigNumber;
   mimetype?: string;
-  setKeyIndex: any;
-  keyIndex: any;
 }
 
 const NFT = ({
-  iconUrl, name, balance, mimetype, setKeyIndex, keyIndex
+  iconUrl, name, balance, mimetype
 }: NFTData): JSX.Element => {
   const loading = false;
-  const [isNftDetailsOpen, setIsNFTDetailsOpen] = useState(false);
-  const [nftKey, setNftKey] = useState(0);
-
-  useEffect(() => {
-    // Reset the key when isNftDetailsOpen is set to false
-    if (!isNftDetailsOpen) {
-      setNftKey(nftKey + 1);
-    }
-  }, [isNftDetailsOpen]);
-
   return (
-    <div className="nfts__item" onClick={() => {
-      setIsNFTDetailsOpen(true);
-    }}>
+    <div className="nfts__item">
       {mimetype && mimetype.indexOf('mp4') > -1
         && (
           <video className="nfts__item-video" autoPlay loop muted poster="">
@@ -52,15 +38,6 @@ const NFT = ({
         <div className="nfts__item-name">{name}</div>
         <div className="nfts__item-balance">{balance.toString()}</div>
       </div>
-      <OverlayNFT
-        key={nftKey}
-        nftName={name}
-        isVideoNFT={mimetype != undefined && mimetype.indexOf('mp4') > -1}
-        iconUrl={iconUrl}
-        isOpen={isNftDetailsOpen}
-        onClose={setKeyIndex}
-        onCloseIdx={keyIndex}
-      />
     </div>
   );
 };

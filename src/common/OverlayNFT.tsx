@@ -9,10 +9,9 @@ const { Send, OverlayAction } = Components;
 export interface OverlayNFT {
   nftName?: string;
   isOpen: boolean;
-  isVideoNFT: boolean;
-  iconUrl: string;
+  isVideoNFT?: boolean;
+  iconUrl?: string;
   onClose:any;
-  onCloseIdx:any;
 }
 
 const OverlayNFT = ({
@@ -20,8 +19,7 @@ const OverlayNFT = ({
   isOpen,
   isVideoNFT,
   iconUrl,
-  onClose,
-  onCloseIdx
+  onClose
 }: OverlayNFT): JSX.Element => {
   const { tokens } = useContext(TokenContext);
 
@@ -33,9 +31,7 @@ const OverlayNFT = ({
     <OverlayAction
       isOpen={isOpen}
       title="NFT Details"
-      onClose={()=>
-        onClose(onCloseIdx+1)
-    }
+      onClose={onClose}
       className="overlay-swap"
     >
       <div className="uik-pool-actions pool-actions">
