@@ -51,6 +51,13 @@ export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
                   isOpen={nftDetails}
                   onClose={()=>setNftDetails(false)}
                  nftName={nfts[nftIndex].name} 
+                 isVideoNFT={nfts[nftIndex].mimetype !=undefined && nfts[nftIndex].mimetype?.includes('mp4')}
+                 iconUrl={nfts[nftIndex].iconUrl}
+                  balance={nfts[nftIndex].balance}
+                  address={nfts[nftIndex].address}
+                  contractType={nfts[nftIndex].contractType}
+                  nftId = {nfts[nftIndex].nftId}
+
                   />
             </div>
           )}
