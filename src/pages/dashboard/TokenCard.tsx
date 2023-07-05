@@ -10,7 +10,6 @@ import './token-card.css';
 import HideBalance from '../../context/HideBalance';
 import { displayBalance, displayBalanceFromToken } from '../../utils/displayBalance';
 import { localizedStrings } from '../../l10n/l10n';
-import OverlayNFT from '../../common/OverlayNFT';
 
 export interface TokenCard {
   price: number;

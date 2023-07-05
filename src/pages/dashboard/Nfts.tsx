@@ -1,5 +1,5 @@
 import { NFT as NFTData } from '@reef-defi/react-lib';
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import './Nfts.css';
 import Uik from '@reef-chain/ui-kit';
 import NFT from './NFT';
@@ -20,7 +20,7 @@ interface NftsProps {
 
 export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
   const [nftDetails, setNftDetails] = useState(false);
- const [nftIndex,setNftIndex] = useState(0);
+  const [nftIndex, setNftIndex] = useState(0);
 
   return (
     <div className="nfts">
@@ -35,10 +35,15 @@ export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
           {!!nfts.length && (
             <div className="nfts__container">
               {nfts.map((nft, index) => (
-                <div key={`${nft.address}-${nft.nftId}`} onClick={()=>{
-                  setNftDetails(true)
-                  setNftIndex(index)
-                  }}>
+                <div
+                  className="nft__button"
+                  key={`${nft.address}-${nft.nftId}`}
+                  role="button"
+                  onClick={() => {
+                    setNftDetails(true);
+                    setNftIndex(index);
+                  }}
+                >
                   <NFT
                     iconUrl={nft.iconUrl}
                     name={nft.name}
@@ -47,18 +52,17 @@ export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
                   />
                 </div>
               ))}
-             <OverlayNFT
-                  isOpen={nftDetails}
-                  onClose={()=>setNftDetails(false)}
-                 nftName={nfts[nftIndex].name} 
-                 isVideoNFT={nfts[nftIndex].mimetype !=undefined && nfts[nftIndex].mimetype?.includes('mp4')}
-                 iconUrl={nfts[nftIndex].iconUrl}
-                  balance={nfts[nftIndex].balance}
-                  address={nfts[nftIndex].address}
-                  contractType={nfts[nftIndex].contractType}
-                  nftId = {nfts[nftIndex].nftId}
-
-                  />
+              <OverlayNFT
+                isOpen={nftDetails}
+                onClose={() => setNftDetails(false)}
+                nftName={nfts[nftIndex].name}
+                isVideoNFT={nfts[nftIndex].mimetype !== undefined && nfts[nftIndex].mimetype?.includes('mp4')}
+                iconUrl={nfts[nftIndex].iconUrl}
+                balance={nfts[nftIndex].balance.toString()}
+                address={nfts[nftIndex].address}
+                contractType={nfts[nftIndex].contractType}
+                nftId={nfts[nftIndex].nftId}
+              />
             </div>
           )}
         </div>

@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { BigNumber } from 'ethers';
-import OverlaySend from '../../common/OverlaySend';
-import OverlayNFT from '../../common/OverlayNFT';
 
 interface NFTData {
   iconUrl: string;
@@ -11,7 +9,7 @@ interface NFTData {
 }
 
 const NFT = ({
-  iconUrl, name, balance, mimetype
+  iconUrl, name, balance, mimetype,
 }: NFTData): JSX.Element => {
   const loading = false;
   return (
