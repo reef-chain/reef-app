@@ -1,0 +1,30 @@
+.nft-name--modal{
+    font-size: x-large;
+    font-weight: bold;
+}
+
+.nft-iconurl{
+    max-width: 250px;
+    border-radius: 20px;
+    margin-top: 15px;
+}
+
+.nft-view{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.display-table{
+    padding: 4px;
+    font-size: 14px;
+    background-color: #eff2f6;
+    padding: 4px;
+    margin-top: 8px;
+    border-radius: 10px;
+}
+
+.display-table-label{
+    font-weight: bold;
+    color: #a93185;
+}
