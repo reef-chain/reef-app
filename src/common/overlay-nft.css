@@ -28,3 +28,15 @@
     font-weight: bold;
     color: #a93185;
 }
+
+.nft-box-send-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.nft__button{
+    outline: none;
+    border: none;
+}
