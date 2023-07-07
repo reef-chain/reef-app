@@ -1,9 +1,11 @@
-import { Components } from '@reef-defi/react-lib';
-import React from 'react';
+import { appState, Components, hooks } from '@reef-defi/react-lib';
+import React, { useState } from 'react';
 import './overlay-swap.css';
 import './overlay-nft.css';
 import Uik from '@reef-chain/ui-kit';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { Contract } from 'ethers';
+import BigNumber from 'bignumber.js';
 
 const { OverlayAction } = Components;
 
@@ -12,11 +14,51 @@ export interface OverlaySendNFT {
   isOpen: boolean;
   isVideoNFT?: boolean;
   iconUrl?: string;
-  onClose:()=>void;
-  balance:string;
-  address:string;
-  contractType:string;
-  nftId:string;
+  onClose: () => void;
+  balance: string;
+  address: string;
+  contractType: string;
+  nftId: string;
+}
+
+const nftTxAbi = [
+  {
+    "name": "safeTransferFrom",
+    "type": "function",
+    "inputs": [
+      {
+        "name": "from",
+        "type": "address"
+      },
+      {
+        "name": "to",
+        "type": "address"
+      },
+      {
+        "name": "id",
+        "type": "uint256"
+      },
+      {
+        "name": "amount",
+        "type": "uint256"
+      },
+      {
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  }
+]
+
+const transferNFT = async (from: string, to: string, amount: number, nftContract: string, signer: any,nftId:number) => {
+  const contractInstance = new Contract(nftContract, nftTxAbi, signer);
+  contractInstance.safeTransferFrom(from, to, amount, nftId, [], {
+    customData: {
+      storageLimit: 2000
+    }
+  });
 }
 
 const OverlaySendNFT = ({
@@ -29,60 +71,28 @@ const OverlaySendNFT = ({
   address,
   contractType,
   nftId,
-}: OverlaySendNFT): JSX.Element => (
-// const { tokens } = useContext(TokenContext);
+}: OverlaySendNFT): JSX.Element => {
+  const [destinationAddress, setDestinationAddress] = useState<string>('');
+  const [amount, setAmount] = useState<number>(0);
 
-  // const signer = hooks.useObservableState(appState.selectedSigner$);
-  // const accounts = hooks.useObservableState(appState.accountsSubj);
-  // const provider = hooks.useObservableState(appState.currentProvider$);
-  <OverlayAction
-    isOpen={isOpen}
-    title="NFT Details"
-    onClose={onClose}
-    className="overlay-swap"
-  >
-    <div className="uik-pool-actions pool-actions">
-      <div className="nft-name--modal">{nftName}</div>
-      <div className="nft-view">
-        {isVideoNFT ? (
-          <video className="nfts__item-video nft-iconurl" autoPlay loop muted poster="">
-            <source src={iconUrl} type="video/mp4" />
-          </video>
-        ) : (
-          <img src={iconUrl} alt="" className="nft-iconurl" />
-        )}
+  const signer = hooks.useObservableState(appState.selectedSigner$);
+
+  return (
+    <OverlayAction
+      isOpen={isOpen}
+      title="NFT Details"
+      onClose={onClose}
+      className="overlay-swap"
+    >
+      <div className="uik-pool-actions pool-actions">
+        <input type="text" onChange={e => setDestinationAddress(e.target.value)} />
+        {destinationAddress}
+        {amount}
+        <input type="number" onChange={e => setAmount(1)} />
+        <button onClick={() => transferNFT('0x7Ca7886e0b851e6458770BC1d85Feb6A5307b9a2','0x8Eb24026196108108E71E45F37591164BDefcB76',1,address,signer?.signer,1790)}>Send</button>
       </div>
-      <div className="display-table">
-        <div>
-          <span className="display-table-label">nft id : </span>
-          {' '}
-          {nftId}
-        </div>
-        <div>
-          <span className="display-table-label">balance : </span>
-          {balance}
-        </div>
-        <div>
-          <span className="display-table-label">address : </span>
-          {' '}
-          {address}
-        </div>
-        <div>
-          <span className="display-table-label">contract type : </span>
-          {' '}
-          {contractType}
-        </div>
-      </div>
-      <div className="nft-box-send-btn">
-        <Uik.Button
-          text="Send NFT"
-          icon={faPaperPlane}
-          onClick={() => onClose()}
-          size="large"
-          fill
-        />
-      </div>
-    </div>
-  </OverlayAction>
-);
+    </OverlayAction>
+  );
+};
+
 export default OverlaySendNFT;
