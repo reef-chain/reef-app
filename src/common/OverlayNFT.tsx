@@ -5,6 +5,7 @@ import './overlay-nft.css';
 import Uik from '@reef-chain/ui-kit';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import OverlaySendNFT from './OverlaySendNft';
+import { shortAddress } from '../utils/utils';
 
 const { OverlayAction } = Components;
 
@@ -67,7 +68,7 @@ const OverlayNFT = ({
         <div>
           <span className="display-table-label">address : </span>
           {' '}
-          {address}
+          {shortAddress(address)}
         </div>
         <div>
           <span className="display-table-label">contract type : </span>

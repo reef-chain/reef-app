@@ -52,14 +52,15 @@ const nftTxAbi = [
   }
 ]
 
-const transferNFT = async (from: string, to: string, amount: number, nftContract: string, signer: any,nftId:number) => {
+const transferNFT = async (from: string, to: string, amount: number, nftContract: string, signer: any,nftId:string) => {
   const contractInstance = new Contract(nftContract, nftTxAbi, signer);
-  contractInstance.safeTransferFrom(from, to, amount, nftId, [], {
+  contractInstance.safeTransferFrom(from, to, amount, 1720, [], {
     customData: {
       storageLimit: 2000
     }
   });
 }
+
 
 const OverlaySendNFT = ({
   nftName,
@@ -89,7 +90,7 @@ const OverlaySendNFT = ({
         {destinationAddress}
         {amount}
         <input type="number" onChange={e => setAmount(1)} />
-        <button onClick={() => transferNFT('0x7Ca7886e0b851e6458770BC1d85Feb6A5307b9a2','0x8Eb24026196108108E71E45F37591164BDefcB76',1,address,signer?.signer,1790)}>Send</button>
+        <button onClick={() => transferNFT('0x7Ca7886e0b851e6458770BC1d85Feb6A5307b9a2','0x8Eb24026196108108E71E45F37591164BDefcB76',1,address,signer?.signer,nftId)}>Send</button>
       </div>
     </OverlayAction>
   );
