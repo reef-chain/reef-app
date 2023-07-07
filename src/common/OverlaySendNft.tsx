@@ -1,14 +1,13 @@
 import { Components } from '@reef-defi/react-lib';
-import React, { useState } from 'react';
+import React from 'react';
 import './overlay-swap.css';
 import './overlay-nft.css';
 import Uik from '@reef-chain/ui-kit';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import OverlaySendNFT from './OverlaySendNft';
 
 const { OverlayAction } = Components;
 
-export interface OverlayNFT {
+export interface OverlaySendNFT {
   nftName?: string;
   isOpen: boolean;
   isVideoNFT?: boolean;
@@ -20,7 +19,7 @@ export interface OverlayNFT {
   nftId:string;
 }
 
-const OverlayNFT = ({
+const OverlaySendNFT = ({
   nftName,
   isOpen,
   isVideoNFT,
@@ -30,14 +29,13 @@ const OverlayNFT = ({
   address,
   contractType,
   nftId,
-}: OverlayNFT): JSX.Element =>{
-  const[sendNFT,setSendNFT]=useState(false);
+}: OverlaySendNFT): JSX.Element => (
 // const { tokens } = useContext(TokenContext);
 
   // const signer = hooks.useObservableState(appState.selectedSigner$);
   // const accounts = hooks.useObservableState(appState.accountsSubj);
   // const provider = hooks.useObservableState(appState.currentProvider$);
-  return (<OverlayAction
+  <OverlayAction
     isOpen={isOpen}
     title="NFT Details"
     onClose={onClose}
@@ -79,25 +77,12 @@ const OverlayNFT = ({
         <Uik.Button
           text="Send NFT"
           icon={faPaperPlane}
-          onClick={() => {
-            setSendNFT(true);
-          }}
+          onClick={() => onClose()}
           size="large"
           fill
         />
       </div>
     </div>
-    <OverlaySendNFT
-                isOpen={sendNFT}
-                onClose={() => setSendNFT(false)}
-                nftName={nftName}
-                isVideoNFT={false}
-                iconUrl={'nfts[nftIndex].iconUrl'}
-                balance={'nfts[nftIndex].balance.toString()'}
-                address={'nfts[nftIndex].address'}
-                contractType={'nfts[nftIndex].contractType'}
-                nftId={'nfts[nftIndex].nftId'}
-              />
   </OverlayAction>
-)};
-export default OverlayNFT;
+);
+export default OverlaySendNFT;
