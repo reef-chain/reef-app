@@ -6,6 +6,7 @@ import Uik from '@reef-chain/ui-kit';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { Contract } from 'ethers';
 import BigNumber from 'bignumber.js';
+import {resolveEvmAddress} from "@reef-defi/evm-provider/utils"
 
 const { OverlayAction } = Components;
 
@@ -61,6 +62,11 @@ const transferNFT = async (from: string, to: string, amount: number, nftContract
   });
 }
 
+const getResolvedEVMAddress=async(provider:any,address:string):Promise<string>=>{
+  const result = await resolveEvmAddress(provider,address);
+  return result; 
+}
+
 
 const OverlaySendNFT = ({
   nftName,
@@ -77,6 +83,7 @@ const OverlaySendNFT = ({
   const [amount, setAmount] = useState<number>(0);
 
   const signer = hooks.useObservableState(appState.selectedSigner$);
+  const provider = hooks.useObservableState(appState.currentProvider$);
 
   return (
     <OverlayAction
@@ -90,7 +97,10 @@ const OverlaySendNFT = ({
         {destinationAddress}
         {amount}
         <input type="number" onChange={e => setAmount(1)} />
-        <button onClick={() => transferNFT('0x7Ca7886e0b851e6458770BC1d85Feb6A5307b9a2','0x8Eb24026196108108E71E45F37591164BDefcB76',1,address,signer?.signer,nftId)}>Send</button>
+        <button onClick={() => transferNFT(signer?.evmAddress!,'0x8Eb24026196108108E71E45F37591164BDefcB76',1,address,signer?.signer,nftId)}>Send</button>
+        <button onClick={()=>getResolvedEVMAddress(provider,'5EnY9eFwEDcEJ62dJWrTXhTucJ4pzGym4WZ2xcDKiT3eJecP')}>
+    resolve evm addr
+          </button>
       </div>
     </OverlayAction>
   );
