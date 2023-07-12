@@ -99,7 +99,7 @@ const OverlaySendNFT = ({
       className="overlay-swap"
     >
       <div className="uik-pool-actions pool-actions">
-        <Uik.Input label='Send to :' type="text" onChange={e => setDestinationAddress(e.target.value)} />
+        <Uik.Input label={`Send ${nftName} to :`} type="text" onChange={e => setDestinationAddress(e.target.value)} />
        <br />
         <Uik.Input label='Amount : ' value={amount.toString()} type="number" onChange={e => setAmount(e.target.value)} />
         <br />
