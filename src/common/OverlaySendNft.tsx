@@ -99,15 +99,26 @@ const OverlaySendNFT = ({
     }
   }
 
-  const validator = ()=>{
-  if(amount>parseInt(balance)){
-      setBtnLabel('Amount too high');
-    }else if(amount<1){
-      setBtnLabel('Amount too low');
-    }else{
-      if(ethers.utils.isAddress(destinationAddress)){
-        setBtnLabel('Send')
+  const validator = (e:any)=>{
+    if(e.target.name == "amount"){
+      setAmount(e.target.value);
+      if(e.target.value>parseInt(balance)){
+        setBtnLabel('Amount too high');
+      }else if(e.target.value<1){
+        setBtnLabel('Amount too low');
       }else{
+        if(ethers.utils.isAddress(destinationAddress)){
+          setBtnLabel('Send');
+        }
+      }
+    }
+  if(e.target.name=="destination"){
+    setDestinationAddress(e.target.value);
+      if(ethers.utils.isAddress(e.target.value) && (amount<=parseInt(balance) && amount>0)){
+        setBtnLabel('Send')
+      }else if(ethers.utils.isAddress(e.target.value) && (amount>parseInt(balance) && amount<=0)){
+        setBtnLabel('Amount not valid')
+      }else {
         setBtnLabel('Address is invalid')
       }
   }
@@ -121,18 +132,17 @@ const OverlaySendNFT = ({
       className="overlay-swap"
     >
       <div className="uik-pool-actions pool-actions">
-        <Uik.Input label={`Send ${nftName} to :`} type="text" onChange={e => {
-        setDestinationAddress(e.target.value);
-        validator();
+        <Uik.Input label={`Send ${nftName} to :`} name='destination' type="text" onChange={e => {
+          validator(e);
         }} />
        <br />
-        <Uik.Input label='Amount : ' value={amount.toString()} type="number" onChange={e => {
-          setAmount(e.target.value);
-          validator();
+        <Uik.Input label='Amount : ' name='amount' value={amount.toString()} type="number" onChange={e => {
+          validator(e);
         }
           }/>
         <br />
-        <Uik.Button onClick={() => transferNFT(signer?.evmAddress!,destinationAddress,amount,address,signer?.signer,provider,nftId)} fill>{btnLabel}</Uik.Button>
+        {btnLabel == "Send"?<Uik.Button onClick={() => transferNFT(signer?.evmAddress!,destinationAddress,amount,address,signer?.signer,provider,nftId)} fill>{btnLabel}</Uik.Button>:<Uik.Button onClick={() => transferNFT(signer?.evmAddress!,destinationAddress,amount,address,signer?.signer,provider,nftId)} disabled>{btnLabel}</Uik.Button>}
+        
       </div>
     </OverlayAction>
   );
