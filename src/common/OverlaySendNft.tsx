@@ -52,7 +52,7 @@ const nftTxAbi = [
 
 const transferNFT = async (from: string, to: string, amount: number, nftContract: string, signer: any,nftId:string) => {
   const contractInstance = new Contract(nftContract, nftTxAbi, signer);
-  contractInstance.safeTransferFrom(from, to, amount, 1720, [], {
+  contractInstance.safeTransferFrom(from, to, nftId, amount, [], {
     customData: {
       storageLimit: 2000
     }
@@ -87,14 +87,11 @@ const OverlaySendNFT = ({
       className="overlay-swap"
     >
       <div className="uik-pool-actions pool-actions">
-        <input type="text" onChange={e => setDestinationAddress(e.target.value)} />
-        {destinationAddress}
-        {amount}
-        <input type="number" onChange={e => setAmount(1)} />
-        <button onClick={() => transferNFT(signer?.evmAddress!,'0x8Eb24026196108108E71E45F37591164BDefcB76',1,address,signer?.signer,nftId)}>Send</button>
-        <button onClick={()=>getResolvedEVMAddress(provider,'5EnY9eFwEDcEJ62dJWrTXhTucJ4pzGym4WZ2xcDKiT3eJecP')}>
-    resolve evm addr
-          </button>
+        <Uik.Input label='Send to :' type="text" onChange={e => setDestinationAddress(e.target.value)} />
+       <br />
+        <Uik.Input label='Amount : ' value={amount.toString()} type="number" onChange={e => setAmount(e.target.value)} />
+        <br />
+        <Uik.Button onClick={() => transferNFT(signer?.evmAddress!,destinationAddress,amount,address,signer?.signer,nftId)} fill>Send</Uik.Button>
       </div>
     </OverlayAction>
   );
