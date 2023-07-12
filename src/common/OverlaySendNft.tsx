@@ -13,12 +13,9 @@ const { OverlayAction } = Components;
 export interface OverlaySendNFT {
   nftName?: string;
   isOpen: boolean;
-  isVideoNFT?: boolean;
-  iconUrl?: string;
   onClose: () => void;
   balance: string;
   address: string;
-  contractType: string;
   nftId: string;
 }
 
@@ -71,12 +68,9 @@ const getResolvedEVMAddress=async(provider:any,address:string):Promise<string>=>
 const OverlaySendNFT = ({
   nftName,
   isOpen,
-  isVideoNFT,
-  iconUrl,
   onClose,
   balance,
   address,
-  contractType,
   nftId,
 }: OverlaySendNFT): JSX.Element => {
   const [destinationAddress, setDestinationAddress] = useState<string>('');
