@@ -92,11 +92,8 @@ const OverlayNFT = ({
                 isOpen={sendNFT}
                 onClose={() => setSendNFT(false)}
                 nftName={nftName}
-                isVideoNFT={false}
-                iconUrl={'nfts[nftIndex].iconUrl'}
                 balance={'nfts[nftIndex].balance.toString()'}
                 address={'nfts[nftIndex].address'}
-                contractType={'nfts[nftIndex].contractType'}
                 nftId={'nfts[nftIndex].nftId'}
               />
   </OverlayAction>
