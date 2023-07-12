@@ -4,7 +4,7 @@ import './overlay-swap.css';
 import './overlay-nft.css';
 import Uik from '@reef-chain/ui-kit';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
-import { Contract } from 'ethers';
+import { Contract ,ethers} from 'ethers';
 import {resolveEvmAddress,isSubstrateAddress} from "@reef-defi/evm-provider/utils"
 
 const { OverlayAction } = Components;
@@ -68,6 +68,7 @@ const OverlaySendNFT = ({
 }: OverlaySendNFT): JSX.Element => {
   const [destinationAddress, setDestinationAddress] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
+  const [btnLabel, setBtnLabel] = useState<string>('Enter destination address');
 
   const signer = hooks.useObservableState(appState.selectedSigner$);
   const provider = hooks.useObservableState(appState.currentProvider$);
@@ -98,6 +99,20 @@ const OverlaySendNFT = ({
     }
   }
 
+  const validator = ()=>{
+  if(amount>parseInt(balance)){
+      setBtnLabel('Amount too high');
+    }else if(amount<1){
+      setBtnLabel('Amount too low');
+    }else{
+      if(ethers.utils.isAddress(destinationAddress)){
+        setBtnLabel('Send')
+      }else{
+        setBtnLabel('Address is invalid')
+      }
+  }
+}
+
   return (
     <OverlayAction
       isOpen={isOpen}
@@ -106,11 +121,18 @@ const OverlaySendNFT = ({
       className="overlay-swap"
     >
       <div className="uik-pool-actions pool-actions">
-        <Uik.Input label={`Send ${nftName} to :`} type="text" onChange={e => setDestinationAddress(e.target.value)} />
+        <Uik.Input label={`Send ${nftName} to :`} type="text" onChange={e => {
+        setDestinationAddress(e.target.value);
+        validator();
+        }} />
        <br />
-        <Uik.Input label='Amount : ' value={amount.toString()} type="number" onChange={e => setAmount(e.target.value)} />
+        <Uik.Input label='Amount : ' value={amount.toString()} type="number" onChange={e => {
+          setAmount(e.target.value);
+          validator();
+        }
+          }/>
         <br />
-        <Uik.Button onClick={() => transferNFT(signer?.evmAddress!,destinationAddress,amount,address,signer?.signer,provider,nftId)} fill>Send</Uik.Button>
+        <Uik.Button onClick={() => transferNFT(signer?.evmAddress!,destinationAddress,amount,address,signer?.signer,provider,nftId)} fill>{btnLabel}</Uik.Button>
       </div>
     </OverlayAction>
   );
