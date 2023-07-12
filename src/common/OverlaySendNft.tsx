@@ -6,7 +6,7 @@ import Uik from '@reef-chain/ui-kit';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { Contract } from 'ethers';
 import BigNumber from 'bignumber.js';
-import {resolveEvmAddress} from "@reef-defi/evm-provider/utils"
+import {resolveEvmAddress,isSubstrateAddress} from "@reef-defi/evm-provider/utils"
 
 const { OverlayAction } = Components;
 
@@ -50,9 +50,10 @@ const nftTxAbi = [
   }
 ]
 
-const transferNFT = async (from: string, to: string, amount: number, nftContract: string, signer: any,nftId:string) => {
+const transferNFT = async (from: string, to: string, amount: number, nftContract: string, signer: any,provider:any,nftId:string) => {
   const contractInstance = new Contract(nftContract, nftTxAbi, signer);
-  contractInstance.safeTransferFrom(from, to, nftId, amount, [], {
+  const toAddress = await getResolvedEVMAddress(provider,to);
+  contractInstance.safeTransferFrom(from, toAddress, nftId, amount, [], {
     customData: {
       storageLimit: 2000
     }
@@ -60,8 +61,11 @@ const transferNFT = async (from: string, to: string, amount: number, nftContract
 }
 
 const getResolvedEVMAddress=async(provider:any,address:string):Promise<string>=>{
-  const result = await resolveEvmAddress(provider,address);
-  return result; 
+  if(isSubstrateAddress(address)){
+    const resolvedEvmAddress = await resolveEvmAddress(provider,address);
+    return resolvedEvmAddress; 
+  }
+  return address;
 }
 
 
@@ -91,7 +95,7 @@ const OverlaySendNFT = ({
        <br />
         <Uik.Input label='Amount : ' value={amount.toString()} type="number" onChange={e => setAmount(e.target.value)} />
         <br />
-        <Uik.Button onClick={() => transferNFT(signer?.evmAddress!,destinationAddress,amount,address,signer?.signer,nftId)} fill>Send</Uik.Button>
+        <Uik.Button onClick={() => transferNFT(signer?.evmAddress!,destinationAddress,amount,address,signer?.signer,provider,nftId)} fill>Send</Uik.Button>
       </div>
     </OverlayAction>
   );
