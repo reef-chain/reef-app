@@ -49,25 +49,6 @@ const nftTxAbi = [
   }
 ]
 
-const transferNFT = async (from: string, to: string, amount: number, nftContract: string, signer: any,provider:any,nftId:string) => {
-  const contractInstance = new Contract(nftContract, nftTxAbi, signer);
-  const toAddress = await getResolvedEVMAddress(provider,to);
-  try {   
-    const result = await contractInstance.safeTransferFrom(from, toAddress, nftId, amount, [], {
-      customData: {
-        storageLimit: 2000
-      }
-    });
-    Uik.notify.success('Transaction Successful!');
-  } catch (error:any) {
-    if(error.message == '_canceled'){
-      Uik.notify.danger('Cancelled by user');
-    }else{
-      Uik.notify.danger('Some error occured');
-    }
-  }
-}
-
 const getResolvedEVMAddress=async(provider:any,address:string):Promise<string>=>{
   if(isSubstrateAddress(address)){
     const resolvedEvmAddress = await resolveEvmAddress(provider,address);
@@ -90,6 +71,32 @@ const OverlaySendNFT = ({
 
   const signer = hooks.useObservableState(appState.selectedSigner$);
   const provider = hooks.useObservableState(appState.currentProvider$);
+
+  const clearStates = ()=>{
+    setDestinationAddress('');
+    setAmount(0);
+    onClose();
+  }
+
+  const transferNFT = async (from: string, to: string, amount: number, nftContract: string, signer: any,provider:any,nftId:string) => {
+    const contractInstance = new Contract(nftContract, nftTxAbi, signer);
+    const toAddress = await getResolvedEVMAddress(provider,to);
+    try {   
+      const result = await contractInstance.safeTransferFrom(from, toAddress, nftId, amount, [], {
+        customData: {
+          storageLimit: 2000
+        }
+      });
+      Uik.notify.success('Transaction Successful!');
+      clearStates();
+    } catch (error:any) {
+      if(error.message == '_canceled'){
+        Uik.notify.danger('Cancelled by user');
+      }else{
+        Uik.notify.danger('Some error occured');
+      }
+    }
+  }
 
   return (
     <OverlayAction
