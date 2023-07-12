@@ -6,8 +6,6 @@ import Uik from '@reef-chain/ui-kit';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { Contract } from 'ethers';
 import {resolveEvmAddress,isSubstrateAddress} from "@reef-defi/evm-provider/utils"
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 const { OverlayAction } = Components;
 
@@ -60,12 +58,13 @@ const transferNFT = async (from: string, to: string, amount: number, nftContract
         storageLimit: 2000
       }
     });
-    toast.success('Transaction Successful')
+    Uik.notify.success('Transaction Successful!');
   } catch (error:any) {
     if(error.message == '_canceled'){
-      toast.error('Transaction cancelled by user');
+      Uik.notify.danger('Cancelled by user');
+    }else{
+      Uik.notify.danger('Some error occured');
     }
-    toast.success('Transaction failed!')
   }
 }
 
@@ -106,16 +105,6 @@ const OverlaySendNFT = ({
         <br />
         <Uik.Button onClick={() => transferNFT(signer?.evmAddress!,destinationAddress,amount,address,signer?.signer,provider,nftId)} fill>Send</Uik.Button>
       </div>
-     <ToastContainer
-                  draggable
-                  newestOnTop
-                  closeOnClick
-                  hideProgressBar
-                  position={toast.POSITION.BOTTOM_LEFT}
-                  rtl={false}
-                  pauseOnFocusLoss={false}
-                  pauseOnHover={false}
-                />
     </OverlayAction>
   );
 };
