@@ -19,7 +19,7 @@ import {
   SPECIFIED_SWAP_URL,
   TRANSFER_TOKEN,
   BUY_URL,
-  ONRAMP_URL
+  ONRAMP_URL,
 } from '../urls';
 import Bind from './bind/Bind';
 import { Bonds } from './bonds/Bonds';

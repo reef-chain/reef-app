@@ -112,7 +112,7 @@ const TokenActivityItem = ({
               </div>
               <div
                 className="activity-item__amount-token-icon"
-                style={{ backgroundImage: `url(${token.iconUrl})` }}
+                style={{ backgroundImage: `url(${token.iconUrl.startsWith('ipfs') ? `https://reef.infura-ipfs.io/ipfs/${token.iconUrl.substring(7)}` : token.iconUrl})` }}
               />
             </div>
           )

@@ -238,13 +238,13 @@ const BuyReefButton = (): JSX.Element => {
   const history = useHistory();
   const navigate = (): void => {
     fetch('https://ipapi.co/json/')
-      .then(response => response.json()).then(data=>{
-        if(data.country === 'IN' || data.country === 'AE' ||data.country === 'TR'){
+      .then((response) => response.json()).then((data) => {
+        if (data.country === 'IN' || data.country === 'AE' || data.country === 'TR') {
           history.push(ONRAMP_URL);
-        }else{
+        } else {
           history.push(BUY_URL);
         }
-      })
+      });
   };
 
   return (
