@@ -71,7 +71,6 @@ const TokenActivityItem = ({
 
   const activityPreviewIcon = useMemo(() => {
     const iconUrlIpfsResolved = iconUrl.startsWith('ipfs') ? getIpfsGatewayUrl(iconUrl.substring(7)) : iconUrl;
-
     const isVideoNFT = mimetype && mimetype.indexOf('mp4') > -1;
 
     if (!isNFT) {
