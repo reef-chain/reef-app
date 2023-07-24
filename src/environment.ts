@@ -1,6 +1,6 @@
 import { availableNetworks, Network } from '@reef-defi/react-lib';
 
-export const isReefswapUI = true;// window.location.host.indexOf('reefswap') > -1;
+export const isReefswapUI = window.location.host.indexOf('reefswap') > -1;
 
 if (isReefswapUI) {
   console.warn('Setting testnet for reefswap promo period!');
