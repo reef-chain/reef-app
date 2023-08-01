@@ -37,6 +37,7 @@ const TokenActivityItem = ({
   const {
     symbol,
     name,
+    iconUrl,
   } = token;
   const {
     nftId,
@@ -44,7 +45,7 @@ const TokenActivityItem = ({
   } = token as NFT;
   const isNFT = nftId != null;
   const type: 'receive' | 'send' = inbound ? 'receive' : 'send';
-
+console.log('iiiii=',iconUrl);
   const title = useMemo(() => {
     const actionMap = {
       receive: strings.received,
@@ -69,13 +70,15 @@ const TokenActivityItem = ({
   const hideBalance = useContext(HideBalance);
 
   const activityPreviewIcon = useMemo(() => {
+    const iconUrlIpfsResolved = iconUrl.startsWith('ipfs') ? getIpfsGatewayUrl(iconUrl.substring(7)) : iconUrl;
+
     const isVideoNFT = mimetype && mimetype.indexOf('mp4') > -1;
 
     if (!isNFT) {
       return (
         <div
           className="activity-item__amount-token-icon"
-          style={{ backgroundImage: `url(${token.iconUrl})` }}
+          style={{ backgroundImage: `url(${iconUrlIpfsResolved})` }}
         />
       );
     }
@@ -101,10 +104,10 @@ const TokenActivityItem = ({
     ) : (
       <div
         className="activity-item__nft-preview"
-        style={{ backgroundImage: `url(${token.iconUrl.startsWith('ipfs') ? getIpfsGatewayUrl(token.iconUrl.substring(7)) : token.iconUrl})` }}
+        style={{ backgroundImage: `url(${iconUrlIpfsResolved})` }}
       />
     );
-  }, [token, mimetype, isNFT]);
+  }, [mimetype, isNFT, iconUrl]);
 
   return (
     <a
