@@ -6,6 +6,7 @@ import { faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import HideBalance from '../../../context/HideBalance';
 import { displayBalanceFromToken } from '../../../utils/displayBalance';
 import { localizedStrings as strings } from '../../../l10n/l10n';
+import { getIpfsGatewayUrl } from '../../../environment';
 
 const { showBalance } = utils;
 
@@ -112,7 +113,7 @@ const TokenActivityItem = ({
               </div>
               <div
                 className="activity-item__amount-token-icon"
-                style={{ backgroundImage: `url(${token.iconUrl})` }}
+                style={{ backgroundImage: `url(${token.iconUrl.startsWith('ipfs') ? getIpfsGatewayUrl(token.iconUrl.substring(7)) : token.iconUrl})` }}
               />
             </div>
           )
