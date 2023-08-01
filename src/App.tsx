@@ -14,10 +14,11 @@ import HideBalance, { getStoredPref, toggleHidden } from './context/HideBalance'
 import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
+import { getIpfsGatewayUrl } from './environment';
 
 const App = (): JSX.Element => {
   const { loading, error } = hooks.useInitReefState(
-    'Reef Wallet App', { ipfsHashResolverFn: (hash: string) => `https://reef.infura-ipfs.io/ipfs/${hash}` },
+    'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
   const history = useHistory();
   const apolloExplorer = hooks.useObservableState(graphql.apolloExplorerClientInstance$);
