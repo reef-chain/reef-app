@@ -14,7 +14,7 @@ import HideBalance, { getStoredPref, toggleHidden } from './context/HideBalance'
 import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
-import {getIpfsGatewayUrl} from "./environment";
+import { getIpfsGatewayUrl } from './environment';
 
 const App = (): JSX.Element => {
   const { loading, error } = hooks.useInitReefState(
