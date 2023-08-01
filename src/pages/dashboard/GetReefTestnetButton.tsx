@@ -1,9 +1,8 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
 import './buy-reef-button.css';
-import { BUY_URL, ONRAMP_URL } from '../../urls';
 import { localizedStrings } from '../../l10n/l10n';
+import { isReefswapUI } from '../../environment';
 
 const Shape = (): JSX.Element => (
   <svg
@@ -234,17 +233,10 @@ C226.3,333.5,225.4,331.3,224.1,329.3z"
   </svg>
 );
 
-const BuyReefButton = (): JSX.Element => {
-  const history = useHistory();
+const GetReefTestnetButton = (): JSX.Element => {
   const navigate = (): void => {
-    fetch('https://ipapi.co/json/')
-      .then((response) => response.json()).then((data) => {
-        if (data.country === 'IN' || data.country === 'AE' || data.country === 'TR') {
-          history.push(ONRAMP_URL);
-        } else {
-          history.push(BUY_URL);
-        }
-      });
+    const url = isReefswapUI ? 'https://discord.com/channels/1116016091014123521/1120371707019010128' : 'https://discord.com/channels/793946260171259904/1087737503550816396';
+    window.open(url);
   };
 
   return (
@@ -254,11 +246,11 @@ const BuyReefButton = (): JSX.Element => {
       onClick={navigate}
     >
       <Uik.ReefSign className="buy-reef-btn__icon" />
-      <span className="buy-reef-btn__text">{localizedStrings.buy_reef_tokens}</span>
+      <span className="buy-reef-btn__text">{localizedStrings.get_reef_tokens}</span>
       <Uik.Bubbles />
       <Shape />
     </button>
   );
 };
 
-export default BuyReefButton;
+export default GetReefTestnetButton;

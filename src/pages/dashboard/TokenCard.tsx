@@ -10,6 +10,7 @@ import './token-card.css';
 import HideBalance from '../../context/HideBalance';
 import { displayBalance, displayBalanceFromToken } from '../../utils/displayBalance';
 import { localizedStrings } from '../../l10n/l10n';
+import { isReefswapUI } from '../../environment';
 
 export interface TokenCard {
   price: number;
@@ -26,6 +27,7 @@ const TokenCard = ({
 }: TokenCard): JSX.Element => {
   const [isSwapOpen, setSwapOpen] = useState(false);
   const [isSendOpen, setSendOpen] = useState(false);
+  const [hasPool, setHasPool] = useState(false);
 
   const hideBalance = useContext(HideBalance);
 
@@ -148,12 +150,15 @@ const TokenCard = ({
             </button>
           </div>
 
+          {isReefswapUI && (
           <Uik.Button
             text={localizedStrings.swap}
             icon={faRepeat}
             onClick={() => setSwapOpen(true)}
             size="small"
+            disabled={!hasPool}
           />
+          )}
 
           <Uik.Button
             text={localizedStrings.send}
@@ -169,6 +174,7 @@ const TokenCard = ({
         tokenAddress={token.address}
         isOpen={isSwapOpen}
         onClose={() => setSwapOpen(false)}
+        onPoolsLoaded={setHasPool}
       />
 
       <OverlaySend

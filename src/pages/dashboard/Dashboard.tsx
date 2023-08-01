@@ -1,6 +1,7 @@
 import Uik from '@reef-chain/ui-kit';
 import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo, useState } from 'react';
+import { appState, availableNetworks, hooks } from '@reef-defi/react-lib';
 import NftContext from '../../context/NftContext';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
@@ -13,8 +14,10 @@ import { TokenBalances } from './TokenBalances';
 import { Activity } from './Activity/Activity';
 import { isReefswapUI } from '../../environment';
 import { localizedStrings } from '../../l10n/l10n';
+import GetReefTestnetButton from './GetReefTestnetButton';
 
 const Dashboard = (): JSX.Element => {
+  const network = hooks.useObservableState(appState.currentNetwork$);
   const { nfts } = useContext(NftContext);
   const tabs = (() => {
     const list = [
@@ -49,7 +52,8 @@ const Dashboard = (): JSX.Element => {
           {/* <Rewards rewards={0} /> */}
         </div>
         <div className="dashboard__top-right">
-          <BuyReefButton />
+          {network?.name !== availableNetworks.mainnet.name && <GetReefTestnetButton />}
+          {network?.name === availableNetworks.mainnet.name && <BuyReefButton />}
         </div>
       </div>
 
