@@ -20,6 +20,7 @@ export interface VerificationContractReq extends BaseContract {
     address: string;
     filename: string;
     arguments: string;
+    file?: string;
 }
 
 export interface ReefContract extends BaseContract {
@@ -73,7 +74,7 @@ const isContrIndexed = async (address: string): Promise<boolean> => new Promise(
   });
 }) as Promise<boolean>;
 
-export const verifyContract = async (deployedContract: Contract, contract: ReefContract, arg: string[], url?: string): Promise<boolean> => {
+export const verifyContract = async (deployedContract: Contract, contract: ReefContract, arg: string[], url?: string, file?:string): Promise<boolean> => {
   if (!url) {
     return false;
   }
@@ -95,6 +96,7 @@ export const verifyContract = async (deployedContract: Contract, contract: ReefC
       compilerVersion: contract.compilerVersion,
       license: contract.license,
       runs: contract.runs,
+      file: file?.split(',')[1],
     };
     await contractVerificatorApi.post<VerificationContractReq, AxiosResponse<string>>(`${url}${CONTRACT_VERIFICATION_URL}`, body);
     // (verification_test, body)
