@@ -45,7 +45,7 @@ const TokenActivityItem = ({
   } = token as NFT;
   const isNFT = nftId != null;
   const type: 'receive' | 'send' = inbound ? 'receive' : 'send';
-  console.log('iiiii=', iconUrl);
+
   const title = useMemo(() => {
     const actionMap = {
       receive: strings.received,
