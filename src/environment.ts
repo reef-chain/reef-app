@@ -19,6 +19,7 @@ export const getAppNetworkOverride = (network: Network): Network => appAvailable
 export const binanceConnectApiUrl = 'https://onramp.reefscan.info';
 
 export const whitelistedAddresses = [
+  '5EnY9eFwEDcEJ62dJWrTXhTucJ4pzGym4WZ2xcDKiT3eJecP',
   '5H8thN8qTxRzuGfzbQmnL7Zr1oZUx4CwUV5ebJduDK9dgy2R',
   '5GQbwbKELBEhoCufQZTQpWh1D727Y9esNxGrMufDWWHMqyFc',
   '5FqUmAfBKX4yCQiCkANW7Q8Nm4rP3Rn9SExGLZN73ASLHKvi',
