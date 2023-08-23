@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Uik from '@reef-chain/ui-kit';
 import Nav from './common/Nav';
 import OptionContext from './context/OptionContext';
 import ContentRouter from './pages/ContentRouter';
@@ -41,47 +42,55 @@ const App = (): JSX.Element => {
   }, [loading]);
 
   return (
-    <>
-      {apolloExplorer
-    && (
-    <ApolloProvider client={apolloExplorer}>
-      <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
-        <HideBalance.Provider value={hideBalance}>
-          <NetworkSwitch.Provider value={networkSwitch}>
-            <div className="App d-flex w-100 h-100">
-              <div className="w-100 main-content">
-                {!loading && !error && (
-                <>
-                  <Nav display={!loading && !error} />
-                  <ContentRouter />
-                </>
-                )}
+    loading
+      ? (
+        <div className="App w-100 h-100 d-flex justify-content-center align-items-middle">
+          <Uik.Loading />
+        </div>
+      )
+      : (
+        <>
+          {apolloExplorer
+          && (
+          <ApolloProvider client={apolloExplorer}>
+            <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
+              <HideBalance.Provider value={hideBalance}>
+                <NetworkSwitch.Provider value={networkSwitch}>
+                  <div className="App d-flex w-100 h-100">
+                    <div className="w-100 main-content">
+                      {!loading && !error && (
+                      <>
+                        <Nav display={!loading && !error} />
+                        <ContentRouter />
+                      </>
+                      )}
 
-                <NetworkSwitching isOpen={isNetworkSwitching} />
+                      <NetworkSwitching isOpen={isNetworkSwitching} />
 
-                {error?.code === 1 && <NoExtension />}
-                {error?.code === 2 && <NoAccount />}
-                <ToastContainer
-                  draggable
-                  newestOnTop
-                  closeOnClick
-                  hideProgressBar
-                  position={toast.POSITION.BOTTOM_LEFT}
-                  autoClose={5000}
-                  rtl={false}
-                  pauseOnFocusLoss={false}
-                  pauseOnHover={false}
-                />
+                      {error?.code === 1 && <NoExtension />}
+                      {error?.code === 2 && <NoAccount />}
+                      <ToastContainer
+                        draggable
+                        newestOnTop
+                        closeOnClick
+                        hideProgressBar
+                        position={toast.POSITION.BOTTOM_LEFT}
+                        autoClose={5000}
+                        rtl={false}
+                        pauseOnFocusLoss={false}
+                        pauseOnHover={false}
+                      />
 
-                <Bind />
-              </div>
-            </div>
-          </NetworkSwitch.Provider>
-        </HideBalance.Provider>
-      </OptionContext.Provider>
-    </ApolloProvider>
-    )}
-    </>
+                      <Bind />
+                    </div>
+                  </div>
+                </NetworkSwitch.Provider>
+              </HideBalance.Provider>
+            </OptionContext.Provider>
+          </ApolloProvider>
+          )}
+        </>
+      )
   );
 };
 
