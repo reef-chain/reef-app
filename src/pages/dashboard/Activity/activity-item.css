@@ -204,6 +204,11 @@
   box-shadow: 0 2px 3px var(--border-color-dark);
 }
 
+.activity-item__nft-preview-icon {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
 .activity-item__nft-video-icon {
   display: flex;
   align-items: center;
