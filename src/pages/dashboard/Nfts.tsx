@@ -19,8 +19,7 @@ interface NftsProps {
 }
 
 export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
-  const [nftDetails, setNftDetails] = useState(false);
-  const [nftIndex, setNftIndex] = useState(0);
+  const [selectedNFT, setSelectedNFT] = useState<NFTData | undefined>(undefined);
 
   return (
     <div className="nfts">
@@ -34,15 +33,12 @@ export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
         <div className="col-12">
           {!!nfts.length && (
             <div className="nfts__container">
-              {nfts.map((nft, index) => (
+              {nfts.map((nft) => (
                 <div
                   className="nft__button"
                   key={`${nft.address}-${nft.nftId}`}
                   role="button"
-                  onClick={() => {
-                    setNftDetails(true);
-                    setNftIndex(index);
-                  }}
+                  onClick={() => setSelectedNFT(nft)}
                 >
                   <NFT
                     iconUrl={nft.iconUrl}
@@ -52,17 +48,20 @@ export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
                   />
                 </div>
               ))}
-              <OverlayNFT
-                isOpen={nftDetails}
-                onClose={() => setNftDetails(false)}
-                nftName={nfts[nftIndex].name}
-                isVideoNFT={nfts[nftIndex].mimetype !== undefined && nfts[nftIndex].mimetype?.includes('mp4')}
-                iconUrl={nfts[nftIndex].iconUrl}
-                balance={nfts[nftIndex].balance.toString()}
-                address={nfts[nftIndex].address}
-                contractType={nfts[nftIndex].contractType}
-                nftId={nfts[nftIndex].nftId}
-              />
+
+              {!!selectedNFT && (
+                <OverlayNFT
+                  isOpen={!!selectedNFT}
+                  onClose={() => setSelectedNFT(undefined)}
+                  nftName={selectedNFT.name}
+                  isVideoNFT={selectedNFT.mimetype !== undefined && selectedNFT.mimetype?.includes('mp4')}
+                  iconUrl={selectedNFT.iconUrl}
+                  balance={selectedNFT.balance.toString()}
+                  address={selectedNFT.address}
+                  contractType={selectedNFT.contractType}
+                  nftId={selectedNFT.nftId}
+                />
+              )}
             </div>
           )}
         </div>

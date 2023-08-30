@@ -19,7 +19,6 @@
     padding: 4px;
     font-size: 14px;
     background-color: #eff2f6;
-    padding: 4px;
     margin-top: 8px;
     border-radius: 10px;
 }
@@ -39,4 +38,8 @@
 .nft__button{
     outline: none;
     border: none;
+}
+
+.nft-hidden {
+    display: none;
 }

@@ -1,5 +1,9 @@
-import { appState, Components, hooks } from '@reef-defi/react-lib';
-import React, { useState } from 'react';
+import {
+  appState,
+  Components,
+  hooks,
+} from '@reef-defi/react-lib';
+import React, { useEffect, useState } from 'react';
 import './overlay-swap.css';
 import './overlay-nft.css';
 import Uik from '@reef-chain/ui-kit';
@@ -49,12 +53,11 @@ const nftTxAbi = [
   },
 ];
 
-const getResolvedEVMAddress = async (provider:Provider, address:string):Promise<string> => {
+const getResolvedEVMAddress = (provider:Provider, address:string): Promise<string> => {
   if (isSubstrateAddress(address)) {
-    const resolvedEvmAddress = await resolveEvmAddress(provider, address);
-    return resolvedEvmAddress;
+    return resolveEvmAddress(provider, address);
   }
-  return address;
+  return Promise.resolve(address);
 };
 
 const OverlaySendNFT = ({
@@ -68,6 +71,9 @@ const OverlaySendNFT = ({
   const [destinationAddress, setDestinationAddress] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
   const [btnLabel, setBtnLabel] = useState<string>('Enter destination address');
+  const [isFormValid, setIsFormValid] = useState<boolean>(false);
+  const [isAmountEnabled, setIsAmountEnabled] = useState<boolean>(false);
+  const [transactionInProgress, setTransactionInProgress] = useState<boolean>(false);
 
   const signer = hooks.useObservableState(appState.selectedSigner$);
   const provider = hooks.useObservableState(appState.currentProvider$);
@@ -75,10 +81,17 @@ const OverlaySendNFT = ({
   const clearStates = ():void => {
     setDestinationAddress('');
     setAmount(0);
-    onClose();
+    setIsFormValid(false);
+    setIsAmountEnabled(false);
+    setTransactionInProgress(false);
   };
 
-  const transferNFT = async (from: string, to: string, _amount: number, nftContract: string, _signer: Signer, _provider:Provider, _nftId:string):Promise<void> => {
+  const transferNFT = async (from: string, to: string, _amount: number, nftContract: string, _signer: Signer, _provider: Provider, _nftId: string): Promise<void> => {
+    if (!isFormValid || transactionInProgress) {
+      return;
+    }
+
+    setTransactionInProgress(true);
     const contractInstance = new Contract(nftContract, nftTxAbi, _signer);
     const toAddress = await getResolvedEVMAddress(_provider, to);
     try {
@@ -89,67 +102,88 @@ const OverlaySendNFT = ({
       });
       Uik.notify.success('Transaction Successful!');
       clearStates();
+      onClose();
       /* eslint-disable @typescript-eslint/no-explicit-any */
-    } catch (error:any) {
-      if (error.message === '_canceled') {
-        Uik.notify.danger('Cancelled by user');
+    } catch (error: any) {
+      if (!toAddress) {
+        Uik.notify.danger('Transaction can not be made because destination address does not have EVM address connected.');
+      } else if (error?.message === '_canceled') {
+        Uik.notify.danger('Transaction cancelled by user');
       } else {
-        Uik.notify.danger('Some error occured');
+        Uik.notify.danger('Unknown error occurred, please try again');
       }
+    } finally {
+      setTransactionInProgress(false);
     }
   };
 
-  const validator = (e:any):void => {
-    if (e.target.name === 'amount') {
-      setAmount(e.target.value);
-      if (e.target.value > parseInt(balance, 10)) {
+  useEffect(() => {
+    const parsedBalance = parseInt(balance, 10);
+    setAmount(parsedBalance);
+    setIsAmountEnabled(parsedBalance > 1);
+  }, [balance]);
+
+  useEffect(() => {
+    const validateAmount = (): boolean => {
+      if (amount > parseInt(balance, 10)) {
         setBtnLabel('Amount too high');
-      } else if (e.target.value < 1) {
+      } else if (amount < 1) {
         setBtnLabel('Amount too low');
-      } else if (ethers.utils.isAddress(destinationAddress) || isSubstrateAddress(destinationAddress)) {
-        setBtnLabel('Send');
-      }
-    }
-    if (e.target.name === 'destination') {
-      setDestinationAddress(e.target.value);
-      if ((ethers.utils.isAddress(e.target.value) || isSubstrateAddress(e.target.value)) && (amount <= parseInt(balance, 10) && amount > 0)) {
-        setBtnLabel('Send');
-      } else if ((ethers.utils.isAddress(e.target.value) || isSubstrateAddress(e.target.value)) && (amount > parseInt(balance, 10) && amount <= 0)) {
-        setBtnLabel('Amount not valid');
       } else {
-        setBtnLabel('Address is invalid');
+        setBtnLabel('Send');
       }
-    }
-  };
+      return amount > 0 && amount <= parseInt(balance, 10);
+    };
+
+    const validateDestinationAddress = (): boolean => {
+      const isAddressValid = ethers.utils.isAddress(destinationAddress) || isSubstrateAddress(destinationAddress);
+      if (!isAddressValid) {
+        setBtnLabel('Address is invalid');
+      } else {
+        setBtnLabel('Send');
+      }
+      return isAddressValid;
+    };
+
+    const amountValid = validateAmount();
+    const destinationValid = validateDestinationAddress();
+    setIsFormValid(amountValid && destinationValid);
+  }, [amount, balance, destinationAddress]);
 
   return (
     <OverlayAction
       isOpen={isOpen}
-      title="NFT Details"
+      title="Send NFT"
       onClose={onClose}
       className="overlay-swap"
     >
       <div className="uik-pool-actions pool-actions">
         <Uik.Input
-          label={`Send ${nftName} to :`}
+          label={`Send ${nftName} to:`}
+          placeholder="Enter destination address"
           name="destination"
           type="text"
-          onChange={(e) => {
-            validator(e);
-          }}
+          disabled={transactionInProgress}
+          onChange={(e) => setDestinationAddress(e.target.value)}
         />
         <br />
         <Uik.Input
-          label="Amount : "
+          label="Amount: "
           name="amount"
           value={amount.toString()}
           type="number"
-          onChange={(e) => {
-            validator(e);
-          }}
+          disabled={!isAmountEnabled || transactionInProgress}
+          onChange={(e) => setAmount(+e.target.value)}
         />
         <br />
-        {btnLabel === 'Send' ? <Uik.Button onClick={() => transferNFT(signer?.evmAddress as string, destinationAddress, amount, address, signer?.signer as Signer, provider, nftId)} fill>{btnLabel}</Uik.Button> : <Uik.Button disabled>{btnLabel}</Uik.Button>}
+        <Uik.Button
+          disabled={!isFormValid}
+          loading={transactionInProgress}
+          fill={isFormValid && !transactionInProgress}
+          onClick={() => transferNFT(signer?.evmAddress as string, destinationAddress, amount, address, signer?.signer as Signer, provider, nftId)}
+        >
+          { !transactionInProgress ? btnLabel : ''}
+        </Uik.Button>
 
       </div>
     </OverlayAction>
