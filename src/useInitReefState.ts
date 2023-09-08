@@ -4,13 +4,26 @@ import {
   import { useEffect, useState } from 'react';
   import { useInjectExtension } from './useInjectExtension';
   import { Provider } from '@reef-defi/evm-provider';
-import { Network, ReefSigner} from '@reef-defi/react-lib';
+import { Network, ReefSigner, availableNetworks} from '@reef-defi/react-lib';
 import { useObservableState } from './hooks/useObservableState';
 import { StateOptions } from '@reef-defi/react-lib/dist/appState/util';
 import { State } from '@reef-defi/react-lib/dist/appState/util';
 import type { Signer as InjectedSigner } from '@polkadot/api/types';
 import { rpc } from '@reef-defi/react-lib/';
 import { useAsyncEffect } from './useAsyncEffect';
+import { appState } from '@reef-defi/react-lib'
+
+const getNetworkFallback = (): Network => {
+  let storedNetwork;
+  try {
+    storedNetwork = localStorage.getItem(appState.ACTIVE_NETWORK_LS_KEY);
+    storedNetwork = JSON.parse(storedNetwork);
+    storedNetwork = availableNetworks[storedNetwork.name];
+  } catch (e) {
+    // when cookies disabled localStorage can throw
+  }
+  return storedNetwork != null ? storedNetwork : availableNetworks.mainnet;
+};
 
 const reefAccountToReefSigner = (accountsFromUtilLib:any,injectedSigner:InjectedSigner)=>{
   const resultObj = {
@@ -58,6 +71,8 @@ interface UpdatedState extends State{
         return;
       }
 
+      const network = getNetworkFallback();
+      
       const jsonAccounts = { accounts, injectedSigner: extension?.signer };
 
         reefState.initReefState({
@@ -73,6 +88,7 @@ interface UpdatedState extends State{
 
     const allReefAccounts = useObservableState(reefState.accounts$);
     useAsyncEffect(async()=>{
+   
       if(allReefAccounts && provider){
         const extensionAccounts = [reefAccountToReefSigner(allReefAccounts,jsonAccounts.injectedSigner!)];
         const accountPromises = (extensionAccounts as any).flatMap(
