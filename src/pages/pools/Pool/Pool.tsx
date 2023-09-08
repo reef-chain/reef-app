@@ -10,6 +10,7 @@ import Actions, { ActionTabs } from './Actions';
 import Chart, { TimeData, Timeframe } from './Chart';
 import './pool.css';
 import Stats from './Stats';
+import axios from 'axios';
 
 interface Params {
   address: string;
@@ -55,7 +56,7 @@ const Pool = (): JSX.Element => {
     address,
     signer?.address || '',
     tokenPrices,
-    apolloDex,
+    axios,
   );
 
   const tokenPrice1 = (poolInfo ? tokenPrices[poolInfo.firstToken.address] : 0) || 0;

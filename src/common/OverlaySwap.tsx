@@ -10,6 +10,7 @@ import TokenContext from '../context/TokenContext';
 import TokenPricesContext from '../context/TokenPricesContext';
 import { MAX_SLIPPAGE, notify } from '../utils/utils';
 import './overlay-swap.css';
+import axios from 'axios';
 
 const { Trade, OverlayAction, Finalizing } = Components;
 const REEF_ADDRESS = '0x0000000000000000000000000000000001000000';
@@ -128,7 +129,7 @@ const OverlaySwap = ({
     tokenPrices,
     tokens,
     account: signer || undefined,
-    dexClient: apolloDex,
+    httpClient: axios,
     waitForPool: true,
     pool,
   });

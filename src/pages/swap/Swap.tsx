@@ -7,6 +7,7 @@ import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, SPECIFIED_SWAP_URL, UrlAddressParams } from '../../urls';
 import { notify } from '../../utils/utils';
+import axios from 'axios';
 
 const { SwapComponent } = Components;
 
@@ -26,7 +27,7 @@ const Swap = (): JSX.Element => {
     address1,
     address2,
     dispatch,
-    dexClient: apolloDex,
+    httpClient:axios,
     state,
     tokens,
     tokenPrices,

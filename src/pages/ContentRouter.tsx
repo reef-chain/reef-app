@@ -35,6 +35,7 @@ import { Transfer } from './transfer/Transfer';
 import { isAddressWhitelisted, isReefswapUI } from '../environment';
 import { shortAddress } from '../utils/utils';
 import Onramp from './onramp/Onramp';
+import axios from 'axios';
 
 const ContentRouter = (): JSX.Element => {
   const selectedAddress = hooks.useObservableState(appState.currentAddress$);
@@ -53,8 +54,7 @@ const ContentRouter = (): JSX.Element => {
 
   const tokens = hooks.useObservableState<TokenWithAmount[]|null>(appState.tokenPrices$, []);
   const [nfts, nftsLoading] = hooks.useAllNfts();
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
-  const pools = hooks.useAllPools(apolloDex);
+  const pools = hooks.useAllPools(axios);
   const tokenPrices = useMemo(
     () => (tokens ? tokens.reduce((prices: AddressToNumber<number>, tkn) => {
       prices[tkn.address] = tkn.price;// eslint-disable-line

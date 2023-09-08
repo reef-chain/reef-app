@@ -10,6 +10,7 @@ import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, ADD_LIQUIDITY_URL } from '../../urls';
 import { notify } from '../../utils/utils';
+import axios from 'axios';
 
 const { AddLiquidity } = Components;
 interface UrlParams {
@@ -38,7 +39,7 @@ const AddPoolLiquidity = (): JSX.Element => {
     state,
     tokens,
     signer: signer || undefined,
-    dexClient: apolloDex,
+    httpClient: axios,
     tokenPrices,
   });
 

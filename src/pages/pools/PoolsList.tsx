@@ -11,6 +11,7 @@ import { POOL_CHART_URL } from '../../urls';
 import './pools.css';
 import PoolsSearch from './PoolsSearch';
 import { localizedStrings } from '../../l10n/l10n';
+import axios from 'axios';
 
 export interface Props {
   tokens: Token[]
@@ -31,7 +32,7 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
   const [pools, , count] = hooks.usePoolsList({
     limit: pageCount,
     offset: (currentPage - 1) * pageCount,
-    dexClient: apolloDex,
+    httpClient:axios,
     search,
     signerAddress: signer?.address || '',
     tokenPrices,

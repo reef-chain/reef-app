@@ -12,6 +12,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { notify } from '../../utils/utils';
+import axios from 'axios';
 
 const { RemoveLiquidityComponent } = Components;
 
@@ -46,7 +47,7 @@ const RemoveLiquidity = (): JSX.Element => {
     state,
     tokens,
     signer: signer || undefined,
-    dexClient: apolloDex,
+    httpClient:axios,
     tokenPrices,
   });
 

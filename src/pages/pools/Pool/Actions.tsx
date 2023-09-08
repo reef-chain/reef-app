@@ -13,6 +13,7 @@ import TokenPricesContext from '../../../context/TokenPricesContext';
 import { POOL_CHART_URL } from '../../../urls';
 import { MAX_SLIPPAGE, notify } from '../../../utils/utils';
 import './actions.css';
+import axios from 'axios';
 
 const {
   Trade, Provide, Finalizing, Withdraw,
@@ -56,7 +57,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     tokenPrices,
     tokens,
     account: signer || undefined,
-    dexClient: apolloDex,
+    httpClient: axios,
   });
 
   const onSwap = hooks.onSwap({
@@ -89,7 +90,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     state: provideState,
     tokens,
     signer: signer || undefined,
-    dexClient: apolloDex,
+    httpClient: axios,
     tokenPrices,
   });
 
@@ -113,7 +114,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
 
   hooks.useRemoveLiquidity({
     tokens,
-    dexClient: apolloDex,
+    httpClient:axios,
     address1: token1.address,
     address2: token2.address,
     tokenPrices,

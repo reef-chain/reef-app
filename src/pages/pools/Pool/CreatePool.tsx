@@ -13,6 +13,7 @@ import { notify } from '../../../utils/utils';
 import '../../../common/overlay-swap.css';
 import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
+import axios from 'axios';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
@@ -56,7 +57,7 @@ const CreatePool = ({
     state: provideState,
     tokens,
     signer: signer || undefined,
-    dexClient: apolloDex,
+    httpClient:axios,
     tokenPrices,
   });
 

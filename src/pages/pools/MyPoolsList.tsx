@@ -10,6 +10,7 @@ import TokenPricesContext from '../../context/TokenPricesContext';
 import { POOL_CHART_URL } from '../../urls';
 import './pools.css';
 import PoolsSearch from './PoolsSearch';
+import axios from 'axios';
 
 interface Pool {
   address?: string,
@@ -47,7 +48,7 @@ const MyPoolsList = ({ tokens }: Props): JSX.Element => {
   const [pools,, count] = hooks.usePoolsList({
     limit: perPage,
     offset: (currentPage - 1) * perPage,
-    dexClient: apolloDex,
+    httpClient:axios,
     search,
     signerAddress: signer?.address || '',
     tokenPrices,

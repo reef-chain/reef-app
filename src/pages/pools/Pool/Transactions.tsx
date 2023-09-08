@@ -6,6 +6,7 @@ import Identicon from '@polkadot/react-identicon';
 import { ApolloClient } from '@apollo/client';
 import { Tabs, Tokens } from './PoolTransactions';
 import { localizedStrings as strings } from '../../../l10n/l10n';
+import axios from 'axios';
 
 const { formatAgoDate, formatAmount, shortAddress } = utils;
 const {
@@ -41,8 +42,8 @@ const Transactions = ({
 }: Props): JSX.Element => {
   const [pageIndex, setPageIndex] = useState(0);
 
-  const { loading: loadingTransactions, data: transactionData } = usePoolTransactionSubscription(address, tab, pageIndex, 10, dexClient);
-  const { data } = usePoolTransactionCountSubscription(address, tab, dexClient);
+  const { loading: loadingTransactions, data: transactionData } = usePoolTransactionSubscription(address, tab, pageIndex, 10, axios);
+  const { data } = usePoolTransactionCountSubscription(address, tab, axios);
 
   const maxPage = data
     ? Math.ceil(data.poolEventsConnection.totalCount / 10)
