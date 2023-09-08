@@ -44,6 +44,7 @@ interface UpdatedState extends State{
       network, ipfsHashResolverFn,
     } = options;
     const [accounts, extension, loadingExtension, errExtension] = useInjectExtension(applicationDisplayName);
+    const [isSignersLoading,setIsSignersLoading] = useState<boolean>(true);
     const [allAccounts,setAllAccounts] = useState<ReefSigner[]>();
     const jsonAccounts = { accounts, injectedSigner: extension?.signer };
     const selectedNetwork: Network|undefined = useObservableState(reefState.selectedNetwork$);
@@ -67,8 +68,8 @@ interface UpdatedState extends State{
     }, [accounts, extension]);
 
     useEffect(() => {
-      setLoading(loadingExtension||provider==undefined);
-    }, [loadingExtension,provider]);
+      setLoading(loadingExtension||provider==undefined||isSignersLoading);
+    }, [loadingExtension,provider,isSignersLoading]);
 
     const allReefAccounts = useObservableState(reefState.accounts$);
     useAsyncEffect(async()=>{
@@ -87,8 +88,9 @@ interface UpdatedState extends State{
           setSelectedReefSigner(allAccs[0])
           reefState.setSelectedAddress(allAccs[0].address);
         }
+        setIsSignersLoading(false);
       }
-    },[allReefAccounts,provider,selectedAddress])
+    },[allReefAccounts,provider,selectedAddress,network])
   
     return {
       error:errExtension,

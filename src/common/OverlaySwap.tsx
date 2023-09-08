@@ -1,5 +1,5 @@
 import {
-  appState, Components, graphql, hooks, Network, Pool, PoolWithReserves, store, Token,
+  appState, Components, graphql, hooks, Network, Pool, PoolWithReserves, ReefSigner, store, Token,
 } from '@reef-defi/react-lib';
 import React, {
   useContext, useEffect, useReducer, useState,
@@ -12,6 +12,7 @@ import { MAX_SLIPPAGE, notify } from '../utils/utils';
 import './overlay-swap.css';
 import axios from 'axios';
 import {reefState} from '@reef-chain/util-lib';
+import ReefSigners from '../context/ReefSigners';
 
 const { Trade, OverlayAction, Finalizing } = Components;
 const REEF_ADDRESS = '0x0000000000000000000000000000000001000000';
@@ -63,7 +64,7 @@ const OverlaySwap = ({
   const pools = useContext(PoolContext);
 
   const network:Network = hooks.useObservableState(reefState.selectedNetwork$);
-  const signer = hooks.useObservableState(appState.selectedSigner$);
+  const signer: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(

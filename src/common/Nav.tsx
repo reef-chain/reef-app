@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import {
-  appState, availableNetworks, Components, hooks, Network, ReefSigner,
+  availableNetworks, Components, hooks, Network, ReefSigner,
 } from '@reef-defi/react-lib';
 import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
@@ -44,7 +44,6 @@ const Nav = ({ display }: Nav): JSX.Element => {
 
   const selectAccount = (index: number): void => {
     saveSignerLocalPointer(index);
-    console.log(accounts?.[index].address)
     reefState.setSelectedAddress(index != null ? accounts?.[index].address : undefined);
   };
 
@@ -54,7 +53,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
     history.push(DASHBOARD_URL);
 
     if (toSelect) {
-      appState.setCurrentNetwork(toSelect);
+      reefState.setSelectedNetwork(toSelect);
     }
   };
 

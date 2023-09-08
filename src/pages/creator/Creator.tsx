@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   appState, hooks, Network, ReefSigner,
 } from '@reef-defi/react-lib';
 import { CreatorComponent } from './CreatorComponent';
 import {reefState} from '@reef-chain/util-lib';
+import ReefSigners from '../../context/ReefSigners';
 
 export const Creator = (): JSX.Element => {
-  const selectedSigner: ReefSigner|undefined|null = hooks.useObservableState(appState.selectedSigner$);
+  const selectedSigner: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
   const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
 
   /* const onCreatorTxUpdate = (txState: utils.TxStatusUpdate): void => {

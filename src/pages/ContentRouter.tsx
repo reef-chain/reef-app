@@ -47,8 +47,6 @@ const ContentRouter = (): JSX.Element => {
     setDisplayWhitelisted(isAddressWhitelisted(selectedAddress, selectedNetwork));
   }, [selectedAddress, selectedNetwork]);
 
-  // const currentSigner: ReefSigner|undefined|null = hooks.useObservableState(appState.selectedSigner$);
-  // const reefPrice = hooks.useObservableState(appState.reefPrice$);
   // const [tokenPrices, setTokenPrices] = useState({} as AddressToNumber<number>);
   // Its not appropriate to have token state in this component, but the problem was apollo client.
   // Once its declared properly in App move TokenContext in the parent component (App.tsx)

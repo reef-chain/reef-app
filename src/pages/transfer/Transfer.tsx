@@ -9,13 +9,14 @@ import { Provider } from '@reef-defi/evm-provider';
 import TokenContext from '../../context/TokenContext';
 import { notify } from '../../utils/utils';
 import {reefState} from "@reef-chain/util-lib";
+import ReefSigners from '../../context/ReefSigners';
 
 const { Send } = Components;
 
 export const Transfer = (): JSX.Element => {
   const provider: Provider|undefined = hooks.useObservableState(reefState.selectedProvider$);
-  const accounts: ReefSigner[]|undefined|null = hooks.useObservableState(appState.signers$);
-  const selectedSigner: ReefSigner|undefined|null = hooks.useObservableState(appState.selectedSigner$);
+  const selectedSigner: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
+  const accounts: ReefSigner[]|undefined|null = useContext(ReefSigners).accounts;
   const { tokens } = useContext(TokenContext);
 
   if (!accounts || !selectedSigner || !provider) {

@@ -1,13 +1,14 @@
 import {
-  appState, createEmptyTokenWithAmount, hooks, ReefSigner, Network,
+  appState, createEmptyTokenWithAmount, hooks, ReefSigner, Network, TokenTransfer,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React from 'react';
+import React, { useContext } from 'react';
 import './activity.css';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem, { Skeleton } from './ActivityItem';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 import {reefState} from "@reef-chain/util-lib";
+import ReefSigners from '../../../context/ReefSigners';
 
 const noActivityTokenDisplay = createEmptyTokenWithAmount();
 noActivityTokenDisplay.address = '0x';
@@ -15,9 +16,10 @@ noActivityTokenDisplay.iconUrl = '';
 noActivityTokenDisplay.name = 'No account history yet.';
 
 export const Activity = (): JSX.Element => {
-  const transfers = hooks.useObservableState(appState.transferHistory$);
+  const transfers :TokenTransfer[]|null= hooks.useObservableState(reefState.selectedTransactionHistory_status$);
 
-  const signer: ReefSigner | undefined |null = hooks.useObservableState(appState.selectedSigner$);
+  const signer: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
+
   const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
 
   return (

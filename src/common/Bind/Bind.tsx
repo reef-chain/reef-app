@@ -1,16 +1,18 @@
-import React, { useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 import {
   appState, hooks, ReefSigner, Components,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import './bind.css';
 import { TxStatusUpdate } from '@reef-defi/react-lib/dist/utils';
+import {reefState} from "@reef-chain/util-lib";
+import ReefSigners from '../../context/ReefSigners';
 
 const { EvmBindComponent } = Components;
 
 const Bind = (): JSX.Element => {
-  const selectedSigner: ReefSigner|undefined | null = hooks.useObservableState(appState.selectedSigner$);
-  const accounts: ReefSigner[] | undefined | null = hooks.useObservableState(appState.signers$);
+  const selectedSigner: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
+  const accounts: ReefSigner[]|undefined|null = useContext(ReefSigners).accounts;
 
   const onTxUpdate = (state: TxStatusUpdate): void => {
     let updateActions: appState.UpdateAction[] = [];

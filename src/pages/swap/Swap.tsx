@@ -9,6 +9,7 @@ import { addressReplacer, SPECIFIED_SWAP_URL, UrlAddressParams } from '../../url
 import { notify } from '../../utils/utils';
 import axios from 'axios';
 import {reefState} from "@reef-chain/util-lib";
+import ReefSigners from '../../context/ReefSigners';
 
 const { SwapComponent } = Components;
 
@@ -19,7 +20,7 @@ const Swap = (): JSX.Element => {
   const { address1, address2 } = useParams<UrlAddressParams>();
 
   const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
-  const signer: ReefSigner|undefined | null = hooks.useObservableState(appState.selectedSigner$);
+  const signer: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
 
   const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);
   // hook manages all necessary swap updates
