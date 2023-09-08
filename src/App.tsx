@@ -1,5 +1,4 @@
-import { ApolloProvider } from '@apollo/client';
-import { defaultOptions, graphql, hooks } from '@reef-defi/react-lib';
+import {  defaultOptions} from '@reef-defi/react-lib';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -7,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Uik from '@reef-chain/ui-kit';
 import Nav from './common/Nav';
 import OptionContext from './context/OptionContext';
+import ReefSignersContext from './context/ReefSigners';
 import ContentRouter from './pages/ContentRouter';
 import NoAccount from './pages/error/NoAccount';
 import NoExtension from './pages/error/NoExtension';
@@ -24,9 +24,14 @@ const App = (): JSX.Element => {
   const { loading, error } = useInitReefState(
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
-  console.log(utilLib);
-  const allAccounts = useObservableState(utilLib.reefState.accounts$);
-  console.log(allAccounts);
+
+// only for development 
+  let allAccounts:any=useObservableState(utilLib.reefState.accounts$);
+  
+  console.log(useObservableState(utilLib.reefState.selectedAccount$))
+  
+  console.log(utilLib)
+  // // remove till here
   
   const history = useHistory();
 
@@ -57,6 +62,7 @@ const App = (): JSX.Element => {
       : (
         <>
             <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
+              <ReefSignersContext.Provider value={{accounts:allAccounts}}>
               <HideBalance.Provider value={hideBalance}>
                 <NetworkSwitch.Provider value={networkSwitch}>
                   <div className="App d-flex w-100 h-100">
@@ -89,6 +95,7 @@ const App = (): JSX.Element => {
                   </div>
                 </NetworkSwitch.Provider>
               </HideBalance.Provider>
+              </ReefSignersContext.Provider>
             </OptionContext.Provider>
         </>
       )

@@ -98,18 +98,5 @@ export const useInjectExtension = (
     }
   }, [isReefInjected]);
 
-  /* useEffect(() => {
-    if (!accountsVal.length) {
-      return;
-    }
-
-    const storedAddr = localStorage.getItem('selected_address_reef');
-    if (storedAddr && signersVal.some((s) => storedAddr === s.address)) {
-      setCurrentAddress(storedAddr);
-      return;
-    }
-    setCurrentAddress(signersVal[0].address);
-  }, [accountsVal]); */
-
   return [accountsVal, extensionVal, isLoading, error];
 };

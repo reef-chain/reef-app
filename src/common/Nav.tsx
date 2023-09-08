@@ -43,7 +43,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
 
   const selectAccount = (index: number): void => {
     saveSignerLocalPointer(index);
-    appState.setCurrentAddress(index != null ? accounts?.[index].address : undefined);
+    reefState.setSelectedAddress(index != null ? accounts?.[index].address : undefined);
   };
 
   const selectNetwork = (key: 'mainnet' | 'testnet'): void => {

@@ -20,6 +20,16 @@ import { State } from '@reef-defi/react-lib/dist/appState/util';
     const selectedNetwork: Network|undefined = useObservableState(reefState.selectedNetwork$);
     const provider = useObservableState(reefState.selectedProvider$) as Provider|undefined;
     const [loading, setLoading] = useState(true);
+    const selectedAddress:string|undefined = useObservableState(reefState.selectedAddress$);
+
+    useEffect(()=>{
+      if (!accounts || !accounts.length || !extension) {
+        return;
+      }
+      if(selectedAddress!=accounts[0].address){
+        reefState.setSelectedAddress(accounts[0].address);
+      }
+    },[accounts,selectedAddress])
   
     useEffect(() => {
   
@@ -34,6 +44,8 @@ import { State } from '@reef-defi/react-lib/dist/appState/util';
           ipfsHashResolverFn,
         });
     }, [accounts, extension]);
+
+
   
     useEffect(() => {
       setLoading(loadingExtension||provider==undefined);

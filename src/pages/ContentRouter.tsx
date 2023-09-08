@@ -39,7 +39,7 @@ import axios from 'axios';
 import {reefState} from "@reef-chain/util-lib";
 
 const ContentRouter = (): JSX.Element => {
-  const selectedAddress = hooks.useObservableState(appState.currentAddress$);
+  const selectedAddress:string|undefined = hooks.useObservableState(reefState.selectedAddress$);
   const selectedNetwork:Network = hooks.useObservableState(reefState.selectedNetwork$);
   const [isDisplayWhitelisted, setDisplayWhitelisted] = useState(false);
 
