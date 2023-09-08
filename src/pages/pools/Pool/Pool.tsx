@@ -1,5 +1,5 @@
 import {
-  appState, graphql, hooks, ReefSigner,
+  appState, hooks, Network, ReefSigner,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
@@ -11,6 +11,7 @@ import Chart, { TimeData, Timeframe } from './Chart';
 import './pool.css';
 import Stats from './Stats';
 import axios from 'axios';
+import {reefState} from "@reef-chain/util-lib";
 
 interface Params {
   address: string;
@@ -49,8 +50,7 @@ const Pool = (): JSX.Element => {
     appState.selectedSigner$,
   );
 
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
-  const network = hooks.useObservableState(appState.currentNetwork$);
+  const network:Network = hooks.useObservableState(reefState.selectedNetwork$);
 
   const [poolInfo] = hooks.usePoolInfo(
     address,
@@ -73,7 +73,7 @@ const Pool = (): JSX.Element => {
     price1: tokenPrice1,
     price2: tokenPrice2,
     timeData: timeframeToTimeData(timeframe),
-  }, apolloDex);
+  }, axios);
 
   if (!poolInfo) {
     return <Uik.Loading />;
@@ -86,7 +86,6 @@ const Pool = (): JSX.Element => {
         price1={tokenPrice1}
         price2={tokenPrice2}
         reefscanUrl={network.reefscanUrl}
-        dexClient={apolloDex}
       />
 
       <div className="pool__content">

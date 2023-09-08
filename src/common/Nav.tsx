@@ -13,6 +13,7 @@ import { appAvailableNetworks, isReefswapUI } from '../environment';
 import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
 import { localizedStrings } from '../l10n/l10n';
+import {reefState} from "@reef-chain/util-lib";
 
 export interface Nav {
     display: boolean;
@@ -23,7 +24,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
   const { pathname } = useLocation();
   const signer: ReefSigner|undefined|null = hooks.useObservableState(appState.selectedSigner$);
   const accounts: ReefSigner[]|undefined|null = hooks.useObservableState(appState.signers$);
-  const network: Network|undefined = hooks.useObservableState(appState.currentNetwork$);
+  const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
   const mainnetSelected = network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
   let menuItems = [
     { title: localizedStrings.dashboard, url: DASHBOARD_URL },

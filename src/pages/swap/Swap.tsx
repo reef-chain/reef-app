@@ -8,6 +8,7 @@ import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, SPECIFIED_SWAP_URL, UrlAddressParams } from '../../urls';
 import { notify } from '../../utils/utils';
 import axios from 'axios';
+import {reefState} from "@reef-chain/util-lib";
 
 const { SwapComponent } = Components;
 
@@ -17,9 +18,8 @@ const Swap = (): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
   const { address1, address2 } = useParams<UrlAddressParams>();
 
-  const network: Network|undefined = hooks.useObservableState(appState.currentNetwork$);
+  const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
   const signer: ReefSigner|undefined | null = hooks.useObservableState(appState.selectedSigner$);
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
 
   const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);
   // hook manages all necessary swap updates

@@ -7,6 +7,7 @@ import './activity.css';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import ActivityItem, { Skeleton } from './ActivityItem';
 import { localizedStrings as strings } from '../../../l10n/l10n';
+import {reefState} from "@reef-chain/util-lib";
 
 const noActivityTokenDisplay = createEmptyTokenWithAmount();
 noActivityTokenDisplay.address = '0x';
@@ -17,7 +18,7 @@ export const Activity = (): JSX.Element => {
   const transfers = hooks.useObservableState(appState.transferHistory$);
 
   const signer: ReefSigner | undefined |null = hooks.useObservableState(appState.selectedSigner$);
-  const network: Network|undefined = hooks.useObservableState(appState.currentNetwork$);
+  const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
 
   return (
     <div className="token-activity activity">

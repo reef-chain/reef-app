@@ -14,7 +14,6 @@ interface StatsProps {
   price1: number;
   price2: number;
   reefscanUrl: string;
-  dexClient: ApolloClient<unknown>;
 }
 interface TokenStatsProps {
   token: hooks.TokenStats;
@@ -92,7 +91,6 @@ const Stats = ({
   price1,
   price2,
   reefscanUrl,
-  dexClient,
 }: StatsProps): JSX.Element => {
   const [isSelectOpen, setSelectOpen] = useState(false);
   const [isTransactionsOpen, setTransactionsOpen] = useState(false);
@@ -192,7 +190,6 @@ const Stats = ({
       <PoolTransactions
         address={address}
         reefscanUrl={reefscanUrl}
-        dexClient={dexClient}
         isOpen={isTransactionsOpen}
         onClose={() => setTransactionsOpen(false)}
         tokens={{

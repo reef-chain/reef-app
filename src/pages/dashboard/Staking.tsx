@@ -6,10 +6,11 @@ import {
 import { BondsComponent } from '../bonds/BondsComponent';
 import { bonds, IBond } from '../bonds/utils/bonds';
 import { localizedStrings as strings } from '../../l10n/l10n';
+import {reefState} from "@reef-chain/util-lib";
 
 export const Staking = (): JSX.Element => {
   const selectedSigner: ReefSigner | undefined | null = hooks.useObservableState(appState.selectedSigner$);
-  const network: Network | undefined = hooks.useObservableState(appState.currentNetwork$);
+  const network: Network | undefined = hooks.useObservableState(reefState.selectedNetwork$);
 
   return (
     <div className="staking">

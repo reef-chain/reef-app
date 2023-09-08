@@ -4,6 +4,7 @@ import Uik from '@reef-chain/ui-kit';
 import { CSSTransition } from 'react-transition-group';
 import { appState, hooks, Network } from '@reef-defi/react-lib';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import {reefState} from "@reef-chain/util-lib";
 
 export interface Props {
   isOpen?: boolean
@@ -11,7 +12,7 @@ export interface Props {
 
 const NetworkSwitching = ({ isOpen }: Props):JSX.Element => {
   const container = useRef(null);
-  const network: Network | undefined = hooks.useObservableState(appState.currentNetwork$);
+  const network: Network | undefined = hooks.useObservableState(reefState.selectedNetwork$);
 
   const name = useMemo(() => {
     if (network?.name) {

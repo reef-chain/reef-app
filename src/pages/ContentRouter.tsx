@@ -1,5 +1,5 @@
 import {
-  AddressToNumber, appState, graphql, hooks, TokenWithAmount,
+  AddressToNumber, appState, graphql, hooks, Network, TokenWithAmount,
 } from '@reef-defi/react-lib';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
@@ -36,10 +36,11 @@ import { isAddressWhitelisted, isReefswapUI } from '../environment';
 import { shortAddress } from '../utils/utils';
 import Onramp from './onramp/Onramp';
 import axios from 'axios';
+import {reefState} from "@reef-chain/util-lib";
 
 const ContentRouter = (): JSX.Element => {
   const selectedAddress = hooks.useObservableState(appState.currentAddress$);
-  const selectedNetwork = hooks.useObservableState(appState.currentNetwork$);
+  const selectedNetwork:Network = hooks.useObservableState(reefState.selectedNetwork$);
   const [isDisplayWhitelisted, setDisplayWhitelisted] = useState(false);
 
   useEffect(() => {

@@ -3,6 +3,8 @@ import React, { useContext } from 'react';
 import TokenContext from '../context/TokenContext';
 import { notify } from '../utils/utils';
 import './overlay-swap.css';
+import {reefState} from '@reef-chain/util-lib';
+import {Provider} from "@reef-defi/evm-provider";
 
 const { Send, OverlayAction } = Components;
 
@@ -21,7 +23,7 @@ const OverlaySend = ({
 
   const signer = hooks.useObservableState(appState.selectedSigner$);
   const accounts = hooks.useObservableState(appState.accountsSubj);
-  const provider = hooks.useObservableState(appState.currentProvider$);
+  const provider:Provider = hooks.useObservableState(reefState.selectedProvider$);
 
   return (
     <OverlayAction

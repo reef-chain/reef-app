@@ -17,7 +17,6 @@ export interface Props {
   tokens?: Tokens,
   address: string,
   reefscanUrl: string,
-  dexClient: ApolloClient<unknown>,
   isOpen: boolean,
   onClose: () => void
 }
@@ -29,7 +28,6 @@ const PoolSelect = ({
   onClose,
   address,
   reefscanUrl,
-  dexClient,
   tokens,
 }: Props): JSX.Element => {
   const [tab, setTab] = useState<Tabs>('All');
@@ -56,7 +54,6 @@ const PoolSelect = ({
         key={tab}
         address={address}
         reefscanUrl={reefscanUrl}
-        dexClient={dexClient}
         tab={tab}
         tokens={tokens}
       />

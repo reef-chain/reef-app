@@ -16,13 +16,19 @@ import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
+import {useInitReefState} from "./useInitReefState";
+import { useObservableState } from './hooks/useObservableState';
+import * as utilLib from "@reef-chain/util-lib";
 
 const App = (): JSX.Element => {
-  const { loading, error } = hooks.useInitReefState(
+  const { loading, error } = useInitReefState(
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
+  console.log(utilLib);
+  const allAccounts = useObservableState(utilLib.reefState.accounts$);
+  console.log(allAccounts);
+  
   const history = useHistory();
-  const apolloExplorer = hooks.useObservableState(graphql.apolloExplorerClientInstance$);
 
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
   const hideBalance = {
@@ -50,9 +56,6 @@ const App = (): JSX.Element => {
       )
       : (
         <>
-          {apolloExplorer
-          && (
-          <ApolloProvider client={apolloExplorer}>
             <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
               <HideBalance.Provider value={hideBalance}>
                 <NetworkSwitch.Provider value={networkSwitch}>
@@ -87,8 +90,6 @@ const App = (): JSX.Element => {
                 </NetworkSwitch.Provider>
               </HideBalance.Provider>
             </OptionContext.Provider>
-          </ApolloProvider>
-          )}
         </>
       )
   );

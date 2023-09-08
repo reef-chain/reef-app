@@ -18,7 +18,6 @@ export interface Props {
   tab: Tabs,
   address: string,
   reefscanUrl: string,
-  dexClient: ApolloClient<unknown>,
   tokens?: Tokens
 }
 
@@ -38,7 +37,7 @@ const icons = {
 };
 
 const Transactions = ({
-  tab, address, reefscanUrl, dexClient, tokens,
+  tab, address, reefscanUrl, tokens,
 }: Props): JSX.Element => {
   const [pageIndex, setPageIndex] = useState(0);
 
