@@ -17,20 +17,18 @@ import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
 import {useInitReefState} from "./useInitReefState";
-import { useObservableState } from './hooks/useObservableState';
 import * as utilLib from "@reef-chain/util-lib";
+import { useObservableState } from './hooks/useObservableState';
 
 const App = (): JSX.Element => {
-  const { loading, error } = useInitReefState(
+  const { loading, error,signers,selectedReefSigner } = useInitReefState(
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
 
 // only for development 
-  let allAccounts:any=useObservableState(utilLib.reefState.accounts$);
   
-  console.log(useObservableState(utilLib.reefState.selectedAccount$))
-  
-  console.log(utilLib)
+  // console.log(utilLib)
+  // console.log(useObservableState(utilLib.reefState.selectedAddress$))
   // // remove till here
   
   const history = useHistory();
@@ -62,7 +60,7 @@ const App = (): JSX.Element => {
       : (
         <>
             <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
-              <ReefSignersContext.Provider value={{accounts:allAccounts}}>
+              <ReefSignersContext.Provider value={{accounts:signers,selectedSigner:selectedReefSigner}}>
               <HideBalance.Provider value={hideBalance}>
                 <NetworkSwitch.Provider value={networkSwitch}>
                   <div className="App d-flex w-100 h-100">

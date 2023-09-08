@@ -14,6 +14,7 @@ import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
 import { localizedStrings } from '../l10n/l10n';
 import {reefState} from "@reef-chain/util-lib";
+import ReefSigners from '../context/ReefSigners';
 
 export interface Nav {
     display: boolean;
@@ -22,8 +23,8 @@ export interface Nav {
 const Nav = ({ display }: Nav): JSX.Element => {
   const history = useHistory();
   const { pathname } = useLocation();
-  const signer: ReefSigner|undefined|null = hooks.useObservableState(appState.selectedSigner$);
-  const accounts: ReefSigner[]|undefined|null = hooks.useObservableState(appState.signers$);
+  const signer: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
+  const accounts: ReefSigner[]|undefined|null = useContext(ReefSigners).accounts;
   const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
   const mainnetSelected = network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
   let menuItems = [
@@ -43,6 +44,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
 
   const selectAccount = (index: number): void => {
     saveSignerLocalPointer(index);
+    console.log(accounts?.[index].address)
     reefState.setSelectedAddress(index != null ? accounts?.[index].address : undefined);
   };
 
