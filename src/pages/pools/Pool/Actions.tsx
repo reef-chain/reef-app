@@ -39,10 +39,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const network = hooks.useObservableState(
     appState.currentNetwork$,
   );
-  const apolloDex = hooks.useObservableState(
-    graphql.apolloDexClientInstance$,
-  );
-
+  
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
     store.swapReducer,

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Components, hooks } from '@reef-defi/react-lib';
 import './pool-transactions.css';
 import Uik from '@reef-chain/ui-kit';
-import { ApolloClient } from '@apollo/client';
 import Transactions from './Transactions';
 import { localizedStrings } from '../../../l10n/l10n';
 

@@ -77,7 +77,7 @@ async function verify(
     network.verificationApiUrl,
     icon,
   );
-  return verified;
+  return verified as any;
 }
 
 const createToken = async ({

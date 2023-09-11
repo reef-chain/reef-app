@@ -1,8 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import { Contract, utils } from 'ethers';
-import { ApolloClient, gql } from '@apollo/client';
-import { firstValueFrom, Observable } from 'rxjs';
-import { graphql } from '@reef-defi/react-lib';
+import {graphql} from "@reef-chain/util-lib";
 
 const CONTRACT_VERIFICATION_URL = '/verification/submit';
 
@@ -32,7 +30,7 @@ const contractVerificatorApi = axios.create();
 
 const toContractAddress = (address: string): string => utils.getAddress(address);
 
-const CONTRACT_EXISTS_GQL = gql`
+const CONTRACT_EXISTS_GQL = `
   subscription query ($address: String!) {
       contracts(limit: 1, where: {id_eq: $address}) {
         id
@@ -46,10 +44,8 @@ const isContrIndexed = async (address: string): Promise<boolean> => new Promise(
   const tmt = setTimeout(() => {
     resolve(false);
   }, 120000);
-  const apolloClInst$: unknown = graphql.apolloExplorerClientInstance$;
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  const apollo = await firstValueFrom(apolloClInst$ as Observable<ApolloClient<any>>);
-  const subs = apollo.subscribe({
+  const subs = graphql.queryGql$.subscribe({
     query: CONTRACT_EXISTS_GQL,
     variables: { address },
     fetchPolicy: 'network-only',

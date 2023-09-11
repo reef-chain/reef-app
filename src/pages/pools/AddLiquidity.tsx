@@ -29,8 +29,7 @@ const AddPoolLiquidity = (): JSX.Element => {
   const network: Network | undefined = hooks.useObservableState(
     appState.currentNetwork$,
   );
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
-
+  
   const [state, dispatch] = useReducer(store.addLiquidityReducer, store.initialAddLiquidityState);
   hooks.useAddLiquidity({
     address1,

@@ -33,7 +33,6 @@ const RemoveLiquidity = (): JSX.Element => {
   const signer: ReefSigner | undefined | null = hooks.useObservableState(
     appState.selectedSigner$,
   );
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
 
   const [state, dispatch] = useReducer(
     store.removeLiquidityReducer,

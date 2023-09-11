@@ -41,10 +41,6 @@ const CreatePool = ({
     appState.currentNetwork$,
   );
 
-  const apolloDex = hooks.useObservableState(
-    graphql.apolloDexClientInstance$,
-  );
-
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,
     store.initialAddLiquidityState,

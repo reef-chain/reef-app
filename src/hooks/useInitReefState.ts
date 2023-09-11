@@ -1,5 +1,5 @@
 import {
-    reefState,
+    reefState
   } from '@reef-chain/util-lib';
   import { useEffect, useState } from 'react';
   import { useInjectExtension } from './useInjectExtension';

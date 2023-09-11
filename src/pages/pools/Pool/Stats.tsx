@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { hooks } from '@reef-defi/react-lib';
 import { faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
-import { ApolloClient } from '@apollo/client';
 import PoolSelect from './PoolSelect';
 import PoolTransactions from './PoolTransactions';
 import { localizedStrings } from '../../../l10n/l10n';

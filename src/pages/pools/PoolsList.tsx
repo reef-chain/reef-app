@@ -24,8 +24,6 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
   const [search, setSearch] = useState('');
   const tokenPrices = useContext(TokenPricesContext);
 
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
-
   const signer = hooks.useObservableState(
     appState.selectedSigner$,
   );
