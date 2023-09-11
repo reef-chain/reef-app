@@ -31,7 +31,7 @@ const contractVerificatorApi = axios.create();
 const toContractAddress = (address: string): string => utils.getAddress(address);
 
 const CONTRACT_EXISTS_GQL = `
-  subscription query ($address: String!) {
+  query query ($address: String!) {
       contracts(limit: 1, where: {id_eq: $address}) {
         id
       }
@@ -45,7 +45,7 @@ const isContrIndexed = async (address: string): Promise<boolean> => new Promise(
     resolve(false);
   }, 120000);
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  const subs = graphql.queryGql$.subscribe({
+  const subs = graphql.queryGql$(axios,{
     query: CONTRACT_EXISTS_GQL,
     variables: { address },
     fetchPolicy: 'network-only',
@@ -94,7 +94,7 @@ export const verifyContract = async (deployedContract: Contract, contract: ReefC
       runs: contract.runs,
       file: file?.split(',')[1],
     };
-    await contractVerificatorApi.post<VerificationContractReq, AxiosResponse<string>>(`${url}${CONTRACT_VERIFICATION_URL}`, body);
+    await contractVerificatorApi.post<VerificationContractReq, AxiosResponse<string>>(`${"https://api.reefscan.com/"}${CONTRACT_VERIFICATION_URL}`, body);
     // (verification_test, body)
     return true;
   } catch (err) {

@@ -116,6 +116,9 @@ interface State{
         );
         const allAccs = await Promise.all(accountPromises);
         setAllAccounts(allAccs);
+        
+        appState.accountsSubj.next(allAccs); //todo - remove this once util-lib observables work
+
         let storedAddress = getSelectedAddress();
         if(selectedAddress===undefined && storedAddress!=undefined)selectedAddress=storedAddress;
         if(selectedAddress){
