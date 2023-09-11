@@ -136,7 +136,6 @@ interface UpdatedState extends State{
 
     // selectedTokenBalances test
     useAsyncEffect(async()=>{
-      console.log(reefState);
       reefState.selectedTokenBalances$.subscribe({next:(val)=>console.log("observer catched==",val)});
       const selectedTokenBalances = await firstValueFrom(reefState.selectedTokenBalances$.pipe(skip(1)));
       console.log("selectedTokenBalances==",selectedTokenBalances);
