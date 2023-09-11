@@ -6,8 +6,6 @@ import {
   import { Provider } from '@reef-defi/evm-provider';
 import { Network, ReefSigner, availableNetworks, hooks} from '@reef-defi/react-lib';
 import { useObservableState } from './useObservableState';
-import { StateOptions } from '@reef-defi/react-lib/dist/appState/util';
-import { State } from '@reef-defi/react-lib/dist/appState/util';
 import type { Signer as InjectedSigner } from '@polkadot/api/types';
 import { rpc } from '@reef-defi/react-lib/';
 import { useAsyncEffect } from './useAsyncEffect';
@@ -58,14 +56,20 @@ const reefAccountToReefSigner = (accountsFromUtilLib:any,injectedSigner:Injected
   return resultObj;
 }
 
-interface UpdatedState extends State{
+interface State{
+  error:{ code?: number; message: string; url?: string } | undefined,
+  loading:boolean,
+  provider:Provider|undefined,
+  network: Network,
+  signers:ReefSigner[],
   selectedReefSigner?:ReefSigner
+  
 }
 
   export const useInitReefState = (
     applicationDisplayName: string,
-    options: StateOptions = {},
-  ): UpdatedState => {
+    options:any,
+  ): State => {
     const {
       network, ipfsHashResolverFn,
     } = options;
@@ -85,9 +89,6 @@ interface UpdatedState extends State{
       }
 
       const network = getNetworkFallback();
-
-      (accounts[1] as any).isSelected = true;
-      console.log(accounts);
       
       const jsonAccounts = { accounts, injectedSigner: extension?.signer };
 
