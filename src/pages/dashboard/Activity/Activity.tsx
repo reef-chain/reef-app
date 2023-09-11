@@ -16,7 +16,7 @@ noActivityTokenDisplay.iconUrl = '';
 noActivityTokenDisplay.name = 'No account history yet.';
 
 export const Activity = (): JSX.Element => {
-  const transfers :TokenTransfer[]|null= hooks.useObservableState(reefState.selectedTransactionHistory_status$);
+  const transfers :TokenTransfer[]|null= hooks.useObservableState(appState.transferHistory$);
 
   const signer: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
 

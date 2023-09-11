@@ -16,9 +16,7 @@ import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
-import {useInitReefState} from "./useInitReefState";
-import * as utilLib from "@reef-chain/util-lib";
-import { useObservableState } from './hooks/useObservableState';
+import {useInitReefState} from './hooks/useInitReefState';
 
 const App = (): JSX.Element => {
   const { loading, error,signers,selectedReefSigner } = useInitReefState(

@@ -5,13 +5,14 @@ import {
   import { useInjectExtension } from './useInjectExtension';
   import { Provider } from '@reef-defi/evm-provider';
 import { Network, ReefSigner, availableNetworks} from '@reef-defi/react-lib';
-import { useObservableState } from './hooks/useObservableState';
+import { useObservableState } from './useObservableState';
 import { StateOptions } from '@reef-defi/react-lib/dist/appState/util';
 import { State } from '@reef-defi/react-lib/dist/appState/util';
 import type { Signer as InjectedSigner } from '@polkadot/api/types';
 import { rpc } from '@reef-defi/react-lib/';
 import { useAsyncEffect } from './useAsyncEffect';
 import { appState } from '@reef-defi/react-lib'
+import { firstValueFrom, skip } from 'rxjs';
 
 const SELECTED_ADDRESS_IDENT = "selected_address_reef";
 
@@ -124,6 +125,22 @@ interface UpdatedState extends State{
         setIsSignersLoading(false);
       }
     },[allReefAccounts,provider,selectedAddress,network])
+
+    // fetching accounts
+    // useAsyncEffect(async()=>{
+    //   console.log("addr=",selectedAddress);
+    //   reefState.accounts$.subscribe({next:(val)=>console.log("observer catched==",val)});
+    //   const accs = await firstValueFrom(reefState.accounts$.pipe(skip(1)));
+    //   console.log("accs==",accs);
+    // },[selectedAddress])
+
+    // selectedTokenBalances test
+    useAsyncEffect(async()=>{
+      console.log(reefState);
+      reefState.selectedTokenBalances$.subscribe({next:(val)=>console.log("observer catched==",val)});
+      const selectedTokenBalances = await firstValueFrom(reefState.selectedTokenBalances$.pipe(skip(1)));
+      console.log("selectedTokenBalances==",selectedTokenBalances);
+    },[selectedAddress])
   
     return {
       error:errExtension,
