@@ -1,5 +1,5 @@
 import {
-    reefState
+    reefState,network as nw
   } from '@reef-chain/util-lib';
   import { useEffect, useState } from 'react';
   import { useInjectExtension } from './useInjectExtension';
@@ -19,7 +19,7 @@ const getNetworkFallback = (): Network => {
   try {
     storedNetwork = localStorage.getItem(appState.ACTIVE_NETWORK_LS_KEY);
     storedNetwork = JSON.parse(storedNetwork);
-    storedNetwork = availableNetworks[storedNetwork.name];
+    storedNetwork = nw.AVAILABLE_NETWORKS[storedNetwork.name];
   } catch (e) {
     // when cookies disabled localStorage can throw
   }
@@ -92,12 +92,15 @@ interface State{
       
       const jsonAccounts = { accounts, injectedSigner: extension?.signer };
 
-        reefState.initReefState({
-          network,
-          jsonAccounts,
-          ipfsHashResolverFn,
-        });
+      reefState.initReefState({
+        network: network,
+        jsonAccounts:jsonAccounts,
+        ipfsHashResolverFn
+      });
+
     }, [accounts, extension]);
+
+    reefState.selectedTokenBalances$.subscribe(val=>console.log("emitted val:",val))
 
     const isProviderLoading = hooks.useObservableState(reefState.providerConnState$.pipe(map((v) => !(v as any).isConnected)), false);
 
@@ -131,23 +134,6 @@ interface State{
         setIsSignersLoading(false);
       }
     },[allReefAccounts,provider,selectedAddress,network])
-
-
-    // fetching accounts
-    // useAsyncEffect(async()=>{
-    //   console.log("addr=",selectedAddress);
-    //   reefState.accounts$.subscribe({next:(val)=>console.log("observer catched==",val)});
-    //   const accs = await firstValueFrom(reefState.accounts$.pipe(skip(1)));
-    //   console.log("accs==",accs);
-    // },[selectedAddress])
-
-    // selectedTokenBalances test
-    
-    useAsyncEffect(async()=>{
-      reefState.selectedTokenBalances$.subscribe({next:(val)=>console.log("observer catched==",val)});
-      const selectedTokenBalances = await firstValueFrom(reefState.selectedTokenBalances$.pipe(skip(1)));
-      console.log("selectedTokenBalances==",selectedTokenBalances);
-    },[selectedAddress])
   
     return {
       error:errExtension,
