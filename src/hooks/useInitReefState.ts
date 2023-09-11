@@ -99,7 +99,6 @@ interface State{
       });
 
     }, [accounts, extension,selectedNetwork]);
-    // reefState.selectedTokenPrices$.subscribe(val=>console.log("emitted val:",val))
 
     const isProviderLoading = hooks.useObservableState(reefState.providerConnState$.pipe(map((v) => !(v as any).isConnected)), false);
 
@@ -118,8 +117,6 @@ interface State{
         );
         const allAccs = await Promise.all(accountPromises);
         setAllAccounts(allAccs);
-        
-        appState.accountsSubj.next(allAccs); //todo - remove this once util-lib observables work
 
         let storedAddress = getSelectedAddress();
         if(selectedAddress===undefined && storedAddress!=undefined)selectedAddress=storedAddress;
