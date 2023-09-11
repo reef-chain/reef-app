@@ -52,6 +52,7 @@ const ContentRouter = (): JSX.Element => {
   // Once its declared properly in App move TokenContext in the parent component (App.tsx)
 
   const tokens = hooks.useObservableState<TokenWithAmount[]|null>(appState.tokenPrices$, []);
+  // console.log(hooks.useObservableState<TokenWithAmount[]|null>(reefState.selectedTokenPrices$, []));
   const [nfts, nftsLoading] = hooks.useAllNfts();
   const pools = hooks.useAllPools(axios);
   const tokenPrices = useMemo(

@@ -98,9 +98,8 @@ interface State{
         ipfsHashResolverFn
       });
 
-    }, [accounts, extension]);
-
-    reefState.selectedTokenBalances$.subscribe(val=>console.log("emitted val:",val))
+    }, [accounts, extension,selectedNetwork]);
+    // reefState.selectedTokenPrices$.subscribe(val=>console.log("emitted val:",val))
 
     const isProviderLoading = hooks.useObservableState(reefState.providerConnState$.pipe(map((v) => !(v as any).isConnected)), false);
 
