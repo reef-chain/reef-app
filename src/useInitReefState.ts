@@ -13,6 +13,8 @@ import { rpc } from '@reef-defi/react-lib/';
 import { useAsyncEffect } from './useAsyncEffect';
 import { appState } from '@reef-defi/react-lib'
 
+const SELECTED_ADDRESS_IDENT = "selected_address_reef";
+
 const getNetworkFallback = (): Network => {
   let storedNetwork;
   try {
@@ -24,6 +26,16 @@ const getNetworkFallback = (): Network => {
   }
   return storedNetwork != null ? storedNetwork : availableNetworks.mainnet;
 };
+
+const getSelectedAddress = ():string|undefined=>{
+  let storedAddress:string;
+  try {
+    storedAddress = localStorage.getItem(SELECTED_ADDRESS_IDENT);
+  } catch (e) {
+    // when cookies disabled localStorage can throw
+  }
+  return storedAddress != null ? storedAddress : undefined;
+}
 
 const reefAccountToReefSigner = (accountsFromUtilLib:any,injectedSigner:InjectedSigner)=>{
   const resultObj = {
@@ -64,7 +76,7 @@ interface UpdatedState extends State{
     const [selectedReefSigner,setSelectedReefSigner] = useState<ReefSigner>();
     const provider = useObservableState(reefState.selectedProvider$) as Provider|undefined;
     const [loading, setLoading] = useState(true);
-    const selectedAddress:string|undefined = useObservableState(reefState.selectedAddress$);
+    let selectedAddress:string|undefined = useObservableState(reefState.selectedAddress$);
   
     useEffect(() => {
       if (!accounts || !accounts.length || !extension) {
@@ -72,6 +84,9 @@ interface UpdatedState extends State{
       }
 
       const network = getNetworkFallback();
+
+      (accounts[1] as any).isSelected = true;
+      console.log(accounts);
       
       const jsonAccounts = { accounts, injectedSigner: extension?.signer };
 
@@ -87,6 +102,7 @@ interface UpdatedState extends State{
     }, [loadingExtension,provider,isSignersLoading]);
 
     const allReefAccounts = useObservableState(reefState.accounts$);
+
     useAsyncEffect(async()=>{
    
       if(allReefAccounts && provider){
@@ -96,7 +112,8 @@ interface UpdatedState extends State{
         );
         const allAccs = await Promise.all(accountPromises);
         setAllAccounts(allAccs);
-
+        let storedAddress = getSelectedAddress();
+        if(selectedAddress===undefined && storedAddress!=undefined)selectedAddress=storedAddress;
         if(selectedAddress){
           setSelectedReefSigner(allAccs.find(acc => acc.address === selectedAddress))
           reefState.setSelectedAddress(selectedAddress);
