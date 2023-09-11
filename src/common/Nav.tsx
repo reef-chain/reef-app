@@ -51,7 +51,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
     const toSelect = appAvailableNetworks.find((item) => item.name === key);
     networkSwitch.setSwitching(true);
     history.push(DASHBOARD_URL);
-
+    
     if (toSelect) {
       reefState.setSelectedNetwork(toSelect);
     }
