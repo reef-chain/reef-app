@@ -94,7 +94,7 @@ export const verifyContract = async (deployedContract: Contract, contract: ReefC
       runs: contract.runs,
       file: file?.split(',')[1],
     };
-    await contractVerificatorApi.post<VerificationContractReq, AxiosResponse<string>>(`${"https://api.reefscan.com/"}${CONTRACT_VERIFICATION_URL}`, body);
+    await contractVerificatorApi.post<VerificationContractReq, AxiosResponse<string>>(`${url}${CONTRACT_VERIFICATION_URL}`, body);
     // (verification_test, body)
     return true;
   } catch (err) {
