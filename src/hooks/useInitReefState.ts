@@ -4,8 +4,7 @@ import {
 import { useEffect, useState } from 'react';
 import { Provider } from '@reef-defi/evm-provider';
 import {
-  Network, ReefSigner, availableNetworks, hooks, 
-, rpc , appState } from '@reef-defi/react-lib';
+  Network, ReefSigner, availableNetworks, hooks, rpc , appState } from '@reef-defi/react-lib';
 import type { Signer as InjectedSigner } from '@polkadot/api/types';
 import { firstValueFrom, map, skip } from 'rxjs';
 import { useAsyncEffect } from './useAsyncEffect';
@@ -40,6 +39,7 @@ const reefAccountToReefSigner = (accountsFromUtilLib:any, injectedSigner:Injecte
   const resultObj = {
     name: 'reef',
     sig: injectedSigner,
+    accounts:[],
   };
   const reefSigners = <any[]>[];
   for (let i = 0; i < accountsFromUtilLib.length; i++) {
