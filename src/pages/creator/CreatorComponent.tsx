@@ -60,6 +60,7 @@ async function verify(
   const contractDataSettings = contractData.metadata.settings;
   const { compilationTarget } = contractDataSettings;
   const compTargetFileName = Object.keys(compilationTarget)[0];
+
   const verified = await verifyContract(
     contract,
     {
@@ -77,6 +78,7 @@ async function verify(
     network.verificationApiUrl,
     icon,
   );
+  console.log(verified);
   return verified as any;
 }
 
@@ -185,7 +187,7 @@ const createToken = async ({
     setResultMessage({
       complete: true,
       title: strings.token_created,
-      message: `Success, your new token ${tokenName} is deployed. Innitial supply is ${initialSupply} ${symbol.toUpperCase()}. Next step is to create a pool so users can start trading.`,
+      message: `Success, your new token ${tokenName} is deployed. Initial supply is ${initialSupply} ${symbol.toUpperCase()}. Next step is to create a pool so users can start trading.`,
       contract,
     });
   } else {
