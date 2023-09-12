@@ -1,5 +1,5 @@
 import {
-  appState, Components, hooks, ReefSigner,
+  appState, Components, ReefSigner,
 } from '@reef-defi/react-lib';
 import React, { useContext, useEffect, useState } from 'react';
 import { TxStatusUpdate } from '@reef-defi/react-lib/dist/utils';

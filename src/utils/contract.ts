@@ -1,6 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { Contract, utils } from 'ethers';
-import { from } from 'rxjs';
 
 const CONTRACT_VERIFICATION_URL = '/verification/submit';
 
@@ -31,6 +30,11 @@ const contractVerificatorApi = axios.create();
 
 const toContractAddress = (address: string): string => utils.getAddress(address);
 
+const graphqlUrls = {
+  explorerTestnet: 'https://squid.subsquid.io/reef-explorer-testnet/graphql',
+  explorerMainnet: 'https://squid.subsquid.io/reef-explorer/graphql',
+};
+
 const CONTRACT_EXISTS_GQL = `
   query query ($address: String!) {
       contracts(limit: 1, where: {id_eq: $address}) {
@@ -53,18 +57,13 @@ const getContractExistsQry = (address: string) => ({
   variables: { address },
 });
 
-const graphqlUrls = {
-  explorerTestnet: 'https://squid.subsquid.io/reef-explorer-testnet/graphql',
-  explorerMainnet: 'https://squid.subsquid.io/reef-explorer/graphql',
-};
-
 const ACTIVE_NETWORK_LS_KEY = 'reef-app-active-network';
 
 const graphqlRequest = (
   httpClient: AxiosInstance,
   queryObj: { query: string; variables: any },
   isExplorer?:boolean,
-) => {
+) :any => {
   let selectedNetwork = 'mainnet';
   try {
     const storedNetwork = localStorage.getItem(ACTIVE_NETWORK_LS_KEY);
@@ -73,27 +72,22 @@ const graphqlRequest = (
       selectedNetwork = parsedStoredNetwork.name;
     }
   } catch (error) {
-    console.log(error);
   }
   const graphql = JSON.stringify(queryObj);
   if (isExplorer) {
-    const url = getGraphqlEndpoint(selectedNetwork!);
+    const url = getGraphqlEndpoint(selectedNetwork);
     return httpClient.post(url, graphql, {
       headers: { 'Content-Type': 'application/json' },
     });
   }
 
-  const url = getGraphqlEndpoint(selectedNetwork!);
+  const url = getGraphqlEndpoint(selectedNetwork);
   return httpClient.post(url, graphql, {
     headers: { 'Content-Type': 'application/json' },
   });
 };
 
-const isContrIndexed = async (address: string): Promise<boolean> => new Promise(async (resolve) => {
-  const tmt = setTimeout(() => {
-    resolve(false);
-  }, 120000);
-
+const isContrIndexed = async (address: string): Promise<boolean> => new Promise((resolve) => {
   const timer = setInterval(async () => {
     try {
       const result = await graphqlRequest(axios, getContractExistsQry(address));

@@ -1,6 +1,6 @@
 import { faArrowUpFromBracket, faCoins, faRepeat } from '@fortawesome/free-solid-svg-icons';
 import {
-  appState, graphql, hooks, Token,
+  hooks, Token,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';

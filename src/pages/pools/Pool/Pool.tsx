@@ -1,5 +1,5 @@
 import {
-  appState, hooks, Network, ReefSigner,
+  hooks, Network, ReefSigner,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';

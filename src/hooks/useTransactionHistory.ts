@@ -6,7 +6,7 @@ type UseTxHistory = TokenTransfer[];
 export const UseTxHistory = (): UseTxHistory => {
   const txHistory:any = useObservableState(reefState.selectedTransactionHistory_status$);
   let txHistoryData;
-  if (txHistory && txHistory._status[0].code == 6) {
+  if (txHistory && txHistory._status[0].code === 6) {
     txHistoryData = txHistory.data;
   }
 

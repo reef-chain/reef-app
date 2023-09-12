@@ -1,12 +1,11 @@
 import {
-  appState,
   Components,
-  graphql,
   hooks,
   Network,
   store,
   Token,
 } from '@reef-defi/react-lib';
+import axios from 'axios';
 import React, { useContext, useReducer, useState } from 'react';
 import { reefState } from '@reef-chain/util-lib';
 import TokenContext from '../../../context/TokenContext';
@@ -15,7 +14,6 @@ import { notify } from '../../../utils/utils';
 import '../../../common/overlay-swap.css';
 import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
-import axios from 'axios';
 import ReefSigners from '../../../context/ReefSigners';
 
 const { Provide, OverlayAction, Finalizing } = Components;

@@ -1,8 +1,6 @@
 import {
-  appState,
   Components,
   hooks,
-  ReefSigner,
 } from '@reef-defi/react-lib';
 import React, { useContext } from 'react';
 import { Provider } from '@reef-defi/evm-provider';

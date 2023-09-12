@@ -1,7 +1,5 @@
 import {
-  appState,
   Components,
-  graphql,
   hooks, Network, store, Token,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';

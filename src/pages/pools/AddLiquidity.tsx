@@ -1,6 +1,6 @@
 import {
-  appState, Components,
-  graphql,
+  Components,
+
   hooks, Network,
   ReefSigner, store, Token,
 } from '@reef-defi/react-lib';

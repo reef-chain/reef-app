@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import './Staking.css';
 import {
-  appState, hooks, Network, ReefSigner,
+  hooks, Network,
 } from '@reef-defi/react-lib';
 import { reefState } from '@reef-chain/util-lib';
 import { BondsComponent } from '../bonds/BondsComponent';

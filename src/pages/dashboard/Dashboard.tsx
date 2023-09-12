@@ -2,7 +2,7 @@ import Uik from '@reef-chain/ui-kit';
 import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo, useState } from 'react';
 import {
-  Network, appState, availableNetworks, hooks,
+  Network, availableNetworks, hooks,
 } from '@reef-defi/react-lib';
 import { reefState } from '@reef-chain/util-lib';
 import NftContext from '../../context/NftContext';
