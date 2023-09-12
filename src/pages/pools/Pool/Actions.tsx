@@ -2,7 +2,7 @@ import {
   appState,
   Components,
   graphql,
-  hooks, store, Token,
+  hooks, Network, store, Token,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useReducer, useState } from 'react';
@@ -14,6 +14,8 @@ import { POOL_CHART_URL } from '../../../urls';
 import { MAX_SLIPPAGE, notify } from '../../../utils/utils';
 import './actions.css';
 import axios from 'axios';
+import ReefSigners from '../../../context/ReefSigners';
+import {reefState} from "@reef-chain/util-lib";
 
 const {
   Trade, Provide, Finalizing, Withdraw,
@@ -33,11 +35,9 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const [finalized, setFinalized] = useState(true);
   const pools = useContext(PoolContext);
 
-  const signer = hooks.useObservableState(
-    appState.selectedSigner$,
-  );
-  const network = hooks.useObservableState(
-    appState.currentNetwork$,
+  const signer = useContext(ReefSigners).selectedSigner;
+  const network:Network|undefined = hooks.useObservableState(
+    reefState.selectedNetwork$,
   );
   
   // Trade

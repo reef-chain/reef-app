@@ -3,6 +3,7 @@ import {
   Components,
   graphql,
   hooks,
+  Network,
   store,
   Token,
 } from '@reef-defi/react-lib';
@@ -14,6 +15,8 @@ import '../../../common/overlay-swap.css';
 import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
 import axios from 'axios';
+import ReefSigners from '../../../context/ReefSigners';
+import {reefState} from "@reef-chain/util-lib";
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
@@ -34,11 +37,10 @@ const CreatePool = ({
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
 
-  const signer = hooks.useObservableState(
-    appState.selectedSigner$,
-  );
-  const network = hooks.useObservableState(
-    appState.currentNetwork$,
+  const signer = useContext(ReefSigners).selectedSigner;
+
+  const network:Network|undefined = hooks.useObservableState(
+    reefState.selectedNetwork$,
   );
 
   const [provideState, provideDispatch] = useReducer(

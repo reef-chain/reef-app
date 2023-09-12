@@ -11,6 +11,7 @@ import { POOL_CHART_URL } from '../../urls';
 import './pools.css';
 import PoolsSearch from './PoolsSearch';
 import axios from 'axios';
+import ReefSigners from '../../context/ReefSigners';
 
 interface Pool {
   address?: string,
@@ -40,9 +41,7 @@ const MyPoolsList = ({ tokens }: Props): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
 
 
-  const signer = hooks.useObservableState(
-    appState.selectedSigner$,
-  );
+  const signer = useContext(ReefSigners).selectedSigner;
 
   const [pools,, count] = hooks.usePoolsList({
     limit: perPage,

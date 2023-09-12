@@ -13,6 +13,8 @@ import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { notify } from '../../utils/utils';
 import axios from 'axios';
+import {reefState} from "@reef-chain/util-lib";
+import ReefSigners from '../../context/ReefSigners';
 
 const { RemoveLiquidityComponent } = Components;
 
@@ -28,11 +30,9 @@ const RemoveLiquidity = (): JSX.Element => {
   const { address1, address2 } = useParams<UrlParams>();
 
   const network: Network | undefined = hooks.useObservableState(
-    appState.currentNetwork$,
+    reefState.selectedNetwork$,
   );
-  const signer: ReefSigner | undefined | null = hooks.useObservableState(
-    appState.selectedSigner$,
-  );
+  const signer: ReefSigner | undefined | null = useContext(ReefSigners).selectedSigner;
 
   const [state, dispatch] = useReducer(
     store.removeLiquidityReducer,

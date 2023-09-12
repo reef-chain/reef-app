@@ -12,6 +12,7 @@ import './pool.css';
 import Stats from './Stats';
 import axios from 'axios';
 import {reefState} from "@reef-chain/util-lib";
+import ReefSigners from '../../../context/ReefSigners';
 
 interface Params {
   address: string;
@@ -46,9 +47,7 @@ const Pool = (): JSX.Element => {
   const { address, action } = useParams<Params>();
   const tokenPrices = useContext(TokenPricesContext);
 
-  const signer: ReefSigner | undefined | null = hooks.useObservableState(
-    appState.selectedSigner$,
-  );
+  const signer: ReefSigner | undefined | null = useContext(ReefSigners).selectedSigner;
 
   const network:Network = hooks.useObservableState(reefState.selectedNetwork$);
 

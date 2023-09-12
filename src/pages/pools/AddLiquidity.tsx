@@ -11,6 +11,8 @@ import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, ADD_LIQUIDITY_URL } from '../../urls';
 import { notify } from '../../utils/utils';
 import axios from 'axios';
+import {reefState} from "@reef-chain/util-lib";
+import ReefSigners from '../../context/ReefSigners';
 
 const { AddLiquidity } = Components;
 interface UrlParams {
@@ -23,11 +25,9 @@ const AddPoolLiquidity = (): JSX.Element => {
   const history = useHistory();
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
-  const signer: ReefSigner | undefined | null = hooks.useObservableState(
-    appState.selectedSigner$,
-  );
+  const signer: ReefSigner | undefined | null = useContext(ReefSigners).selectedSigner;
   const network: Network | undefined = hooks.useObservableState(
-    appState.currentNetwork$,
+    reefState.selectedNetwork$,
   );
   
   const [state, dispatch] = useReducer(store.addLiquidityReducer, store.initialAddLiquidityState);
