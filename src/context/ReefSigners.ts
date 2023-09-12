@@ -7,5 +7,5 @@ interface ReefSignersContext {
 }
 export default createContext<ReefSignersContext>({
   accounts: [],
-  selectedSigner:undefined
+  selectedSigner: undefined,
 });

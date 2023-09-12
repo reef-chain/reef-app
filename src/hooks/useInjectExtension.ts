@@ -43,16 +43,15 @@ export const useInjectExtension = (
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<{ message: string; code?: number; url?: string }>();
   let extensions: InjectedExtension[];
-  
 
-  document.addEventListener('reef-injected', async()=>{
-    if(!isReefInjected)setIsReefInjected(true);
+  document.addEventListener('reef-injected', async () => {
+    if (!isReefInjected)setIsReefInjected(true);
   });
   useAsyncEffect(async () => {
     try {
       setError(undefined);
       setIsLoading(true);
-      extensions= await web3Enable(appDisplayName);
+      extensions = await web3Enable(appDisplayName);
       const reefExt = extensions.find((ext) => ext.name === REEF_EXTENSION_IDENT);
       if (!reefExt) {
         const installExtensionMessage = getInstallExtensionMessage();

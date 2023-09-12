@@ -41,65 +41,63 @@ const CONTRACT_EXISTS_GQL = `
           
 `;
 
-const getContractExistsQry=(address: string) => {
-  return {
-    query: CONTRACT_EXISTS_GQL,
-    variables: { address },
-  };
+const getGraphqlEndpoint = (network:string):string => {
+  if (network === 'testnet') {
+    return graphqlUrls.explorerTestnet;
+  }
+  return graphqlUrls.explorerMainnet;
 };
 
-const graphqlUrls = {
-  explorerTestnet:'https://squid.subsquid.io/reef-explorer-testnet/graphql',
-  explorerMainnet:'https://squid.subsquid.io/reef-explorer/graphql',
-}
+const getContractExistsQry = (address: string) => ({
+  query: CONTRACT_EXISTS_GQL,
+  variables: { address },
+});
 
-const ACTIVE_NETWORK_LS_KEY = "reef-app-active-network";
+const graphqlUrls = {
+  explorerTestnet: 'https://squid.subsquid.io/reef-explorer-testnet/graphql',
+  explorerMainnet: 'https://squid.subsquid.io/reef-explorer/graphql',
+};
+
+const ACTIVE_NETWORK_LS_KEY = 'reef-app-active-network';
 
 const graphqlRequest = (
   httpClient: AxiosInstance,
   queryObj: { query: string; variables: any },
-  isExplorer?:boolean
+  isExplorer?:boolean,
 ) => {
-  let selectedNetwork:string="mainnet";
+  let selectedNetwork = 'mainnet';
   try {
-    let storedNetwork = localStorage.getItem(ACTIVE_NETWORK_LS_KEY);
-    if(storedNetwork){
-      let parsedStoredNetwork = JSON.parse(storedNetwork);
+    const storedNetwork = localStorage.getItem(ACTIVE_NETWORK_LS_KEY);
+    if (storedNetwork) {
+      const parsedStoredNetwork = JSON.parse(storedNetwork);
       selectedNetwork = parsedStoredNetwork.name;
     }
   } catch (error) {
     console.log(error);
   }
   const graphql = JSON.stringify(queryObj);
-  if(isExplorer){
-    let url = getGraphqlEndpoint(selectedNetwork!);
+  if (isExplorer) {
+    const url = getGraphqlEndpoint(selectedNetwork!);
     return httpClient.post(url, graphql, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  const url = getGraphqlEndpoint(selectedNetwork!);
+  return httpClient.post(url, graphql, {
     headers: { 'Content-Type': 'application/json' },
   });
-} 
-
-let url = getGraphqlEndpoint(selectedNetwork!);
-return httpClient.post(url, graphql, {
-  headers: { 'Content-Type': 'application/json' },
-});
 };
-
-const getGraphqlEndpoint = (network:string):string=>{
-    if(network=='testnet'){
-      return graphqlUrls.explorerTestnet
-    }
-      return graphqlUrls.explorerMainnet
-}
 
 const isContrIndexed = async (address: string): Promise<boolean> => new Promise(async (resolve) => {
   const tmt = setTimeout(() => {
     resolve(false);
   }, 120000);
 
-  const timer = setInterval(async()=>{
+  const timer = setInterval(async () => {
     try {
-      const result = await graphqlRequest(axios,getContractExistsQry(address));
-      if(result.data.data.contracts &&result.data.data.contracts.length ){
+      const result = await graphqlRequest(axios, getContractExistsQry(address));
+      if (result.data.data.contracts && result.data.data.contracts.length) {
         console.log(result.data.data);
         resolve(true);
         clearInterval(timer);
@@ -107,7 +105,7 @@ const isContrIndexed = async (address: string): Promise<boolean> => new Promise(
     } catch (error) {
       resolve(false);
     }
-  },BLOCK_TIME)
+  }, BLOCK_TIME);
 }) as Promise<boolean>;
 
 export const verifyContract = async (deployedContract: Contract, contract: ReefContract, arg: string[], url?: string, file?:string): Promise<boolean> => {
@@ -133,7 +131,7 @@ export const verifyContract = async (deployedContract: Contract, contract: ReefC
       runs: contract.runs,
       file: file?.split(',')[1],
     };
-    
+
     await contractVerificatorApi.post<VerificationContractReq, AxiosResponse<string>>(`${url}${CONTRACT_VERIFICATION_URL}`, body);
     return true;
   } catch (err) {

@@ -49,14 +49,12 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
 
   const tokenCards = tokens
-    .filter(({ balance }) => 
-    {
+    .filter(({ balance }) => {
       try {
         return balance.gt(0);
       } catch (error) {}
       return false;
-    }
-    )
+    })
     .sort((a, b) => {
       const balanceA = balanceValue(a, tokenPrices[a.address] || 0);
       const balanceB = balanceValue(b, tokenPrices[b.address] || 0);

@@ -1,4 +1,4 @@
-import {  defaultOptions} from '@reef-defi/react-lib';
+import { defaultOptions } from '@reef-defi/react-lib';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -16,19 +16,21 @@ import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
-import {useInitReefState} from './hooks/useInitReefState';
+import { useInitReefState } from './hooks/useInitReefState';
 
 const App = (): JSX.Element => {
-  const { loading, error,signers,selectedReefSigner } = useInitReefState(
+  const {
+    loading, error, signers, selectedReefSigner,
+  } = useInitReefState(
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
 
-// only for development 
-  
+  // only for development
+
   // console.log(utilLib)
   // console.log(useObservableState(utilLib.reefState.selectedAddress$))
   // // remove till here
-  
+
   const history = useHistory();
 
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
@@ -57,17 +59,17 @@ const App = (): JSX.Element => {
       )
       : (
         <>
-            <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
-              <ReefSignersContext.Provider value={{accounts:signers,selectedSigner:selectedReefSigner}}>
+          <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
+            <ReefSignersContext.Provider value={{ accounts: signers, selectedSigner: selectedReefSigner }}>
               <HideBalance.Provider value={hideBalance}>
                 <NetworkSwitch.Provider value={networkSwitch}>
                   <div className="App d-flex w-100 h-100">
                     <div className="w-100 main-content">
                       {!loading && !error && (
-                      <>
-                        <Nav display={!loading && !error} />
-                        <ContentRouter />
-                      </>
+                        <>
+                          <Nav display={!loading && !error} />
+                          <ContentRouter />
+                        </>
                       )}
 
                       <NetworkSwitching isOpen={isNetworkSwitching} />
@@ -91,8 +93,8 @@ const App = (): JSX.Element => {
                   </div>
                 </NetworkSwitch.Provider>
               </HideBalance.Provider>
-              </ReefSignersContext.Provider>
-            </OptionContext.Provider>
+            </ReefSignersContext.Provider>
+          </OptionContext.Provider>
         </>
       )
   );

@@ -11,7 +11,7 @@ import TokenPricesContext from '../context/TokenPricesContext';
 import { MAX_SLIPPAGE, notify } from '../utils/utils';
 import './overlay-swap.css';
 import axios from 'axios';
-import {reefState} from '@reef-chain/util-lib';
+import { reefState } from '@reef-chain/util-lib';
 import ReefSigners from '../context/ReefSigners';
 
 const { Trade, OverlayAction, Finalizing } = Components;
@@ -64,7 +64,7 @@ const OverlaySwap = ({
   const pools = useContext(PoolContext);
 
   const network:Network = hooks.useObservableState(reefState.selectedNetwork$);
-  const signer: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
+  const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(

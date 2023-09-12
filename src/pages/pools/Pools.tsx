@@ -2,9 +2,10 @@ import React, { useContext, useMemo, useState } from 'react';
 import { BigNumber } from 'bignumber.js';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import {  hooks } from '@reef-defi/react-lib';
+import { hooks } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';
 
+import axios from 'axios';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import MyPoolsList from './MyPoolsList';
 import './pools.css';
@@ -12,7 +13,6 @@ import PoolsList from './PoolsList';
 import CreatePool from './Pool/CreatePool';
 import TokenContext from '../../context/TokenContext';
 import { localizedStrings as strings } from '../../l10n/l10n';
-import axios from 'axios';
 
 const Pools = (): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);

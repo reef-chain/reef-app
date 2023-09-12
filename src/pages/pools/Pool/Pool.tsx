@@ -5,13 +5,13 @@ import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';
+import axios from 'axios';
+import { reefState } from '@reef-chain/util-lib';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import Actions, { ActionTabs } from './Actions';
 import Chart, { TimeData, Timeframe } from './Chart';
 import './pool.css';
 import Stats from './Stats';
-import axios from 'axios';
-import {reefState} from "@reef-chain/util-lib";
 import ReefSigners from '../../../context/ReefSigners';
 
 interface Params {

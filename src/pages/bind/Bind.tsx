@@ -43,8 +43,8 @@ const onTxUpdate = (state: TxStatusUpdate): void => {
 };
 
 const Bind = (): JSX.Element => {
-  const selectedSigner: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
-  const accounts: ReefSigner[]|undefined|null = useContext(ReefSigners).accounts;
+  const { selectedSigner } = useContext(ReefSigners);
+  const { accounts } = useContext(ReefSigners);
   const [bindSigner, setBindSigner] = useState<ReefSigner>();
 
   useEffect(() => {

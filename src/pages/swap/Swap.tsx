@@ -3,12 +3,12 @@ import {
 } from '@reef-defi/react-lib';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import axios from 'axios';
+import { reefState } from '@reef-chain/util-lib';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, SPECIFIED_SWAP_URL, UrlAddressParams } from '../../urls';
 import { notify } from '../../utils/utils';
-import axios from 'axios';
-import {reefState} from "@reef-chain/util-lib";
 import ReefSigners from '../../context/ReefSigners';
 
 const { SwapComponent } = Components;
@@ -20,7 +20,7 @@ const Swap = (): JSX.Element => {
   const { address1, address2 } = useParams<UrlAddressParams>();
 
   const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
-  const signer: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
+  const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
 
   const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);
   // hook manages all necessary swap updates
@@ -28,7 +28,7 @@ const Swap = (): JSX.Element => {
     address1,
     address2,
     dispatch,
-    httpClient:axios,
+    httpClient: axios,
     state,
     tokens,
     tokenPrices,

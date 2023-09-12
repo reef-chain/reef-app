@@ -1,7 +1,10 @@
 import Uik from '@reef-chain/ui-kit';
 import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo, useState } from 'react';
-import { Network, appState, availableNetworks, hooks } from '@reef-defi/react-lib';
+import {
+  Network, appState, availableNetworks, hooks,
+} from '@reef-defi/react-lib';
+import { reefState } from '@reef-chain/util-lib';
 import NftContext from '../../context/NftContext';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
@@ -15,7 +18,6 @@ import { Activity } from './Activity/Activity';
 import { isReefswapUI } from '../../environment';
 import { localizedStrings } from '../../l10n/l10n';
 import GetReefTestnetButton from './GetReefTestnetButton';
-import {reefState} from "@reef-chain/util-lib";
 
 const Dashboard = (): JSX.Element => {
   const network:Network = hooks.useObservableState(reefState.selectedNetwork$);

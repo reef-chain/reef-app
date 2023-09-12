@@ -6,12 +6,12 @@ import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
+import axios from 'axios';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { POOL_CHART_URL } from '../../urls';
 import './pools.css';
 import PoolsSearch from './PoolsSearch';
 import { localizedStrings } from '../../l10n/l10n';
-import axios from 'axios';
 import ReefSigners from '../../context/ReefSigners';
 
 export interface Props {
@@ -29,7 +29,7 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
   const [pools, , count] = hooks.usePoolsList({
     limit: pageCount,
     offset: (currentPage - 1) * pageCount,
-    httpClient:axios,
+    httpClient: axios,
     search,
     signerAddress: signer?.address || '',
     tokenPrices,

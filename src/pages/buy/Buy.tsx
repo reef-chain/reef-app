@@ -36,7 +36,7 @@ const Buy = (): JSX.Element => {
   const iconUrl = {
     REEF: 'https://s2.coinmarketcap.com/static/img/coins/64x64/6951.png',
   };
-  const selectedSigner: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
+  const { selectedSigner } = useContext(ReefSigners);
 
   const [tokenAmount, setTokenAmount] = useState<string>('');
   const [allPairs, setAllPairs] = useState<BuyPair[]>([]);

@@ -3,6 +3,8 @@ import {
 } from '@reef-defi/react-lib';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import axios from 'axios';
+import { reefState } from '@reef-chain/util-lib';
 import NftContext from '../context/NftContext';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
@@ -35,8 +37,6 @@ import { Transfer } from './transfer/Transfer';
 import { isAddressWhitelisted, isReefswapUI } from '../environment';
 import { shortAddress } from '../utils/utils';
 import Onramp from './onramp/Onramp';
-import axios from 'axios';
-import {reefState} from "@reef-chain/util-lib";
 
 const ContentRouter = (): JSX.Element => {
   const selectedAddress:string|undefined = hooks.useObservableState(reefState.selectedAddress$);

@@ -3,9 +3,9 @@ import Uik from '@reef-chain/ui-kit';
 import { utils, hooks } from '@reef-defi/react-lib';
 import { faRepeat, faCoins, faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import Identicon from '@polkadot/react-identicon';
+import axios from 'axios';
 import { Tabs, Tokens } from './PoolTransactions';
 import { localizedStrings as strings } from '../../../l10n/l10n';
-import axios from 'axios';
 
 const { formatAgoDate, formatAmount, shortAddress } = utils;
 const {

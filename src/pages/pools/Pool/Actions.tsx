@@ -7,15 +7,15 @@ import {
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
+import { reefState } from '@reef-chain/util-lib';
 import PoolContext from '../../../context/PoolContext';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import { POOL_CHART_URL } from '../../../urls';
 import { MAX_SLIPPAGE, notify } from '../../../utils/utils';
 import './actions.css';
-import axios from 'axios';
 import ReefSigners from '../../../context/ReefSigners';
-import {reefState} from "@reef-chain/util-lib";
 
 const {
   Trade, Provide, Finalizing, Withdraw,
@@ -39,7 +39,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const network:Network|undefined = hooks.useObservableState(
     reefState.selectedNetwork$,
   );
-  
+
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
     store.swapReducer,
@@ -111,7 +111,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
 
   hooks.useRemoveLiquidity({
     tokens,
-    httpClient:axios,
+    httpClient: axios,
     address1: token1.address,
     address2: token2.address,
     tokenPrices,

@@ -9,11 +9,11 @@ import {
 } from '@reef-defi/react-lib';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import axios from 'axios';
+import { reefState } from '@reef-chain/util-lib';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { notify } from '../../utils/utils';
-import axios from 'axios';
-import {reefState} from "@reef-chain/util-lib";
 import ReefSigners from '../../context/ReefSigners';
 
 const { RemoveLiquidityComponent } = Components;
@@ -46,7 +46,7 @@ const RemoveLiquidity = (): JSX.Element => {
     state,
     tokens,
     signer: signer || undefined,
-    httpClient:axios,
+    httpClient: axios,
     tokenPrices,
   });
 

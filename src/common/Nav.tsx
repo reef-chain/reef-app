@@ -5,6 +5,7 @@ import {
 import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
+import { reefState } from '@reef-chain/util-lib';
 import { saveSignerLocalPointer } from '../store/internalStore';
 import {
   BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL,
@@ -13,7 +14,6 @@ import { appAvailableNetworks, isReefswapUI } from '../environment';
 import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
 import { localizedStrings } from '../l10n/l10n';
-import {reefState} from "@reef-chain/util-lib";
 import ReefSigners from '../context/ReefSigners';
 
 export interface Nav {
@@ -23,8 +23,8 @@ export interface Nav {
 const Nav = ({ display }: Nav): JSX.Element => {
   const history = useHistory();
   const { pathname } = useLocation();
-  const signer: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
-  const accounts: ReefSigner[]|undefined|null = useContext(ReefSigners).accounts;
+  const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
+  const { accounts } = useContext(ReefSigners);
   const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
   const mainnetSelected = network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
   let menuItems = [
@@ -51,7 +51,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
     const toSelect = appAvailableNetworks.find((item) => item.name === key);
     networkSwitch.setSwitching(true);
     history.push(DASHBOARD_URL);
-    
+
     if (toSelect) {
       reefState.setSelectedNetwork(toSelect);
     }

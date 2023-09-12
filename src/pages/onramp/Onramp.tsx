@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 import ReefSigners from '../../context/ReefSigners';
 
 function Onramp() : JSX.Element {
-  const signer: ReefSigner|undefined|null =  useContext(ReefSigners).selectedSigner;
+  const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
   return (
     <div style={{ height: '100vh' }}>
       <iframe
