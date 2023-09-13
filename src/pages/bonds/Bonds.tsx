@@ -3,11 +3,11 @@ import {
   hooks, Network,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';
+import { reefState } from '@reef-chain/util-lib';
 import { BondsComponent } from './BondsComponent';
 import { bonds, IBond } from './utils/bonds';
 import './bonds.css';
 import { localizedStrings as strings } from '../../l10n/l10n';
-import { reefState } from '@reef-chain/util-lib';
 import ReefSigners from '../../context/ReefSigners';
 
 export const Bonds = (): JSX.Element => {

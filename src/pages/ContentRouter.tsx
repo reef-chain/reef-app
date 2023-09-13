@@ -1,5 +1,5 @@
 import {
-  AddressToNumber, appState, graphql, hooks, Network, TokenWithAmount,
+  AddressToNumber, hooks, Network, TokenWithAmount,
 } from '@reef-defi/react-lib';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';

@@ -52,6 +52,7 @@ const getGraphqlEndpoint = (network:string):string => {
   return graphqlUrls.explorerMainnet;
 };
 
+// eslint-disable-next-line
 const getContractExistsQry = (address: string) => ({
   query: CONTRACT_EXISTS_GQL,
   variables: { address },
@@ -61,8 +62,10 @@ const ACTIVE_NETWORK_LS_KEY = 'reef-app-active-network';
 
 const graphqlRequest = (
   httpClient: AxiosInstance,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   queryObj: { query: string; variables: any },
   isExplorer?:boolean,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 ) :any => {
   let selectedNetwork = 'mainnet';
   try {

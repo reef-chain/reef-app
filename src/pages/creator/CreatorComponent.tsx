@@ -79,6 +79,7 @@ async function verify(
     icon,
   );
   console.log(verified);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return verified as any;
 }
 

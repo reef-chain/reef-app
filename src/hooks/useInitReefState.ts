@@ -36,14 +36,16 @@ const getSelectedAddress = ():string|undefined => {
   return storedAddress != null ? storedAddress : undefined;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const reefAccountToReefSigner = (accountsFromUtilLib:any, injectedSigner:InjectedSigner):any => {
   const resultObj = {
     name: 'reef',
     sig: injectedSigner,
     accounts: [],
   };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const reefSigners = <any[]>[];
-  for (let i = 0; i < accountsFromUtilLib.length; i++) {
+  for (let i = 0; i < accountsFromUtilLib.length; i += 1) {
     const reefAccount = accountsFromUtilLib[i];
     const toReefSigner = {
       name: reefAccount.name,
@@ -69,6 +71,7 @@ interface State{
 
 export const useInitReefState = (
   applicationDisplayName: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options:any,
 ): State => {
   const {
@@ -89,8 +92,10 @@ export const useInitReefState = (
       return;
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     const network = getNetworkFallback();
 
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     const jsonAccounts = { accounts, injectedSigner: extension?.signer };
 
     reefState.initReefState({
@@ -100,6 +105,7 @@ export const useInitReefState = (
     });
   }, [accounts, extension, selectedNetwork]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const isProviderLoading = hooks.useObservableState(reefState.providerConnState$.pipe(map((v) => !(v as any).isConnected)), false);
 
   useEffect(() => {
@@ -111,14 +117,17 @@ export const useInitReefState = (
   useAsyncEffect(async () => {
     if (allReefAccounts && provider) {
       const extensionAccounts = [reefAccountToReefSigner(allReefAccounts, jsonAccounts.injectedSigner!)];
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const accountPromises = (extensionAccounts as any).flatMap(
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         ({ accounts, name, sig }) => accounts.map((account) => rpc.accountToSigner(account, provider, sig, name)),
       );
       const allAccs = await Promise.all(accountPromises);
       setAllAccounts(allAccs);
 
       const storedAddress = getSelectedAddress();
-      if (selectedAddress === undefined && storedAddress != undefined)selectedAddress = storedAddress;
+      if (selectedAddress === undefined && storedAddress !== undefined)selectedAddress = storedAddress;
       if (selectedAddress) {
         setSelectedReefSigner(allAccs.find((acc) => acc.address === selectedAddress));
         reefState.setSelectedAddress(selectedAddress);

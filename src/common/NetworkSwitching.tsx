@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import './network-switching.css';
 import Uik from '@reef-chain/ui-kit';
 import { CSSTransition } from 'react-transition-group';
-import { appState, hooks, Network } from '@reef-defi/react-lib';
+import { hooks, Network } from '@reef-defi/react-lib';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
 import { reefState } from '@reef-chain/util-lib';
 

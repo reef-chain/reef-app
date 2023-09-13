@@ -1,11 +1,11 @@
 import React, { useContext, useMemo, useState } from 'react';
 import {
-  appState, hooks, ReefSigner, Components,
+  appState, Components,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import './bind.css';
 import { TxStatusUpdate } from '@reef-defi/react-lib/dist/utils';
-import { reefState } from '@reef-chain/util-lib';
+
 import ReefSigners from '../../context/ReefSigners';
 
 const { EvmBindComponent } = Components;

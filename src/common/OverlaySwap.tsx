@@ -1,17 +1,17 @@
 import {
-  appState, Components, graphql, hooks, Network, Pool, PoolWithReserves, ReefSigner, store, Token,
+  Components, hooks, Network, Pool, PoolWithReserves, ReefSigner, store, Token,
 } from '@reef-defi/react-lib';
 import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react';
 import { BigNumber } from 'ethers';
+import { reefState } from '@reef-chain/util-lib';
+import axios from 'axios';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
 import TokenPricesContext from '../context/TokenPricesContext';
 import { MAX_SLIPPAGE, notify } from '../utils/utils';
 import './overlay-swap.css';
-import axios from 'axios';
-import { reefState } from '@reef-chain/util-lib';
 import ReefSigners from '../context/ReefSigners';
 
 const { Trade, OverlayAction, Finalizing } = Components;

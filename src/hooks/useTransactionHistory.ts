@@ -4,6 +4,7 @@ import { useObservableState } from './useObservableState';
 
 type UseTxHistory = TokenTransfer[];
 export const UseTxHistory = (): UseTxHistory => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const txHistory:any = useObservableState(reefState.selectedTransactionHistory_status$);
   let txHistoryData;
   if (txHistory && txHistory._status[0].code === 6) {
