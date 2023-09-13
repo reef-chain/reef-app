@@ -2,14 +2,17 @@ import {
   appState,
   Components,
   hooks,
+  ReefSigner,
 } from '@reef-defi/react-lib';
-import React, { useEffect, useState } from 'react';
+import Identicon from '@polkadot/react-identicon';
+import React, { useEffect, useMemo, useState } from 'react';
 import './overlay-swap.css';
 import './overlay-nft.css';
 import Uik from '@reef-chain/ui-kit';
 import { Contract, ethers } from 'ethers';
 import { resolveEvmAddress, isSubstrateAddress } from '@reef-defi/evm-provider/utils';
 import { Provider, Signer } from '@reef-defi/evm-provider';
+import { shortAddress } from '../utils/utils';
 
 const { OverlayAction } = Components;
 
@@ -60,6 +63,72 @@ const getResolvedEVMAddress = (provider:Provider, address:string): Promise<strin
   return Promise.resolve(address);
 };
 
+const Accounts = ({
+  accounts,
+  selectAccount,
+  isOpen,
+  onClose,
+  query,
+  selectedAccount,
+}: {
+  accounts: ReefSigner[];
+  selectAccount: (index: number, signer: ReefSigner) => void;
+  isOpen: boolean;
+  onClose: () => void;
+  query: string;
+  selectedAccount: ReefSigner;
+}): JSX.Element => {
+  const availableAccounts = useMemo(() => {
+    const list = accounts.filter(({ address }) => selectedAccount.address !== address);
+
+    if (!query) return list;
+
+    const perfectMatch = list.find((acc) => acc.address === query);
+    if (perfectMatch) {
+      return [
+        perfectMatch,
+        ...list.filter((acc) => acc.address !== query),
+      ];
+    }
+
+    return list.filter((acc) => acc.address.toLowerCase().startsWith(query.toLowerCase())
+        || (acc.name as any).replaceAll(' ', '').toLowerCase().startsWith(query.toLowerCase()));
+  }, [accounts, query]);
+
+  return (
+    <div className="send-accounts">
+      {
+        availableAccounts?.length > 0
+          && (
+            <Uik.Dropdown
+              isOpen={isOpen}
+              onClose={onClose}
+            >
+              {
+                availableAccounts.map((account, index) => (
+                  <Uik.DropdownItem
+                    key={`account-${index}`}
+                    className={`
+                      send-accounts__account
+                      ${account.address === query ? 'send-accounts__account--selected' : ''}
+                    `}
+                    onClick={() => selectAccount(index, account)}
+                  >
+                    <Identicon className="send-accounts__account-identicon" value={account.address} size={44} theme="substrate" />
+                    <div className="send-accounts__account-info">
+                      <div className="send-accounts__account-name">{ account.name }</div>
+                      <div className="send-accounts__account-address">{ shortAddress(account.address) }</div>
+                    </div>
+                  </Uik.DropdownItem>
+                ))
+              }
+            </Uik.Dropdown>
+          )
+      }
+    </div>
+  );
+};
+
 const OverlaySendNFT = ({
   nftName,
   isOpen,
@@ -68,9 +137,11 @@ const OverlaySendNFT = ({
   address,
   nftId,
 }: OverlaySendNFT): JSX.Element => {
+  const [isAccountListOpen, setAccountsListOpen] = useState(false);
   const [destinationAddress, setDestinationAddress] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
   const [btnLabel, setBtnLabel] = useState<string>('Enter destination address');
+  const accounts = hooks.useObservableState(appState.accountsSubj);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [isAmountEnabled, setIsAmountEnabled] = useState<boolean>(false);
   const [transactionInProgress, setTransactionInProgress] = useState<boolean>(false);
@@ -158,14 +229,33 @@ const OverlaySendNFT = ({
       className="overlay-swap"
     >
       <div className="uik-pool-actions pool-actions">
-        <Uik.Input
-          label={`Send ${nftName} to:`}
-          placeholder="Enter destination address"
-          name="destination"
-          type="text"
-          disabled={transactionInProgress}
+        <div className='send__address'>
+        <Identicon className="send__address-identicon" value={destinationAddress} size={46} theme="substrate" />
+        <input
+          className="send__address-input"
+          value={destinationAddress}
+          maxLength={70}
           onChange={(e) => setDestinationAddress(e.target.value)}
+          placeholder={`Send ${nftName} to:`}
+          disabled={transactionInProgress}
+          onFocus={() => setAccountsListOpen(true)}
         />
+        {
+          accounts && accounts!.length > 0
+          && (
+            <Accounts
+              isOpen={isAccountListOpen}
+              onClose={() => setAccountsListOpen(false)}
+              accounts={accounts!}
+              query={destinationAddress}
+              selectAccount={(_, signer) => setDestinationAddress(signer.address)}
+              selectedAccount={signer!}
+            />
+     
+          )
+        }
+        </div>
+        
         <br />
         <Uik.Input
           label="Amount: "
