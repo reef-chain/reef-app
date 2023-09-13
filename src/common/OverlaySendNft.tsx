@@ -13,6 +13,7 @@ import { Contract, ethers } from 'ethers';
 import { resolveEvmAddress, isSubstrateAddress } from '@reef-defi/evm-provider/utils';
 import { Provider, Signer } from '@reef-defi/evm-provider';
 import { shortAddress } from '../utils/utils';
+import BigNumber from 'bignumber.js';
 
 const { OverlayAction } = Components;
 
@@ -144,6 +145,7 @@ const OverlaySendNFT = ({
   const [isAccountListOpen, setAccountsListOpen] = useState(false);
   const [destinationAddress, setDestinationAddress] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
+  const [percentage, setPercentage] = useState<number>(100);
   const [btnLabel, setBtnLabel] = useState<string>('Enter destination address');
   const accounts = hooks.useObservableState(appState.accountsSubj);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
@@ -197,6 +199,12 @@ const OverlaySendNFT = ({
     setAmount(parsedBalance);
     setIsAmountEnabled(parsedBalance > 1);
   }, [balance]);
+
+  const calculateAndSetPercentage = (val:number)=>{
+    let closestToVal = Math.ceil((val * parseInt(balance, 10))/100);
+    setAmount(closestToVal);
+    setPercentage(closestToVal*100/parseInt(balance, 10));
+  }
 
   useEffect(() => {
     const validateAmount = (): boolean => {
@@ -282,12 +290,31 @@ const OverlaySendNFT = ({
           value={amount.toString()}
           maxLength={70}
           name="amount"
-          onChange={(e) => setAmount(+e.target.value)}
+          onChange={(e) => {
+            setAmount(+e.target.value)
+            if(parseInt(e.target.value,10)<=parseInt(balance,10) && parseInt(e.target.value,10)>=0 ){
+              setPercentage(parseInt(e.target.value,10)*100/parseInt(balance,10));
+            }
+          }}
           placeholder={`Send ${amount} ${nftName}`}
           disabled={!isAmountEnabled || transactionInProgress}
         />
         </div> 
-        <br />
+        <div className="uik-pool-actions__slider">
+        <Uik.Slider
+          className="send__slider"
+          value={percentage}
+          onChange={calculateAndSetPercentage}
+          tooltip={`${Uik.utils.maxDecimals(percentage, 2)}%`}
+          helpers={[
+            { position: 0, text: '0%' },
+            { position: 25 },
+            { position: 50, text: '50%' },
+            { position: 75 },
+            { position: 100, text: '100%' },
+          ]}
+        />
+        </div>
         <Uik.Button
           disabled={!isFormValid}
           loading={transactionInProgress}
