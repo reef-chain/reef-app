@@ -47,6 +47,7 @@ const balanceValue = (token: Token, price = 0): number => (new BigNumber(token.b
 
 export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
+  console.log(tokens);
 
   const tokenCards = tokens
     .filter(({ balance }) => {

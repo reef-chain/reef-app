@@ -9,7 +9,7 @@
     "@polkadot/extension-dapp": "^0.40.3",
     "@popperjs/core": "^2.11.5",
     "@reef-chain/ui-kit": "^1.1.2",
-    "@reef-chain/util-lib": "file:.yalc/@reef-chain/util-lib",
+    "@reef-chain/util-lib": "^1.0.0-rc7",
     "@reef-defi/extension-dapp": "^1.0.14",
     "@reef-defi/react-lib": "file:.yalc/@reef-defi/react-lib",
     "@testing-library/jest-dom": "^5.11.4",
