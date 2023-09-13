@@ -316,6 +316,8 @@ const OverlaySendNFT = ({
         />
         </div>
         <Uik.Button
+        size="large"
+        className="uik-pool-actions__cta"
           disabled={!isFormValid}
           loading={transactionInProgress}
           fill={isFormValid && !transactionInProgress}
