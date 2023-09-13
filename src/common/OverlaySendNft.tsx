@@ -13,7 +13,6 @@ import { Contract, ethers } from 'ethers';
 import { resolveEvmAddress, isSubstrateAddress } from '@reef-defi/evm-provider/utils';
 import { Provider, Signer } from '@reef-defi/evm-provider';
 import { shortAddress } from '../utils/utils';
-import BigNumber from 'bignumber.js';
 
 const { OverlayAction } = Components;
 
@@ -95,6 +94,7 @@ const Accounts = ({
     }
 
     return list.filter((acc) => acc.address.toLowerCase().startsWith(query.toLowerCase())
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
         || (acc.name as any).replaceAll(' ', '').toLowerCase().startsWith(query.toLowerCase()));
   }, [accounts, query]);
 
@@ -110,6 +110,7 @@ const Accounts = ({
               {
                 availableAccounts.map((account, index) => (
                   <Uik.DropdownItem
+                  // eslint-disable-next-line
                     key={`account-${index}`}
                     className={`
                       send-accounts__account
@@ -200,11 +201,11 @@ const OverlaySendNFT = ({
     setIsAmountEnabled(parsedBalance > 1);
   }, [balance]);
 
-  const calculateAndSetPercentage = (val:number)=>{
-    let closestToVal = Math.ceil((val * parseInt(balance, 10))/100);
+  const calculateAndSetPercentage = (val:number):void => {
+    const closestToVal = Math.ceil((val * parseInt(balance, 10)) / 100);
     setAmount(closestToVal);
-    setPercentage(closestToVal*100/parseInt(balance, 10));
-  }
+    setPercentage(closestToVal * 100 / parseInt(balance, 10));
+  };
 
   useEffect(() => {
     const validateAmount = (): boolean => {
@@ -241,18 +242,18 @@ const OverlaySendNFT = ({
       className="overlay-swap"
     >
       <div className="uik-pool-actions pool-actions">
-        <div className='send__address'>
-        <Identicon className="send__address-identicon" value={destinationAddress} size={46} theme="substrate" />
-        <input
-          className="send__address-input"
-          value={destinationAddress}
-          maxLength={70}
-          onChange={(e) => setDestinationAddress(e.target.value)}
-          placeholder={`Send ${nftName} to:`}
-          disabled={transactionInProgress}
-          onFocus={() => setAccountsListOpen(true)}
-        />
-        {
+        <div className="send__address">
+          <Identicon className="send__address-identicon" value={destinationAddress} size={46} theme="substrate" />
+          <input
+            className="send__address-input"
+            value={destinationAddress}
+            maxLength={70}
+            onChange={(e) => setDestinationAddress(e.target.value)}
+            placeholder={`Send ${nftName} to:`}
+            disabled={transactionInProgress}
+            onFocus={() => setAccountsListOpen(true)}
+          />
+          {
           accounts && accounts!.length > 0
           && (
             <Accounts
@@ -260,64 +261,67 @@ const OverlaySendNFT = ({
               onClose={() => setAccountsListOpen(false)}
               accounts={accounts!}
               query={destinationAddress}
-              selectAccount={(_, signer) => setDestinationAddress(signer.address)}
+              selectAccount={(_, _signer) => setDestinationAddress(_signer.address)}
               selectedAccount={signer!}
             />
-     
+
           )
         }
-        </div>   
-        <div className='send__address'>
-          {isVideoNFT?
-           <video
-           className={`nfts__item-video-small nft-iconurl-small send__address-identicon`}
-           autoPlay
-           loop
-           muted
-           poster=""
-         >
-           <source src={iconUrl} type="video/mp4" />
-         </video>
-          :<img
-          src={iconUrl}
-          alt=""
-          className={`nft-iconurl-small send__address-identicon`}
-       
-        />}
-         <input
-         type="number"
-          className="send__amount-input"
-          value={amount.toString()}
-          maxLength={70}
-          name="amount"
-          onChange={(e) => {
-            setAmount(+e.target.value)
-            if(parseInt(e.target.value,10)<=parseInt(balance,10) && parseInt(e.target.value,10)>=0 ){
-              setPercentage(parseInt(e.target.value,10)*100/parseInt(balance,10));
-            }
-          }}
-          placeholder={`Send ${amount} ${nftName}`}
-          disabled={!isAmountEnabled || transactionInProgress}
-        />
-        </div> 
+        </div>
+        <div className="send__address">
+          {isVideoNFT
+            ? (
+              <video
+                className="nfts__item-video-small nft-iconurl-small send__address-identicon"
+                autoPlay
+                loop
+                muted
+                poster=""
+              >
+                <source src={iconUrl} type="video/mp4" />
+              </video>
+            )
+            : (
+              <img
+                src={iconUrl}
+                alt=""
+                className="nft-iconurl-small send__address-identicon"
+              />
+            )}
+          <input
+            type="number"
+            className="send__amount-input"
+            value={amount.toString()}
+            maxLength={70}
+            name="amount"
+            onChange={(e) => {
+              setAmount(+e.target.value);
+              if (parseInt(e.target.value, 10) <= parseInt(balance, 10) && parseInt(e.target.value, 10) >= 0) {
+                setPercentage(parseInt(e.target.value, 10) * 100 / parseInt(balance, 10));
+              }
+            }}
+            placeholder={`Send ${amount} ${nftName}`}
+            disabled={!isAmountEnabled || transactionInProgress}
+          />
+        </div>
         <div className="uik-pool-actions__slider">
-        <Uik.Slider
-          className="send__slider"
-          value={percentage}
-          onChange={calculateAndSetPercentage}
-          tooltip={`${Uik.utils.maxDecimals(percentage, 2)}%`}
-          helpers={[
-            { position: 0, text: '0%' },
-            { position: 25 },
-            { position: 50, text: '50%' },
-            { position: 75 },
-            { position: 100, text: '100%' },
-          ]}
-        />
+          <Uik.Slider
+            className="send__slider"
+            value={percentage}
+            onChange={calculateAndSetPercentage}
+            tooltip={`${Uik.utils.maxDecimals(percentage, 2)}%`}
+            helpers={[
+              { position: 0, text: '0%' },
+              { position: 25 },
+              { position: 50, text: '50%' },
+              { position: 75 },
+              { position: 100, text: '100%' },
+            ]}
+          />
         </div>
         <Uik.Button
-        size="large"
-        className="uik-pool-actions__cta"
+          size="large"
+          className="uik-pool-actions__cta"
           disabled={!isFormValid}
           loading={transactionInProgress}
           fill={isFormValid && !transactionInProgress}
