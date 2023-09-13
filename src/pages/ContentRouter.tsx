@@ -1,7 +1,9 @@
 import {
   AddressToNumber, hooks, Network, TokenWithAmount,
 } from '@reef-defi/react-lib';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useContext, useEffect, useMemo, useState,
+} from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import { reefState } from '@reef-chain/util-lib';
@@ -37,9 +39,11 @@ import { Transfer } from './transfer/Transfer';
 import { isAddressWhitelisted, isReefswapUI } from '../environment';
 import { shortAddress } from '../utils/utils';
 import Onramp from './onramp/Onramp';
+import ReefSigners from '../context/ReefSigners';
 
 const ContentRouter = (): JSX.Element => {
-  const selectedAddress:string|undefined = hooks.useObservableState(reefState.selectedAddress$);
+  const { selectedSigner } = useContext(ReefSigners);
+  const selectedAddress:string|undefined = selectedSigner ? selectedSigner.address : undefined;
   const selectedNetwork:Network = hooks.useObservableState(reefState.selectedNetwork$);
   const [isDisplayWhitelisted, setDisplayWhitelisted] = useState(false);
 
