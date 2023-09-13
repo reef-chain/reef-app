@@ -88,6 +88,7 @@ const OverlayNFT = ({
         </div>
         <div className="nft-box-send-btn">
           <Uik.Button
+          className="uik-pool-actions__cta"
             text="Send NFT"
             icon={faPaperPlane}
             onClick={() => {
