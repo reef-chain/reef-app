@@ -8,6 +8,14 @@
     border-radius: 20px;
     margin-top: 15px;
 }
+.nft-iconurl-small{
+    max-width: 42px;
+    border-radius: 5px;
+}
+
+.nfts__item-video-small {
+    max-width: 10%;
+  }
 
 .nft-view{
     display: flex;
@@ -68,6 +76,20 @@
     font-weight: 500;
     line-height: 1.2;
   }
+  .send__amount-input {
+    width: 100%;
+    border-radius: 15px;
+    border: none;
+    background-color: #e6e2f1;
+    transition: all 0.125s;
+    height: 70px;
+    padding: 0 17px 1px 17px;
+    font-family: var(--font);
+    font-size: 15px;
+    color: var(--text);
+    font-weight: 500;
+    line-height: 1.2;
+  }
 
   .send__address .send__address-identicon {
     position: absolute;
@@ -76,3 +98,4 @@
     border-radius: 10px;
     pointer-events: none;
   }
+

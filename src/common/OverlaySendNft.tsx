@@ -23,6 +23,8 @@ export interface OverlaySendNFT {
   balance: string;
   address: string;
   nftId: string;
+  iconUrl?: string;
+  isVideoNFT?:boolean;
 }
 
 const nftTxAbi = [
@@ -134,6 +136,8 @@ const OverlaySendNFT = ({
   isOpen,
   onClose,
   balance,
+  isVideoNFT,
+  iconUrl,
   address,
   nftId,
 }: OverlaySendNFT): JSX.Element => {
@@ -254,17 +258,35 @@ const OverlaySendNFT = ({
      
           )
         }
-        </div>
-        
-        <br />
-        <Uik.Input
-          label="Amount: "
-          name="amount"
+        </div>   
+        <div className='send__address'>
+          {isVideoNFT?
+           <video
+           className={`nfts__item-video-small nft-iconurl-small send__address-identicon`}
+           autoPlay
+           loop
+           muted
+           poster=""
+         >
+           <source src={iconUrl} type="video/mp4" />
+         </video>
+          :<img
+          src={iconUrl}
+          alt=""
+          className={`nft-iconurl-small send__address-identicon`}
+       
+        />}
+         <input
+         type="number"
+          className="send__amount-input"
           value={amount.toString()}
-          type="number"
-          disabled={!isAmountEnabled || transactionInProgress}
+          maxLength={70}
+          name="amount"
           onChange={(e) => setAmount(+e.target.value)}
+          placeholder={`Send ${amount} ${nftName}`}
+          disabled={!isAmountEnabled || transactionInProgress}
         />
+        </div> 
         <br />
         <Uik.Button
           disabled={!isFormValid}
