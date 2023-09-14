@@ -242,6 +242,27 @@ const OverlaySendNFT = ({
       className="overlay-swap"
     >
       <div className="uik-pool-actions pool-actions">
+        <div className='send-nft-view'>
+        {isVideoNFT
+            ? (
+              <video
+                className="nfts__item-video-small nft-iconurl-small send__address-identicon"
+                autoPlay
+                loop
+                muted
+                poster=""
+              >
+                <source src={iconUrl} type="video/mp4" />
+              </video>
+            )
+            : (
+              <img
+                src={iconUrl}
+                alt=""
+                className="nft-iconurl-small send__address-identicon"
+              />
+            )}
+        </div>
         <div className="send__address">
           <Identicon className="send__address-identicon" value={destinationAddress} size={46} theme="substrate" />
           <input
@@ -269,25 +290,7 @@ const OverlaySendNFT = ({
         }
         </div>
         <div className="send__address">
-          {isVideoNFT
-            ? (
-              <video
-                className="nfts__item-video-small nft-iconurl-small send__address-identicon"
-                autoPlay
-                loop
-                muted
-                poster=""
-              >
-                <source src={iconUrl} type="video/mp4" />
-              </video>
-            )
-            : (
-              <img
-                src={iconUrl}
-                alt=""
-                className="nft-iconurl-small send__address-identicon"
-              />
-            )}
+          
           <input
             type="number"
             className="send__amount-input"
