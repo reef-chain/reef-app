@@ -6,13 +6,16 @@ import {
   store,
   Token,
 } from '@reef-defi/react-lib';
-import React, { useContext, useReducer, useState } from 'react';
+import {  gql } from '@apollo/client';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import { notify } from '../../../utils/utils';
 import '../../../common/overlay-swap.css';
 import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
+import { useHistory } from 'react-router-dom';
+import PoolContext from '../../../context/PoolContext';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
@@ -21,17 +24,25 @@ export interface Props {
   onClose?: () => void;
 }
 
+interface TokenPair {
+  address1?:string;
+  address2?:string;
+}
+
 const CreatePool = ({
   isOpen,
   onClose,
 }: Props): JSX.Element => {
   const [address1, setAddress1] = useState('0x');
   const [address2, setAddress2] = useState('0x');
+  const [tokenPair,setTokenPair] = useState<TokenPair|undefined>(undefined);
 
   const [finalized, setFinalized] = useState(true);
 
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
+
+  const history = useHistory();
 
   const signer = hooks.useObservableState(
     appState.selectedSigner$,
@@ -44,6 +55,24 @@ const CreatePool = ({
     graphql.apolloDexClientInstance$,
   );
 
+
+  const pools = useContext(PoolContext);
+  useEffect(()=>{
+    if(!finalized){
+      setTokenPair({address1,address2});
+    }
+    else{
+        if(tokenPair){
+          for(let i=0;i<pools.length;i++){
+            if(pools[i].token1==tokenPair.address1 && pools[i].token2==tokenPair.address2){
+              history.push(`/chart/${pools[i].address}/trade`)
+            }
+          }
+        }
+    }
+  },[finalized,pools])
+
+  
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,
     store.initialAddLiquidityState,
@@ -68,9 +97,11 @@ const CreatePool = ({
     dispatch: provideDispatch,
     notify,
     updateTokenState: async () => {}, // eslint-disable-line
-    onSuccess: () => setFinalized(false),
-    onFinalized: () => {
-      setFinalized(true);
+    onSuccess: () => {
+      setFinalized(false)
+    },
+    onFinalized: async() => {
+      // setFinalized(true);
       if (onClose) onClose();
     },
   });
@@ -113,7 +144,8 @@ const CreatePool = ({
                 confirmText={localizedStrings.create_pool}
               />
             )
-            : <Finalizing />
+            : <Finalizing/>
+            
         }
       </div>
     </OverlayAction>

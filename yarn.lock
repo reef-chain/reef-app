@@ -3384,7 +3384,7 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
-"@reef-chain/ui-kit@^1.1.2", "@reef-chain/ui-kit@^1.1.4":
+"@reef-chain/ui-kit@^1.1.4":
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/@reef-chain/ui-kit/-/ui-kit-1.1.4.tgz#52c6e643fd459b2577fefd4a33e586799911631d"
   integrity sha512-B6wDCQJ1CU8ql1iCo7O0sDPNBJCZP2WnPUpqXetEdI8/dpbNJ7HY+sd0siTzw8d2a55qRQk2pzTeG6BqFbQnRg==
@@ -3528,17 +3528,17 @@
   dependencies:
     "@babel/runtime" "^7.16.0"
 
-"@reef-defi/react-lib@1.7.8":
-  version "1.7.8"
-  resolved "https://registry.yarnpkg.com/@reef-defi/react-lib/-/react-lib-1.7.8.tgz#964c0316e960c4b110fd694c82f6a6b4d57da62e"
-  integrity sha512-DMeHMuIgra1WIn84i0gyp8gfxDV+GpW9drAu7/Mqvs5RlMwAAjgPJGBbHLLFom6omxzvI+EIKHgemt9AgF1Mkg==
+"@reef-defi/react-lib@1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@reef-defi/react-lib/-/react-lib-1.8.0.tgz#30542e8a4cb0db9bee716a08822934e62c70677a"
+  integrity sha512-aWxl7kdx76ao4v8u82dUeNny78aZ5127uz2xq5mImppu2EfxogJDTHSEuLTe5PXr3GVjjOAR5xz0fuqb18ftBg==
   dependencies:
     "@apollo/client" "^3.6.2"
     "@fortawesome/free-regular-svg-icons" "^6.1.0"
     "@fortawesome/free-solid-svg-icons" "^6.1.0"
     "@polkadot/extension-dapp" "^0.40.4"
     "@polkadot/react-identicon" "^0.86.4"
-    "@reef-chain/ui-kit" "^1.1.2"
+    "@reef-chain/ui-kit" "^1.1.4"
     "@reef-chain/util-lib" "^0.6.0"
     "@reef-defi/evm-provider" "^1.0.9"
     "@reef-defi/extension-base" "^1.0.14"
