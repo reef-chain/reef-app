@@ -6,7 +6,7 @@ import {
   store,
   Token,
 } from '@reef-defi/react-lib';
-import {  gql } from '@apollo/client';
+import {  gql,useSubscription} from '@apollo/client';
 import React, { useContext, useEffect, useReducer, useState } from 'react';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
@@ -56,43 +56,39 @@ const CreatePool = ({
   );
 
   const FETCH_POOL_ADDRESS = gql`
-  query userPoolSupply($token1: String!, $token2: String!) {
-    userPoolSupply(token1: $token1, token2: $token2, signerAddress: "") {
-      address
+  query PoolAddress($token1: String!, $token2: String!) {
+    pools(where: {token1: {id_eq: $token1}, token2: {id_eq: $token2}},limit: 10) {
+      id
     }
-  }
+  }  
 `;
 
 const pools = useContext(PoolContext);
 
   useEffect(()=>{
-    const fetchPoolAddress = async()=>{
       if(!finalized && !tokenPair){
         setTokenPair({address1,address2});
       }
-      else{
-          if(tokenPair){
-            const interval = setInterval(async () => {
-              let poolAddressResp = await apolloDex.query({
-                query: FETCH_POOL_ADDRESS,
-                fetchPolicy:'network-only',
-                variables: {
-                  token1: tokenPair.address1,
-                  token2: tokenPair.address2,
-                },
-              });
+      if(tokenPair){
+        const fetchPoolAddress = ()=>{apolloDex.query({
+          query:FETCH_POOL_ADDRESS,
+          fetchPolicy:'no-cache',
           
-              console.log(poolAddressResp.data.userPoolSupply.address);
-          
-              if (poolAddressResp.data.userPoolSupply.address !== "0x0000000000000000000000000000000000000000") {
-                clearInterval(interval);
-                history.push(`/chart/${poolAddressResp.data.userPoolSupply.address}/trade`);
-              }
-            }, 10000);
+          variables:{
+            token1:tokenPair.address1,
+            token2:tokenPair.address2,
           }
+        }).then(res=>res.data.length>0?history.push(`/chart/${res.data.pools[0].id}/trade`):
+        pools.forEach((pool)=>{
+          console.log("checking")
+          if(pool.token1==tokenPair.address1&&pool.token2==tokenPair.address2){
+            history.push(`/chart/${pool.address}/trade`)
+          }
+        })
+        )}
+        fetchPoolAddress();
       }
-    }
-    fetchPoolAddress();
+      
   },[finalized,pools])
 
   
