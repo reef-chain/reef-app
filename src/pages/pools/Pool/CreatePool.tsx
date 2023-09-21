@@ -55,21 +55,44 @@ const CreatePool = ({
     graphql.apolloDexClientInstance$,
   );
 
+  const FETCH_POOL_ADDRESS = gql`
+  query userPoolSupply($token1: String!, $token2: String!) {
+    userPoolSupply(token1: $token1, token2: $token2, signerAddress: "") {
+      address
+    }
+  }
+`;
 
-  const pools = useContext(PoolContext);
+const pools = useContext(PoolContext);
+
   useEffect(()=>{
-    if(!finalized){
-      setTokenPair({address1,address2});
-    }
-    else{
-        if(tokenPair){
-          for(let i=0;i<pools.length;i++){
-            if(pools[i].token1==tokenPair.address1 && pools[i].token2==tokenPair.address2){
-              history.push(`/chart/${pools[i].address}/trade`)
-            }
+    const fetchPoolAddress = async()=>{
+      if(!finalized && !tokenPair){
+        setTokenPair({address1,address2});
+      }
+      else{
+          if(tokenPair){
+            const interval = setInterval(async () => {
+              let poolAddressResp = await apolloDex.query({
+                query: FETCH_POOL_ADDRESS,
+                fetchPolicy:'network-only',
+                variables: {
+                  token1: tokenPair.address1,
+                  token2: tokenPair.address2,
+                },
+              });
+          
+              console.log(poolAddressResp.data.userPoolSupply.address);
+          
+              if (poolAddressResp.data.userPoolSupply.address !== "0x0000000000000000000000000000000000000000") {
+                clearInterval(interval);
+                history.push(`/chart/${poolAddressResp.data.userPoolSupply.address}/trade`);
+              }
+            }, 10000);
           }
-        }
+      }
     }
+    fetchPoolAddress();
   },[finalized,pools])
 
   
@@ -101,7 +124,7 @@ const CreatePool = ({
       setFinalized(false)
     },
     onFinalized: async() => {
-      // setFinalized(true);
+      setFinalized(true);
       if (onClose) onClose();
     },
   });
