@@ -73,14 +73,12 @@ const pools = useContext(PoolContext);
         const fetchPoolAddress = ()=>{apolloDex.query({
           query:FETCH_POOL_ADDRESS,
           fetchPolicy:'no-cache',
-          
           variables:{
             token1:tokenPair.address1,
             token2:tokenPair.address2,
           }
         }).then(res=>res.data.length>0?history.push(`/chart/${res.data.pools[0].id}/trade`):
         pools.forEach((pool)=>{
-          console.log("checking")
           if(pool.token1==tokenPair.address1&&pool.token2==tokenPair.address2){
             history.push(`/chart/${pool.address}/trade`)
           }
