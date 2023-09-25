@@ -6,15 +6,17 @@ import {
   store,
   Token,
 } from '@reef-defi/react-lib';
-import {  gql,useSubscription} from '@apollo/client';
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import { gql } from '@apollo/client';
+import React, {
+  useContext, useEffect, useReducer, useState,
+} from 'react';
+import { useHistory } from 'react-router-dom';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import { notify } from '../../../utils/utils';
 import '../../../common/overlay-swap.css';
 import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
-import { useHistory } from 'react-router-dom';
 import PoolContext from '../../../context/PoolContext';
 
 const { Provide, OverlayAction, Finalizing } = Components;
@@ -35,7 +37,7 @@ const CreatePool = ({
 }: Props): JSX.Element => {
   const [address1, setAddress1] = useState('0x');
   const [address2, setAddress2] = useState('0x');
-  const [tokenPair,setTokenPair] = useState<TokenPair|undefined>(undefined);
+  const [tokenPair, setTokenPair] = useState<TokenPair|undefined>(undefined);
 
   const [finalized, setFinalized] = useState(true);
 
@@ -63,29 +65,28 @@ const CreatePool = ({
   }  
 `;
 
-const pools = useContext(PoolContext);
+  const pools = useContext(PoolContext);
 
-  useEffect(()=>{
-      if(!finalized && !tokenPair){
-        setTokenPair({address1,address2});
-      }
-      if(tokenPair){
-        const fetchPoolAddress = ()=>{apolloDex.query({
-          query:FETCH_POOL_ADDRESS,
-          fetchPolicy:'no-cache',
-          variables:{
-            token1:tokenPair.address1,
-            token2:tokenPair.address2,
-          }
-        }).then(res=>res.data.length>0?history.push(`/chart/${res.data.pools[0].id}/trade`):
-        {}
-        )}
-        fetchPoolAddress();
-      }
-      
-  },[finalized,pools])
+  useEffect(() => {
+    if (!finalized && !tokenPair) {
+      setTokenPair({ address1, address2 });
+    }
+    if (tokenPair) {
+      const fetchPoolAddress = ():void => {
+        apolloDex.query({
+          query: FETCH_POOL_ADDRESS,
+          fetchPolicy: 'no-cache',
+          variables: {
+            token1: tokenPair.address1,
+            token2: tokenPair.address2,
+          },
+        }).then((res) => (res.data.length > 0 ? history.push(`/chart/${res.data.pools[0].id}/trade`)
+          : {}));
+      };
+      fetchPoolAddress();
+    }
+  }, [finalized, pools]);
 
-  
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,
     store.initialAddLiquidityState,
@@ -111,9 +112,9 @@ const pools = useContext(PoolContext);
     notify,
     updateTokenState: async () => {}, // eslint-disable-line
     onSuccess: () => {
-      setFinalized(false)
+      setFinalized(false);
     },
-    onFinalized: async() => {
+    onFinalized: async () => {
       setFinalized(true);
       // if (onClose) onClose();
     },
@@ -157,8 +158,8 @@ const pools = useContext(PoolContext);
                 confirmText={localizedStrings.create_pool}
               />
             )
-            : <Finalizing/>
-            
+            : <Finalizing />
+
         }
       </div>
     </OverlayAction>
