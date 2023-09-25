@@ -78,7 +78,7 @@ const pools = useContext(PoolContext);
             token2:tokenPair.address2,
           }
         }).then(res=>res.data.length>0?history.push(`/chart/${res.data.pools[0].id}/trade`):
-        setFinalized(true)
+        {}
         )}
         fetchPoolAddress();
       }
@@ -115,7 +115,7 @@ const pools = useContext(PoolContext);
     },
     onFinalized: async() => {
       setFinalized(true);
-      if (onClose) onClose();
+      // if (onClose) onClose();
     },
   });
 
