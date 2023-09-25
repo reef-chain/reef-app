@@ -78,11 +78,7 @@ const pools = useContext(PoolContext);
             token2:tokenPair.address2,
           }
         }).then(res=>res.data.length>0?history.push(`/chart/${res.data.pools[0].id}/trade`):
-        pools.forEach((pool)=>{
-          if(pool.token1==tokenPair.address1&&pool.token2==tokenPair.address2){
-            history.push(`/chart/${pool.address}/trade`)
-          }
-        })
+        setFinalized(true)
         )}
         fetchPoolAddress();
       }
