@@ -5,6 +5,7 @@ export const isReefswapUI = window.location.host.indexOf('reefswap') > -1;
 if (isReefswapUI) {
   console.warn('Setting testnet for reefswap promo period!');
   localStorage.setItem('reef-app-active-network', '{"name":"testnet","rpcUrl":"wss://rpc-testnet.reefscan.info/ws","reefscanUrl":"https://testnet.reefscan.info","verificationApiUrl":"https://api-testnet.reefscan.com","factoryAddress":"0x06D7a7334B9329D0750FFd0a636D6C3dFA77E580","routerAddress":"0xa29DFc7329ac30445Ba963E313fD26E171722057","graphqlExplorerUrl":"wss://squid.subsquid.io/reef-explorer-testnet/graphql","graphqlDexsUrl":"https://squid.subsquid.io/reef-swap-testnet/graphql","genesisHash":"0x0f89efd7bf650f2d521afef7456ed98dff138f54b5b7915cc9bce437ab728660","bonds":[]}');
+  document.title = 'ReefSwap dApp';
 }
 export const getIpfsGatewayUrl = (hash: string): string => `https://reef.infura-ipfs.io/ipfs/${hash}`;
 export const testnetOverride = {
@@ -21,10 +22,10 @@ export const binanceConnectApiUrl = 'https://onramp.reefscan.info';
 export const whitelistedAddresses = [
   '5HfwqM3NFbrXXi5csi1oQScrNpRBSYUwtLPztiveMx4vDgCp',
   '5EJ56v5jhzGdU6berDYPb2jcxRAfrGxpxccwh8hXmp6sVqiG',
-'5G8zJRFYcqbaTkLdDzrpKsmoFEMNV4tZHLTPZJvNrwfcdkfZ',
-'5HmXZ4c7QubGkjWjPcwE3kEAvBVzSMQwxf77KWhJRrWMHAxV',
-'5HYXMX7XwwXZP2h22AVo6TFhem5h64CnPZTK4np2sP4SkNBU',
-'5EnwWrpS3kZ5muUw9YH4wVHKCy93T7NWDYL2FPQYdVpbxXuM',
+  '5G8zJRFYcqbaTkLdDzrpKsmoFEMNV4tZHLTPZJvNrwfcdkfZ',
+  '5HmXZ4c7QubGkjWjPcwE3kEAvBVzSMQwxf77KWhJRrWMHAxV',
+  '5HYXMX7XwwXZP2h22AVo6TFhem5h64CnPZTK4np2sP4SkNBU',
+  '5EnwWrpS3kZ5muUw9YH4wVHKCy93T7NWDYL2FPQYdVpbxXuM',
   '5EnY9eFwEDcEJ62dJWrTXhTucJ4pzGym4WZ2xcDKiT3eJecP',
   '5H8thN8qTxRzuGfzbQmnL7Zr1oZUx4CwUV5ebJduDK9dgy2R',
   '5GQbwbKELBEhoCufQZTQpWh1D727Y9esNxGrMufDWWHMqyFc',
