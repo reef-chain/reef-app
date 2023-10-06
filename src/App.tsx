@@ -1,7 +1,7 @@
 import { ApolloProvider } from '@apollo/client';
 import { defaultOptions, graphql, hooks } from '@reef-defi/react-lib';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Uik from '@reef-chain/ui-kit';
@@ -17,12 +17,30 @@ import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
 
+const saveMsParamsToLs = ()=>{
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+
+  const params = {};
+  for (const [key, value] of searchParams) {
+    //@ts-ignore
+    params[key] = value;
+  }
+ 
+  useEffect(() => {
+    const existingParams = JSON.parse(localStorage.getItem('msPromo') as any) || {};
+    const updatedParams = { ...existingParams, ...params };
+    localStorage.setItem('msPromo', JSON.stringify(updatedParams));
+  }, [params]);
+}
+
 const App = (): JSX.Element => {
   const { loading, error } = hooks.useInitReefState(
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
   const history = useHistory();
   const apolloExplorer = hooks.useObservableState(graphql.apolloExplorerClientInstance$);
+  saveMsParamsToLs()
 
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
   const hideBalance = {
