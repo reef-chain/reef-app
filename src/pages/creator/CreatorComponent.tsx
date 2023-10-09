@@ -185,7 +185,7 @@ const createToken = async ({
     setResultMessage({
       complete: true,
       title: strings.token_created,
-      message: `Success, your new token ${tokenName} is deployed. Innitial supply is ${initialSupply} ${symbol.toUpperCase()}. Next step is to create a pool so users can start trading.`,
+      message: `Success, your new token ${tokenName} is deployed. Initial supply is ${initialSupply} ${symbol.toUpperCase()}. Next step is to create a pool so users can start trading.`,
       contract,
     });
   } else {
