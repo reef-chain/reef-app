@@ -152,6 +152,8 @@ const OverlaySendNFT = ({
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [isAmountEnabled, setIsAmountEnabled] = useState<boolean>(false);
   const [transactionInProgress, setTransactionInProgress] = useState<boolean>(false);
+  const [showPercentages, setShowPercentages] = useState<boolean>(true);
+  const [parsedBalance, setParsedBalance] = useState<number>(parseInt(balance, 10));
 
   const signer = hooks.useObservableState(appState.selectedSigner$);
   const provider = hooks.useObservableState(appState.currentProvider$);
@@ -195,44 +197,79 @@ const OverlaySendNFT = ({
     }
   };
 
-  useEffect(() => {
-    const parsedBalance = parseInt(balance, 10);
-    setAmount(parsedBalance);
-    setIsAmountEnabled(parsedBalance > 1);
-  }, [balance]);
-
-  const calculateAndSetPercentage = (val:number):void => {
-    const closestToVal = Math.ceil((val * parseInt(balance, 10)) / 100);
+  const calculateAndSetPercentage = (val: number): void => {
+    const closestToVal = Math.ceil((val * parsedBalance) / 100);
     setAmount(closestToVal);
-    setPercentage(closestToVal * 100 / parseInt(balance, 10));
+    setPercentage(closestToVal * 100 / parsedBalance);
   };
 
+  const createSliderConfig = (): { position: number, text?: string }[] => {
+    if (parsedBalance <= 1) {
+      return [];
+    }
+
+    if (showPercentages) {
+      return [
+        { position: 0, text: '0%' },
+        { position: 25 },
+        { position: 50, text: '50%' },
+        { position: 75 },
+        { position: 100, text: '100%' },
+      ];
+    }
+
+    const step = 25;
+    const helpers = [];
+
+    for (let i = 0; i < 5; i += 1) {
+      const position = Math.ceil(step * i);
+      const positionText = Math.ceil(parsedBalance * (step / 100) * i).toString();
+      const text = (i % 2 === 0 || position === parsedBalance) ? positionText : '';
+      helpers.push({ position, text });
+    }
+    return helpers;
+  };
+
+  const sliderConfig = useMemo(() => createSliderConfig(), [showPercentages]);
+
+  const getSliderTooltipValue = (value = 0): string => (
+    showPercentages ? `${Uik.utils.maxDecimals(value, 2)}%` : Math.ceil(value / 100 * parsedBalance).toString()
+  );
+
   useEffect(() => {
-    const validateAmount = (): boolean => {
-      if (amount > parseInt(balance, 10)) {
+    setParsedBalance(parseInt(balance, 10) ?? 0);
+  }, [balance]);
+
+  useEffect(() => {
+    setAmount(parsedBalance);
+    setIsAmountEnabled(parsedBalance > 1);
+    setShowPercentages(parsedBalance > 99);
+  }, [parsedBalance]);
+
+  useEffect(() => {
+    const validateAmount = (): boolean => amount > 0 && amount <= parsedBalance;
+    const validateDestinationAddress = (): boolean => ethers.utils.isAddress(destinationAddress) || isSubstrateAddress(destinationAddress);
+
+    const setAmountError = (): void => {
+      if (amount > parsedBalance) {
         setBtnLabel('Amount too high');
       } else if (amount < 1) {
         setBtnLabel('Amount too low');
-      } else {
-        setBtnLabel('Send');
       }
-      return amount > 0 && amount <= parseInt(balance, 10);
     };
 
-    const validateDestinationAddress = (): boolean => {
-      const isAddressValid = ethers.utils.isAddress(destinationAddress) || isSubstrateAddress(destinationAddress);
-      if (!isAddressValid) {
-        setBtnLabel('Address is invalid');
-      } else {
-        setBtnLabel('Send');
-      }
-      return isAddressValid;
-    };
-
-    const amountValid = validateAmount();
     const destinationValid = validateDestinationAddress();
+    const amountValid = validateAmount();
     setIsFormValid(amountValid && destinationValid);
-  }, [amount, balance, destinationAddress]);
+
+    if (!destinationValid) {
+      setBtnLabel('Address is invalid');
+    } else if (!amountValid) {
+      setAmountError();
+    } else {
+      setBtnLabel('Send');
+    }
+  }, [amount, parsedBalance, destinationAddress]);
 
   return (
     <OverlayAction
@@ -242,8 +279,8 @@ const OverlaySendNFT = ({
       className="overlay-swap"
     >
       <div className="uik-pool-actions pool-actions">
-        <div className='send-nft-view'>
-        {isVideoNFT
+        <div className="send-nft-view">
+          { isVideoNFT
             ? (
               <video
                 className="nfts__item-video-small nft-iconurl-small send__address-identicon"
@@ -290,7 +327,6 @@ const OverlaySendNFT = ({
         }
         </div>
         <div className="send__address">
-          
           <input
             type="number"
             className="send__amount-input"
@@ -307,21 +343,19 @@ const OverlaySendNFT = ({
             disabled={!isAmountEnabled || transactionInProgress}
           />
         </div>
-        <div className="uik-pool-actions__slider">
-          <Uik.Slider
-            className="send__slider"
-            value={percentage}
-            onChange={calculateAndSetPercentage}
-            tooltip={`${Uik.utils.maxDecimals(percentage, 2)}%`}
-            helpers={[
-              { position: 0, text: '0%' },
-              { position: 25 },
-              { position: 50, text: '50%' },
-              { position: 75 },
-              { position: 100, text: '100%' },
-            ]}
-          />
-        </div>
+        {
+          parsedBalance > 1 && (
+            <div className="uik-pool-actions__slider">
+              <Uik.Slider
+                className="send__slider"
+                value={percentage}
+                onChange={calculateAndSetPercentage}
+                tooltip={getSliderTooltipValue(percentage)}
+                helpers={sliderConfig}
+              />
+            </div>
+          )
+        }
         <Uik.Button
           size="large"
           className="uik-pool-actions__cta"
