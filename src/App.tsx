@@ -1,7 +1,7 @@
 import { ApolloProvider } from '@apollo/client';
 import { defaultOptions, graphql, hooks } from '@reef-defi/react-lib';
 import React, { useEffect, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Uik from '@reef-chain/ui-kit';
@@ -23,24 +23,6 @@ const App = (): JSX.Element => {
   );
   const history = useHistory();
   const apolloExplorer = hooks.useObservableState(graphql.apolloExplorerClientInstance$);
-
-  // save to magicstore - remove after campaign @anukulpandey
-  const location = useLocation();
-  const searchParams = new URLSearchParams(location.search);
-
-  const params = {};
-  // eslint-disable-next-line no-restricted-syntax
-  for (const [key, value] of searchParams) {
-    // @ts-ignore
-    params[key] = value;
-  }
-
-  useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const existingParams = JSON.parse(localStorage.getItem('msPromo') as any) || {};
-    const updatedParams = { ...existingParams, ...params };
-    localStorage.setItem('msPromo', JSON.stringify(updatedParams));
-  }, [params]);
 
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
   const hideBalance = {
