@@ -104,16 +104,13 @@ const TokenActivityItem = ({
 
   return (
     <>
-      <a
+      <div
         key={timestamp}
         className={`
           activity-item
           activity-item--${type}
           ${isNFT ? 'activity-item--nft' : ''}
         `}
-        href={url}
-        target="_blank"
-        rel="noreferrer"
       >
         <div className="activity-item__indicator">
           <Uik.Icon className="activity-item__indicator-icon" icon={faArrowDown} />
@@ -156,7 +153,7 @@ const TokenActivityItem = ({
             )
           }
         </div>
-      </a>
+      </div>
 
       <VideoPlaybackOverlay
         src={token.iconUrl}

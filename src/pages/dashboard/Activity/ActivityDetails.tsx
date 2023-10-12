@@ -5,7 +5,7 @@ import React, {
   useContext, useMemo,
 } from 'react';
 import './activity-details.css';
-import Uik from '@reef-defi/ui-kit';
+import Uik from '@reef-chain/ui-kit';
 import {
   faArrowDown,
   faCheck,
