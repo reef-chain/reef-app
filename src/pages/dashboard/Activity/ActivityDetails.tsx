@@ -1,5 +1,5 @@
 import {
-  NFT, Token, utils,
+  NFT, Token, utils,Components
 } from '@reef-defi/react-lib';
 import React, {
   useContext, useMemo,
@@ -15,6 +15,7 @@ import HideBalance from '../../../context/HideBalance';
 import { displayBalanceFromToken } from '../../../utils/displayBalance';
 
 const { showBalance } = utils;
+const { OverlayAction } = Components;
 
 export interface Props {
   isOpen: boolean;
@@ -81,13 +82,12 @@ const ActivityDetails = ({
   const hideBalance = useContext(HideBalance);
 
   return (
-    <Uik.Modal
-      className="transfer-asset"
-      title={title}
-      isOpen={isOpen}
-      onClose={onClose}
-      footer={<Uik.Button text="Details" size="small" onClick={() => window.open(url, '_blank')} />}
-    >
+    <OverlayAction
+    isOpen={isOpen}
+    title={title}
+    onClose={onClose}
+    className="overlay-swap"
+  >
       <div className="transfer-asset__container">
         <div className="transfer-asset-summary">
           {isNFT ? (
@@ -299,7 +299,7 @@ const ActivityDetails = ({
           )}
         </div>
       </div>
-    </Uik.Modal>
+</OverlayAction>
   );
 };
 
