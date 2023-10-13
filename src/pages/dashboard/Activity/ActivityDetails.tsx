@@ -13,6 +13,7 @@ import {
 import { differenceInDays } from 'date-fns';
 import HideBalance from '../../../context/HideBalance';
 import { displayBalanceFromToken } from '../../../utils/displayBalance';
+import { shortAddress } from '../../../utils/utils';
 
 const { showBalance } = utils;
 const { OverlayAction } = Components;
@@ -37,6 +38,14 @@ const formatDate = (timestamp: number): string => {
   const difference = differenceInDays(today, date);
   return `${difference}` + ' ' + 'days ago';
 };
+
+const getTokenUrl = (tokenUrl:string):string=>{
+  const ipfsProtocol = "ipfs://";
+  if (tokenUrl?.startsWith(ipfsProtocol)) {
+    return `https://cloudflare-ipfs.com/ipfs/${tokenUrl.substring(ipfsProtocol.length)}`
+  }
+  return tokenUrl;
+}
 
 const ActivityDetails = ({
   isOpen,
@@ -133,7 +142,9 @@ const ActivityDetails = ({
                       `}
                     >
                       {!hideBalance.isHidden ? (
-                        amount
+                        <>
+                        {amount}
+                        </>
                       ) : (
                         <div>
                           <div />
@@ -170,11 +181,10 @@ const ActivityDetails = ({
                   <div className="transfer-asset__wallet transfer-asset__direction-indicator">
                     <div className="my-auto mx-2 fs-6">
                       <span className="transfer-asset__wallet-address">
-                        {from.substring(0, 5)}
-                        ...
+                      {shortAddress(from)}
                       </span>
                     </div>
-                    <button type="button" className="transfer-asset__wallet-name">{ sender }</button>
+                   
                   </div>
                 </div>
 
@@ -182,11 +192,10 @@ const ActivityDetails = ({
                   <div className="transfer-asset__wallet">
                     <div className="my-auto mx-2 ">
                       <span className="transfer-asset__wallet-address">
-                        {to.substring(0, 5)}
-                        ...
+                      {shortAddress(to)}
                       </span>
                     </div>
-                    <button type="button" className="transfer-asset__wallet-name">{ recipient }</button>
+                  
                   </div>
                 </div>
               </div>
@@ -201,6 +210,13 @@ const ActivityDetails = ({
             >
               <div className="transfer-asset__content-token">
                 <div className="transfer-asset__block col-span-6">
+                
+                  <div
+                      className="transfer-asset__amount-token-icon"
+                      style={{ backgroundImage: `url(${getTokenUrl(token.iconUrl)})`,padding:'8px' }}
+                    />
+                  <div>
+                    <div>
                   <div
                     className="transfer-asset__amount-wrapper"
                     title={`${type === 'receive' ? '+' : '-'} ${showBalance(
@@ -216,9 +232,14 @@ const ActivityDetails = ({
                                     : ''
                               }
                     `}
+                    style={{display:'flex',alignItems:'center',justifyContent:'start'}}
                     >
                       {!hideBalance.isHidden ? (
-                        amount
+                        <div style={{display:'flex',alignItems:'center',justifyContent:'start'}}>
+                          <div style={{padding:'4px 10px'}}>{amount}</div>
+                          
+                   
+                        </div>
                       ) : (
                         <div>
                           <div />
@@ -230,10 +251,13 @@ const ActivityDetails = ({
                       )}
                     </div>
                   </div>
-                </div>
-
-                <div className="transfer-asset__block">
-                  <div className="transfer-asset__info">
+                 
+                    </div>
+                  <div className="transfer-asset__date">
+                      {formatDate(timestamp)}
+                    </div>
+                  </div>
+                    <div className="transfer-asset__info" style={{position:'absolute',right:'5%'}}>
                     <div className="transfer-asset__indicator">
                       <Uik.Icon
                         className="transfer-asset__indicator-icon"
@@ -242,58 +266,33 @@ const ActivityDetails = ({
                     </div>
                   </div>
                 </div>
-
-                <div className="transfer-asset__block">
-                  <div className="transfer-asset__info">
-                    <div className="transfer-asset__date">
-                      {formatDate(timestamp)}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="transfer-asset__block">
-                  <div className="transfer-asset__info">
-                    <div className="transfer-asset__status">
-                      <Uik.Icon
-                        className="transfer-asset__status-icon transfer-asset__status-icon--success"
-                        icon={faCheck}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="transfer-asset__block">
-                  <div className="transfer-asset__info">
-                    <div
-                      className="transfer-asset__amount-token-icon"
-                      style={{ backgroundImage: `url(${token.iconUrl})` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="transfer-asset__block col-span-6">
-                  <div className="transfer-asset__wallet transfer-asset__direction-indicator">
+                <Uik.Text text='Transfer Details' type='light' className='mt-2'/>
+                <div className='transfer-asset__block my-2'>
+                  <div className='transfer-detail'>
                     <div className="my-auto mx-2 fs-6">
+                      
+                    <div className="transfer-asset__wallet">
                       <span className="transfer-asset__wallet-address">
-                        {from.substring(0, 5)}
-                        ...
+                      {shortAddress(from)}
                       </span>
+                      </div>
                     </div>
-                    <button type="button" className="transfer-asset__wallet-name">{ sender }</button>
-                  </div>
-                </div>
-
-                <div className="transfer-asset__block col-span-6">
-                  <div className="transfer-asset__wallet">
-                    <div className="my-auto mx-2 ">
+                    <div className="transfer-asset__direction-indicator"></div>
+                    <div className="my-auto mx-2 fs-6">
+                    
+                    <div className="transfer-asset__wallet">
                       <span className="transfer-asset__wallet-address">
-                        {to.substring(0, 5)}
-                        ...
+                      {shortAddress(to)}
                       </span>
-                    </div>
-                    <button type="button" className="transfer-asset__wallet-name">{ recipient }</button>
-                  </div>
+                      </div>
+                  
+                 
+</div>
+</div>
                 </div>
+                
+<Uik.Button text="Details"onClick={() => window.open(url, '_blank')} />
+                
               </div>
             </div>
           )}

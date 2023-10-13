@@ -24,6 +24,9 @@
   box-shadow: var(--neomorph-in);
   padding: 20px;
   border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 
@@ -41,8 +44,8 @@
 
 
 .transfer-asset__content-token .transfer-asset__indicator {
-  height: 4.5rem;
-  width: 4.5rem;
+  height: 3.5rem;
+  width: 3.5rem;
   border-radius: 20px;
 }
 
@@ -68,8 +71,8 @@
   height: 1.25rem;
 }
 .transfer-asset__content-token .transfer-asset__indicator-icon {
-  width: 1.8rem;
-  height: 2.05rem;
+  width: 0.8rem;
+    height: 1.05rem;
 }
 
 .transfer-asset--send .transfer-asset__indicator-icon {
@@ -103,21 +106,16 @@
   position: relative;
   padding: 30px 10px;
   border-radius: 15px;
-  grid-column: span 3;
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
+  min-width: 30vw;
 }
 
 .transfer-asset__content-token .transfer-asset__block  {
   padding: 20px 20px;
 }
 
-.transfer-asset__content-ntf, .transfer-asset__content-token {
-  display: grid;
-  grid-template-columns: repeat(13, 1fr);
-  grid-gap: 1rem;
-}
 
 .transfer-asset__content-token {
   grid-template-columns: repeat(15, 1fr);
@@ -153,15 +151,16 @@
 
 .transfer-asset__date {
   color: #b2b0c8;
-  font-weight: bold;
-  font-size: 1.8rem;
+  font-weight: lighter;
+  font-size: 0.8rem;
   line-height: 1.1;
+  padding: 4px 20px;
 }
 
 .transfer-asset__amount-wrapper {
   display: flex;
   flex-flow: row nowrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-end;
   gap: 0.323rem;
 }
@@ -186,7 +185,7 @@
 }
 
 .transfer-asset__content-token .transfer-asset__amount {
-  font-size: 1.8rem;
+  font-size: 1.2rem;
 }
 
 .transfer-asset__content-ntf .transfer-asset__amount {
@@ -196,6 +195,7 @@
 .transfer-asset__wallet {
   background: linear-gradient(0deg, rgb(250 248 255) 0%, rgb(217 211 235) 100%);
   height: 2.5em;
+  min-width: max-content;
   background-color: #f3f0f8;
   box-shadow: 0.2em 0.2em 1.5em #e2def1;
   padding: 0;
@@ -204,7 +204,7 @@
   overflow: hidden;
   border-radius: 99px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .transfer-asset__wallet-name {
@@ -238,23 +238,19 @@
 }
 
 .transfer-asset__direction-indicator::after {
-  content: url("data:image/svg+xml,%3Csvg width='31' height='29' viewBox='0 0 31 29' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M29.8304 12.6982C30.665 13.616 30.665 15.1063 29.8304 16.0241L19.1466 27.7709C18.312 28.6887 16.9565 28.6887 16.1218 27.7709C15.2871 26.8532 15.2871 25.3628 16.1218 24.4451L23.1664 16.7069L2.68033 16.7069C1.49844 16.7069 0.543578 15.657 0.543578 14.3575C0.543579 13.058 1.49844 12.0081 2.68033 12.0081L23.1597 12.0081L16.1285 4.26986C15.2938 3.35214 15.2938 1.86175 16.1285 0.944031C16.9631 0.0263071 18.3186 0.0263072 19.1533 0.944031L29.837 12.6909L29.8304 12.6982Z' fill='%239E4287'/%3E%3C/svg%3E%0A");
-  padding: 0.8rem;
-  width: 4rem;
-  height: 4rem;
-  top: 50%; 
-  right: 0%;
-  transform: translate(50%,-50%);
+  content: url("data:image/svg+xml,%3Csvg width='14' height='16' viewBox='0 0 29 31' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M29.8304 12.6982C30.665 13.616 30.665 15.1063 29.8304 16.0241L19.1466 27.7709C18.312 28.6887 16.9565 28.6887 16.1218 27.7709C15.2871 26.8532 15.2871 25.3628 16.1218 24.4451L23.1664 16.7069L2.68033 16.7069C1.49844 16.7069 0.543578 15.657 0.543578 14.3575C0.543579 13.058 1.49844 12.0081 2.68033 12.0081L23.1597 12.0081L16.1285 4.26986C15.2938 3.35214 15.2938 1.86175 16.1285 0.944031C16.9631 0.0263071 18.3186 0.0263072 19.1533 0.944031L29.837 12.6909L29.8304 12.6982Z' fill='%239E4287'/%3E%3C/svg%3E%0A");
+  padding: 0.5rem 0.5rem 0.1rem 0.5rem;
+  width: 2rem;
+  height: 2rem;
   background-color: #E6DFEF;
   border-radius: 1rem;
   background-size: cover;
   background-position: center;
   border: solid 4px #eeebf6;
   box-shadow: 0 2px 7px var(--border-color-dark);
-  position: absolute;
   z-index: 10;
-  margin-right: -0.6rem;
 }
+
 
 .transfer-asset__wallet .transfer-asset__wallet-address {
   margin: 0 !important;
@@ -306,7 +302,7 @@
 
 .transfer-asset__amount-token-icon {
   width: 4rem;
-  min-width: 4rem;
+  min-width:4rem;
   height: 4rem;
   border-radius: 50%;
   overflow: hidden;
@@ -370,4 +366,9 @@
 
 .uik-modal.transfer-asset .uik-modal__overlay {
   background-color: #EDEBF6;
+}
+
+.transfer-detail{
+  display: flex;
+  align-items: center;
 }
