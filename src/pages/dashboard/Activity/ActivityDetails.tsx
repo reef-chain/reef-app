@@ -109,6 +109,7 @@ const ActivityDetails = ({
             `}
             >
               <div className="transfer-asset__content-ntf">
+                <div className="transfer-asset__block">
                 <div
                   className="transfer-asset__nft-preview row-span-2"
                   style={{ backgroundImage: `url(${token.iconUrl})` }}
@@ -120,9 +121,8 @@ const ActivityDetails = ({
                     />
                   </div>
                 </div>
-
-                <div className="transfer-asset__block">
-                  <div
+                <div className='amount-wrapper'>
+                <div
                     className={`
                     transfer-asset__amount-wrapper
                     ${isNFT ? 'transfer-asset__nft-quantity-indicator' : ''}
@@ -156,48 +156,39 @@ const ActivityDetails = ({
                       )}
                     </div>
                   </div>
-                </div>
-
-                <div className="transfer-asset__block col-span-6">
-                  <div className="transfer-asset__info">
-                    <div className="transfer-asset__date">
+                      <div className="transfer-asset__date">
                       {formatDate(timestamp)}
                     </div>
-                  </div>
+                </div>
+                  
                 </div>
 
-                <div className="transfer-asset__block">
-                  <div className="transfer-asset__info">
-                    <div className="transfer-asset__status">
-                      <Uik.Icon
-                        className="transfer-asset__status-icon transfer-asset__status-icon--success"
-                        icon={faCheck}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="transfer-asset__block col-span-6">
-                  <div className="transfer-asset__wallet transfer-asset__direction-indicator">
+                <Uik.Text text='Transfer Details' type='light' className='mt-2'/>
+                <div className='transfer-asset__block my-2'>
+                  <div className='transfer-detail'>
                     <div className="my-auto mx-2 fs-6">
+                      
+                    <div className="transfer-asset__wallet">
                       <span className="transfer-asset__wallet-address">
                       {shortAddress(from)}
                       </span>
+                      </div>
                     </div>
-                   
-                  </div>
-                </div>
-
-                <div className="transfer-asset__block col-span-6">
-                  <div className="transfer-asset__wallet">
-                    <div className="my-auto mx-2 ">
+                    <div className="transfer-asset__direction-indicator"></div>
+                    <div className="my-auto mx-2 fs-6">
+                    
+                    <div className="transfer-asset__wallet">
                       <span className="transfer-asset__wallet-address">
                       {shortAddress(to)}
                       </span>
-                    </div>
+                      </div>
                   
-                  </div>
+                 
+</div>
+</div>
                 </div>
+                <Uik.Button text="Details"onClick={() => window.open(url, '_blank')} />
+                
               </div>
             </div>
           ) : (
