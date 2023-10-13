@@ -1,5 +1,5 @@
 import {
-  NFT, Token, utils,Components
+  NFT, Token, utils, Components,
 } from '@reef-defi/react-lib';
 import React, {
   useContext, useMemo,
@@ -8,7 +8,6 @@ import './activity-details.css';
 import Uik from '@reef-chain/ui-kit';
 import {
   faArrowDown,
-  faCheck,
 } from '@fortawesome/free-solid-svg-icons';
 import { differenceInDays } from 'date-fns';
 import HideBalance from '../../../context/HideBalance';
@@ -27,8 +26,6 @@ export interface Props {
   url: string;
   token: Token | NFT;
   timestamp: number;
-  sender: string | undefined;
-  recipient: string | undefined;
 }
 
 const formatDate = (timestamp: number): string => {
@@ -36,16 +33,16 @@ const formatDate = (timestamp: number): string => {
   const date = new Date(timestamp);
 
   const difference = differenceInDays(today, date);
-  return `${difference}` + ' ' + 'days ago';
+  return `${difference} days ago`;
 };
 
-const getTokenUrl = (tokenUrl:string):string=>{
-  const ipfsProtocol = "ipfs://";
+const getTokenUrl = (tokenUrl:string):string => {
+  const ipfsProtocol = 'ipfs://';
   if (tokenUrl?.startsWith(ipfsProtocol)) {
-    return `https://cloudflare-ipfs.com/ipfs/${tokenUrl.substring(ipfsProtocol.length)}`
+    return `https://cloudflare-ipfs.com/ipfs/${tokenUrl.substring(ipfsProtocol.length)}`;
   }
   return tokenUrl;
-}
+};
 
 const ActivityDetails = ({
   isOpen,
@@ -56,8 +53,6 @@ const ActivityDetails = ({
   inbound,
   url,
   token,
-  sender,
-  recipient,
 }: Props): JSX.Element => {
   const isNFT = !!(token as NFT).nftId;
   const type: 'receive' | 'send' = inbound ? 'receive' : 'send';
@@ -92,11 +87,11 @@ const ActivityDetails = ({
 
   return (
     <OverlayAction
-    isOpen={isOpen}
-    title={title}
-    onClose={onClose}
-    className="overlay-swap"
-  >
+      isOpen={isOpen}
+      title={title}
+      onClose={onClose}
+      className="overlay-swap"
+    >
       <div className="transfer-asset__container">
         <div className="transfer-asset-summary">
           {isNFT ? (
@@ -110,29 +105,29 @@ const ActivityDetails = ({
             >
               <div className="transfer-asset__content-ntf">
                 <div className="transfer-asset__block">
-                <div
-                  className="transfer-asset__nft-preview row-span-2"
-                  style={{ backgroundImage: `url(${token.iconUrl})` }}
-                >
-                  <div className="transfer-asset__indicator">
-                    <Uik.Icon
-                      className="transfer-asset__indicator-icon"
-                      icon={faArrowDown}
-                    />
+                  <div
+                    className="transfer-asset__nft-preview row-span-2"
+                    style={{ backgroundImage: `url(${token.iconUrl})` }}
+                  >
+                    <div className="transfer-asset__indicator">
+                      <Uik.Icon
+                        className="transfer-asset__indicator-icon"
+                        icon={faArrowDown}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className='amount-wrapper'>
-                <div
-                    className={`
+                  <div className="amount-wrapper">
+                    <div
+                      className={`
                     transfer-asset__amount-wrapper
                     ${isNFT ? 'transfer-asset__nft-quantity-indicator' : ''}
                   `}
-                    title={`${type === 'receive' ? '+' : '-'} ${showBalance(
+                      title={`${type === 'receive' ? '+' : '-'} ${showBalance(
                               token as Token,
-                    )}`}
-                  >
-                    <div
-                      className={`
+                      )}`}
+                    >
+                      <div
+                        className={`
                         transfer-asset__amount
                         ${
                                 hideBalance.isHidden
@@ -140,55 +135,54 @@ const ActivityDetails = ({
                                   : ''
                             }
                       `}
-                    >
-                      {!hideBalance.isHidden ? (
-                        <>
-                        {amount}
-                        </>
-                      ) : (
-                        <div>
-                          <div />
-                          <div />
-                          <div />
-                          <div />
-                          <div />
-                        </div>
-                      )}
+                      >
+                        {!hideBalance.isHidden ? (
+                          <>
+                            {amount}
+                          </>
+                        ) : (
+                          <div>
+                            <div />
+                            <div />
+                            <div />
+                            <div />
+                            <div />
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                      <div className="transfer-asset__date">
+                    <div className="transfer-asset__date">
                       {formatDate(timestamp)}
                     </div>
-                </div>
-                  
+                  </div>
+
                 </div>
 
-                <Uik.Text text='Transfer Details' type='light' className='mt-2'/>
-                <div className='transfer-asset__block my-2'>
-                  <div className='transfer-detail'>
+                <Uik.Text text="Transfer Details" type="light" className="mt-2" />
+                <div className="transfer-asset__block my-2">
+                  <div className="transfer-detail">
                     <div className="my-auto mx-2 fs-6">
-                      
-                    <div className="transfer-asset__wallet">
-                      <span className="transfer-asset__wallet-address">
-                      {shortAddress(from)}
-                      </span>
+
+                      <div className="transfer-asset__wallet">
+                        <span className="transfer-asset__wallet-address">
+                          {shortAddress(from)}
+                        </span>
                       </div>
                     </div>
-                    <div className="transfer-asset__direction-indicator"></div>
+                    <div className="transfer-asset__direction-indicator" />
                     <div className="my-auto mx-2 fs-6">
-                    
-                    <div className="transfer-asset__wallet">
-                      <span className="transfer-asset__wallet-address">
-                      {shortAddress(to)}
-                      </span>
+
+                      <div className="transfer-asset__wallet">
+                        <span className="transfer-asset__wallet-address">
+                          {shortAddress(to)}
+                        </span>
                       </div>
-                  
-                 
-</div>
-</div>
+
+                    </div>
+                  </div>
                 </div>
-                <Uik.Button text="Details"onClick={() => window.open(url, '_blank')} />
-                
+                <Uik.Button text="Details" onClick={() => window.open(url, '_blank')} />
+
               </div>
             </div>
           ) : (
@@ -201,21 +195,21 @@ const ActivityDetails = ({
             >
               <div className="transfer-asset__content-token">
                 <div className="transfer-asset__block col-span-6">
-                
+
                   <div
-                      className="transfer-asset__amount-token-icon"
-                      style={{ backgroundImage: `url(${getTokenUrl(token.iconUrl)})`,padding:'8px' }}
-                    />
+                    className="transfer-asset__amount-token-icon"
+                    style={{ backgroundImage: `url(${getTokenUrl(token.iconUrl)})`, padding: '8px' }}
+                  />
                   <div>
                     <div>
-                  <div
-                    className="transfer-asset__amount-wrapper"
-                    title={`${type === 'receive' ? '+' : '-'} ${showBalance(
+                      <div
+                        className="transfer-asset__amount-wrapper"
+                        title={`${type === 'receive' ? '+' : '-'} ${showBalance(
                                 token as Token,
-                    )}`}
-                  >
-                    <div
-                      className={`
+                        )}`}
+                      >
+                        <div
+                          className={`
                       transfer-asset__amount
                       ${
                                   hideBalance.isHidden
@@ -223,32 +217,31 @@ const ActivityDetails = ({
                                     : ''
                               }
                     `}
-                    style={{display:'flex',alignItems:'center',justifyContent:'start'}}
-                    >
-                      {!hideBalance.isHidden ? (
-                        <div style={{display:'flex',alignItems:'center',justifyContent:'start'}}>
-                          <div style={{padding:'4px 10px'}}>{amount}</div>
-                          
-                   
+                          style={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}
+                        >
+                          {!hideBalance.isHidden ? (
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'start' }}>
+                              <div style={{ padding: '4px 10px' }}>{amount}</div>
+
+                            </div>
+                          ) : (
+                            <div>
+                              <div />
+                              <div />
+                              <div />
+                              <div />
+                              <div />
+                            </div>
+                          )}
                         </div>
-                      ) : (
-                        <div>
-                          <div />
-                          <div />
-                          <div />
-                          <div />
-                          <div />
-                        </div>
-                      )}
+                      </div>
+
                     </div>
-                  </div>
-                 
-                    </div>
-                  <div className="transfer-asset__date">
+                    <div className="transfer-asset__date">
                       {formatDate(timestamp)}
                     </div>
                   </div>
-                    <div className="transfer-asset__info" style={{position:'absolute',right:'5%'}}>
+                  <div className="transfer-asset__info" style={{ position: 'absolute', right: '5%' }}>
                     <div className="transfer-asset__indicator">
                       <Uik.Icon
                         className="transfer-asset__indicator-icon"
@@ -257,39 +250,38 @@ const ActivityDetails = ({
                     </div>
                   </div>
                 </div>
-                <Uik.Text text='Transfer Details' type='light' className='mt-2'/>
-                <div className='transfer-asset__block my-2'>
-                  <div className='transfer-detail'>
+                <Uik.Text text="Transfer Details" type="light" className="mt-2" />
+                <div className="transfer-asset__block my-2">
+                  <div className="transfer-detail">
                     <div className="my-auto mx-2 fs-6">
-                      
-                    <div className="transfer-asset__wallet">
-                      <span className="transfer-asset__wallet-address">
-                      {shortAddress(from)}
-                      </span>
+
+                      <div className="transfer-asset__wallet">
+                        <span className="transfer-asset__wallet-address">
+                          {shortAddress(from)}
+                        </span>
                       </div>
                     </div>
-                    <div className="transfer-asset__direction-indicator"></div>
+                    <div className="transfer-asset__direction-indicator" />
                     <div className="my-auto mx-2 fs-6">
-                    
-                    <div className="transfer-asset__wallet">
-                      <span className="transfer-asset__wallet-address">
-                      {shortAddress(to)}
-                      </span>
+
+                      <div className="transfer-asset__wallet">
+                        <span className="transfer-asset__wallet-address">
+                          {shortAddress(to)}
+                        </span>
                       </div>
-                  
-                 
-</div>
-</div>
+
+                    </div>
+                  </div>
                 </div>
-                
-<Uik.Button text="Details"onClick={() => window.open(url, '_blank')} />
-                
+
+                <Uik.Button text="Details" onClick={() => window.open(url, '_blank')} />
+
               </div>
             </div>
           )}
         </div>
       </div>
-</OverlayAction>
+    </OverlayAction>
   );
 };
 

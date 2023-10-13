@@ -15,7 +15,6 @@ interface Props {
   timestamp: number;
   inbound: boolean;
   token: Token | NFT;
-  url: string;
 }
 
 const formatDate = (timestamp: number): string => {
@@ -32,7 +31,6 @@ const TokenActivityItem = ({
   token,
   timestamp,
   inbound,
-  url,
 }: Props): JSX.Element => {
   const [isVideoOverlayOpen, setIsVideoOverlayOpen] = useState(false);
   const {
