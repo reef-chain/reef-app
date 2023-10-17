@@ -19,7 +19,7 @@ interface paramType {
   vid?:string
 }
 
-export const useSaveToMs = async ():Promise<void> => {
+export const useMagicSquareParamsSave = ():void => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const params:paramType = {};
@@ -51,6 +51,6 @@ export const magicSquareAction = async (network: AvailableNetworks, eventType: E
     eventType,
     address,
   };
-
+  console.log('ms post', bodyParams);
   axios.post(`${baseUrl}/magicsquare`, bodyParams);
 };
