@@ -142,9 +142,9 @@ const OverlaySwap = ({
     dispatch: tradeDispatch,
     notify,
     updateTokenState: async () => Promise.resolve(), // eslint-disable-line
-    onSuccess: () =>{
-      setFinalized(false)
-      if(signer)magicSquareAction(network.name, EventType.SWAP, signer.address)
+    onSuccess: () => {
+      setFinalized(false);
+      if (signer)magicSquareAction(network.name, EventType.SWAP, signer.address);
     },
     onFinalized: () => {
       setFinalized(true);

@@ -69,8 +69,8 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     notify,
     updateTokenState: async () => {}, // eslint-disable-line
     onSuccess: () => {
-      setFinalized(false)
-      if(signer)magicSquareAction(network.name, EventType.SWAP, signer.address)
+      setFinalized(false);
+      if (signer)magicSquareAction(network.name, EventType.SWAP, signer.address);
     },
     onFinalized: () => setFinalized(true),
   });
