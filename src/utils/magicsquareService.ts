@@ -56,6 +56,6 @@ export const magicSquareAction = async (network: AvailableNetworks, eventType: E
 
   axios.post(`${baseUrl}/magicsquare`, bodyParams).catch((err) => {
     // do nothing
-    console.log('magicsquare err=', err);
+    console.log('ms err=', err);
   });
 };
