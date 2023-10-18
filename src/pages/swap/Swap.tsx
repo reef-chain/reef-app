@@ -42,9 +42,11 @@ const Swap = (): JSX.Element => {
     batchTxs: network?.name === 'mainnet',
     dispatch,
     notify,
-    onSuccess: () => (signer ? magicSquareAction(network.name, EventType.SWAP, signer.address) : () => {
-      // do nothing
-    }),
+    onSuccess: () => {
+      if (signer) {
+        magicSquareAction(network.name, EventType.SWAP, signer.address);
+      }
+    },
     updateTokenState: async () => {}, // eslint-disable-line
   });
   const onSwitch = (): void => {
