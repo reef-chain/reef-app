@@ -3548,10 +3548,10 @@
   dependencies:
     "@babel/runtime" "^7.16.0"
 
-"@reef-defi/react-lib@1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@reef-defi/react-lib/-/react-lib-1.8.0.tgz#30542e8a4cb0db9bee716a08822934e62c70677a"
-  integrity sha512-aWxl7kdx76ao4v8u82dUeNny78aZ5127uz2xq5mImppu2EfxogJDTHSEuLTe5PXr3GVjjOAR5xz0fuqb18ftBg==
+"@reef-defi/react-lib@1.8.1":
+  version "1.8.1"
+  resolved "https://registry.npmmirror.com/@reef-defi/react-lib/-/react-lib-1.8.1.tgz#8e80be6aafdc49260c4cf2de3d9d085d7a8ffc48"
+  integrity sha512-tY+7m1DkXLBHEZVzUILWv9S08wZKpX/PF4lj6ZXpjhQqilJy+KT5w/9pn11JMtfTG+aFkG0ye+Vm0z9UVC2iEA==
   dependencies:
     "@apollo/client" "^3.6.2"
     "@fortawesome/free-regular-svg-icons" "^6.1.0"
