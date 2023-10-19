@@ -13,6 +13,7 @@ import TokenPricesContext from '../../../context/TokenPricesContext';
 import { POOL_CHART_URL } from '../../../urls';
 import { MAX_SLIPPAGE, notify } from '../../../utils/utils';
 import './actions.css';
+import { EventType, magicSquareAction } from '../../../utils/magicsquareService';
 
 const {
   Trade, Provide, Finalizing, Withdraw,
@@ -67,7 +68,10 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     dispatch: tradeDispatch,
     notify,
     updateTokenState: async () => {}, // eslint-disable-line
-    onSuccess: () => setFinalized(false),
+    onSuccess: () => {
+      setFinalized(false);
+      if (signer)magicSquareAction(network.name, EventType.SWAP, signer.address);
+    },
     onFinalized: () => setFinalized(true),
   });
   const onSwitch = (): void => {

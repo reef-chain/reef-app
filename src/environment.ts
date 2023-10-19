@@ -5,6 +5,7 @@ export const isReefswapUI = window.location.host.indexOf('reefswap') > -1;
 if (isReefswapUI) {
   console.warn('Setting testnet for reefswap promo period!');
   localStorage.setItem('reef-app-active-network', '{"name":"testnet","rpcUrl":"wss://rpc-testnet.reefscan.info/ws","reefscanUrl":"https://testnet.reefscan.info","verificationApiUrl":"https://api-testnet.reefscan.com","factoryAddress":"0x06D7a7334B9329D0750FFd0a636D6C3dFA77E580","routerAddress":"0xa29DFc7329ac30445Ba963E313fD26E171722057","graphqlExplorerUrl":"wss://squid.subsquid.io/reef-explorer-testnet/graphql","graphqlDexsUrl":"https://squid.subsquid.io/reef-swap-testnet/graphql","genesisHash":"0x0f89efd7bf650f2d521afef7456ed98dff138f54b5b7915cc9bce437ab728660","bonds":[]}');
+  document.title = 'ReefSwap dApp';
 }
 export const getIpfsGatewayUrl = (hash: string): string => `https://reef.infura-ipfs.io/ipfs/${hash}`;
 export const testnetOverride = {
@@ -12,6 +13,7 @@ export const testnetOverride = {
   rpcUrl: 'wss://rpc-testnet.reefscan.com/ws',
   verificationApiUrl: 'https://api-testnet.reefscan.info',
 } as Network;
+
 // export const mainnetOverride = { ...availableNetworks.testnet, rpcUrl: 'wss://rpc.reefscan.com/ws', verificationApiUrl: 'https://api-testnet.reefscan.info' } as Network;
 export const appAvailableNetworks = [availableNetworks.mainnet, testnetOverride];
 export const getAppNetworkOverride = (network: Network): Network => appAvailableNetworks.find((net) => net.name === network.name) || network;
@@ -19,6 +21,7 @@ export const getAppNetworkOverride = (network: Network): Network => appAvailable
 export const binanceConnectApiUrl = 'https://onramp.reefscan.info';
 
 export const whitelistedAddresses = [
+  '5HfwqM3NFbrXXi5csi1oQScrNpRBSYUwtLPztiveMx4vDgCp',
   '5EJ56v5jhzGdU6berDYPb2jcxRAfrGxpxccwh8hXmp6sVqiG',
   '5G8zJRFYcqbaTkLdDzrpKsmoFEMNV4tZHLTPZJvNrwfcdkfZ',
   '5HmXZ4c7QubGkjWjPcwE3kEAvBVzSMQwxf77KWhJRrWMHAxV',
