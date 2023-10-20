@@ -103,7 +103,7 @@ export const useInitReefState = (
       jsonAccounts,
       ipfsHashResolverFn,
     });
-  }, [accounts, extension, selectedNetwork]);
+  }, [accounts, extension]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const isProviderLoading = hooks.useObservableState(reefState.providerConnState$.pipe(map((v) => !(v as any).isConnected)), false);

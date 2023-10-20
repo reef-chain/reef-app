@@ -34,7 +34,7 @@
     jsonpointer "^5.0.0"
     leven "^3.1.0"
 
-"@apollo/client@^3.6.2", "@apollo/client@^3.6.9":
+"@apollo/client@^3.6.9":
   version "3.8.3"
   resolved "https://registry.yarnpkg.com/@apollo/client/-/client-3.8.3.tgz#7cd23307bbc788a0a9eda51e6a76f32db8282933"
   integrity sha512-mK86JM6hCpMEBGDgdO9U8ZYS8r9lPjXE1tVGpJMdSFUsIcXpmEfHUAbbFpPtYmxn8Qa7XsYy0dwDaDhpf4UUPw==
@@ -3542,12 +3542,9 @@
   dependencies:
     "@babel/runtime" "^7.16.0"
 
-"@reef-defi/react-lib@1.7.8":
+"@reef-defi/react-lib@file:.yalc/@reef-defi/react-lib":
   version "1.7.8"
-  resolved "https://registry.yarnpkg.com/@reef-defi/react-lib/-/react-lib-1.7.8.tgz#964c0316e960c4b110fd694c82f6a6b4d57da62e"
-  integrity sha512-DMeHMuIgra1WIn84i0gyp8gfxDV+GpW9drAu7/Mqvs5RlMwAAjgPJGBbHLLFom6omxzvI+EIKHgemt9AgF1Mkg==
   dependencies:
-    "@apollo/client" "^3.6.2"
     "@fortawesome/free-regular-svg-icons" "^6.1.0"
     "@fortawesome/free-solid-svg-icons" "^6.1.0"
     "@polkadot/extension-dapp" "^0.40.4"
