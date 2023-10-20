@@ -10,6 +10,7 @@ import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, SPECIFIED_SWAP_URL, UrlAddressParams } from '../../urls';
 import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
+import { EventType, magicSquareAction } from '../../utils/magicsquareService';
 
 const { SwapComponent } = Components;
 
@@ -43,6 +44,11 @@ const Swap = (): JSX.Element => {
     batchTxs: network?.name === 'mainnet',
     dispatch,
     notify,
+    onSuccess: () => {
+      if (signer) {
+        magicSquareAction(network.name, EventType.SWAP, signer.address);
+      }
+    },
     updateTokenState: async () => {}, // eslint-disable-line
   });
   const onSwitch = (): void => {

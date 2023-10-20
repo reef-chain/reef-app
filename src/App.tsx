@@ -16,21 +16,16 @@ import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
+import { useMagicSquareParamsSave } from './utils/magicsquareService';
 import { useInitReefState } from './hooks/useInitReefState';
 
 const App = (): JSX.Element => {
+  useMagicSquareParamsSave();
   const {
     loading, error, signers, selectedReefSigner,
   } = useInitReefState(
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
-
-  // only for development
-
-  // console.log(utilLib)
-  // console.log(useObservableState(utilLib.reefState.selectedAddress$))
-  // // remove till here
-
   const history = useHistory();
 
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
