@@ -1,10 +1,8 @@
 import {
-  appState, createEmptyTokenWithAmount, hooks, ReefSigner, Network, TokenTransfer,
   createEmptyTokenWithAmount, hooks, ReefSigner, Network, TokenTransfer,
 } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React, { useState } from 'react';
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import './activity.css';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { reefState } from '@reef-chain/util-lib';
@@ -26,9 +24,8 @@ export const Activity = (): JSX.Element => {
 
   const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
 
-
-    const [isActivityModalOpen, setActivityModalOpen] = useState(false);
-    const [selectedTransaction, setSelectedTransaction] = useState<TokenTransfer|null>(null);
+  const [isActivityModalOpen, setActivityModalOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<TokenTransfer|null>(null);
 
   // set current transaction as parameter and call setSelectedTransaction state function.
   const setCurrentTransaction = (transaction : TokenTransfer): void => {
@@ -36,7 +33,7 @@ export const Activity = (): JSX.Element => {
   };
 
   // @ts-ignore
-    return (
+  return (
     <div className="token-activity activity">
       <div className="activity__head">
         <Uik.Text type="title" text={strings.activity} className="activity__title" />
