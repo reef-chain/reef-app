@@ -1,6 +1,6 @@
 import {
   Components, hooks, Network, ReefSigner, Settings, store, Token,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';

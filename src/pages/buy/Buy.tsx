@@ -1,12 +1,12 @@
 import {
   Components,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import React, {
   useContext,
   useEffect, useState,
 } from 'react';
 import './Buy.css';
-import { InputAmountValidity } from '@reef-defi/react-lib/dist/components/common/Input';
+import { InputAmountValidity } from '@reef-chain/react-lib/dist/components/common/Input';
 import Uik from '@reef-chain/ui-kit';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

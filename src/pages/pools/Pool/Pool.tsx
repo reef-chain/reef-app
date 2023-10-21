@@ -1,6 +1,6 @@
 import {
   hooks, Network, ReefSigner,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';

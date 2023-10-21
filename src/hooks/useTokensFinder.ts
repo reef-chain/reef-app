@@ -1,6 +1,6 @@
 import {
   createEmptyTokenWithAmount, rpc, ReefSigner, reefTokenWithAmount, Token, TokenWithAmount,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import { useEffect, useState } from 'react';
 
 type State = 'Init' | 'Loading' | 'Success';

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Components } from '@reef-defi/react-lib';
+import { Components } from '@reef-chain/react-lib';
 import PoolsList from '../PoolsList';
 import './pool-select.css';
 import TokenContext from '../../../context/TokenContext';

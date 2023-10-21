@@ -1,8 +1,8 @@
 import {
   appState, Components, ReefSigner,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import React, { useContext, useEffect, useState } from 'react';
-import { TxStatusUpdate } from '@reef-defi/react-lib/dist/utils';
+import { TxStatusUpdate } from '@reef-chain/react-lib/dist/utils';
 import ReefSigners from '../../context/ReefSigners';
 
 const { EvmBindComponent } = Components;

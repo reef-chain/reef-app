@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Components, hooks } from '@reef-defi/react-lib';
+import { Components, hooks } from '@reef-chain/react-lib';
 import './pool-transactions.css';
 import Uik from '@reef-chain/ui-kit';
 import Transactions from './Transactions';

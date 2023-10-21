@@ -1,6 +1,6 @@
 import {
   AddressToNumber, hooks, Network, TokenWithAmount,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import React, {
   useContext, useEffect, useMemo, useState,
 } from 'react';

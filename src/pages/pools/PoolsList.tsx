@@ -1,5 +1,5 @@
 import { faArrowUpFromBracket, faCoins, faRepeat } from '@fortawesome/free-solid-svg-icons';
-import { hooks, Token } from '@reef-defi/react-lib';
+import { hooks, Token } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';

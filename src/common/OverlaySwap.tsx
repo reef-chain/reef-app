@@ -1,6 +1,6 @@
 import {
   Components, hooks, Network, Pool, PoolWithReserves, ReefSigner, store, Token,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react';

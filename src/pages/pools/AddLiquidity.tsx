@@ -3,7 +3,7 @@ import {
 
   hooks, Network,
   ReefSigner, store, Token,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';

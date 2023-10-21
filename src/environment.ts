@@ -1,4 +1,4 @@
-import { availableNetworks, Network } from '@reef-defi/react-lib';
+import { availableNetworks, Network } from '@reef-chain/react-lib';
 
 export const isReefswapUI = window.location.host.indexOf('reefswap') > -1;
 

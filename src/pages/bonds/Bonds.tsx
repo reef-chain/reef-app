@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import {
   hooks, Network,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import { reefState } from '@reef-chain/util-lib';
 import { BondsComponent } from './BondsComponent';

@@ -1,4 +1,4 @@
-import { defaultOptions } from '@reef-defi/react-lib';
+import { defaultOptions } from '@reef-chain/react-lib';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';

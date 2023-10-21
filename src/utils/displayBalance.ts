@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { Token, utils } from '@reef-defi/react-lib';
+import { Token, utils } from '@reef-chain/react-lib';
 
 export const formatHumanAmount = (value = ''): string => {
   let amount = new BigNumber(value.replaceAll(',', ''));

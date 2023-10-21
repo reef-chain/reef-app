@@ -1,6 +1,6 @@
 import {
   NFT, Token, utils, Components,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import React, {
   useContext, useMemo,
 } from 'react';

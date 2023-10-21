@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import {
   hooks, Network,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import { reefState } from '@reef-chain/util-lib';
 import { CreatorComponent } from './CreatorComponent';
 import ReefSigners from '../../context/ReefSigners';

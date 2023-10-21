@@ -1,6 +1,6 @@
 import {
   createEmptyTokenWithAmount, hooks, ReefSigner, Network, TokenTransfer,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useState, useContext } from 'react';
 import './activity.css';

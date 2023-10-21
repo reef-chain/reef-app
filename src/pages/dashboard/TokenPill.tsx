@@ -1,4 +1,4 @@
-import { Token, utils } from '@reef-defi/react-lib';
+import { Token, utils } from '@reef-chain/react-lib';
 import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo } from 'react';
 import TokenPricesContext from '../../context/TokenPricesContext';

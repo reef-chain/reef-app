@@ -5,7 +5,7 @@ import {
 import { Provider } from '@reef-defi/evm-provider';
 import {
   Components, ReefSigner, rpc, utils,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import BN from 'bn.js';
 import {
   compareAsc, format, formatDistance, intervalToDuration, secondsToMilliseconds,

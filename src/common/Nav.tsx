@@ -1,7 +1,7 @@
 import React, { useContext, useMemo } from 'react';
 import {
   availableNetworks, Components, hooks, Network, ReefSigner,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';

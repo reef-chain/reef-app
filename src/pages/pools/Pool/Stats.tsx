@@ -1,7 +1,7 @@
 import './stats.css';
 import Uik from '@reef-chain/ui-kit';
 import React, { useState } from 'react';
-import { hooks } from '@reef-defi/react-lib';
+import { hooks } from '@reef-chain/react-lib';
 import { faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
 import PoolSelect from './PoolSelect';

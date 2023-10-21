@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { ReefSigner } from '@reef-defi/react-lib';
+import { ReefSigner } from '@reef-chain/react-lib';
 
 interface ReefSignersContext {
   accounts: ReefSigner[]|undefined;

@@ -1,4 +1,4 @@
-import { Token } from '@reef-defi/react-lib';
+import { Token } from '@reef-chain/react-lib';
 import { createContext } from 'react';
 
 interface TokenContext {

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { Provider } from '@reef-defi/evm-provider';
 import {
   Network, ReefSigner, availableNetworks, hooks, rpc, appState,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import type { Signer as InjectedSigner } from '@polkadot/api/types';
 import { map } from 'rxjs';
 import { useAsyncEffect } from './useAsyncEffect';

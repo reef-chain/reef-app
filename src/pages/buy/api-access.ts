@@ -1,4 +1,4 @@
-import { ReefSigner } from '@reef-defi/react-lib';
+import { ReefSigner } from '@reef-chain/react-lib';
 import axios, { AxiosResponse } from 'axios';
 import { web3FromSource, web3Enable, web3Accounts } from '@reef-defi/extension-dapp';
 import {

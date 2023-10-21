@@ -2,7 +2,7 @@ import React, { useContext, useMemo, useState } from 'react';
 import { BigNumber } from 'bignumber.js';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { hooks } from '@reef-defi/react-lib';
+import { hooks } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 
 import axios from 'axios';

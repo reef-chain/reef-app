@@ -1,7 +1,7 @@
 import {
   Components,
   hooks,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import React, { useContext } from 'react';
 import { Provider } from '@reef-defi/evm-provider';
 import { reefState } from '@reef-chain/util-lib';

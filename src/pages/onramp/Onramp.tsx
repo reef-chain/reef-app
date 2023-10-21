@@ -1,4 +1,4 @@
-import { ReefSigner } from '@reef-defi/react-lib';
+import { ReefSigner } from '@reef-chain/react-lib';
 import React, { useContext } from 'react';
 import ReefSigners from '../../context/ReefSigners';
 

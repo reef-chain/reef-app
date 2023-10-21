@@ -1,4 +1,4 @@
-import { utils } from '@reef-defi/react-lib';
+import { utils } from '@reef-chain/react-lib';
 
 export interface UrlAddressParams {
   address1: string;

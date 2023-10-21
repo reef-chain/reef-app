@@ -1,4 +1,4 @@
-import { NFT as NFTData } from '@reef-defi/react-lib';
+import { NFT as NFTData } from '@reef-chain/react-lib';
 import React from 'react';
 import './Nfts.css';
 import Uik from '@reef-chain/ui-kit';

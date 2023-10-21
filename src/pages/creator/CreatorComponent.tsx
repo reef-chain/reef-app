@@ -3,7 +3,7 @@ import {
   Network,
   ReefSigner,
   utils as reefUtils,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import React, { useEffect, useState } from 'react';
 import { faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icons';
 import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-icons';

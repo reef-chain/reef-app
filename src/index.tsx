@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './assets/index.css';
-import '@reef-defi/react-lib/dist/index.css';
+import '@reef-chain/react-lib/dist/index.css';
 import {
   BrowserRouter as Router,
 } from 'react-router-dom';

@@ -4,7 +4,7 @@ import {
   Network,
   store,
   Token,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import axios from 'axios';
 import React, { useContext, useReducer, useState } from 'react';
 import { reefState } from '@reef-chain/util-lib';

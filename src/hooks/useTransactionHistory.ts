@@ -1,4 +1,4 @@
-import { TokenTransfer } from '@reef-defi/react-lib';
+import { TokenTransfer } from '@reef-chain/react-lib';
 import { reefState } from '@reef-chain/util-lib';
 import { useObservableState } from './useObservableState';
 

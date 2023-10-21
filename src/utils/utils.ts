@@ -1,4 +1,4 @@
-import { Notify } from '@reef-defi/react-lib';
+import { Notify } from '@reef-chain/react-lib';
 import { BigNumber, utils as ethUtils } from 'ethers';
 import { toast } from 'react-toastify';
 

@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import { NFT } from '@reef-defi/react-lib';
+import { NFT } from '@reef-chain/react-lib';
 
 interface NFTContext {
   nfts: NFT[];

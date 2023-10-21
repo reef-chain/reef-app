@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo, useState } from 'react';
 import {
   Network, availableNetworks, hooks,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import { reefState } from '@reef-chain/util-lib';
 import NftContext from '../../context/NftContext';
 import TokenContext from '../../context/TokenContext';
