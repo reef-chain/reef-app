@@ -2,7 +2,7 @@ import {
   reefState, network as nw,
 } from '@reef-chain/util-lib';
 import { useEffect, useState } from 'react';
-import { Provider } from '@reef-defi/evm-provider';
+import { Provider } from '@reef-chain/evm-provider';
 import {
   Network, ReefSigner, availableNetworks, hooks, rpc, appState,
 } from '@reef-chain/react-lib';

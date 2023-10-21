@@ -1,7 +1,7 @@
 import { Components, hooks, ReefSigner } from '@reef-chain/react-lib';
 import React, { useContext } from 'react';
 import { reefState } from '@reef-chain/util-lib';
-import { Provider } from '@reef-defi/evm-provider';
+import { Provider } from '@reef-chain/evm-provider';
 import TokenContext from '../context/TokenContext';
 import { notify } from '../utils/utils';
 import './overlay-swap.css';

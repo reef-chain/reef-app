@@ -2,7 +2,7 @@ import { DeriveEraRewards, DeriveOwnSlashes, DeriveStakerPoints } from '@polkado
 import {
   BN_THOUSAND, BN_ZERO, isBn, isFunction,
 } from '@polkadot/util';
-import { Provider } from '@reef-defi/evm-provider';
+import { Provider } from '@reef-chain/evm-provider';
 import {
   Components, ReefSigner, rpc, utils,
 } from '@reef-chain/react-lib';
