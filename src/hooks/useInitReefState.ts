@@ -99,7 +99,7 @@ export const useInitReefState = (
     const jsonAccounts = { accounts, injectedSigner: extension?.signer };
 
     reefState.initReefState({
-      net,
+      network:net,
       jsonAccounts,
       ipfsHashResolverFn,
     });
