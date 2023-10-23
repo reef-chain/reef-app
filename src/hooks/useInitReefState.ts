@@ -93,13 +93,13 @@ export const useInitReefState = (
     }
 
     // eslint-disable-next-line @typescript-eslint/no-shadow
-    const network = getNetworkFallback();
+    const net = network || getNetworkFallback();
 
     // eslint-disable-next-line @typescript-eslint/no-shadow
     const jsonAccounts = { accounts, injectedSigner: extension?.signer };
 
     reefState.initReefState({
-      network,
+      net,
       jsonAccounts,
       ipfsHashResolverFn,
     });
