@@ -6,7 +6,6 @@ import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { reefState } from '@reef-chain/util-lib';
 import PoolContext from '../../../context/PoolContext';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
@@ -15,6 +14,7 @@ import { MAX_SLIPPAGE, notify } from '../../../utils/utils';
 import './actions.css';
 import { EventType, magicSquareAction } from '../../../utils/magicsquareService';
 import ReefSigners from '../../../context/ReefSigners';
+import { selectedNetworkDex$ } from '../../../state/networkDex';
 
 const {
   Trade, Provide, Finalizing, Withdraw,
@@ -36,7 +36,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
 
   const signer = useContext(ReefSigners).selectedSigner;
   const network:Network|undefined = hooks.useObservableState(
-    reefState.selectedNetwork$,
+    selectedNetworkDex$
   );
 
   // Trade

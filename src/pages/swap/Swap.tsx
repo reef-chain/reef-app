@@ -11,6 +11,7 @@ import { addressReplacer, SPECIFIED_SWAP_URL, UrlAddressParams } from '../../url
 import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
 import { EventType, magicSquareAction } from '../../utils/magicsquareService';
+import { selectedNetworkDex$ } from '../../state/networkDex';
 
 const { SwapComponent } = Components;
 
@@ -20,7 +21,7 @@ const Swap = (): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
   const { address1, address2 } = useParams<UrlAddressParams>();
 
-  const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
+  const network: Network|undefined = hooks.useObservableState(selectedNetworkDex$);
   const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
 
   const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);

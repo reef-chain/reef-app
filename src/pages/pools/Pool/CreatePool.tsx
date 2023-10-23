@@ -8,7 +8,6 @@ import axios from 'axios';
 import React, { useContext, useReducer, useState } from 'react';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
-import * as x from "@reef-chain/util-lib";
 import { notify } from '../../../utils/utils';
 import '../../../common/overlay-swap.css';
 import './create-pool.css';
@@ -37,7 +36,7 @@ const CreatePool = ({
 
   const signer = useContext(ReefSigners).selectedSigner;
 
-  const networkDex:DexNetwork|undefined = hooks.useObservableState(selectedNetworkDex$)
+  const network:DexNetwork|undefined = hooks.useObservableState(selectedNetworkDex$)
 
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,
@@ -57,9 +56,9 @@ const CreatePool = ({
 
   const onAddLiquidity = hooks.onAddLiquidity({
     state: provideState,
-    network:networkDex,
+    network,
     signer: signer || undefined,
-    batchTxs: networkDex?.name === 'mainnet',
+    batchTxs: network?.name === 'mainnet',
     dispatch: provideDispatch,
     notify,
     updateTokenState: async () => {}, // eslint-disable-line
