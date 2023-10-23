@@ -8,12 +8,13 @@ import axios from 'axios';
 import React, { useContext, useReducer, useState } from 'react';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
+import * as x from "@reef-chain/util-lib";
 import { notify } from '../../../utils/utils';
 import '../../../common/overlay-swap.css';
 import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
 import ReefSigners from '../../../context/ReefSigners';
-import { DexNetwork, selectedNetworkDex$ } from '../../../networkDex';
+import { DexNetwork, selectedNetworkDex$ } from '../../../state/networkDex';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
