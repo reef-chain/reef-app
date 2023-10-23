@@ -1,13 +1,11 @@
 import {
   Components,
   hooks,
-  Network,
   store,
   Token,
 } from '@reef-chain/react-lib';
 import axios from 'axios';
 import React, { useContext, useReducer, useState } from 'react';
-import { reefState } from '@reef-chain/util-lib';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import { notify } from '../../../utils/utils';
@@ -15,6 +13,7 @@ import '../../../common/overlay-swap.css';
 import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
 import ReefSigners from '../../../context/ReefSigners';
+import { DexNetwork, selectedNetworkDex$ } from '../../../networkDex';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
@@ -37,9 +36,7 @@ const CreatePool = ({
 
   const signer = useContext(ReefSigners).selectedSigner;
 
-  const network:Network|undefined = hooks.useObservableState(
-    reefState.selectedNetwork$,
-  );
+  const networkDex:DexNetwork|undefined = hooks.useObservableState(selectedNetworkDex$)
 
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,
@@ -59,9 +56,9 @@ const CreatePool = ({
 
   const onAddLiquidity = hooks.onAddLiquidity({
     state: provideState,
-    network,
+    network:networkDex,
     signer: signer || undefined,
-    batchTxs: network?.name === 'mainnet',
+    batchTxs: networkDex?.name === 'mainnet',
     dispatch: provideDispatch,
     notify,
     updateTokenState: async () => {}, // eslint-disable-line
