@@ -7,7 +7,6 @@ import {
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { reefState } from '@reef-chain/util-lib';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, ADD_LIQUIDITY_URL } from '../../urls';
@@ -28,7 +27,7 @@ const AddPoolLiquidity = (): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
   const signer: ReefSigner | undefined | null = useContext(ReefSigners).selectedSigner;
   const network: Network | undefined = hooks.useObservableState(
-    selectedNetworkDex$
+    selectedNetworkDex$,
   );
 
   const [state, dispatch] = useReducer(store.addLiquidityReducer, store.initialAddLiquidityState);

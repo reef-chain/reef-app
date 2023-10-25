@@ -1,4 +1,4 @@
-import { defaultOptions } from '@reef-chain/react-lib';
+import { defaultOptions, hooks } from '@reef-chain/react-lib';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -17,7 +17,6 @@ import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
 import { useMagicSquareParamsSave } from './utils/magicsquareService';
-import {hooks} from '@reef-chain/react-lib';
 
 const App = (): JSX.Element => {
   useMagicSquareParamsSave();

@@ -1,5 +1,5 @@
 import {
-  createEmptyTokenWithAmount, hooks, ReefSigner, Network, TokenTransfer
+  createEmptyTokenWithAmount, hooks, ReefSigner, Network, TokenTransfer,
 } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useState, useContext } from 'react';
@@ -10,7 +10,6 @@ import ActivityItem, { Skeleton } from './ActivityItem';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 import ActivityDetails from './ActivityDetails';
 import ReefSigners from '../../../context/ReefSigners';
-
 
 const noActivityTokenDisplay = createEmptyTokenWithAmount();
 noActivityTokenDisplay.address = '0x';

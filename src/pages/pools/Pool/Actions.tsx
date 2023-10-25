@@ -36,7 +36,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
 
   const signer = useContext(ReefSigners).selectedSigner;
   const network:Network|undefined = hooks.useObservableState(
-    selectedNetworkDex$
+    selectedNetworkDex$,
   );
 
   // Trade

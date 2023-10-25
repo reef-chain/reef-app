@@ -36,7 +36,7 @@ const CreatePool = ({
 
   const signer = useContext(ReefSigners).selectedSigner;
 
-  const network:DexNetwork|undefined = hooks.useObservableState(selectedNetworkDex$)
+  const network:DexNetwork|undefined = hooks.useObservableState(selectedNetworkDex$);
 
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,
