@@ -17,13 +17,13 @@ import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
 import { useMagicSquareParamsSave } from './utils/magicsquareService';
-import { useInitReefState } from './hooks/useInitReefState';
+import {hooks} from '@reef-chain/react-lib';
 
 const App = (): JSX.Element => {
   useMagicSquareParamsSave();
   const {
     loading, error, signers, selectedReefSigner,
-  } = useInitReefState(
+  } = hooks.useInitReefState(
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
   const history = useHistory();
