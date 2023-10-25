@@ -1,5 +1,5 @@
 import {
-  createEmptyTokenWithAmount, hooks, ReefSigner, Network, TokenTransfer,
+  createEmptyTokenWithAmount, hooks, ReefSigner, Network, TokenTransfer
 } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useState, useContext } from 'react';
@@ -10,7 +10,7 @@ import ActivityItem, { Skeleton } from './ActivityItem';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 import ActivityDetails from './ActivityDetails';
 import ReefSigners from '../../../context/ReefSigners';
-import { useTxHistory } from '../../../hooks/useTransactionHistory';
+
 
 const noActivityTokenDisplay = createEmptyTokenWithAmount();
 noActivityTokenDisplay.address = '0x';
@@ -18,7 +18,7 @@ noActivityTokenDisplay.iconUrl = '';
 noActivityTokenDisplay.name = 'No account history yet.';
 
 export const Activity = (): JSX.Element => {
-  const transfers :TokenTransfer[]|null = useTxHistory();
+  const transfers :TokenTransfer[]|null = hooks.useTxHistory();
 
   const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
 
