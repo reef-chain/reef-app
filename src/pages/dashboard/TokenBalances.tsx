@@ -8,6 +8,7 @@ import TokenPricesContext from '../../context/TokenPricesContext';
 import TokenCard from './TokenCard';
 import { CREATE_ERC20_TOKEN_URL } from '../../urls';
 import { localizedStrings } from '../../l10n/l10n';
+import './loading-animation.css';
 
 interface TokenBalances {
   tokens: Token[];
@@ -17,12 +18,12 @@ export const Skeleton = (): JSX.Element => (
   <div className="token-card token-card--skeleton">
     <div className="token-card__wrapper">
       <div className="token-card__main">
-        <div className="token-card__image" />
+        <div className="token-card__image loading-animation" />
         <div className="token-card__info">
           <div className="token-card__token-info">
-            <span className="token-card__token-name" />
+            <span className="token-card__token-name loading-animation" />
           </div>
-          <div className="token-card__token-price" />
+          <div className="token-card__token-price loading-animation" />
         </div>
       </div>
     </div>
