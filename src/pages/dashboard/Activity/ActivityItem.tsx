@@ -8,6 +8,7 @@ import { displayBalanceFromToken } from '../../../utils/displayBalance';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 import { getIpfsGatewayUrl } from '../../../environment';
 import VideoPlaybackOverlay from '../../../common/VideoPlaybackOverlay';
+import '../loading-animation.css';
 
 const { showBalance } = utils;
 
@@ -167,16 +168,16 @@ export default TokenActivityItem;
 
 export const Skeleton = (): JSX.Element => (
   <div className="activity-item activity-item--skeleton">
-    <div className="activity-item__indicator" />
+    <div className="activity-item__indicator loading-animation" />
 
     <div className="activity-item__content">
       <div className="activity-item__info">
-        <div className="activity-item__title" />
-        <div className="activity-item__date" />
+        <div className="activity-item__title loading-animation" />
+        <div className="activity-item__date loading-animation" />
       </div>
 
       <div className="activity-item__amount-wrapper">
-        <div className="activity-item__amount" />
+        <div className="activity-item__amount loading-animation" />
       </div>
     </div>
   </div>
