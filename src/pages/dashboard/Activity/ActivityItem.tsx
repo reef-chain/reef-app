@@ -12,6 +12,7 @@ import HideBalance from '../../../context/HideBalance';
 import { displayBalanceFromToken } from '../../../utils/displayBalance';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 import { getIpfsGatewayUrl } from '../../../environment';
+import '../loading-animation.css';
 import OverlayNFT from '../../../common/OverlayNFT';
 
 const { showBalance } = utils;
@@ -20,7 +21,6 @@ interface Props {
   timestamp: number;
   inbound: boolean;
   token: Token | NFT;
-  url: string;
 }
 
 const formatDate = (timestamp: number): string => {
@@ -37,7 +37,6 @@ const TokenActivityItem = ({
   token,
   timestamp,
   inbound,
-  url,
 }: Props): JSX.Element => {
   const [isOverlayNFTOpen, setIsOverlayNFTOpen] = useState(false);
   const {
@@ -107,16 +106,13 @@ const TokenActivityItem = ({
 
   return (
     <>
-      <a
+      <div
         key={timestamp}
         className={`
           activity-item
           activity-item--${type}
           ${isNFT ? 'activity-item--nft' : ''}
         `}
-        href={url}
-        target="_blank"
-        rel="noreferrer"
       >
         <div className="activity-item__indicator">
           <Uik.Icon className="activity-item__indicator-icon" icon={faArrowDown} />
@@ -159,7 +155,7 @@ const TokenActivityItem = ({
             )
           }
         </div>
-      </a>
+      </div>
 
       { isOverlayNFTOpen && (
         <OverlayNFT
@@ -182,16 +178,16 @@ export default TokenActivityItem;
 
 export const Skeleton = (): JSX.Element => (
   <div className="activity-item activity-item--skeleton">
-    <div className="activity-item__indicator" />
+    <div className="activity-item__indicator loading-animation" />
 
     <div className="activity-item__content">
       <div className="activity-item__info">
-        <div className="activity-item__title" />
-        <div className="activity-item__date" />
+        <div className="activity-item__title loading-animation" />
+        <div className="activity-item__date loading-animation" />
       </div>
 
       <div className="activity-item__amount-wrapper">
-        <div className="activity-item__amount" />
+        <div className="activity-item__amount loading-animation" />
       </div>
     </div>
   </div>
