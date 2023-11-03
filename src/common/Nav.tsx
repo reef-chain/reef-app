@@ -110,6 +110,8 @@ const Nav = ({ display }: Nav): JSX.Element => {
               isBalanceHidden={hideBalance.isHidden}
               showBalance={hideBalance.toggle}
               onLanguageSelect={selectLanguage}
+              // availableNetworks={appAvailableNetworks.map((net) => net.name as unknown as Components.Network)}
+              availableNetworks={isReefswapUI ? ['testnet'] : ['mainnet', 'testnet']}
             />
             )}
           </nav>

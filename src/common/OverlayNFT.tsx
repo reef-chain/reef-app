@@ -33,11 +33,8 @@ const OverlayNFT = ({
   nftId,
 }: OverlayNFT): JSX.Element => {
   const [sendNFT, setSendNFT] = useState(false);
-  // const { tokens } = useContext(TokenContext);
+  const [isNFTLoaded, setIsNFTLoaded] = useState<boolean>(false);
 
-  // const signer = hooks.useObservableState(appState.selectedSigner$);
-  // const accounts = hooks.useObservableState(appState.accountsSubj);
-  // const provider = hooks.useObservableState(appState.currentProvider$);
   return (
     <OverlayAction
       isOpen={isOpen}
@@ -48,37 +45,50 @@ const OverlayNFT = ({
       <div className="uik-pool-actions pool-actions">
         <div className="nft-name--modal">{nftName}</div>
         <div className="nft-view">
-          {isVideoNFT ? (
-            <video className="nfts__item-video nft-iconurl" autoPlay loop muted poster="">
+
+          { !isNFTLoaded && <Uik.Loading /> }
+
+          { isVideoNFT ? (
+            <video
+              className={`nfts__item-video nft-iconurl ${!isNFTLoaded ? 'nft-hidden' : ''}`}
+              autoPlay
+              loop
+              muted
+              poster=""
+              onLoadedData={() => setIsNFTLoaded(true)}
+            >
               <source src={iconUrl} type="video/mp4" />
             </video>
           ) : (
-            <img src={iconUrl} alt="" className="nft-iconurl" />
+            <img
+              src={iconUrl}
+              alt=""
+              className={`nft-iconurl ${!isNFTLoaded ? 'nft-hidden' : ''}`}
+              onLoad={() => setIsNFTLoaded(true)}
+            />
           )}
         </div>
         <div className="display-table">
           <div>
-            <span className="display-table-label">nft id : </span>
-            {' '}
+            <span className="display-table-label">nft id: </span>
             {nftId}
           </div>
           <div>
-            <span className="display-table-label">balance : </span>
+            <span className="display-table-label">balance: </span>
             {balance}
           </div>
           <div>
-            <span className="display-table-label">address : </span>
-            {' '}
+            <span className="display-table-label">address: </span>
             {shortAddress(address)}
           </div>
           <div>
-            <span className="display-table-label">contract type : </span>
-            {' '}
+            <span className="display-table-label">contract type: </span>
             {contractType}
           </div>
         </div>
         <div className="nft-box-send-btn">
           <Uik.Button
+            className="uik-pool-actions__cta"
             text="Send NFT"
             icon={faPaperPlane}
             onClick={() => {
@@ -93,6 +103,8 @@ const OverlayNFT = ({
         isOpen={sendNFT}
         onClose={() => setSendNFT(false)}
         nftName={nftName}
+        iconUrl={iconUrl}
+        isVideoNFT={isVideoNFT}
         balance={balance}
         address={address}
         nftId={nftId}
