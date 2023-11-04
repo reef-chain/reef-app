@@ -1,10 +1,8 @@
 import { NFT, Token, utils } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, {
-  SyntheticEvent,
   useContext,
   useMemo,
-  useState,
 } from 'react';
 import './activity-item.css';
 import { faArrowDown, faPlay } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +11,6 @@ import { displayBalanceFromToken } from '../../../utils/displayBalance';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 import { getIpfsGatewayUrl } from '../../../environment';
 import '../loading-animation.css';
-import OverlayNFT from '../../../common/OverlayNFT';
 
 const { showBalance } = utils;
 
@@ -38,7 +35,6 @@ const TokenActivityItem = ({
   timestamp,
   inbound,
 }: Props): JSX.Element => {
-  const [isOverlayNFTOpen, setIsOverlayNFTOpen] = useState(false);
   const {
     symbol,
     name,
@@ -47,7 +43,6 @@ const TokenActivityItem = ({
   const {
     nftId,
     mimetype,
-    contractType,
   } = token as NFT;
   const isNFT = nftId != null;
   const isVideoNFT = !!mimetype?.includes('mp4');
@@ -78,10 +73,6 @@ const TokenActivityItem = ({
 
   const activityPreviewIcon = useMemo(() => {
     const iconUrlIpfsResolved = iconUrl.startsWith('ipfs') ? getIpfsGatewayUrl(iconUrl.substring(7)) : iconUrl;
-    const openVideoPreview = (event: SyntheticEvent): void => {
-      event.preventDefault();
-      setIsOverlayNFTOpen(true);
-    };
 
     if (!isNFT) {
       return (
@@ -93,14 +84,11 @@ const TokenActivityItem = ({
     }
 
     return (
-      <Uik.Button
-        className="activity-item__nft-video-icon activity-item__nft-preview"
-        onClick={openVideoPreview}
-      >
+      <div className="activity-item__nft-video-icon activity-item__nft-preview">
         { isVideoNFT
           ? <Uik.Icon className="activity-item__nft-preview-icon" icon={faPlay} />
           : <div className="activity-item__nft-preview" style={{ backgroundImage: `url(${iconUrlIpfsResolved})` }} /> }
-      </Uik.Button>
+      </div>
     );
   }, [isVideoNFT, isNFT, iconUrl]);
 
@@ -156,20 +144,6 @@ const TokenActivityItem = ({
           }
         </div>
       </div>
-
-      { isOverlayNFTOpen && (
-        <OverlayNFT
-          isOpen={isOverlayNFTOpen}
-          onClose={() => setIsOverlayNFTOpen(false)}
-          nftName={token.name}
-          isVideoNFT={isVideoNFT}
-          iconUrl={token.iconUrl}
-          balance={token.balance.toString()}
-          address={token.address}
-          contractType={contractType}
-          nftId={nftId}
-        />
-      )}
     </>
   );
 };
