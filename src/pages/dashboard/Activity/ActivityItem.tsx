@@ -1,13 +1,15 @@
 import { NFT, Token, utils } from '@reef-defi/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React, { useContext, useMemo, useState } from 'react';
+import React, {
+  useContext,
+  useMemo,
+} from 'react';
 import './activity-item.css';
 import { faArrowDown, faPlay } from '@fortawesome/free-solid-svg-icons';
 import HideBalance from '../../../context/HideBalance';
 import { displayBalanceFromToken } from '../../../utils/displayBalance';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 import { getIpfsGatewayUrl } from '../../../environment';
-import VideoPlaybackOverlay from '../../../common/VideoPlaybackOverlay';
 import '../loading-animation.css';
 
 const { showBalance } = utils;
@@ -33,17 +35,17 @@ const TokenActivityItem = ({
   timestamp,
   inbound,
 }: Props): JSX.Element => {
-  const [isVideoOverlayOpen, setIsVideoOverlayOpen] = useState(false);
   const {
     symbol,
     name,
     iconUrl,
-  } = token;
+  } = token as NFT;
   const {
     nftId,
     mimetype,
   } = token as NFT;
   const isNFT = nftId != null;
+  const isVideoNFT = !!mimetype?.includes('mp4');
   const type: 'receive' | 'send' = inbound ? 'receive' : 'send';
 
   const title = useMemo(() => {
@@ -71,11 +73,6 @@ const TokenActivityItem = ({
 
   const activityPreviewIcon = useMemo(() => {
     const iconUrlIpfsResolved = iconUrl.startsWith('ipfs') ? getIpfsGatewayUrl(iconUrl.substring(7)) : iconUrl;
-    const isVideoNFT = mimetype && mimetype.indexOf('mp4') > -1;
-    const openVideoPreview = (event: Event): void => {
-      event.preventDefault();
-      setIsVideoOverlayOpen(true);
-    };
 
     if (!isNFT) {
       return (
@@ -86,20 +83,14 @@ const TokenActivityItem = ({
       );
     }
 
-    return isVideoNFT ? (
-      <Uik.Button
-        className="activity-item__nft-video-icon activity-item__nft-preview"
-        onClick={openVideoPreview}
-      >
-        <Uik.Icon className="activity-item__nft-preview-icon" icon={faPlay} />
-      </Uik.Button>
-    ) : (
-      <div
-        className="activity-item__nft-preview"
-        style={{ backgroundImage: `url(${iconUrlIpfsResolved})` }}
-      />
+    return (
+      <div className="activity-item__nft-video-icon activity-item__nft-preview">
+        { isVideoNFT
+          ? <Uik.Icon className="activity-item__nft-preview-icon" icon={faPlay} />
+          : <div className="activity-item__nft-preview" style={{ backgroundImage: `url(${iconUrlIpfsResolved})` }} /> }
+      </div>
     );
-  }, [mimetype, isNFT, iconUrl]);
+  }, [isVideoNFT, isNFT, iconUrl]);
 
   return (
     <>
@@ -153,13 +144,6 @@ const TokenActivityItem = ({
           }
         </div>
       </div>
-
-      <VideoPlaybackOverlay
-        src={token.iconUrl}
-        title={token.name}
-        isOpen={isVideoOverlayOpen}
-        onClose={() => setIsVideoOverlayOpen(false)}
-      />
     </>
   );
 };

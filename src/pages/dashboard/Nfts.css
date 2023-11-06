@@ -1,5 +1,6 @@
 .nfts {
   width: 100%;
+  overflow: auto;
 }
 
 .nfts__empty-nft-list {
@@ -38,6 +39,7 @@
 .nfts__item-video {
   max-width: 100%;
 }
+
 
 .nfts__item-image--loading {
   position: relative;
@@ -82,6 +84,9 @@
 .nfts__item-name {
   font-weight: 600;
   color: var(--text);
+}
+.nfts__item-name:hover {
+  cursor: pointer;
 }
 
 .nfts__item-name + .nfts__item-balance {
@@ -154,4 +159,8 @@
     opacity: 0;
     transform: translateY(10px);
   }
+}
+
+.nfts__item:hover{
+  cursor: pointer;
 }
