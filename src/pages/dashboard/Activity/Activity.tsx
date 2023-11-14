@@ -1,11 +1,8 @@
-import {
-  createEmptyTokenWithAmount, hooks, ReefSigner, Network, TokenTransfer,
-} from '@reef-chain/react-lib';
+import { createEmptyTokenWithAmount, hooks, TokenTransfer } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import './activity.css';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
-import { reefState } from '@reef-chain/util-lib';
 import ActivityItem, { Skeleton } from './ActivityItem';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 import ActivityDetails from './ActivityDetails';
@@ -18,10 +15,9 @@ noActivityTokenDisplay.name = 'No account history yet.';
 
 export const Activity = (): JSX.Element => {
   const transfers :TokenTransfer[]|null = hooks.useTxHistory();
-
-  const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
-
-  const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
+  const {
+    selectedSigner, network,
+  } = useContext(ReefSigners);
 
   const [isActivityModalOpen, setActivityModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<TokenTransfer|null>(null);
@@ -37,13 +33,13 @@ export const Activity = (): JSX.Element => {
       <div className="activity__head">
         <Uik.Text type="title" text={strings.activity} className="activity__title" />
         {
-          !!signer?.address && !!network?.reefscanUrl
+          !!selectedSigner?.address && !!network?.reefscanUrl
           && (
           <Uik.Button
             size="small"
             icon={faArrowUpRightFromSquare}
             text={strings.open_explorer}
-            onClick={() => window.open(`${network?.reefscanUrl}/account/${signer.address}`)}
+            onClick={() => window.open(`${network?.reefscanUrl}/account/${selectedSigner.address}`)}
           />
           )
         }
@@ -56,10 +52,12 @@ export const Activity = (): JSX.Element => {
 
             {transfers.map((item, index) => (
               // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-              <div onClick={() => {
-                setCurrentTransaction(item);
-                setActivityModalOpen(!isActivityModalOpen);
-              }}
+              <div
+                key={`item-wrapper-${item.timestamp + index.toString()}`}
+                onClick={() => {
+                  setCurrentTransaction(item);
+                  setActivityModalOpen(!isActivityModalOpen);
+                }}
               >
                 <ActivityItem
                   key={item.timestamp + index.toString()}

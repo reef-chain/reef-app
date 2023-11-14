@@ -1,11 +1,10 @@
 import React, { useContext, useMemo } from 'react';
 import {
-  availableNetworks, Components, hooks, Network, ReefSigner,
+  availableNetworks, Components,
 } from '@reef-chain/react-lib';
 import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
-import { reefState } from '@reef-chain/util-lib';
 import { saveSignerLocalPointer } from '../store/internalStore';
 import {
   BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL,
@@ -23,9 +22,9 @@ export interface Nav {
 const Nav = ({ display }: Nav): JSX.Element => {
   const history = useHistory();
   const { pathname } = useLocation();
-  const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
-  const { accounts } = useContext(ReefSigners);
-  const network: Network|undefined = hooks.useObservableState(reefState.selectedNetwork$);
+  const {
+    accounts, selectedSigner, network, reefState,
+  } = useContext(ReefSigners);
   const mainnetSelected = network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
   let menuItems = [
     { title: localizedStrings.dashboard, url: DASHBOARD_URL },
@@ -105,7 +104,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
 
             <Components.AccountSelector
               accounts={accounts}
-              selectedSigner={signer || undefined}
+              selectedSigner={selectedSigner || undefined}
               selectAccount={selectAccount}
               onNetworkSelect={selectNetwork}
               selectedNetwork={selectedNetwork}

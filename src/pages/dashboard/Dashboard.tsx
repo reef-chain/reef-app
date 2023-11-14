@@ -1,10 +1,7 @@
 import Uik from '@reef-chain/ui-kit';
 import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo, useState } from 'react';
-import {
-  Network, availableNetworks, hooks,
-} from '@reef-chain/react-lib';
-import { reefState } from '@reef-chain/util-lib';
+import { availableNetworks } from '@reef-chain/react-lib';
 import NftContext from '../../context/NftContext';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
@@ -18,19 +15,16 @@ import { Activity } from './Activity/Activity';
 import { isReefswapUI } from '../../environment';
 import { localizedStrings } from '../../l10n/l10n';
 import GetReefTestnetButton from './GetReefTestnetButton';
+import ReefSigners from '../../context/ReefSigners';
 
 const Dashboard = (): JSX.Element => {
-  const network:Network = hooks.useObservableState(reefState.selectedNetwork$);
+  const { network } = useContext(ReefSigners);
   const { nfts } = useContext(NftContext);
-  const tabs = (() => {
-    const list = [
-      { value: 'tokens', text: localizedStrings.tokens_pill || 'Tokens' },
-      { value: 'bonds', text: localizedStrings.bonds || 'Bonds' },
-      { value: 'nfts', text: localizedStrings.nfts || 'NFTs' },
-    ];
-
-    return list;
-  })();
+  const tabs = (() => [
+    { value: 'tokens', text: localizedStrings.tokens_pill || 'Tokens' },
+    { value: 'bonds', text: localizedStrings.bonds || 'Bonds' },
+    { value: 'nfts', text: localizedStrings.nfts || 'NFTs' },
+  ])();
 
   const { tokens, loading } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);

@@ -1,7 +1,5 @@
-import { Components, hooks, ReefSigner } from '@reef-chain/react-lib';
+import { Components } from '@reef-chain/react-lib';
 import React, { useContext } from 'react';
-import { reefState } from '@reef-chain/util-lib';
-import { Provider } from '@reef-chain/evm-provider';
 import TokenContext from '../context/TokenContext';
 import { notify } from '../utils/utils';
 import './overlay-swap.css';
@@ -22,9 +20,8 @@ const OverlaySend = ({
 }: OverlaySend): JSX.Element => {
   const { tokens } = useContext(TokenContext);
 
-  const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
+  const { selectedSigner, provider } = useContext(ReefSigners);
   const { accounts } = useContext(ReefSigners);
-  const provider:Provider = hooks.useObservableState(reefState.selectedProvider$);
 
   return (
     <OverlayAction
@@ -34,13 +31,13 @@ const OverlaySend = ({
       className="overlay-swap"
     >
       <div className="uik-pool-actions pool-actions">
-        { provider && signer
+        { provider && selectedSigner
           && (
           <Send
             accounts={accounts || []}
             notify={notify}
             provider={provider}
-            signer={signer}
+            signer={selectedSigner}
             tokens={tokens}
             tokenAddress={tokenAddress}
           />

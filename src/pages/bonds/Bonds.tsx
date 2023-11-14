@@ -1,9 +1,5 @@
 import React, { useContext } from 'react';
-import {
-  hooks, Network,
-} from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import { reefState } from '@reef-chain/util-lib';
 import { BondsComponent } from './BondsComponent';
 import { bonds, IBond } from './utils/bonds';
 import './bonds.css';
@@ -11,8 +7,7 @@ import { localizedStrings as strings } from '../../l10n/l10n';
 import ReefSigners from '../../context/ReefSigners';
 
 export const Bonds = (): JSX.Element => {
-  const { selectedSigner } = useContext(ReefSigners);
-  const network: Network | undefined = hooks.useObservableState(reefState.selectedNetwork$);
+  const { selectedSigner, network } = useContext(ReefSigners);
 
   return (
     <div className="bonds-page">
