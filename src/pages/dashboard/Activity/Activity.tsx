@@ -14,7 +14,7 @@ noActivityTokenDisplay.iconUrl = '';
 noActivityTokenDisplay.name = 'No account history yet.';
 
 export const Activity = (): JSX.Element => {
-  const transfers :TokenTransfer[]|null = hooks.useTxHistory();
+  const [transfers, loading] :[TokenTransfer[], boolean] = hooks.useTxHistory();
   const {
     selectedSigner, network,
   } = useContext(ReefSigners);
@@ -46,7 +46,14 @@ export const Activity = (): JSX.Element => {
       </div>
 
       <div className={`col-12 card  ${transfers?.length ? 'card-bg-light' : ''}`}>
-        {!!transfers && !transfers.length && <div className="no-token-activity">{strings.no_recent_transfer}</div>}
+        {!!transfers && !transfers.length && !loading && <div className="no-token-activity">{strings.no_recent_transfer}</div>}
+        {!!transfers && !transfers.length && loading && (
+        <div className="no-token-activity">
+          <Uik.Container vertical>
+            <Uik.Loading size="small" />
+          </Uik.Container>
+        </div>
+        )}
         {!!transfers && !!transfers.length && (
           <div>
 

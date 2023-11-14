@@ -3418,10 +3418,10 @@
     blakejs "~1.1.0"
     ethers "~5.5.0"
 
-"@reef-chain/react-lib@2.0.1":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@reef-chain/react-lib/-/react-lib-2.0.1.tgz#ff3dc2ab0ab9e3551c230378dffdff886c9c9748"
-  integrity sha512-P9Bgby1a2IVXEkyImnxDfYf0VmID1YYAmu7RzoR7nHe1EPw9EuikSC9p9WuGkrm5ne4YbU1hsCEpKG1yB1+TEg==
+"@reef-chain/react-lib@2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/@reef-chain/react-lib/-/react-lib-2.0.3.tgz#d438d392742195463ec986db7f15c0663f9129dd"
+  integrity sha512-vW01LL6PY4sCC4MsiJ3XHdY2b6EMY+g4Hwz1/ngY7/QPSc5BjuxSJIqs73rc3GlTxc/KhFYgKYSGyw+CH8GQmQ==
   dependencies:
     "@fortawesome/free-regular-svg-icons" "^6.1.0"
     "@fortawesome/free-solid-svg-icons" "^6.1.0"
@@ -3429,7 +3429,7 @@
     "@polkadot/react-identicon" "^0.86.4"
     "@reef-chain/evm-provider" "^1.0.12"
     "@reef-chain/ui-kit" "^1.1.5"
-    "@reef-chain/util-lib" "^1.0.0-rc9"
+    "@reef-chain/util-lib" "^1.0.0-rc13"
     "@reef-defi/extension-base" "^1.0.14"
     "@reef-defi/extension-dapp" "^1.0.14"
     "@reef-defi/extension-inject" "^1.0.14"
@@ -3482,24 +3482,10 @@
     graphql "^16.6.0"
     subscriptions-transport-ws "^0.11.0"
 
-"@reef-chain/util-lib@^1.0.0-rc12":
-  version "1.0.0-rc12"
-  resolved "https://registry.yarnpkg.com/@reef-chain/util-lib/-/util-lib-1.0.0-rc12.tgz#3f9d42ab25f163011834aea7619df3817669a554"
-  integrity sha512-3jLTKeD52furU+tXCHqF6LtSztXJ1oG+c91Fm9OUHKHkSuEUsUm6z3WzdAFrFT9lIXpKgndkwzoJNhdJm9Nw8Q==
-  dependencies:
-    "@polkadot/extension-inject" "^0.44.6"
-    "@reef-defi/evm-provider" "^1.0.10"
-    "@reef-defi/extension-base" "^1.0.10"
-    "@reef-defi/extension-dapp" "^1.0.16"
-    "@reef-defi/extension-inject" "^1.0.16"
-    axios "^0.27.2"
-    bignumber.js "^9.1.0"
-    pusher-js "^8.2.0"
-
-"@reef-chain/util-lib@^1.0.0-rc9":
-  version "1.0.0-rc9"
-  resolved "https://registry.yarnpkg.com/@reef-chain/util-lib/-/util-lib-1.0.0-rc9.tgz#ba964e2c2e9814ebb4bd1101ee7316af53a8ec1b"
-  integrity sha512-oebKBSbUCzpXz3yuezbEYOcC0s0ll/Ey7sRi6UNs1lbEojmX3Pi7rWewA6crRTL78dQ2cGG2tyvD2Ri6TlAG6Q==
+"@reef-chain/util-lib@^1.0.0-rc13":
+  version "1.0.0-rc13"
+  resolved "https://registry.yarnpkg.com/@reef-chain/util-lib/-/util-lib-1.0.0-rc13.tgz#41798edafe9c6d288e24bb685ee5b226e255ff80"
+  integrity sha512-yipc2pGU8AvXX88elBtM5TRe6+/Tu2oybQupq26PM1ySuKQ+xHsYCkGEHoKUjwvDRkjFh3I1OcfbDWhXKFJAKQ==
   dependencies:
     "@polkadot/extension-inject" "^0.44.6"
     "@reef-defi/evm-provider" "^1.0.10"
@@ -7462,9 +7448,9 @@ ejs@^3.1.6:
     jake "^10.8.5"
 
 electron-to-chromium@^1.4.535:
-  version "1.4.582"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.582.tgz#4908215182266793499ac57d80e2680d7dd9b3db"
-  integrity sha512-89o0MGoocwYbzqUUjc+VNpeOFSOK9nIdC5wY4N+PVUarUK0MtjyTjks75AZS2bW4Kl8MdewdFsWaH0jLy+JNoA==
+  version "1.4.583"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.583.tgz#7b0ac4f36388da4b5485788adb92cd7dd0abffc4"
+  integrity sha512-93y1gcONABZ7uqYe/JWDVQP/Pj/sQSunF0HVAPdlg/pfBnOyBMLlQUxWvkqcljJg1+W6cjvPuYD+r1Th9Tn8mA==
 
 elliptic@6.5.4, elliptic@^6.4.0, elliptic@^6.4.1, elliptic@^6.5.3, elliptic@^6.5.4:
   version "6.5.4"
