@@ -39,7 +39,6 @@ import { isAddressWhitelisted, isReefswapUI } from '../environment';
 import { shortAddress } from '../utils/utils';
 import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
-import eventEmitter, { Listener } from "../utils/eventsEmitter";
 
 const ContentRouter = (): JSX.Element => {
   const { selectedSigner, network: selectedNetwork, reefState } = useContext(ReefSigners);
@@ -56,22 +55,6 @@ const ContentRouter = (): JSX.Element => {
   // Once its declared properly in App move TokenContext in the parent component (App.tsx)
 
   const tokens = hooks.useObservableState<TokenWithAmount[]|null>(reefState.selectedTokenPrices$, []);
-
-// handle forced events here
-useEffect(()=>{
-  const handleTokenCreationEvent: Listener = (data) => {
-    setTimeout(() => {
-      if (data) {
-        reefState.reloadTokens();
-      }
-    }, 20000); // TODO: @anukulpandey remove this once we fix this in indexer
-  };
-
-  eventEmitter.on('tokenCreated', handleTokenCreationEvent);
-  return () => {
-    eventEmitter.off('tokenCreated', handleTokenCreationEvent);
-  };
-}, []); 
 
   const [nfts, nftsLoading] = hooks.useAllNfts();
   const pools = hooks.useAllPools(axios);

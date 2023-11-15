@@ -17,7 +17,7 @@ import IconUpload from './IconUpload';
 import ConfirmToken from './ConfirmToken';
 import { getAppNetworkOverride } from '../../environment';
 import { localizedStrings as strings } from '../../l10n/l10n';
-import eventEmitter from '../../utils/eventsEmitter';
+import {reefState} from "@reef-chain/util-lib";
 
 interface CreatorComponent {
   signer: ReefSigner | undefined;
@@ -79,7 +79,11 @@ async function verify(
     network.verificationApiUrl,
     icon,
   );
-  eventEmitter.emit("tokenCreated",verified)
+  setTimeout(() => {
+    if (verified) {
+      reefState.reloadTokens();
+    }
+  }, 20000); // TODO: @anukulpandey remove this once we fix this in indexer
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return verified as any;
 }
