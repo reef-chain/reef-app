@@ -105,6 +105,11 @@ const ActivityDetails = ({
             >
               <div className="transfer-asset__content-ntf">
                 <div className="transfer-asset__block">
+                  {token.mimetype?.startsWith('video')?<video controls className="transfer-asset__nft-preview row-span-2" loop autoPlay style={{ width: '70%', height: '100%' }}>
+      <source src={token.iconUrl} type={token.mimetype} />
+      Video not supported
+    </video>:
+                
                   <div
                     className="transfer-asset__nft-preview row-span-2"
                     style={{ backgroundImage: `url(${token.iconUrl})` }}
@@ -116,6 +121,7 @@ const ActivityDetails = ({
                       />
                     </div>
                   </div>
+                  }
                   <div className="amount-wrapper">
                     <div
                       className={`

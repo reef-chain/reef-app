@@ -98,6 +98,7 @@ export const Activity = (): JSX.Element => {
           inbound={selectedTransaction.inbound}
           token={selectedTransaction.token}
         />
+        
       )}
     </div>
   );
