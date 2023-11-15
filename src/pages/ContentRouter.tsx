@@ -64,7 +64,7 @@ useEffect(()=>{
       if (data) {
         reefState.reloadTokens();
       }
-    }, 20000);
+    }, 20000); // TODO: @anukulpandey remove this once we fix this in indexer
   };
 
   eventEmitter.on('tokenCreated', handleTokenCreationEvent);
