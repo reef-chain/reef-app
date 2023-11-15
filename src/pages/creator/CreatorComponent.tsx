@@ -17,6 +17,7 @@ import IconUpload from './IconUpload';
 import ConfirmToken from './ConfirmToken';
 import { getAppNetworkOverride } from '../../environment';
 import { localizedStrings as strings } from '../../l10n/l10n';
+import eventEmitter from '../../utils/eventsEmitter';
 
 interface CreatorComponent {
   signer: ReefSigner | undefined;
@@ -78,7 +79,7 @@ async function verify(
     network.verificationApiUrl,
     icon,
   );
-  console.log(verified);
+  eventEmitter.emit("tokenCreated",verified)
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return verified as any;
 }

@@ -39,6 +39,7 @@ import { isAddressWhitelisted, isReefswapUI } from '../environment';
 import { shortAddress } from '../utils/utils';
 import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
+import eventEmitter, { Listener } from "../utils/eventsEmitter";
 
 const ContentRouter = (): JSX.Element => {
   const { selectedSigner, network: selectedNetwork, reefState } = useContext(ReefSigners);
@@ -49,11 +50,28 @@ const ContentRouter = (): JSX.Element => {
     setDisplayWhitelisted(isAddressWhitelisted(selectedAddress, selectedNetwork));
   }, [selectedAddress, selectedNetwork]);
 
+
   // const [tokenPrices, setTokenPrices] = useState({} as AddressToNumber<number>);
   // Its not appropriate to have token state in this component, but the problem was apollo client.
   // Once its declared properly in App move TokenContext in the parent component (App.tsx)
 
   const tokens = hooks.useObservableState<TokenWithAmount[]|null>(reefState.selectedTokenPrices$, []);
+
+// handle forced events here
+useEffect(()=>{
+  const handleTokenCreationEvent: Listener = (data) => {
+    setTimeout(() => {
+      if (data) {
+        reefState.reloadTokens();
+      }
+    }, 20000);
+  };
+
+  eventEmitter.on('tokenCreated', handleTokenCreationEvent);
+  return () => {
+    eventEmitter.off('tokenCreated', handleTokenCreationEvent);
+  };
+}, []); 
 
   const [nfts, nftsLoading] = hooks.useAllNfts();
   const pools = hooks.useAllPools(axios);
@@ -64,6 +82,7 @@ const ContentRouter = (): JSX.Element => {
     }, {}) : []),
     [tokens],
   );
+
   /*
 const tokenPrices = useMemo(
     () => hooks.estimatePrice(tokens||[], pools, reefPrice || 0),
