@@ -33,7 +33,9 @@ export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
         <div className="col-12">
           {!!nfts.length && (
             <div className="nfts__container">
+
               {nfts.map((nft) => (
+                // eslint-disable-next-line jsx-a11y/control-has-associated-label
                 <div
                   className="nft__button"
                   key={`${nft.address}-${nft.nftId}`}

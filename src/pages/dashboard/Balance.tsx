@@ -47,16 +47,24 @@ export const Balance = ({
       dashboard__balance
       ${className || ''}
     `}
+
     >
+
       <div className="dashboard__balance-label">
-        <Uik.Text type="lead">{localizedStrings.balance}</Uik.Text>
+
+        <Uik.Text
+          type="lead"
+        >
+          {localizedStrings.balance}
+        </Uik.Text>
         <button
+          id="balance-toggle"
           key={String(isHidden)}
           type="button"
           className={`
-              dashboard__balance-hide-btn
-              ${isHidden ? 'dashboard__balance-hide-btn--hidden' : ''}
-            `}
+          dashboard__balance-hide-btn
+          ${isHidden ? 'dashboard__balance-hide-btn--hidden' : ''}
+          `}
           onClick={toggle}
         >
           <Uik.Icon icon={isHidden ? faEyeSlash : faEye} />

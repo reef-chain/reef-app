@@ -34,6 +34,7 @@ const PoolsSearch = ({
       {
         !!value
         && (
+        // eslint-disable-next-line jsx-a11y/control-has-associated-label
         <button
           className="pools-search__clear-btn"
           type="button"

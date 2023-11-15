@@ -19,7 +19,8 @@
   "plugins": [
       "react",
       "@typescript-eslint",
-      "react-hooks"
+      "react-hooks",
+      "jsx-a11y"
   ],
   "rules": {
     "no-use-before-define": "off",
@@ -34,6 +35,7 @@
     "@typescript-eslint/no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars-experimental": "error",
     "no-unused-vars": "off",
+    "jsx-a11y/control-has-associated-label": "off",
     "no-unused-expressions": ["error", { "allowShortCircuit": true }],
     "@typescript-eslint/no-use-before-define": ["error"],
     "jsx-a11y/anchor-is-valid": "off",
