@@ -240,9 +240,9 @@ const OverlaySendNFT = ({
   }, [balance]);
 
   useEffect(() => {
-    const initAmount = parsedBalance!=0?1:0;
+    const initAmount = parsedBalance !== 0 ? 1 : 0;
     setAmount(initAmount);
-    setPercentage(parseInt(initAmount.toString(), 10) * 100 / parsedBalance)
+    setPercentage(parseInt(initAmount.toString(), 10) * 100 / parsedBalance);
     setIsAmountEnabled(parsedBalance > 1);
     setShowPercentages(parsedBalance > 99);
   }, [parsedBalance]);
