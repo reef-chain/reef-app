@@ -80,8 +80,11 @@ const CreatePool = ({
             token1: tokenPair.address1,
             token2: tokenPair.address2,
           },
-        }).then((res) => (res.data.length > 0 ? history.push(`/chart/${res.data.pools[0].id}/trade`)
-          : {}));
+        }).then((res) => {
+          if (res.data.pools[0]) {
+            history.push(`/chart/${res.data.pools[0].id}/trade`);
+          }
+        });
       };
       fetchPoolAddress();
     }
