@@ -105,8 +105,8 @@ const ActivityDetails = ({
             >
               <div className="transfer-asset__content-ntf">
                 <div className="transfer-asset__block">
-                  {token.mimetype?.startsWith('video')?<video controls className="transfer-asset__nft-preview row-span-2" loop autoPlay style={{ width: '70%', height: '100%' }}>
-      <source src={token.iconUrl} type={token.mimetype} />
+                  {(token as NFT).mimetype?.startsWith('video')?<video controls className="transfer-asset__nft-preview row-span-2" loop autoPlay style={{ width: '70%', height: '100%' }}>
+      <source src={token.iconUrl} type={(token as NFT).mimetype} />
       Video not supported
     </video>:
                 
