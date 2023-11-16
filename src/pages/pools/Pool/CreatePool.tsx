@@ -108,7 +108,7 @@ const CreatePool = ({
                 confirmText={localizedStrings.create_pool}
               />
             )
-            : isRedirecting?<RedirectingToPool isOpen={isRedirecting} onClose={()=>{
+            : isRedirecting?<RedirectingToPool onClose={()=>{
               if(onClose)onClose()
               setFinalized(true)
             }}/>:<Finalizing />
