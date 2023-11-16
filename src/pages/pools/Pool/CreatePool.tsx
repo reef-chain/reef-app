@@ -14,6 +14,7 @@ import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
 import ReefSigners from '../../../context/ReefSigners';
 import { DexNetwork, selectedNetworkDex$ } from '../../../state/networkDex';
+import RedirectingToPool from './RedirectingToPool';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
@@ -28,6 +29,7 @@ const CreatePool = ({
 }: Props): JSX.Element => {
   const [address1, setAddress1] = useState('0x');
   const [address2, setAddress2] = useState('0x');
+  const [isRedirecting,setIsRedirecting] = useState(false);
 
   const [finalized, setFinalized] = useState(true);
 
@@ -64,8 +66,7 @@ const CreatePool = ({
     updateTokenState: async () => {}, // eslint-disable-line
     onSuccess: () => setFinalized(false),
     onFinalized: () => {
-      setFinalized(true);
-      if (onClose) onClose();
+      setIsRedirecting(true);
     },
   });
 
@@ -107,8 +108,12 @@ const CreatePool = ({
                 confirmText={localizedStrings.create_pool}
               />
             )
-            : <Finalizing />
+            : isRedirecting?<RedirectingToPool isOpen={isRedirecting} onClose={()=>{
+              if(onClose)onClose()
+              setFinalized(true)
+            }}/>:<Finalizing />
         }
+        
       </div>
     </OverlayAction>
   );
