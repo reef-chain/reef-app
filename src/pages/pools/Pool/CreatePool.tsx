@@ -29,7 +29,7 @@ const CreatePool = ({
 }: Props): JSX.Element => {
   const [address1, setAddress1] = useState('0x');
   const [address2, setAddress2] = useState('0x');
-  const [isRedirecting,setIsRedirecting] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const [finalized, setFinalized] = useState(true);
 
@@ -92,6 +92,7 @@ const CreatePool = ({
     >
       <div className="uik-pool-actions pool-actions">
         {
+          // eslint-disable-next-line
           finalized
             ? (
               <Provide
@@ -108,12 +109,15 @@ const CreatePool = ({
                 confirmText={localizedStrings.create_pool}
               />
             )
-            : isRedirecting?<RedirectingToPool onClose={()=>{
-              if(onClose)onClose()
-              setFinalized(true)
-            }}/>:<Finalizing />
+            : isRedirecting ? (
+              <RedirectingToPool onClose={() => {
+                if (onClose)onClose();
+                setFinalized(true);
+              }}
+              />
+            ) : <Finalizing />
         }
-        
+
       </div>
     </OverlayAction>
   );
