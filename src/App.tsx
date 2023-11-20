@@ -26,7 +26,6 @@ const App = (): JSX.Element => {
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
   const history = useHistory();
-
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
   const hideBalance = {
     isHidden: isBalanceHidden,
