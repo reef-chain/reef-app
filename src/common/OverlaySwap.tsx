@@ -108,7 +108,7 @@ const OverlaySwap = ({
       addr2 = tokenPools[0].token1 === tokenAddress ? tokenPools[0].token2 : tokenPools[0].token1;
     }
     // Set default buy token
-    setAddress2(addr2);
+    // setAddress2(addr2); //anukulpandey - don't set default address 2 as it keeps reseting the selected address
 
     // Find pool
     const t1 = tokenAddress < addr2 ? tokenAddress : addr2;
