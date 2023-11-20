@@ -21,7 +21,7 @@ import { useMagicSquareParamsSave } from './utils/magicsquareService';
 const App = (): JSX.Element => {
   useMagicSquareParamsSave();
   const {
-    loading, error, signers, selectedReefSigner,
+    loading, error, signers, selectedReefSigner, network, provider, reefState,
   } = hooks.useInitReefState(
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
@@ -44,6 +44,8 @@ const App = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
+  // @ts-ignore
+  // @ts-ignore
   return (
     loading
       ? (
@@ -54,7 +56,10 @@ const App = (): JSX.Element => {
       : (
         <>
           <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
-            <ReefSignersContext.Provider value={{ accounts: signers, selectedSigner: selectedReefSigner }}>
+            <ReefSignersContext.Provider value={{
+              accounts: signers, selectedSigner: selectedReefSigner, network, reefState, provider,
+            }}
+            >
               <HideBalance.Provider value={hideBalance}>
                 <NetworkSwitch.Provider value={networkSwitch}>
                   <div className="App d-flex w-100 h-100">

@@ -1,12 +1,11 @@
 import {
-  AddressToNumber, hooks, Network, TokenWithAmount,
+  AddressToNumber, hooks, TokenWithAmount,
 } from '@reef-chain/react-lib';
 import React, {
   useContext, useEffect, useMemo, useState,
 } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
-import { reefState } from '@reef-chain/util-lib';
 import NftContext from '../context/NftContext';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
@@ -42,9 +41,8 @@ import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
 
 const ContentRouter = (): JSX.Element => {
-  const { selectedSigner } = useContext(ReefSigners);
+  const { selectedSigner, network: selectedNetwork, reefState } = useContext(ReefSigners);
   const selectedAddress:string|undefined = selectedSigner ? selectedSigner.address : undefined;
-  const selectedNetwork:Network = hooks.useObservableState(reefState.selectedNetwork$);
   const [isDisplayWhitelisted, setDisplayWhitelisted] = useState(false);
 
   useEffect(() => {

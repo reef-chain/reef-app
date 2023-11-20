@@ -1,10 +1,5 @@
-import {
-  Components,
-  hooks,
-} from '@reef-chain/react-lib';
+import { Components } from '@reef-chain/react-lib';
 import React, { useContext } from 'react';
-import { Provider } from '@reef-chain/evm-provider';
-import { reefState } from '@reef-chain/util-lib';
 import TokenContext from '../../context/TokenContext';
 import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
@@ -12,9 +7,7 @@ import ReefSigners from '../../context/ReefSigners';
 const { Send } = Components;
 
 export const Transfer = (): JSX.Element => {
-  const provider: Provider|undefined = hooks.useObservableState(reefState.selectedProvider$);
-  const { selectedSigner } = useContext(ReefSigners);
-  const { accounts } = useContext(ReefSigners);
+  const { selectedSigner, provider, accounts } = useContext(ReefSigners);
   const { tokens } = useContext(TokenContext);
 
   if (!accounts || !selectedSigner || !provider) {
