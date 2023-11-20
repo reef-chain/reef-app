@@ -7,8 +7,8 @@ import './overlay-swap.css';
 import './overlay-nft.css';
 import Uik from '@reef-chain/ui-kit';
 import { Contract, ethers } from 'ethers';
-import { isSubstrateAddress, resolveEvmAddress } from '@reef-defi/evm-provider/utils';
-import { Provider, Signer } from '@reef-defi/evm-provider';
+import { isSubstrateAddress, resolveEvmAddress } from '@reef-chain/evm-provider/utils';
+import { Provider, Signer } from '@reef-chain/evm-provider';
 import { shortAddress } from '../utils/utils';
 import ReefSigners from '../context/ReefSigners';
 
