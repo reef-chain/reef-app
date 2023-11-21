@@ -350,7 +350,7 @@
 .creator__updating-token-balance{
 display: flex;
 margin-top: 20px;
-align-items: baseline;
+align-items: center;
 justify-content: center;
 }
 
