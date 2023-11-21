@@ -73,7 +73,7 @@ const OverlaySwap = ({
     store.initialSwapState,
   );
 
-  const findPool = (addr2:string) => {
+  const findPool = (addr2:string):PoolWithReserves|undefined => {
     const t1 = tokenAddress < addr2 ? tokenAddress : addr2;
     const t2 = tokenAddress < addr2 ? addr2 : tokenAddress;
     return pools.find((p) => p.token1 === t1 && p.token2 === t2);
