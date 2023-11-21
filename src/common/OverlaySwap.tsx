@@ -73,6 +73,12 @@ const OverlaySwap = ({
     store.initialSwapState,
   );
 
+  const findPool = (addr2:string):PoolWithReserves|undefined => {
+    const t1 = tokenAddress < addr2 ? tokenAddress : addr2;
+    const t2 = tokenAddress < addr2 ? addr2 : tokenAddress;
+    return pools.find((p) => p.token1 === t1 && p.token2 === t2);
+  };
+
   useEffect(() => {
     if (!pools || !tokenAddress || !tokens) return;
 
@@ -111,17 +117,14 @@ const OverlaySwap = ({
     // setAddress2(addr2); //anukulpandey - don't set default address 2 as it keeps reseting the selected address
 
     // Find pool
-    const t1 = tokenAddress < addr2 ? tokenAddress : addr2;
-    const t2 = tokenAddress < addr2 ? addr2 : tokenAddress;
-    const poolFound = pools.find((p) => p.token1 === t1 && p.token2 === t2);
+    const poolFound = findPool(addr2);
     if (poolFound) {
       onPoolsLoaded(true);
-      setPool(poolWithReservesToPool(poolFound));
     } else {
       onPoolsLoaded(false);
       console.error('Pool not found');
     }
-  }, [pools, tokenAddress, tokens]);
+  }, [tokens]);
 
   hooks.useSwapState({
     address1,
@@ -179,7 +182,15 @@ const OverlaySwap = ({
                   onSwap,
                   onSwitch,
                   selectToken1: (token: Token): void => setAddress1(token.address),
-                  selectToken2: (token: Token): void => setAddress2(token.address),
+                  selectToken2: (token: Token): void => {
+                    setAddress2(token.address);
+                    const poolFound = findPool(token.address);
+                    if (poolFound) {
+                      setPool(poolWithReservesToPool(poolFound));
+                    } else {
+                      console.error('no pool found');
+                    }
+                  },
                   setPercentage: (amount: number) => tradeDispatch(store.setPercentageAction(amount)),
                   setToken1Amount: (amount: string): void => tradeDispatch(store.setToken1AmountAction(amount)),
                   setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),
