@@ -98,6 +98,9 @@
     "webpack-dev-server": "^4.8.1",
     "webpack-node-externals": "^3.0.0"
   },
+  "engines": {
+    "node": "v18.16.0"
+  },
   "resolutions": {
     "ethers": "5.7.0",
     "rxjs": "7.5.5",
