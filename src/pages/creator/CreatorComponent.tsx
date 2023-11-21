@@ -36,9 +36,17 @@ interface ResultMessage {
   contract?: Contract;
 }
 
+interface UpdateTokenBalance {
+  visibility:boolean;
+  message:string;
+  complete:boolean;
+}
+
 interface CreateToken {
   signer?: ReefSigner;
   setResultMessage: (result: ResultMessage) => void;
+  setUpdateTokensBalance: (updateTokensBalance: UpdateTokenBalance) => void;
+  updateTokensBalance:UpdateTokenBalance;
   tokenName: string;
   symbol: string;
   initialSupply: string;
@@ -93,6 +101,8 @@ const createToken = async ({
   icon,
   onTxUpdate,
   setResultMessage,
+  setUpdateTokensBalance,
+  updateTokensBalance,
   setVerifiedContract,
   setDeployedContract,
 }: CreateToken): Promise<void> => {
@@ -191,6 +201,10 @@ const createToken = async ({
       message: `Success, your new token ${tokenName} is deployed. Initial supply is ${initialSupply} ${symbol.toUpperCase()}. Next step is to create a pool so users can start trading.`,
       contract,
     });
+    setUpdateTokensBalance({
+      ...updateTokensBalance,visibility:true
+    })
+
   } else {
     setResultMessage({
       complete: true,
@@ -211,6 +225,9 @@ export const CreatorComponent = ({
     message: string;
     contract?: Contract;
   } | null>(null);
+  const [updateTokensBalance,setUpdateTokensBalance] = useState<UpdateTokenBalance>({
+    visibility:false,message:"Updating token balances",complete:false
+  })
   const [tokenName, setTokenName] = useState('');
   const [symbol, setSymbol] = useState('');
   const [tokenOptions, setTokenOptions] = useState<ITokenOptions>({
@@ -442,6 +459,8 @@ export const CreatorComponent = ({
             icon,
             onTxUpdate,
             setResultMessage,
+            setUpdateTokensBalance,
+            updateTokensBalance,
             setVerifiedContract,
             setDeployedContract,
           })}
@@ -457,6 +476,11 @@ export const CreatorComponent = ({
 
             <Uik.Text type="headline">{ resultMessage.title }</Uik.Text>
             <Uik.Text>{ resultMessage.message }</Uik.Text>
+
+            { updateTokensBalance.visibility && <div className='creator__updating-token-balance'>
+  {updateTokensBalance.complete?<></>:<Uik.Loading size='small' className='creator__updating-token-balance--loader'/>}
+  <Uik.Text className='creator__updating-token-balance--text'>{ updateTokensBalance.message }</Uik.Text>
+</div> }
 
             {
               !!resultMessage.contract
@@ -480,6 +504,8 @@ export const CreatorComponent = ({
               </div>
               )
             }
+
+
 
             {
               resultMessage.title === strings.create_a_pool

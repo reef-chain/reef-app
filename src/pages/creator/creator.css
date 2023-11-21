@@ -346,3 +346,26 @@
 .creator__creating-cta > * + * {
   margin-left: 15px;
 }
+
+.creator__updating-token-balance{
+display: flex;
+margin-top: 20px;
+align-items: baseline;
+justify-content: center;
+}
+
+.creator__updating-token-balance--text{
+  padding: 4px;
+  margin-left: 10px;
+ 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.creator__updating-token-balance--loader{
+  padding: 4px; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
