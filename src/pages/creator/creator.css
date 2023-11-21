@@ -363,9 +363,8 @@ justify-content: center;
   align-items: center;
 }
 
-.creator__updating-token-balance--loader{
-  padding: 4px; 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.creator__updating-token-balance .uik-loading {
+  margin-bottom: 0px;
+  margin-top: 0px;
 }
+

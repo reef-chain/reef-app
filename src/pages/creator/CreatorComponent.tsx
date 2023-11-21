@@ -1,6 +1,5 @@
 import {
   availableNetworks,
-  hooks,
   Network,
   ReefSigner,
   utils as reefUtils,
@@ -11,7 +10,7 @@ import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-i
 import { Contract, ContractFactory, utils } from 'ethers';
 import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
-import { network as nw, reefState } from '@reef-chain/util-lib';
+import { reefState } from '@reef-chain/util-lib';
 import { verifyContract } from '../../utils/contract';
 import { DeployContractData, deployTokens } from './tokensDeployData';
 import './creator.css';
@@ -56,7 +55,6 @@ interface CreateToken {
   tokenOptions: ITokenOptions;
   network: Network;
   onTxUpdate?: reefUtils.TxStatusHandler;
-  selectedAddress?:string;
   setVerifiedContract: (contract: Contract) => void;
   setDeployedContract: (contract: Contract) => void;
 }
@@ -106,7 +104,6 @@ const createToken = async ({
   setResultMessage,
   setUpdateTokensBalance,
   updateTokensBalance,
-  selectedAddress,
   setVerifiedContract,
   setDeployedContract,
 }: CreateToken): Promise<void> => {
@@ -208,17 +205,16 @@ const createToken = async ({
     setUpdateTokensBalance({
       ...updateTokensBalance, visibility: true,
     });
-    nw.getLatestBlockAccountUpdates$([selectedAddress]).subscribe((e) => {
-      if (e.updatedContracts && e.updatedContracts.length) {
-        if (e.updatedContracts.includes(contract?.address)) {
-          setUpdateTokensBalance({
-            complete: true,
-            message: 'Token balances updated',
-            visibility: true,
-          });
-        }
+    reefState.selectedTokenBalances$.subscribe(e=>{
+      const addresses = e.map(token=>token.address);
+      if(addresses.includes(contract?.address)){
+        setUpdateTokensBalance({
+          message:"Token balances updated", visibility: true,complete:
+          true
+        });
       }
-    });
+    })
+    
   } else {
     setResultMessage({
       complete: true,
@@ -254,7 +250,7 @@ export const CreatorComponent = ({
   // eslint-disable-next-line
   const [deployedContract, setDeployedContract] = useState<Contract>();
   const [isConfirmOpen, setConfirmOpen] = useState(false);
-  const selectedAddress = hooks.useObservableState(reefState.selectedAddress$) as string|undefined;
+
 
   useEffect(() => {
     if (tokenName.trim().length < 1) {
@@ -474,7 +470,6 @@ export const CreatorComponent = ({
             icon,
             onTxUpdate,
             setResultMessage,
-            selectedAddress,
             setUpdateTokensBalance,
             updateTokensBalance,
             setVerifiedContract,
@@ -495,7 +490,7 @@ export const CreatorComponent = ({
 
             { updateTokensBalance.visibility && (
             <div className="creator__updating-token-balance">
-              {updateTokensBalance.complete ? <Uik.Icon icon={faCheckCircle} /> : <Uik.Loading size="small" className="creator__updating-token-balance--loader" />}
+              {updateTokensBalance.complete ? <Uik.Icon icon={faCheckCircle} /> : <Uik.Loading size="small"/>}
               <Uik.Text className="creator__updating-token-balance--text">{ updateTokensBalance.message }</Uik.Text>
             </div>
             ) }
