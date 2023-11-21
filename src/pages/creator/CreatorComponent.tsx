@@ -11,7 +11,7 @@ import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-i
 import { Contract, ContractFactory, utils } from 'ethers';
 import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
-import {network as nw,reefState} from "@reef-chain/util-lib";
+import { network as nw, reefState } from '@reef-chain/util-lib';
 import { verifyContract } from '../../utils/contract';
 import { DeployContractData, deployTokens } from './tokensDeployData';
 import './creator.css';
@@ -206,17 +206,17 @@ const createToken = async ({
       contract,
     });
     setUpdateTokensBalance({
-      ...updateTokensBalance,visibility:true
-    })
-    nw.getLatestBlockAccountUpdates$([selectedAddress]).subscribe(e=>{
-      if(e.updatedContracts && e.updatedContracts.length){
-       if(e.updatedContracts.includes(contract?.address)){
-         setUpdateTokensBalance({
-           complete:true,
-           message:"Token balances updated",
-           visibility:true
-         })
-       }
+      ...updateTokensBalance, visibility: true,
+    });
+    nw.getLatestBlockAccountUpdates$([selectedAddress]).subscribe((e) => {
+      if (e.updatedContracts && e.updatedContracts.length) {
+        if (e.updatedContracts.includes(contract?.address)) {
+          setUpdateTokensBalance({
+            complete: true,
+            message: 'Token balances updated',
+            visibility: true,
+          });
+        }
       }
     });
   } else {
@@ -239,9 +239,9 @@ export const CreatorComponent = ({
     message: string;
     contract?: Contract;
   } | null>(null);
-  const [updateTokensBalance,setUpdateTokensBalance] = useState<UpdateTokenBalance>({
-    visibility:false,message:"Updating token balances",complete:false
-  })
+  const [updateTokensBalance, setUpdateTokensBalance] = useState<UpdateTokenBalance>({
+    visibility: false, message: 'Updating token balances', complete: false,
+  });
   const [tokenName, setTokenName] = useState('');
   const [symbol, setSymbol] = useState('');
   const [tokenOptions, setTokenOptions] = useState<ITokenOptions>({
@@ -493,10 +493,12 @@ export const CreatorComponent = ({
             <Uik.Text type="headline">{ resultMessage.title }</Uik.Text>
             <Uik.Text>{ resultMessage.message }</Uik.Text>
 
-            { updateTokensBalance.visibility && <div className='creator__updating-token-balance'>
-  {updateTokensBalance.complete?<Uik.Icon icon={faCheckCircle} />:<Uik.Loading size='small' className='creator__updating-token-balance--loader'/>}
-  <Uik.Text className='creator__updating-token-balance--text'>{ updateTokensBalance.message }</Uik.Text>
-</div> }
+            { updateTokensBalance.visibility && (
+            <div className="creator__updating-token-balance">
+              {updateTokensBalance.complete ? <Uik.Icon icon={faCheckCircle} /> : <Uik.Loading size="small" className="creator__updating-token-balance--loader" />}
+              <Uik.Text className="creator__updating-token-balance--text">{ updateTokensBalance.message }</Uik.Text>
+            </div>
+            ) }
 
             {
               !!resultMessage.contract
@@ -520,8 +522,6 @@ export const CreatorComponent = ({
               </div>
               )
             }
-
-
 
             {
               resultMessage.title === strings.create_a_pool
