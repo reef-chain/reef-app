@@ -1,5 +1,5 @@
-import { availableNetworks, Network } from '@reef-chain/react-lib';
-
+import { availableNetworks } from '@reef-chain/react-lib';
+import type {Network} from "./state/networkDex";
 export const isReefswapUI = window.location.host.indexOf('reefswap') > -1;
 
 if (isReefswapUI) {
@@ -21,6 +21,8 @@ export const getAppNetworkOverride = (network: Network): Network => appAvailable
 export const binanceConnectApiUrl = 'https://onramp.reefscan.info';
 
 export const whitelistedAddresses = [
+  '5DSBe9rruLt9ZvSDyX91SLjdo7XaRnTPM9KDGNGuGXCUJ3FJ',
+  '5GeomWKETysCbowv8pHmrcH4xDPc1cvNDsao7G77Pok5sxiN',
   '5EJ56v5jhzGdU6berDYPb2jcxRAfrGxpxccwh8hXmp6sVqiG',
   '5G8zJRFYcqbaTkLdDzrpKsmoFEMNV4tZHLTPZJvNrwfcdkfZ',
   '5HmXZ4c7QubGkjWjPcwE3kEAvBVzSMQwxf77KWhJRrWMHAxV',

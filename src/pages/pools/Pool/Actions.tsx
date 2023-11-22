@@ -1,7 +1,8 @@
 import {
   Components,
-  hooks, Network, store, Token,
+  hooks, store, Token,
 } from '@reef-chain/react-lib';
+import type { Network } from '../../../state/networkDex';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';

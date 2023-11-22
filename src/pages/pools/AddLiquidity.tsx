@@ -1,9 +1,10 @@
 import {
   Components,
 
-  hooks, Network,
+  hooks,
   ReefSigner, store, Token,
 } from '@reef-chain/react-lib';
+import type { Network } from '../../state/networkDex';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';

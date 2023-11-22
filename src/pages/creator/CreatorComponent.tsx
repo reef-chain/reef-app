@@ -1,9 +1,9 @@
 import {
   availableNetworks,
-  Network,
   ReefSigner,
   utils as reefUtils,
 } from '@reef-chain/react-lib';
+import type { Network } from '../../state/networkDex';
 import React, { useEffect, useState } from 'react';
 import { faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icons';
 import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-icons';

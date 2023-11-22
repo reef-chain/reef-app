@@ -1,6 +1,7 @@
 import {
-  Components, hooks, Network, Pool, PoolWithReserves, ReefSigner, store, Token,
+  Components, hooks, Pool, PoolWithReserves, ReefSigner, store, Token,
 } from '@reef-chain/react-lib';
+import type { Network } from '../state/networkDex';
 import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react';

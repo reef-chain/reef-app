@@ -1,6 +1,7 @@
 import {
-  hooks, Network, ReefSigner,
+  hooks,  ReefSigner,
 } from '@reef-chain/react-lib';
+import type { Network } from '../../../state/networkDex';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
