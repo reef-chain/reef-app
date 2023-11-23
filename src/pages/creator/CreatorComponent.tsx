@@ -4,7 +4,7 @@ import {
   ReefSigner,
   utils as reefUtils,
 } from '@reef-chain/react-lib';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icons';
 import { faArrowUpRightFromSquare, faCoins, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { Contract, ContractFactory, utils } from 'ethers';
@@ -205,15 +205,16 @@ const createToken = async ({
     setUpdateTokensBalance({
       ...updateTokensBalance, visibility: true,
     });
-    // reefState.selectedTokenBalances$.subscribe(e=>{
-    //   const addresses = e.map(token=>token.address);
-    //   if(addresses.includes(contract?.address)){
-    //     setUpdateTokensBalance({
-    //       message:"Token balances updated", visibility: true,complete:
-    //       true
-    //     });
-    //   }
-    // })
+    const tokenBalancesSub = reefState.selectedTokenBalances$.subscribe(e=>{
+      const addresses = e.map(token=>token.address);
+      if(addresses.includes(contract?.address)){
+        setUpdateTokensBalance({
+          message:"Token balances updated", visibility: true,complete:
+          true
+        });
+        tokenBalancesSub.unsubscribe();
+      }
+    })
     
   } else {
     setResultMessage({
@@ -251,29 +252,6 @@ export const CreatorComponent = ({
   // eslint-disable-next-line
   const [deployedContract, setDeployedContract] = useState<Contract>();
   const [isConfirmOpen, setConfirmOpen] = useState(false);
-  const subscriptionRef = useRef<any>();
-
-  useEffect(() => {
-    const subscription = reefState.selectedTokenBalances$.subscribe((e) => {
-      const addresses = e.map((token) => token.address);
-      if (addresses.includes(deployedContract?.address)) {
-        setUpdateTokensBalance({
-          message: "Token balances updated",
-          visibility: true,
-          complete: true,
-        });
-      }
-    });
-
-    subscriptionRef.current = subscription;
-    return () => {
-      if (subscriptionRef.current) {
-        subscriptionRef.current.unsubscribe();
-      }
-    };
-    
-  }, [deployedContract]);
-
 
   useEffect(() => {
     if (tokenName.trim().length < 1) {
