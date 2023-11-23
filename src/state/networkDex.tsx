@@ -1,6 +1,6 @@
 import { Observable, map, shareReplay } from 'rxjs';
-import { reefState,network } from '@reef-chain/util-lib';
-import {Bond, Network as UtilLibNetwork} from "@reef-chain/util-lib/dist/network"
+import { reefState, network } from '@reef-chain/util-lib';
+import { Bond, Network as UtilLibNetwork } from '@reef-chain/util-lib/dist/network';
 
 export interface Network extends UtilLibNetwork{
   factoryAddress:string;
@@ -23,17 +23,17 @@ const dexConfig = {
 };
 
 const bondsConfig = {
-  mainnet:{
+  mainnet: {
     bonds: network.bonds.testnet,
   },
-  testnet:{
+  testnet: {
     bonds: network.bonds.testnet,
-  }
-}
+  },
+};
 
 export type DexNetwork = Network;
 
 export const selectedNetworkDex$: Observable<DexNetwork> = reefState.selectedNetwork$.pipe(
-  map((network: Network) => ({ ...network, ...dexConfig[network.name],...bondsConfig[network.name] })),
+  map((nw: Network) => ({ ...nw, ...dexConfig[nw.name], ...bondsConfig[nw.name] })),
   shareReplay(1),
 );

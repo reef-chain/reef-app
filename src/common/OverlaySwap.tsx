@@ -1,12 +1,12 @@
 import {
   Components, hooks, Pool, PoolWithReserves, ReefSigner, store, Token,
 } from '@reef-chain/react-lib';
-import type { Network } from '../state/networkDex';
 import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react';
 import { BigNumber } from 'ethers';
 import axios from 'axios';
+import type { Network } from '../state/networkDex';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
 import TokenPricesContext from '../context/TokenPricesContext';

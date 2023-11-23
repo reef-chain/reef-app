@@ -1,5 +1,6 @@
-import {network as nw} from "@reef-chain/util-lib";
-import type {Network} from "./state/networkDex";
+import { network as nw } from '@reef-chain/util-lib';
+import type { Network } from './state/networkDex';
+
 export const isReefswapUI = window.location.host.indexOf('reefswap') > -1;
 
 if (isReefswapUI) {

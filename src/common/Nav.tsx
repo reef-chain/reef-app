@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from 'react';
 import {
   Components,
 } from '@reef-chain/react-lib';
-import {network as nw} from "@reef-chain/util-lib";
+import { network as nw } from '@reef-chain/util-lib';
 import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';

@@ -1,12 +1,12 @@
 import {
-  hooks,  ReefSigner,
+  hooks, ReefSigner,
 } from '@reef-chain/react-lib';
-import type { Network } from '../../../state/networkDex';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';
 import axios from 'axios';
+import type { Network } from '../../../state/networkDex';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import Actions, { ActionTabs } from './Actions';
 import Chart, { TimeData, Timeframe } from './Chart';
