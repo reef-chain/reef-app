@@ -1,8 +1,8 @@
 import {
-  availableNetworks,
   ReefSigner,
   utils as reefUtils,
 } from '@reef-chain/react-lib';
+import {network as nw} from "@reef-chain/util-lib";
 import type { Network } from '../../state/networkDex';
 import React, { useEffect, useState } from 'react';
 import { faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icons';
@@ -168,7 +168,7 @@ const createToken = async ({
       isInBlock: true,
       txTypeEvm: true,
       url: `https://${
-        network === availableNetworks.mainnet ? '' : `${network.name}.`
+        network === nw.AVAILABLE_NETWORKS.mainnet ? '' : `${network.name}.`
       }reefscan.com/extrinsic/${contract.hash}`,
       addresses: [signer.address],
     });

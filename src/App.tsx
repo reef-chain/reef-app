@@ -17,7 +17,7 @@ import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
 import { useMagicSquareParamsSave } from './utils/magicsquareService';
-import { selectedNetworkDex$ } from './state/networkDex';
+import type { Network } from './state/networkDex';
 
 const App = (): JSX.Element => {
   useMagicSquareParamsSave();
@@ -26,7 +26,7 @@ const App = (): JSX.Element => {
   } = hooks.useInitReefState(
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
-const dexNe = hooks.useObservableState(selectedNetworkDex$);
+  
   const history = useHistory();
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
   const hideBalance = {

@@ -1,7 +1,8 @@
 import React, { useContext, useMemo } from 'react';
 import {
-  availableNetworks, Components,
+  Components,
 } from '@reef-chain/react-lib';
+import {network as nw} from "@reef-chain/util-lib";
 import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
@@ -25,7 +26,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
   const {
     accounts, selectedSigner, network, reefState,
   } = useContext(ReefSigners);
-  const mainnetSelected = network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
+  const mainnetSelected = network == null || network?.rpcUrl === nw.AVAILABLE_NETWORKS.mainnet.rpcUrl;
   let menuItems = [
     { title: localizedStrings.dashboard, url: DASHBOARD_URL },
     { title: localizedStrings.bonds, url: BONDS_URL },
