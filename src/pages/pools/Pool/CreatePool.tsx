@@ -110,10 +110,7 @@ const CreatePool = ({
               />
             )
             : isRedirecting ? (
-              <RedirectingToPool onClose={() => {
-                if (onClose)onClose();
-                setFinalized(true);
-              }}
+              <RedirectingToPool
               />
             ) : <Finalizing />
         }

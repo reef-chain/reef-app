@@ -6,11 +6,7 @@ import PoolContext from '../../../context/PoolContext';
 import { useHistory } from 'react-router-dom';
 import './redirecting.css';
 
-interface Props{
-    onClose:(()=>void)|undefined;
-}
-
-function RedirectingToPool({ onClose }:Props):JSX.Element {
+function RedirectingToPool():JSX.Element {
   const contractEvents = hooks.useObservableState(network.getLatestBlockContractEvents$()) as []|undefined;
   const [poolAddress,setPoolAddress]=useState<string|undefined>();
   const pools = useContext(PoolContext);
@@ -20,7 +16,6 @@ function RedirectingToPool({ onClose }:Props):JSX.Element {
   if(poolAddress){
     const poolAddresses = pools.map(p=>p.address);
     if(poolAddresses.includes(poolAddress)){
-      if(onClose)onClose()
       history.push(`/chart/${poolAddress}/trade`);
     }
   }
