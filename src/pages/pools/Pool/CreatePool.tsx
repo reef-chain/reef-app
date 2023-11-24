@@ -110,8 +110,7 @@ const CreatePool = ({
               />
             )
             : isRedirecting ? (
-              <RedirectingToPool
-              />
+              <RedirectingToPool />
             ) : <Finalizing />
         }
 
