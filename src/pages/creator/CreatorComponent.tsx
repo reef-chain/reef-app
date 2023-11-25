@@ -1,12 +1,9 @@
 import {
-  availableNetworks,
-  Network,
-  ReefSigner,
-  utils as reefUtils,
+  availableNetworks, Network, ReefSigner, utils as reefUtils,
 } from '@reef-chain/react-lib';
 import React, { useEffect, useState } from 'react';
 import { faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icons';
-import { faArrowUpRightFromSquare, faCoins, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-icons';
 import { Contract, ContractFactory, utils } from 'ethers';
 import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
@@ -205,17 +202,18 @@ const createToken = async ({
     setUpdateTokensBalance({
       ...updateTokensBalance, visibility: true,
     });
-    const tokenBalancesSub = reefState.selectedTokenBalances$.subscribe(e=>{
-      const addresses = e.map(token=>token.address);
-      if(addresses.includes(contract?.address)){
+    const tokenBalancesSub = reefState.selectedTokenBalances$.subscribe((e) => {
+      const addresses = e.map((token) => token.address);
+      if (addresses.includes(contract?.address)) {
         setUpdateTokensBalance({
-          message:"Token balances updated", visibility: true,complete:
-          true
+          message: 'Token balances updated',
+          visibility: true,
+          complete:
+          true,
         });
         tokenBalancesSub.unsubscribe();
       }
-    })
-    
+    });
   } else {
     setResultMessage({
       complete: true,
@@ -224,7 +222,6 @@ const createToken = async ({
     });
   }
 };
-
 
 export const CreatorComponent = ({
   signer,
@@ -488,11 +485,10 @@ export const CreatorComponent = ({
 
             <Uik.Text type="headline">{ resultMessage.title }</Uik.Text>
             <Uik.Text>{ resultMessage.message }</Uik.Text>
-            
 
             { updateTokensBalance.visibility && (
             <div className="creator__updating-token-balance">
-              {updateTokensBalance.complete ? <Uik.Icon icon={faCheckCircle} /> : <Uik.Loading size="small"/>}
+              {updateTokensBalance.complete ? <Uik.Icon icon={faCheckCircle} /> : <Uik.Loading size="small" />}
               <Uik.Text className="creator__updating-token-balance--text">{ updateTokensBalance.message }</Uik.Text>
             </div>
             ) }
@@ -509,15 +505,16 @@ export const CreatorComponent = ({
                   onClick={() => window.open(`${network.reefscanUrl}/contract/${resultMessage.contract?.address}`)}
                 />
                 {
-                  updateTokensBalance.complete?
-                  <Uik.Button
-                    fill
-                    text={strings.create_a_pool}
-                    icon={faCoins}
-                    size="large"
-                    onClick={() => history.push('/pools')
-                  }
-                  />:<div style={{cursor:'progress'}}><Uik.Button text={strings.create_a_pool} icon={faSpinner} size='large' disabled/></div> 
+                  updateTokensBalance.complete
+                    ? (
+                      <Uik.Button
+                        fill
+                        text={strings.create_a_pool}
+                        icon={faCoins}
+                        size="large"
+                        onClick={() => history.push('/pools')}
+                      />
+                    ) : <div style={{ cursor: 'progress' }}><Uik.Button text={strings.create_a_pool} icon={faCoins} size="large" disabled /></div>
                 }
               </div>
               )
