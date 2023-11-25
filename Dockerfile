@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 as builder
+FROM ubuntu:23.04 as builder
 
 # Install any needed packages
 RUN apt-get update && apt-get install -y curl git gnupg
