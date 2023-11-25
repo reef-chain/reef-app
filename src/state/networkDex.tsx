@@ -1,21 +1,39 @@
-import { Network } from '@reef-chain/react-lib';
 import { Observable, map, shareReplay } from 'rxjs';
-import { reefState } from '@reef-chain/util-lib';
+import { reefState, network } from '@reef-chain/util-lib';
+import { Bond, Network as UtilLibNetwork } from '@reef-chain/util-lib/dist/network';
+
+export interface Network extends UtilLibNetwork{
+  factoryAddress:string;
+  routerAddress:string;
+  graphqlDexsUrl:string;
+  bond:Bond[];
+}
 
 const dexConfig = {
   mainnet: {
-    factoryAddress: '0x380a9033500154872813F6E1120a81ed6c0760a8',
-    routerAddress: '0x641e34931C03751BFED14C4087bA395303bEd1A5',
+    factoryAddress: network.getReefswapNetworkConfig(network.AVAILABLE_NETWORKS.mainnet).factoryAddress,
+    routerAddress: network.getReefswapNetworkConfig(network.AVAILABLE_NETWORKS.mainnet).routerAddress,
+    graphqlDexsUrl: network.getReefswapNetworkConfig(network.AVAILABLE_NETWORKS.mainnet).graphqlDexsUrl,
   },
   testnet: {
-    factoryAddress: '0x8Fc2f9577f6c58e6A91C4A80B45C03d1e71c031f',
-    routerAddress: '0xd855a7c33ebF6566e846B0D6F7Ba7f7e1fe99768',
+    factoryAddress: network.getReefswapNetworkConfig(network.AVAILABLE_NETWORKS.testnet).factoryAddress,
+    routerAddress: network.getReefswapNetworkConfig(network.AVAILABLE_NETWORKS.testnet).routerAddress,
+    graphqlDexsUrl: network.getReefswapNetworkConfig(network.AVAILABLE_NETWORKS.testnet).graphqlDexsUrl,
+  },
+};
+
+const bondsConfig = {
+  mainnet: {
+    bonds: network.bonds.testnet,
+  },
+  testnet: {
+    bonds: network.bonds.testnet,
   },
 };
 
 export type DexNetwork = Network;
 
 export const selectedNetworkDex$: Observable<DexNetwork> = reefState.selectedNetwork$.pipe(
-  map((network: Network) => ({ ...network, ...dexConfig[network.name] })),
+  map((nw: Network) => ({ ...nw, ...dexConfig[nw.name], ...bondsConfig[nw.name] })),
   shareReplay(1),
 );

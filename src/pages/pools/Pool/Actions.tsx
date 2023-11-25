@@ -1,11 +1,12 @@
 import {
   Components,
-  hooks, Network, store, Token,
+  hooks, store, Token,
 } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import type { Network } from '../../../state/networkDex';
 import PoolContext from '../../../context/PoolContext';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';

@@ -1,7 +1,7 @@
 import Uik from '@reef-chain/ui-kit';
 import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo, useState } from 'react';
-import { availableNetworks } from '@reef-chain/react-lib';
+import { network as nw } from '@reef-chain/util-lib';
 import NftContext from '../../context/NftContext';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
@@ -49,8 +49,8 @@ const Dashboard = (): JSX.Element => {
           {/* <Rewards rewards={0} /> */}
         </div>
         <div className="dashboard__top-right">
-          {network?.name !== availableNetworks.mainnet.name && <GetReefTestnetButton />}
-          {network?.name === availableNetworks.mainnet.name && <BuyReefButton />}
+          {network?.name !== nw.AVAILABLE_NETWORKS.mainnet.name && <GetReefTestnetButton />}
+          {network?.name === nw.AVAILABLE_NETWORKS.mainnet.name && <BuyReefButton />}
         </div>
       </div>
 

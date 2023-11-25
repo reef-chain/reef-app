@@ -1,13 +1,13 @@
 import {
   Components,
   hooks,
-  Network,
   ReefSigner,
   store,
 } from '@reef-chain/react-lib';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
+import type { Network } from '../../state/networkDex';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { notify } from '../../utils/utils';
