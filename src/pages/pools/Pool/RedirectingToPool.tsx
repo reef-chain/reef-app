@@ -33,8 +33,8 @@ function RedirectingToPool():JSX.Element {
         <Uik.FishAnimation />
         <Uik.FishAnimation />
       </div>
-      <Uik.Text text="We're redirecting you to the pool details!." />
-      <Uik.Text type="mini" text="This process usually takes up to one minute." />
+      <Uik.Text text="Registering new pool balances." />
+      <Uik.Text type="mini" text="Redirecting to pool details shortly ..." />
     </div>
   );
 }

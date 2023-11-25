@@ -64,7 +64,7 @@ const Token = ({ token, price }: TokenStatsProps): JSX.Element => (
 
     <div className="pool-stats__token-stats">
       <div className="pool-stats__token-stat">
-        <div className="pool-stats__token-stat-label">Amount Locked</div>
+        <div className="pool-stats__token-stat-label">Total Liquidity</div>
         <div className="pool-stats__token-stat-value">{ displayAmount(token.amountLocked) }</div>
       </div>
 

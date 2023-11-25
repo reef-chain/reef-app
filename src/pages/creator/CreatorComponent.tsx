@@ -1,8 +1,5 @@
 import {
-  availableNetworks,
-  Network,
-  ReefSigner,
-  utils as reefUtils,
+  availableNetworks, Network, ReefSigner, utils as reefUtils,
 } from '@reef-chain/react-lib';
 import React, { useEffect, useState } from 'react';
 import { faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icons';
@@ -10,6 +7,7 @@ import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-i
 import { Contract, ContractFactory, utils } from 'ethers';
 import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
+import { reefState } from '@reef-chain/util-lib';
 import { verifyContract } from '../../utils/contract';
 import { DeployContractData, deployTokens } from './tokensDeployData';
 import './creator.css';
@@ -36,9 +34,17 @@ interface ResultMessage {
   contract?: Contract;
 }
 
+interface UpdateTokenBalance {
+  visibility:boolean;
+  message:string;
+  complete:boolean;
+}
+
 interface CreateToken {
   signer?: ReefSigner;
   setResultMessage: (result: ResultMessage) => void;
+  setUpdateTokensBalance: (updateTokensBalance: UpdateTokenBalance) => void;
+  updateTokensBalance:UpdateTokenBalance;
   tokenName: string;
   symbol: string;
   initialSupply: string;
@@ -93,6 +99,8 @@ const createToken = async ({
   icon,
   onTxUpdate,
   setResultMessage,
+  setUpdateTokensBalance,
+  updateTokensBalance,
   setVerifiedContract,
   setDeployedContract,
 }: CreateToken): Promise<void> => {
@@ -191,6 +199,21 @@ const createToken = async ({
       message: `Success, your new token ${tokenName} is deployed. Initial supply is ${initialSupply} ${symbol.toUpperCase()}. Next step is to create a pool so users can start trading.`,
       contract,
     });
+    setUpdateTokensBalance({
+      ...updateTokensBalance, visibility: true,
+    });
+    const tokenBalancesSub = reefState.selectedTokenBalances$.subscribe((e) => {
+      const addresses = e.map((token) => token.address);
+      if (addresses.includes(contract?.address)) {
+        setUpdateTokensBalance({
+          message: 'Token balances updated',
+          visibility: true,
+          complete:
+          true,
+        });
+        tokenBalancesSub.unsubscribe();
+      }
+    });
   } else {
     setResultMessage({
       complete: true,
@@ -211,6 +234,9 @@ export const CreatorComponent = ({
     message: string;
     contract?: Contract;
   } | null>(null);
+  const [updateTokensBalance, setUpdateTokensBalance] = useState<UpdateTokenBalance>({
+    visibility: false, message: 'Updating token balances', complete: false,
+  });
   const [tokenName, setTokenName] = useState('');
   const [symbol, setSymbol] = useState('');
   const [tokenOptions, setTokenOptions] = useState<ITokenOptions>({
@@ -442,6 +468,8 @@ export const CreatorComponent = ({
             icon,
             onTxUpdate,
             setResultMessage,
+            setUpdateTokensBalance,
+            updateTokensBalance,
             setVerifiedContract,
             setDeployedContract,
           })}
@@ -458,6 +486,13 @@ export const CreatorComponent = ({
             <Uik.Text type="headline">{ resultMessage.title }</Uik.Text>
             <Uik.Text>{ resultMessage.message }</Uik.Text>
 
+            { updateTokensBalance.visibility && (
+            <div className="creator__updating-token-balance">
+              {updateTokensBalance.complete ? <Uik.Icon icon={faCheckCircle} /> : <Uik.Loading size="small" />}
+              <Uik.Text className="creator__updating-token-balance--text">{ updateTokensBalance.message }</Uik.Text>
+            </div>
+            ) }
+
             {
               !!resultMessage.contract
               && resultMessage.complete
@@ -469,14 +504,18 @@ export const CreatorComponent = ({
                   size="large"
                   onClick={() => window.open(`${network.reefscanUrl}/contract/${resultMessage.contract?.address}`)}
                 />
-
-                <Uik.Button
-                  fill
-                  text={strings.create_a_pool}
-                  icon={faCoins}
-                  size="large"
-                  onClick={() => history.push('/pools')}
-                />
+                {
+                  updateTokensBalance.complete
+                    ? (
+                      <Uik.Button
+                        fill
+                        text={strings.create_a_pool}
+                        icon={faCoins}
+                        size="large"
+                        onClick={() => history.push('/pools')}
+                      />
+                    ) : <div style={{ cursor: 'progress' }}><Uik.Button text={strings.create_a_pool} icon={faCoins} size="large" disabled /></div>
+                }
               </div>
               )
             }
