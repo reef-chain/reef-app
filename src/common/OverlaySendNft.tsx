@@ -1,18 +1,16 @@
-import {
-  appState,
-  Components,
-  hooks,
-  ReefSigner,
-} from '@reef-defi/react-lib';
+import { Components, ReefSigner } from '@reef-chain/react-lib';
 import Identicon from '@polkadot/react-identicon';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+  useContext, useEffect, useMemo, useState,
+} from 'react';
 import './overlay-swap.css';
 import './overlay-nft.css';
 import Uik from '@reef-chain/ui-kit';
 import { Contract, ethers } from 'ethers';
-import { resolveEvmAddress, isSubstrateAddress } from '@reef-defi/evm-provider/utils';
-import { Provider, Signer } from '@reef-defi/evm-provider';
+import { isSubstrateAddress, resolveEvmAddress } from '@reef-chain/evm-provider/utils';
+import { Provider, Signer } from '@reef-chain/evm-provider';
 import { shortAddress } from '../utils/utils';
+import ReefSigners from '../context/ReefSigners';
 
 const { OverlayAction } = Components;
 
@@ -143,20 +141,21 @@ const OverlaySendNFT = ({
   address,
   nftId,
 }: OverlaySendNFT): JSX.Element => {
+  const { accounts, selectedSigner, provider } = useContext(ReefSigners);
   const [isAccountListOpen, setAccountsListOpen] = useState(false);
   const [destinationAddress, setDestinationAddress] = useState<string>('');
   const [amount, setAmount] = useState<number>(0);
   const [percentage, setPercentage] = useState<number>(100);
   const [btnLabel, setBtnLabel] = useState<string>('Enter destination address');
-  const accounts = hooks.useObservableState(appState.accountsSubj);
+  // const accounts = hooks.useObservableState(appState.accountsSubj);
   const [isFormValid, setIsFormValid] = useState<boolean>(false);
   const [isAmountEnabled, setIsAmountEnabled] = useState<boolean>(false);
   const [transactionInProgress, setTransactionInProgress] = useState<boolean>(false);
   const [showPercentages, setShowPercentages] = useState<boolean>(true);
   const [parsedBalance, setParsedBalance] = useState<number>(parseInt(balance, 10));
 
-  const signer = hooks.useObservableState(appState.selectedSigner$);
-  const provider = hooks.useObservableState(appState.currentProvider$);
+  // const selectedSigner = hooks.useObservableState(appState.selectedSigner$);
+  // const provider = hooks.useObservableState(appState.currentProvider$);
 
   const clearStates = ():void => {
     setDestinationAddress('');
@@ -241,7 +240,9 @@ const OverlaySendNFT = ({
   }, [balance]);
 
   useEffect(() => {
-    setAmount(parsedBalance);
+    const initAmount = parsedBalance !== 0 ? 1 : 0;
+    setAmount(initAmount);
+    setPercentage(parseInt(initAmount.toString(), 10) * 100 / parsedBalance);
     setIsAmountEnabled(parsedBalance > 1);
     setShowPercentages(parsedBalance > 99);
   }, [parsedBalance]);
@@ -320,7 +321,7 @@ const OverlaySendNFT = ({
               accounts={accounts!}
               query={destinationAddress}
               selectAccount={(_, _signer) => setDestinationAddress(_signer.address)}
-              selectedAccount={signer!}
+              selectedAccount={selectedSigner!}
             />
 
           )
@@ -362,7 +363,7 @@ const OverlaySendNFT = ({
           disabled={!isFormValid}
           loading={transactionInProgress}
           fill={isFormValid && !transactionInProgress}
-          onClick={() => transferNFT(signer?.evmAddress as string, destinationAddress, amount, address, signer?.signer as Signer, provider, nftId)}
+          onClick={() => transferNFT(selectedSigner?.evmAddress as string, destinationAddress, amount, address, selectedSigner?.signer as Signer, provider, nftId)}
         >
           { !transactionInProgress ? btnLabel : ''}
         </Uik.Button>

@@ -1,6 +1,6 @@
 import {
   NFT, Token, utils, Components,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import React, {
   useContext, useMemo,
 } from 'react';
@@ -105,17 +105,25 @@ const ActivityDetails = ({
             >
               <div className="transfer-asset__content-ntf">
                 <div className="transfer-asset__block">
-                  <div
-                    className="transfer-asset__nft-preview row-span-2"
-                    style={{ backgroundImage: `url(${token.iconUrl})` }}
-                  >
-                    <div className="transfer-asset__indicator">
-                      <Uik.Icon
-                        className="transfer-asset__indicator-icon"
-                        icon={faArrowDown}
-                      />
+                  {(token as NFT).mimetype?.startsWith('video') ? (
+                  // eslint-disable-next-line jsx-a11y/media-has-caption
+                    <video controls className="transfer-asset__nft-preview row-span-2" loop autoPlay style={{ width: '70%', height: '100%' }}>
+                      <source src={token.iconUrl} type={(token as NFT).mimetype} />
+                      Video not supported
+                    </video>
+                  ) : (
+                    <div
+                      className="transfer-asset__nft-preview row-span-2"
+                      style={{ backgroundImage: `url(${token.iconUrl})` }}
+                    >
+                      <div className="transfer-asset__indicator">
+                        <Uik.Icon
+                          className="transfer-asset__indicator-icon"
+                          icon={faArrowDown}
+                        />
+                      </div>
                     </div>
-                  </div>
+                  )}
                   <div className="amount-wrapper">
                     <div
                       className={`

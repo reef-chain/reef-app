@@ -2,9 +2,10 @@ import React, { useContext, useMemo, useState } from 'react';
 import { BigNumber } from 'bignumber.js';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
-import { graphql, hooks } from '@reef-defi/react-lib';
+import { hooks } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 
+import axios from 'axios';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import MyPoolsList from './MyPoolsList';
 import './pools.css';
@@ -16,9 +17,8 @@ import { localizedStrings as strings } from '../../l10n/l10n';
 const Pools = (): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
 
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
-  const totalLiquidity = hooks.useTotalSupply(tokenPrices, apolloDex);
-  const yesterdayTotalLiquidity = hooks.useTotalSupply(tokenPrices, apolloDex, true);
+  const totalLiquidity = hooks.useTotalSupply(tokenPrices, axios);
+  const yesterdayTotalLiquidity = hooks.useTotalSupply(tokenPrices, axios, true);
 
   const percentage = useMemo(() => new BigNumber(totalLiquidity)
     .minus(yesterdayTotalLiquidity)

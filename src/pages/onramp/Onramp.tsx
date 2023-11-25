@@ -1,8 +1,9 @@
-import { ReefSigner, appState, hooks } from '@reef-defi/react-lib';
-import React from 'react';
+import { ReefSigner } from '@reef-chain/react-lib';
+import React, { useContext } from 'react';
+import ReefSigners from '../../context/ReefSigners';
 
 function Onramp() : JSX.Element {
-  const signer: ReefSigner|undefined|null = hooks.useObservableState(appState.selectedSigner$);
+  const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
   return (
     <div style={{ height: '100vh' }}>
       <iframe

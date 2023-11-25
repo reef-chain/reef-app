@@ -1,4 +1,4 @@
-import { Token, utils } from '@reef-defi/react-lib';
+import { Token, utils, Components } from '@reef-chain/react-lib';
 import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo } from 'react';
 import TokenPricesContext from '../../context/TokenPricesContext';
@@ -7,6 +7,7 @@ import './TokenPill.css';
 import { localizedStrings as strings } from '../../l10n/l10n';
 
 const { showBalance } = utils;
+const { Icons: { getIconUrl } } = Components;
 
 interface TokenPill {
   token: Token;
@@ -27,7 +28,7 @@ export const TokenPill = ({ token }: TokenPill): JSX.Element => {
     <div key={token.address} className="col-md-12 col-lg-6">
       <div className="token-balance-item radius-border d-flex d-flex-space-between d-flex-vert-center">
         <div className="token-balance-item_icon-text mr-1">
-          <div className="token-balance-item_icon-text_w mr-1"><img src={token.iconUrl ? token.iconUrl : utils.getIconUrl(token.address)} alt={token.name} /></div>
+          <div className="token-balance-item_icon-text_w mr-1"><img src={token.iconUrl ? token.iconUrl : getIconUrl(token.address)} alt={token.name} /></div>
           <div className="token-balance-item__info">
             <div className="">
               <div className="title-font text-bold ">{token.name}</div>

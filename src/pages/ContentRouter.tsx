@@ -1,8 +1,11 @@
 import {
-  AddressToNumber, appState, graphql, hooks, TokenWithAmount,
-} from '@reef-defi/react-lib';
-import React, { useEffect, useMemo, useState } from 'react';
+  AddressToNumber, hooks, TokenWithAmount,
+} from '@reef-chain/react-lib';
+import React, {
+  useContext, useEffect, useMemo, useState,
+} from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
+import axios from 'axios';
 import NftContext from '../context/NftContext';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
@@ -35,26 +38,25 @@ import { Transfer } from './transfer/Transfer';
 import { isAddressWhitelisted, isReefswapUI } from '../environment';
 import { shortAddress } from '../utils/utils';
 import Onramp from './onramp/Onramp';
+import ReefSigners from '../context/ReefSigners';
 
 const ContentRouter = (): JSX.Element => {
-  const selectedAddress = hooks.useObservableState(appState.currentAddress$);
-  const selectedNetwork = hooks.useObservableState(appState.currentNetwork$);
+  const { selectedSigner, network: selectedNetwork, reefState } = useContext(ReefSigners);
+  const selectedAddress:string|undefined = selectedSigner ? selectedSigner.address : undefined;
   const [isDisplayWhitelisted, setDisplayWhitelisted] = useState(false);
 
   useEffect(() => {
     setDisplayWhitelisted(isAddressWhitelisted(selectedAddress, selectedNetwork));
   }, [selectedAddress, selectedNetwork]);
 
-  // const currentSigner: ReefSigner|undefined|null = hooks.useObservableState(appState.selectedSigner$);
-  // const reefPrice = hooks.useObservableState(appState.reefPrice$);
   // const [tokenPrices, setTokenPrices] = useState({} as AddressToNumber<number>);
   // Its not appropriate to have token state in this component, but the problem was apollo client.
   // Once its declared properly in App move TokenContext in the parent component (App.tsx)
 
-  const tokens = hooks.useObservableState<TokenWithAmount[]|null>(appState.tokenPrices$, []);
+  const tokens = hooks.useObservableState<TokenWithAmount[]|null>(reefState.selectedTokenPrices$, []);
+
   const [nfts, nftsLoading] = hooks.useAllNfts();
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
-  const pools = hooks.useAllPools(apolloDex);
+  const pools = hooks.useAllPools(axios);
   const tokenPrices = useMemo(
     () => (tokens ? tokens.reduce((prices: AddressToNumber<number>, tkn) => {
       prices[tkn.address] = tkn.price;// eslint-disable-line

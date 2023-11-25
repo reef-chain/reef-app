@@ -1,17 +1,18 @@
 {
   "name": "reef-app",
-  "version": "1.1.7",
+  "version": "3.0.0",
   "private": true,
   "type": "commonjs",
   "dependencies": {
-    "@apollo/client": "^3.6.2",
     "@fortawesome/free-regular-svg-icons": "^6.1.0",
     "@fortawesome/free-solid-svg-icons": "^6.1.0",
     "@polkadot/extension-dapp": "^0.40.3",
     "@popperjs/core": "^2.11.5",
+    "@reef-chain/react-lib": "^2.2.0",
+    "@reef-chain/evm-provider": "^2.0.1",
     "@reef-chain/ui-kit": "^1.1.5",
+    "@reef-chain/util-lib": "^2.0.2",
     "@reef-defi/extension-dapp": "^1.0.14",
-    "@reef-defi/react-lib": "1.8.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -36,7 +37,7 @@
     "react-scripts": "^5.0.1",
     "react-toastify": "^8.2.0",
     "react-transition-group": "^4.4.2",
-    "rxjs": "^7.5.5",
+    "rxjs": "^7.5.4",
     "stream-browserify": "^3.0.0",
     "subscriptions-transport-ws": "^0.11.0",
     "typescript": "^4.3.2",
@@ -102,6 +103,8 @@
     "rxjs": "7.5.5",
     "react-localization": "1.0.0",
     "@types/react": "17.0.2",
-    "@types/react-dom": "17.0.2"
+    "@types/react-dom": "17.0.2",
+    "@types/bn.js": "5.1.5",
+    "@polkadot/api-derive": "10.11.1"
   }
 }

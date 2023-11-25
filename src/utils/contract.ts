@@ -1,8 +1,5 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { Contract, utils } from 'ethers';
-import { ApolloClient, gql } from '@apollo/client';
-import { firstValueFrom, Observable } from 'rxjs';
-import { graphql } from '@reef-defi/react-lib';
 
 const CONTRACT_VERIFICATION_URL = '/verification/submit';
 
@@ -27,13 +24,19 @@ export interface ReefContract extends BaseContract {
     filename: string;
     contractName: string;
 }
+const BLOCK_TIME = 10000;
 
 const contractVerificatorApi = axios.create();
 
 const toContractAddress = (address: string): string => utils.getAddress(address);
 
-const CONTRACT_EXISTS_GQL = gql`
-  subscription query ($address: String!) {
+const graphqlUrls = {
+  explorerTestnet: 'https://squid.subsquid.io/reef-explorer-testnet/graphql',
+  explorerMainnet: 'https://squid.subsquid.io/reef-explorer/graphql',
+};
+
+const CONTRACT_EXISTS_GQL = `
+  query query ($address: String!) {
       contracts(limit: 1, where: {id_eq: $address}) {
         id
       }
@@ -42,36 +45,64 @@ const CONTRACT_EXISTS_GQL = gql`
           
 `;
 
-const isContrIndexed = async (address: string): Promise<boolean> => new Promise(async (resolve) => {
-  const tmt = setTimeout(() => {
-    resolve(false);
-  }, 120000);
-  const apolloClInst$: unknown = graphql.apolloExplorerClientInstance$;
-  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-  const apollo = await firstValueFrom(apolloClInst$ as Observable<ApolloClient<any>>);
-  const subs = apollo.subscribe({
-    query: CONTRACT_EXISTS_GQL,
-    variables: { address },
-    fetchPolicy: 'network-only',
-  }).subscribe({
-    next(result) {
-      if (result.data.contracts && result.data.contracts.length) {
-        clearTimeout(tmt);
-        resolve(true);
-        subs.unsubscribe();
-      }
-    },
-    error(err) {
-      clearTimeout(tmt);
-      console.log('isContrIndexed error=', err);
-      resolve(false);
-      subs.unsubscribe();
-    },
-    complete() {
-      clearTimeout(tmt);
-    },
+const getGraphqlEndpoint = (network:string):string => {
+  if (network === 'testnet') {
+    return graphqlUrls.explorerTestnet;
+  }
+  return graphqlUrls.explorerMainnet;
+};
 
+// eslint-disable-next-line
+const getContractExistsQry = (address: string) => ({
+  query: CONTRACT_EXISTS_GQL,
+  variables: { address },
+});
+
+const ACTIVE_NETWORK_LS_KEY = 'reef-app-active-network';
+
+const graphqlRequest = (
+  httpClient: AxiosInstance,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  queryObj: { query: string; variables: any },
+  isExplorer?:boolean,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+) :any => {
+  let selectedNetwork = 'mainnet';
+  try {
+    const storedNetwork = localStorage.getItem(ACTIVE_NETWORK_LS_KEY);
+    if (storedNetwork) {
+      const parsedStoredNetwork = JSON.parse(storedNetwork);
+      selectedNetwork = parsedStoredNetwork.name;
+    }
+  } catch (error) {
+  }
+  const graphql = JSON.stringify(queryObj);
+  if (isExplorer) {
+    const url = getGraphqlEndpoint(selectedNetwork);
+    return httpClient.post(url, graphql, {
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  const url = getGraphqlEndpoint(selectedNetwork);
+  return httpClient.post(url, graphql, {
+    headers: { 'Content-Type': 'application/json' },
   });
+};
+
+const isContrIndexed = async (address: string): Promise<boolean> => new Promise((resolve) => {
+  const timer = setInterval(async () => {
+    try {
+      const result = await graphqlRequest(axios, getContractExistsQry(address));
+      if (result.data.data.contracts && result.data.data.contracts.length) {
+        console.log(result.data.data);
+        resolve(true);
+        clearInterval(timer);
+      }
+    } catch (error) {
+      resolve(false);
+    }
+  }, BLOCK_TIME);
 }) as Promise<boolean>;
 
 export const verifyContract = async (deployedContract: Contract, contract: ReefContract, arg: string[], url?: string, file?:string): Promise<boolean> => {
@@ -81,7 +112,6 @@ export const verifyContract = async (deployedContract: Contract, contract: ReefC
   try {
     const contractAddress = toContractAddress(deployedContract.address);
     if (!await isContrIndexed(contractAddress)) {
-    // if (!await firstValueFrom(isContractIndexed$(contractAddress))) {
       return false;
     }
 
@@ -98,8 +128,8 @@ export const verifyContract = async (deployedContract: Contract, contract: ReefC
       runs: contract.runs,
       file: file?.split(',')[1],
     };
+
     await contractVerificatorApi.post<VerificationContractReq, AxiosResponse<string>>(`${url}${CONTRACT_VERIFICATION_URL}`, body);
-    // (verification_test, body)
     return true;
   } catch (err) {
     console.error('Verification err=', err);

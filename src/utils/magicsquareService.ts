@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useLocation } from 'react-router';
-import { AvailableNetworks } from '@reef-defi/react-lib/dist/state/network';
+import { AvailableNetworks } from '@reef-chain/react-lib/dist/state/network';
 import { useEffect } from 'react';
 
 const MS_PROMO_IDENT = 'msPromo';

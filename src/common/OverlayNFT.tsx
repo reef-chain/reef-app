@@ -1,4 +1,4 @@
-import { Components } from '@reef-defi/react-lib';
+import { Components } from '@reef-chain/react-lib';
 import React, { useState } from 'react';
 import './overlay-swap.css';
 import './overlay-nft.css';

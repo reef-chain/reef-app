@@ -1,5 +1,5 @@
 import { faPaperPlane, faRepeat } from '@fortawesome/free-solid-svg-icons';
-import { Token } from '@reef-defi/react-lib';
+import { Token } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo, useState } from 'react';

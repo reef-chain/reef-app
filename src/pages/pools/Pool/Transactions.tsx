@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Uik from '@reef-chain/ui-kit';
-import { utils, hooks } from '@reef-defi/react-lib';
+import { utils, hooks } from '@reef-chain/react-lib';
 import { faRepeat, faCoins, faArrowUpFromBracket } from '@fortawesome/free-solid-svg-icons';
 import Identicon from '@polkadot/react-identicon';
-import { ApolloClient } from '@apollo/client';
+import axios from 'axios';
 import { Tabs, Tokens } from './PoolTransactions';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 
@@ -17,7 +17,6 @@ export interface Props {
   tab: Tabs,
   address: string,
   reefscanUrl: string,
-  dexClient: ApolloClient<unknown>,
   tokens?: Tokens
 }
 
@@ -37,12 +36,12 @@ const icons = {
 };
 
 const Transactions = ({
-  tab, address, reefscanUrl, dexClient, tokens,
+  tab, address, reefscanUrl, tokens,
 }: Props): JSX.Element => {
   const [pageIndex, setPageIndex] = useState(0);
 
-  const { loading: loadingTransactions, data: transactionData } = usePoolTransactionSubscription(address, tab, pageIndex, 10, dexClient);
-  const { data } = usePoolTransactionCountSubscription(address, tab, dexClient);
+  const { loading: loadingTransactions, data: transactionData } = usePoolTransactionSubscription(address, tab, pageIndex, 10, axios);
+  const { data } = usePoolTransactionCountSubscription(address, tab, axios);
 
   const maxPage = data
     ? Math.ceil(data.poolEventsConnection.totalCount / 10)

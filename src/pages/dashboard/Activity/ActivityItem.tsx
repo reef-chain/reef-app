@@ -1,4 +1,4 @@
-import { NFT, Token, utils } from '@reef-defi/react-lib';
+import { NFT, Token, utils } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, {
   useContext,

@@ -1,15 +1,17 @@
 import { faArrowUpFromBracket, faCoins, faRepeat } from '@fortawesome/free-solid-svg-icons';
 import {
-  appState, graphql, hooks, Token,
-} from '@reef-defi/react-lib';
+  hooks, Token,
+} from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
+import axios from 'axios';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { POOL_CHART_URL } from '../../urls';
 import './pools.css';
 import PoolsSearch from './PoolsSearch';
+import ReefSigners from '../../context/ReefSigners';
 
 interface Pool {
   address?: string,
@@ -38,16 +40,12 @@ const MyPoolsList = ({ tokens }: Props): JSX.Element => {
   const [search, setSearch] = useState('');
   const tokenPrices = useContext(TokenPricesContext);
 
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
-
-  const signer = hooks.useObservableState(
-    appState.selectedSigner$,
-  );
+  const signer = useContext(ReefSigners).selectedSigner;
 
   const [pools,, count] = hooks.usePoolsList({
     limit: perPage,
     offset: (currentPage - 1) * perPage,
-    dexClient: apolloDex,
+    httpClient: axios,
     search,
     signerAddress: signer?.address || '',
     tokenPrices,

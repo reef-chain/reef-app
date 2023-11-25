@@ -1,15 +1,19 @@
 import {
-  appState, graphql, hooks, ReefSigner,
-} from '@reef-defi/react-lib';
+  hooks, ReefSigner,
+} from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';
+import axios from 'axios';
+import type { Network } from '../../../state/networkDex';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import Actions, { ActionTabs } from './Actions';
 import Chart, { TimeData, Timeframe } from './Chart';
 import './pool.css';
 import Stats from './Stats';
+import ReefSigners from '../../../context/ReefSigners';
+import { selectedNetworkDex$ } from '../../../state/networkDex';
 
 interface Params {
   address: string;
@@ -44,18 +48,15 @@ const Pool = (): JSX.Element => {
   const { address, action } = useParams<Params>();
   const tokenPrices = useContext(TokenPricesContext);
 
-  const signer: ReefSigner | undefined | null = hooks.useObservableState(
-    appState.selectedSigner$,
-  );
+  const signer: ReefSigner | undefined | null = useContext(ReefSigners).selectedSigner;
 
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
-  const network = hooks.useObservableState(appState.currentNetwork$);
+  const network:Network = hooks.useObservableState(selectedNetworkDex$);
 
   const [poolInfo] = hooks.usePoolInfo(
     address,
     signer?.address || '',
     tokenPrices,
-    apolloDex,
+    axios,
   );
 
   const tokenPrice1 = (poolInfo ? tokenPrices[poolInfo.firstToken.address] : 0) || 0;
@@ -72,7 +73,7 @@ const Pool = (): JSX.Element => {
     price1: tokenPrice1,
     price2: tokenPrice2,
     timeData: timeframeToTimeData(timeframe),
-  }, apolloDex);
+  }, axios);
 
   if (!poolInfo) {
     return <Uik.Loading />;
@@ -85,7 +86,6 @@ const Pool = (): JSX.Element => {
         price1={tokenPrice1}
         price2={tokenPrice2}
         reefscanUrl={network.reefscanUrl}
-        dexClient={apolloDex}
       />
 
       <div className="pool__content">

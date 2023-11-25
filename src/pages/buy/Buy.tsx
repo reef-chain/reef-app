@@ -1,17 +1,19 @@
 import {
-  appState, Components, hooks, ReefSigner,
-} from '@reef-defi/react-lib';
+  Components,
+} from '@reef-chain/react-lib';
 import React, {
+  useContext,
   useEffect, useState,
 } from 'react';
 import './Buy.css';
-import { InputAmountValidity } from '@reef-defi/react-lib/dist/components/common/Input';
+import { InputAmountValidity } from '@reef-chain/react-lib/dist/components/common/Input';
 import Uik from '@reef-chain/ui-kit';
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as api from './api-access';
 import { localizedStrings as strings } from '../../l10n/l10n';
 import { AuthenticationResponse, BuyPair, BuyPayload } from './models';
+import ReefSigners from '../../context/ReefSigners';
 
 const {
   Button: ButtonModule,
@@ -34,7 +36,7 @@ const Buy = (): JSX.Element => {
   const iconUrl = {
     REEF: 'https://s2.coinmarketcap.com/static/img/coins/64x64/6951.png',
   };
-  const selectedSigner: ReefSigner | undefined | null = hooks.useObservableState(appState.selectedSigner$);
+  const { selectedSigner } = useContext(ReefSigners);
 
   const [tokenAmount, setTokenAmount] = useState<string>('');
   const [allPairs, setAllPairs] = useState<BuyPair[]>([]);

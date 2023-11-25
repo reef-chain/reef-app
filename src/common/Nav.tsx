@@ -1,7 +1,8 @@
 import React, { useContext, useMemo } from 'react';
 import {
-  appState, availableNetworks, Components, hooks, Network, ReefSigner,
-} from '@reef-defi/react-lib';
+  Components,
+} from '@reef-chain/react-lib';
+import { network as nw } from '@reef-chain/util-lib';
 import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
@@ -13,6 +14,7 @@ import { appAvailableNetworks, isReefswapUI } from '../environment';
 import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
 import { localizedStrings } from '../l10n/l10n';
+import ReefSigners from '../context/ReefSigners';
 
 export interface Nav {
     display: boolean;
@@ -21,10 +23,10 @@ export interface Nav {
 const Nav = ({ display }: Nav): JSX.Element => {
   const history = useHistory();
   const { pathname } = useLocation();
-  const signer: ReefSigner|undefined|null = hooks.useObservableState(appState.selectedSigner$);
-  const accounts: ReefSigner[]|undefined|null = hooks.useObservableState(appState.signers$);
-  const network: Network|undefined = hooks.useObservableState(appState.currentNetwork$);
-  const mainnetSelected = network == null || network?.rpcUrl === availableNetworks.mainnet.rpcUrl;
+  const {
+    accounts, selectedSigner, network, reefState,
+  } = useContext(ReefSigners);
+  const mainnetSelected = network == null || network?.rpcUrl === nw.AVAILABLE_NETWORKS.mainnet.rpcUrl;
   let menuItems = [
     { title: localizedStrings.dashboard, url: DASHBOARD_URL },
     { title: localizedStrings.bonds, url: BONDS_URL },
@@ -42,7 +44,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
 
   const selectAccount = (index: number): void => {
     saveSignerLocalPointer(index);
-    appState.setCurrentAddress(index != null ? accounts?.[index].address : undefined);
+    reefState.setSelectedAddress(index != null ? accounts?.[index].address : undefined);
   };
 
   const selectNetwork = (key: 'mainnet' | 'testnet'): void => {
@@ -51,7 +53,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
     history.push(DASHBOARD_URL);
 
     if (toSelect) {
-      appState.setCurrentNetwork(toSelect);
+      reefState.setSelectedNetwork(toSelect);
     }
   };
 
@@ -103,7 +105,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
 
             <Components.AccountSelector
               accounts={accounts}
-              selectedSigner={signer || undefined}
+              selectedSigner={selectedSigner || undefined}
               selectAccount={selectAccount}
               onNetworkSelect={selectNetwork}
               selectedNetwork={selectedNetwork}

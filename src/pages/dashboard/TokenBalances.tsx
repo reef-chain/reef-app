@@ -1,4 +1,4 @@
-import { Token } from '@reef-defi/react-lib';
+import { Token } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -50,7 +50,12 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
 
   const tokenCards = tokens
-    .filter(({ balance }) => balance.gt(0))
+    .filter(({ balance }) => {
+      try {
+        return balance.gt(0);
+      } catch (error) {}
+      return false;
+    })
     .sort((a, b) => {
       const balanceA = balanceValue(a, tokenPrices[a.address] || 0);
       const balanceB = balanceValue(b, tokenPrices[b.address] || 0);

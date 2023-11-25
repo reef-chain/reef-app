@@ -1,16 +1,20 @@
 import {
-  appState, Components, graphql, hooks, Pool, PoolWithReserves, store, Token,
-} from '@reef-defi/react-lib';
+  Components, hooks, Pool, PoolWithReserves, ReefSigner, store, Token,
+} from '@reef-chain/react-lib';
 import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react';
 import { BigNumber } from 'ethers';
+import axios from 'axios';
+import type { Network } from '../state/networkDex';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
 import TokenPricesContext from '../context/TokenPricesContext';
 import { MAX_SLIPPAGE, notify } from '../utils/utils';
 import './overlay-swap.css';
+import ReefSigners from '../context/ReefSigners';
 import { EventType, magicSquareAction } from '../utils/magicsquareService';
+import { selectedNetworkDex$ } from '../state/networkDex';
 
 const { Trade, OverlayAction, Finalizing } = Components;
 const REEF_ADDRESS = '0x0000000000000000000000000000000001000000';
@@ -61,15 +65,20 @@ const OverlaySwap = ({
   const tokenPrices = useContext(TokenPricesContext);
   const pools = useContext(PoolContext);
 
-  const network = hooks.useObservableState(appState.currentNetwork$);
-  const signer = hooks.useObservableState(appState.selectedSigner$);
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
+  const network:Network = hooks.useObservableState(selectedNetworkDex$);
+  const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
     store.swapReducer,
     store.initialSwapState,
   );
+
+  const findPool = (addr2:string):PoolWithReserves|undefined => {
+    const t1 = tokenAddress < addr2 ? tokenAddress : addr2;
+    const t2 = tokenAddress < addr2 ? addr2 : tokenAddress;
+    return pools.find((p) => p.token1 === t1 && p.token2 === t2);
+  };
 
   useEffect(() => {
     if (!pools || !tokenAddress || !tokens) return;
@@ -106,20 +115,17 @@ const OverlaySwap = ({
       addr2 = tokenPools[0].token1 === tokenAddress ? tokenPools[0].token2 : tokenPools[0].token1;
     }
     // Set default buy token
-    setAddress2(addr2);
+    // setAddress2(addr2); //anukulpandey - don't set default address 2 as it keeps reseting the selected address
 
     // Find pool
-    const t1 = tokenAddress < addr2 ? tokenAddress : addr2;
-    const t2 = tokenAddress < addr2 ? addr2 : tokenAddress;
-    const poolFound = pools.find((p) => p.token1 === t1 && p.token2 === t2);
+    const poolFound = findPool(addr2);
     if (poolFound) {
       onPoolsLoaded(true);
-      setPool(poolWithReservesToPool(poolFound));
     } else {
       onPoolsLoaded(false);
       console.error('Pool not found');
     }
-  }, [pools, tokenAddress, tokens]);
+  }, [tokens]);
 
   hooks.useSwapState({
     address1,
@@ -129,7 +135,7 @@ const OverlaySwap = ({
     tokenPrices,
     tokens,
     account: signer || undefined,
-    dexClient: apolloDex,
+    httpClient: axios,
     waitForPool: true,
     pool,
   });
@@ -177,7 +183,15 @@ const OverlaySwap = ({
                   onSwap,
                   onSwitch,
                   selectToken1: (token: Token): void => setAddress1(token.address),
-                  selectToken2: (token: Token): void => setAddress2(token.address),
+                  selectToken2: (token: Token): void => {
+                    setAddress2(token.address);
+                    const poolFound = findPool(token.address);
+                    if (poolFound) {
+                      setPool(poolWithReservesToPool(poolFound));
+                    } else {
+                      console.error('no pool found');
+                    }
+                  },
                   setPercentage: (amount: number) => tradeDispatch(store.setPercentageAction(amount)),
                   setToken1Amount: (amount: string): void => tradeDispatch(store.setToken1AmountAction(amount)),
                   setToken2Amount: (amount: string): void => tradeDispatch(store.setToken2AmountAction(amount)),

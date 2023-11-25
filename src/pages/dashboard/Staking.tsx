@@ -1,15 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './Staking.css';
-import {
-  appState, hooks, Network, ReefSigner,
-} from '@reef-defi/react-lib';
 import { BondsComponent } from '../bonds/BondsComponent';
 import { bonds, IBond } from '../bonds/utils/bonds';
 import { localizedStrings as strings } from '../../l10n/l10n';
+import ReefSigners from '../../context/ReefSigners';
 
 export const Staking = (): JSX.Element => {
-  const selectedSigner: ReefSigner | undefined | null = hooks.useObservableState(appState.selectedSigner$);
-  const network: Network | undefined = hooks.useObservableState(appState.currentNetwork$);
+  const { selectedSigner, network } = useContext(ReefSigners);
 
   return (
     <div className="staking">

@@ -1,10 +1,9 @@
 import './stats.css';
 import Uik from '@reef-chain/ui-kit';
 import React, { useState } from 'react';
-import { hooks } from '@reef-defi/react-lib';
+import { hooks } from '@reef-chain/react-lib';
 import { faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
-import { ApolloClient } from '@apollo/client';
 import PoolSelect from './PoolSelect';
 import PoolTransactions from './PoolTransactions';
 import { localizedStrings } from '../../../l10n/l10n';
@@ -14,7 +13,6 @@ interface StatsProps {
   price1: number;
   price2: number;
   reefscanUrl: string;
-  dexClient: ApolloClient<unknown>;
 }
 interface TokenStatsProps {
   token: hooks.TokenStats;
@@ -66,7 +64,7 @@ const Token = ({ token, price }: TokenStatsProps): JSX.Element => (
 
     <div className="pool-stats__token-stats">
       <div className="pool-stats__token-stat">
-        <div className="pool-stats__token-stat-label">Amount Locked</div>
+        <div className="pool-stats__token-stat-label">Total Liquidity</div>
         <div className="pool-stats__token-stat-value">{ displayAmount(token.amountLocked) }</div>
       </div>
 
@@ -92,7 +90,6 @@ const Stats = ({
   price1,
   price2,
   reefscanUrl,
-  dexClient,
 }: StatsProps): JSX.Element => {
   const [isSelectOpen, setSelectOpen] = useState(false);
   const [isTransactionsOpen, setTransactionsOpen] = useState(false);
@@ -192,7 +189,6 @@ const Stats = ({
       <PoolTransactions
         address={address}
         reefscanUrl={reefscanUrl}
-        dexClient={dexClient}
         isOpen={isTransactionsOpen}
         onClose={() => setTransactionsOpen(false)}
         tokens={{

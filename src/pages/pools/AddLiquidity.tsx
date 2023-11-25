@@ -1,15 +1,19 @@
 import {
-  appState, Components,
-  graphql,
-  hooks, Network,
+  Components,
+
+  hooks,
   ReefSigner, store, Token,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import axios from 'axios';
+import type { Network } from '../../state/networkDex';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, ADD_LIQUIDITY_URL } from '../../urls';
 import { notify } from '../../utils/utils';
+import ReefSigners from '../../context/ReefSigners';
+import { selectedNetworkDex$ } from '../../state/networkDex';
 
 const { AddLiquidity } = Components;
 interface UrlParams {
@@ -22,13 +26,10 @@ const AddPoolLiquidity = (): JSX.Element => {
   const history = useHistory();
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
-  const signer: ReefSigner | undefined | null = hooks.useObservableState(
-    appState.selectedSigner$,
-  );
+  const signer: ReefSigner | undefined | null = useContext(ReefSigners).selectedSigner;
   const network: Network | undefined = hooks.useObservableState(
-    appState.currentNetwork$,
+    selectedNetworkDex$,
   );
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
 
   const [state, dispatch] = useReducer(store.addLiquidityReducer, store.initialAddLiquidityState);
   hooks.useAddLiquidity({
@@ -38,7 +39,7 @@ const AddPoolLiquidity = (): JSX.Element => {
     state,
     tokens,
     signer: signer || undefined,
-    dexClient: apolloDex,
+    httpClient: axios,
     tokenPrices,
   });
 

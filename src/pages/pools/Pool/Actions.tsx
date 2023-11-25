@@ -1,12 +1,12 @@
 import {
-  appState,
   Components,
-  graphql,
   hooks, store, Token,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
+import type { Network } from '../../../state/networkDex';
 import PoolContext from '../../../context/PoolContext';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
@@ -14,6 +14,8 @@ import { POOL_CHART_URL } from '../../../urls';
 import { MAX_SLIPPAGE, notify } from '../../../utils/utils';
 import './actions.css';
 import { EventType, magicSquareAction } from '../../../utils/magicsquareService';
+import ReefSigners from '../../../context/ReefSigners';
+import { selectedNetworkDex$ } from '../../../state/networkDex';
 
 const {
   Trade, Provide, Finalizing, Withdraw,
@@ -33,14 +35,9 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const [finalized, setFinalized] = useState(true);
   const pools = useContext(PoolContext);
 
-  const signer = hooks.useObservableState(
-    appState.selectedSigner$,
-  );
-  const network = hooks.useObservableState(
-    appState.currentNetwork$,
-  );
-  const apolloDex = hooks.useObservableState(
-    graphql.apolloDexClientInstance$,
+  const signer = useContext(ReefSigners).selectedSigner;
+  const network:Network|undefined = hooks.useObservableState(
+    selectedNetworkDex$,
   );
 
   // Trade
@@ -57,7 +54,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     tokenPrices,
     tokens,
     account: signer || undefined,
-    dexClient: apolloDex,
+    httpClient: axios,
   });
 
   const onSwap = hooks.onSwap({
@@ -70,7 +67,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     updateTokenState: async () => {}, // eslint-disable-line
     onSuccess: () => {
       setFinalized(false);
-      if (signer)magicSquareAction(network.name, EventType.SWAP, signer.address);
+      if (signer)magicSquareAction(network!.name, EventType.SWAP, signer.address);
     },
     onFinalized: () => setFinalized(true),
   });
@@ -93,7 +90,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     state: provideState,
     tokens,
     signer: signer || undefined,
-    dexClient: apolloDex,
+    httpClient: axios,
     tokenPrices,
   });
 
@@ -117,7 +114,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
 
   hooks.useRemoveLiquidity({
     tokens,
-    dexClient: apolloDex,
+    httpClient: axios,
     address1: token1.address,
     address2: token2.address,
     tokenPrices,

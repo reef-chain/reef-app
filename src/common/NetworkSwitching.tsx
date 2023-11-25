@@ -1,9 +1,9 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 import './network-switching.css';
 import Uik from '@reef-chain/ui-kit';
 import { CSSTransition } from 'react-transition-group';
-import { appState, hooks, Network } from '@reef-defi/react-lib';
 import { faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import ReefSigners from '../context/ReefSigners';
 
 export interface Props {
   isOpen?: boolean
@@ -11,7 +11,9 @@ export interface Props {
 
 const NetworkSwitching = ({ isOpen }: Props):JSX.Element => {
   const container = useRef(null);
-  const network: Network | undefined = hooks.useObservableState(appState.currentNetwork$);
+  const {
+    network,
+  } = useContext(ReefSigners);
 
   const name = useMemo(() => {
     if (network?.name) {

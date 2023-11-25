@@ -1,5 +1,4 @@
-import { ApolloProvider } from '@apollo/client';
-import { defaultOptions, graphql, hooks } from '@reef-defi/react-lib';
+import { defaultOptions, hooks } from '@reef-chain/react-lib';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -7,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Uik from '@reef-chain/ui-kit';
 import Nav from './common/Nav';
 import OptionContext from './context/OptionContext';
+import ReefSignersContext from './context/ReefSigners';
 import ContentRouter from './pages/ContentRouter';
 import NoAccount from './pages/error/NoAccount';
 import NoExtension from './pages/error/NoExtension';
@@ -20,12 +20,13 @@ import { useMagicSquareParamsSave } from './utils/magicsquareService';
 
 const App = (): JSX.Element => {
   useMagicSquareParamsSave();
-  const { loading, error } = hooks.useInitReefState(
+  const {
+    loading, error, signers, selectedReefSigner, network, provider, reefState,
+  } = hooks.useInitReefState(
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
-  const history = useHistory();
-  const apolloExplorer = hooks.useObservableState(graphql.apolloExplorerClientInstance$);
 
+  const history = useHistory();
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
   const hideBalance = {
     isHidden: isBalanceHidden,
@@ -43,6 +44,8 @@ const App = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
+  // @ts-ignore
+  // @ts-ignore
   return (
     loading
       ? (
@@ -52,19 +55,20 @@ const App = (): JSX.Element => {
       )
       : (
         <>
-          {apolloExplorer
-          && (
-          <ApolloProvider client={apolloExplorer}>
-            <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
+          <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
+            <ReefSignersContext.Provider value={{
+              accounts: signers, selectedSigner: selectedReefSigner, network, reefState, provider,
+            }}
+            >
               <HideBalance.Provider value={hideBalance}>
                 <NetworkSwitch.Provider value={networkSwitch}>
                   <div className="App d-flex w-100 h-100">
                     <div className="w-100 main-content">
                       {!loading && !error && (
-                      <>
-                        <Nav display={!loading && !error} />
-                        <ContentRouter />
-                      </>
+                        <>
+                          <Nav display={!loading && !error} />
+                          <ContentRouter />
+                        </>
                       )}
 
                       <NetworkSwitching isOpen={isNetworkSwitching} />
@@ -88,9 +92,8 @@ const App = (): JSX.Element => {
                   </div>
                 </NetworkSwitch.Provider>
               </HideBalance.Provider>
-            </OptionContext.Provider>
-          </ApolloProvider>
-          )}
+            </ReefSignersContext.Provider>
+          </OptionContext.Provider>
         </>
       )
   );

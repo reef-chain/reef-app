@@ -1,16 +1,13 @@
-import React from 'react';
-import {
-  appState, hooks, Network, ReefSigner,
-} from '@reef-defi/react-lib';
+import React, { useContext } from 'react';
 import Uik from '@reef-chain/ui-kit';
 import { BondsComponent } from './BondsComponent';
 import { bonds, IBond } from './utils/bonds';
 import './bonds.css';
 import { localizedStrings as strings } from '../../l10n/l10n';
+import ReefSigners from '../../context/ReefSigners';
 
 export const Bonds = (): JSX.Element => {
-  const selectedSigner: ReefSigner | undefined | null = hooks.useObservableState(appState.selectedSigner$);
-  const network: Network | undefined = hooks.useObservableState(appState.currentNetwork$);
+  const { selectedSigner, network } = useContext(ReefSigners);
 
   return (
     <div className="bonds-page">

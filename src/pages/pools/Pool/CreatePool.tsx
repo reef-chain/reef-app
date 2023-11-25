@@ -1,11 +1,10 @@
 import {
-  appState,
   Components,
-  graphql,
   hooks,
   store,
   Token,
-} from '@reef-defi/react-lib';
+} from '@reef-chain/react-lib';
+import axios from 'axios';
 import React, { useContext, useReducer, useState } from 'react';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
@@ -13,6 +12,9 @@ import { notify } from '../../../utils/utils';
 import '../../../common/overlay-swap.css';
 import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
+import ReefSigners from '../../../context/ReefSigners';
+import { DexNetwork, selectedNetworkDex$ } from '../../../state/networkDex';
+import RedirectingToPool from './RedirectingToPool';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
@@ -27,22 +29,16 @@ const CreatePool = ({
 }: Props): JSX.Element => {
   const [address1, setAddress1] = useState('0x');
   const [address2, setAddress2] = useState('0x');
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const [finalized, setFinalized] = useState(true);
 
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
 
-  const signer = hooks.useObservableState(
-    appState.selectedSigner$,
-  );
-  const network = hooks.useObservableState(
-    appState.currentNetwork$,
-  );
+  const signer = useContext(ReefSigners).selectedSigner;
 
-  const apolloDex = hooks.useObservableState(
-    graphql.apolloDexClientInstance$,
-  );
+  const network:DexNetwork|undefined = hooks.useObservableState(selectedNetworkDex$);
 
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,
@@ -56,7 +52,7 @@ const CreatePool = ({
     state: provideState,
     tokens,
     signer: signer || undefined,
-    dexClient: apolloDex,
+    httpClient: axios,
     tokenPrices,
   });
 
@@ -70,8 +66,7 @@ const CreatePool = ({
     updateTokenState: async () => {}, // eslint-disable-line
     onSuccess: () => setFinalized(false),
     onFinalized: () => {
-      setFinalized(true);
-      if (onClose) onClose();
+      setIsRedirecting(true);
     },
   });
 
@@ -97,6 +92,7 @@ const CreatePool = ({
     >
       <div className="uik-pool-actions pool-actions">
         {
+          // eslint-disable-next-line
           finalized
             ? (
               <Provide
@@ -113,8 +109,11 @@ const CreatePool = ({
                 confirmText={localizedStrings.create_pool}
               />
             )
-            : <Finalizing />
+            : isRedirecting ? (
+              <RedirectingToPool />
+            ) : <Finalizing />
         }
+
       </div>
     </OverlayAction>
   );

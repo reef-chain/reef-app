@@ -1,13 +1,17 @@
 import {
-  appState, Components, graphql, hooks, Network, ReefSigner, Settings, store, Token,
-} from '@reef-defi/react-lib';
+  Components, hooks, ReefSigner, Settings, store, Token,
+} from '@reef-chain/react-lib';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import axios from 'axios';
+import type { Network } from '../../state/networkDex';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, SPECIFIED_SWAP_URL, UrlAddressParams } from '../../urls';
 import { notify } from '../../utils/utils';
+import ReefSigners from '../../context/ReefSigners';
 import { EventType, magicSquareAction } from '../../utils/magicsquareService';
+import { selectedNetworkDex$ } from '../../state/networkDex';
 
 const { SwapComponent } = Components;
 
@@ -17,9 +21,8 @@ const Swap = (): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
   const { address1, address2 } = useParams<UrlAddressParams>();
 
-  const network: Network|undefined = hooks.useObservableState(appState.currentNetwork$);
-  const signer: ReefSigner|undefined | null = hooks.useObservableState(appState.selectedSigner$);
-  const apolloDex = hooks.useObservableState(graphql.apolloDexClientInstance$);
+  const network: Network|undefined = hooks.useObservableState(selectedNetworkDex$);
+  const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
 
   const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);
   // hook manages all necessary swap updates
@@ -27,7 +30,7 @@ const Swap = (): JSX.Element => {
     address1,
     address2,
     dispatch,
-    dexClient: apolloDex,
+    httpClient: axios,
     state,
     tokens,
     tokenPrices,
