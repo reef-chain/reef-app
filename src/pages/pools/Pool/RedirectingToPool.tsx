@@ -1,24 +1,29 @@
 import { hooks } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { network } from '@reef-chain/util-lib';
 import { useHistory } from 'react-router-dom';
+import PoolContext from '../../../context/PoolContext';
 import './redirecting.css';
 
-interface Props{
-    onClose:(()=>void)|undefined;
-}
-
-function RedirectingToPool({ onClose }:Props):JSX.Element {
+function RedirectingToPool():JSX.Element {
   const contractEvents = hooks.useObservableState(network.getLatestBlockContractEvents$()) as []|undefined;
+  const [poolAddress, setPoolAddress] = useState<string|undefined>();
+  const pools = useContext(PoolContext);
 
   const history = useHistory();
 
-  if (contractEvents && contractEvents.length) {
-    if (contractEvents.length >= 3) {
-      const poolAddress = contractEvents[contractEvents.length - 1];
+  if (poolAddress) {
+    const poolAddresses = pools.map((p) => p.address);
+    if (poolAddresses.includes(poolAddress)) {
       history.push(`/chart/${poolAddress}/trade`);
-      if (onClose)onClose();
+    }
+  }
+
+  if (!poolAddress && contractEvents && contractEvents.length) {
+    if (contractEvents.length >= 3) {
+      const _poolAddress = contractEvents[contractEvents.length - 1];
+      setPoolAddress(_poolAddress);
     }
   }
 
