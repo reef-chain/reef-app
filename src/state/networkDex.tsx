@@ -1,13 +1,8 @@
 import { Observable, map, shareReplay } from 'rxjs';
 import { reefState, network } from '@reef-chain/util-lib';
-import { Bond, Network as UtilLibNetwork } from '@reef-chain/util-lib/dist/network';
+import { Network as ReactNetwork } from '@reef-chain/react-lib';
 
-export interface Network extends UtilLibNetwork{
-  factoryAddress:string;
-  routerAddress:string;
-  graphqlDexsUrl:string;
-  bond:Bond[];
-}
+export type Network = ReactNetwork;
 
 const dexConfig = {
   mainnet: {
