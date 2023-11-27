@@ -22,6 +22,7 @@ function RedirectingToPool():JSX.Element {
 
   if (!poolAddress && contractEvents && contractEvents.length) {
     if (contractEvents.length >= 3) {
+      // TODO how do we know it's the right pool address?
       const _poolAddress = contractEvents[contractEvents.length - 1];
       setPoolAddress(_poolAddress);
     }

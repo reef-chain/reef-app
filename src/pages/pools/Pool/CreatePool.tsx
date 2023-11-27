@@ -1,8 +1,5 @@
 import {
-  Components,
-  hooks,
-  store,
-  Token,
+  Components, hooks, store, Token,
 } from '@reef-chain/react-lib';
 import axios from 'axios';
 import React, { useContext, useReducer, useState } from 'react';
@@ -13,7 +10,7 @@ import '../../../common/overlay-swap.css';
 import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
 import ReefSigners from '../../../context/ReefSigners';
-import { DexNetwork, selectedNetworkDex$ } from '../../../state/networkDex';
+import { DexNetwork, useNetworkDex } from '../../../state/networkDex';
 import RedirectingToPool from './RedirectingToPool';
 
 const { Provide, OverlayAction, Finalizing } = Components;
@@ -36,9 +33,9 @@ const CreatePool = ({
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
 
-  const signer = useContext(ReefSigners).selectedSigner;
+  const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:DexNetwork|undefined = hooks.useObservableState(selectedNetworkDex$);
+  const network:DexNetwork|undefined = useNetworkDex(nw);
 
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,

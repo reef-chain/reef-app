@@ -1,6 +1,7 @@
 import { Observable, map, shareReplay } from 'rxjs';
-import { reefState, network } from '@reef-chain/util-lib';
+import { network, reefState } from '@reef-chain/util-lib';
 import { Network as ReactNetwork } from '@reef-chain/react-lib';
+import { useEffect, useState } from 'react';
 
 export type Network = ReactNetwork;
 
@@ -28,7 +29,16 @@ const bondsConfig = {
 
 export type DexNetwork = Network;
 
-export const selectedNetworkDex$: Observable<DexNetwork> = reefState.selectedNetwork$.pipe(
-  map((nw: Network) => ({ ...nw, ...dexConfig[nw.name], ...bondsConfig[nw.name] })),
-  shareReplay(1),
-);
+export const useNetworkDex = (nw: Network) => {
+  const [dexNetwork, setDexNetwork] = useState<DexNetwork>();
+
+  useEffect(() => {
+    setDexNetwork({
+      ...nw,
+      ...dexConfig[nw.name],
+      ...bondsConfig[nw.name],
+    });
+  }, [nw]);
+
+  return dexNetwork;
+};
