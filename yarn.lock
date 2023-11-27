@@ -3922,10 +3922,10 @@
     blakejs "~1.1.0"
     ethers "~5.5.0"
 
-"@reef-chain/react-lib@^2.2.0":
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/@reef-chain/react-lib/-/react-lib-2.2.0.tgz#93cdeac734f234da1bb85435ab38bacf2e301831"
-  integrity sha512-IwfoVEMi1h4g8uNmTcYeI0D83kiCVf3ZSJW5qAAUhpzBRWYddkrJU9gngjoVCkUwQnyGOh7nXPdGYDoLxjV+Bw==
+"@reef-chain/react-lib@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@reef-chain/react-lib/-/react-lib-2.2.1.tgz#b8b1a04b05e088971b0371da4c8c8e063c01719a"
+  integrity sha512-8qvDY3xPBbtLz2AvKfUGxE94yeLCzo2k0kwbjGqzuUf/AklDmpgpUrHWMumCIk9mjIJQpSA3ldGFEVRNPn3FWQ==
   dependencies:
     "@fortawesome/free-regular-svg-icons" "^6.1.0"
     "@fortawesome/free-solid-svg-icons" "^6.1.0"
@@ -6663,9 +6663,9 @@ caniuse-api@^3.0.0:
     lodash.uniq "^4.5.0"
 
 caniuse-lite@^1.0.0, caniuse-lite@^1.0.30001538, caniuse-lite@^1.0.30001541:
-  version "1.0.30001564"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001564.tgz#eaa8bbc58c0cbccdcb7b41186df39dd2ba591889"
-  integrity sha512-DqAOf+rhof+6GVx1y+xzbFPeOumfQnhYzVnZD6LAXijR77yPtm9mfOcqOnT3mpnJiZVT+kwLAFnRlZcIz+c6bg==
+  version "1.0.30001565"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001565.tgz#a528b253c8a2d95d2b415e11d8b9942acc100c4f"
+  integrity sha512-xrE//a3O7TP0vaJ8ikzkD2c2NgcVUvsEe2IvFTntV4Yd1Z9FVzh+gW+enX96L0psrbaFMcVcH2l90xNuGDWc8w==
 
 canvas-renderer@~2.2.0:
   version "2.2.1"
@@ -13042,9 +13042,9 @@ node-gyp-build@^4.3.0, node-gyp-build@^4.5.0:
   integrity sha512-wTSrZ+8lsRRa3I3H8Xr65dLWSgCvY2l4AOnaeKdPA9TB/WYMPaTcrzf3rXvFoVvjKNVnu0CcWSx54qq9GKRUYg==
 
 node-hid@^2.1.2:
-  version "2.1.2"
-  resolved "https://registry.yarnpkg.com/node-hid/-/node-hid-2.1.2.tgz#3145fa86ed4336a402a71e9f372c54213b88797c"
-  integrity sha512-qhCyQqrPpP93F/6Wc/xUR7L8mAJW0Z6R7HMQV8jCHHksAxNDe/4z4Un/H9CpLOT+5K39OPyt9tIQlavxWES3lg==
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/node-hid/-/node-hid-2.2.0.tgz#33e039e7530a7bfe2b7a25f0a2f9496af8b02236"
+  integrity sha512-vj48zh9j555DZzUhMc8tk/qw6xPFrDyPBH1ST1Z/hWaA/juBJw7IuSxPeOgpzNFNU36mGYj+THioRMt1xOdm/g==
   dependencies:
     bindings "^1.5.0"
     node-addon-api "^3.0.2"
