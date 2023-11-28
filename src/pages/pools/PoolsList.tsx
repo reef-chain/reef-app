@@ -14,9 +14,10 @@ import ReefSigners from '../../context/ReefSigners';
 
 export interface Props {
   tokens: Token[]
+  onClose?:() => void;
 }
 
-const PoolsList = ({ tokens }: Props): JSX.Element => {
+const PoolsList = ({ tokens,onClose }: Props): JSX.Element => {
   const pageCount = 10;
   const [currentPage, changePage] = useState(1);
   const [changedPage, setChangedPage] = useState(false);
@@ -38,11 +39,15 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
   const openPool = (
     address: string,
     action: 'trade' | 'stake' | 'unstake' = 'trade',
-  ): void => history.push(
+  ): void => {
+    
+    history.push(
     POOL_CHART_URL
       .replace(':address', address)
       .replace(':action', action),
-  );
+  )
+  if(onClose)onClose();
+};
 
   interface TableToken {
     name?: string

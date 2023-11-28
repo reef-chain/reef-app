@@ -22,7 +22,7 @@ const PoolSelect = ({ isOpen, onClose }: Props): JSX.Element => {
       isOpen={isOpen}
       onClose={onClose}
     >
-      <PoolsList tokens={tokens} />
+      <PoolsList tokens={tokens} onClose={onClose} />
     </OverlayAction>
   );
 };
