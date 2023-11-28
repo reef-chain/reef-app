@@ -1,12 +1,12 @@
 import {
-  Components,
-  hooks, store, Token,
+  Components, hooks, store, Token,
 } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import type { Network } from '../../../state/networkDex';
+import { useNetworkDex } from '../../../state/networkDex';
 import PoolContext from '../../../context/PoolContext';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
@@ -15,7 +15,6 @@ import { MAX_SLIPPAGE, notify } from '../../../utils/utils';
 import './actions.css';
 import { EventType, magicSquareAction } from '../../../utils/magicsquareService';
 import ReefSigners from '../../../context/ReefSigners';
-import { selectedNetworkDex$ } from '../../../state/networkDex';
 
 const {
   Trade, Provide, Finalizing, Withdraw,
@@ -35,10 +34,8 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const [finalized, setFinalized] = useState(true);
   const pools = useContext(PoolContext);
 
-  const signer = useContext(ReefSigners).selectedSigner;
-  const network:Network|undefined = hooks.useObservableState(
-    selectedNetworkDex$,
-  );
+  const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
+  const network: Network = useNetworkDex(nw);
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
@@ -67,7 +64,9 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     updateTokenState: async () => {}, // eslint-disable-line
     onSuccess: () => {
       setFinalized(false);
-      if (signer)magicSquareAction(network!.name, EventType.SWAP, signer.address);
+      if (signer) {
+        magicSquareAction(network!.name, EventType.SWAP, signer.address).then();
+      }
     },
     onFinalized: () => setFinalized(true),
   });

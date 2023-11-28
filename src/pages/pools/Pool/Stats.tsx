@@ -101,11 +101,14 @@ const Stats = ({
       <div className="pool-stats__wrapper">
         <div className="pool-stats__main">
           <Uik.Container flow="spaceBetween">
-            <button
+            <div
               className="pool-stats__pool-select"
-              type="button"
-              onClick={() => setSelectOpen(true)}
             >
+              {/* <button
+                  className="pool-stats__pool-select"
+                  type="button"
+                  onClick={() => setSelectOpen(true)}
+              > */}
               <div className="pool-stats__pool-select-pair">
                 <img
                   src={data.firstToken.icon}
@@ -125,7 +128,7 @@ const Stats = ({
                 {' '}
                 { data.secondToken.symbol }
               </span>
-            </button>
+            </div>
 
             <Uik.Button
               className="pool-stats__transactions-btn"

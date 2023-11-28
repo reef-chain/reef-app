@@ -1,5 +1,5 @@
 import {
-  Components, hooks, Pool, PoolWithReserves, ReefSigner, store, Token,
+  Components, hooks, Pool, PoolWithReserves, store, Token,
 } from '@reef-chain/react-lib';
 import React, {
   useContext, useEffect, useReducer, useState,
@@ -7,6 +7,7 @@ import React, {
 import { BigNumber } from 'ethers';
 import axios from 'axios';
 import type { Network } from '../state/networkDex';
+import { useNetworkDex } from '../state/networkDex';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
 import TokenPricesContext from '../context/TokenPricesContext';
@@ -14,7 +15,6 @@ import { MAX_SLIPPAGE, notify } from '../utils/utils';
 import './overlay-swap.css';
 import ReefSigners from '../context/ReefSigners';
 import { EventType, magicSquareAction } from '../utils/magicsquareService';
-import { selectedNetworkDex$ } from '../state/networkDex';
 
 const { Trade, OverlayAction, Finalizing } = Components;
 const REEF_ADDRESS = '0x0000000000000000000000000000000001000000';
@@ -65,8 +65,8 @@ const OverlaySwap = ({
   const tokenPrices = useContext(TokenPricesContext);
   const pools = useContext(PoolContext);
 
-  const network:Network = hooks.useObservableState(selectedNetworkDex$);
-  const signer: ReefSigner|undefined|null = useContext(ReefSigners).selectedSigner;
+  const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
+  const network:Network = useNetworkDex(nw);
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(

@@ -1,19 +1,17 @@
-import {
-  hooks, ReefSigner,
-} from '@reef-chain/react-lib';
+import { hooks } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';
 import axios from 'axios';
 import type { Network } from '../../../state/networkDex';
+import { useNetworkDex } from '../../../state/networkDex';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import Actions, { ActionTabs } from './Actions';
 import Chart, { TimeData, Timeframe } from './Chart';
 import './pool.css';
 import Stats from './Stats';
 import ReefSigners from '../../../context/ReefSigners';
-import { selectedNetworkDex$ } from '../../../state/networkDex';
 
 interface Params {
   address: string;
@@ -48,9 +46,9 @@ const Pool = (): JSX.Element => {
   const { address, action } = useParams<Params>();
   const tokenPrices = useContext(TokenPricesContext);
 
-  const signer: ReefSigner | undefined | null = useContext(ReefSigners).selectedSigner;
+  const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:Network = hooks.useObservableState(selectedNetworkDex$);
+  const network:Network = useNetworkDex(nw);
 
   const [poolInfo] = hooks.usePoolInfo(
     address,
