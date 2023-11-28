@@ -75,7 +75,6 @@ const Pool = (): JSX.Element => {
     timeData: timeframeToTimeData(timeframe),
   }, axios);
 
-
   if (!poolInfo) {
     return <Uik.Loading />;
   }
