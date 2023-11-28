@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Uik from '@reef-chain/ui-kit';
 import './chart.css';
 import LWChart, { CandlestickData, HistogramData } from './LWChart';
@@ -102,7 +102,7 @@ const Chart = ({
           !!getData.length
           && (
           <LWChart
-            key={`${tab}-${timeframe}`}
+          key={`${tab}-${timeframe}-${tokens.firstToken.name}-${tokens.secondToken.name}`}
             // @ts-ignore-next-line
             type={chartTypes[tab]}
             data={getData}
