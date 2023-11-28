@@ -1,9 +1,6 @@
-import { Observable, map, shareReplay } from 'rxjs';
-import { network, reefState } from '@reef-chain/util-lib';
-import { Network as ReactNetwork } from '@reef-chain/react-lib';
+import { network } from '@reef-chain/util-lib';
 import { useEffect, useState } from 'react';
-
-export type Network = ReactNetwork;
+import {Bond, Network as UtilLibNetwork } from '@reef-chain/util-lib/dist/network';
 
 const dexConfig = {
   mainnet: {
@@ -27,10 +24,17 @@ const bondsConfig = {
   },
 };
 
-export type DexNetwork = Network;
 
-export const useNetworkDex = (nw: Network) => {
-  const [dexNetwork, setDexNetwork] = useState<DexNetwork>();
+interface ExtendedNetwork extends UtilLibNetwork{
+  factoryAddress:string;
+  routerAddress:string;
+  graphqlDexsUrl:string;
+  bonds:Bond[];
+}
+export type Network = ExtendedNetwork;
+
+export const useNetworkDex = (nw: UtilLibNetwork):Network => {
+  const [dexNetwork, setDexNetwork] = useState<Network>();
 
   useEffect(() => {
     setDexNetwork({

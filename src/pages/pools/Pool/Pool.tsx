@@ -48,7 +48,7 @@ const Pool = (): JSX.Element => {
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:Network = useNetworkDex(nw);
+  const network:Network|undefined = useNetworkDex(nw);
 
   const [poolInfo] = hooks.usePoolInfo(
     address,
@@ -83,7 +83,7 @@ const Pool = (): JSX.Element => {
         data={poolInfo}
         price1={tokenPrice1}
         price2={tokenPrice2}
-        reefscanUrl={network.reefscanUrl}
+        reefscanUrl={network!.reefscanUrl}
       />
 
       <div className="pool__content">

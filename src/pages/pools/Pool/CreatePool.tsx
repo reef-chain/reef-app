@@ -10,7 +10,7 @@ import '../../../common/overlay-swap.css';
 import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
 import ReefSigners from '../../../context/ReefSigners';
-import { DexNetwork, useNetworkDex } from '../../../state/networkDex';
+import { Network, useNetworkDex } from '../../../state/networkDex';
 import RedirectingToPool from './RedirectingToPool';
 
 const { Provide, OverlayAction, Finalizing } = Components;
@@ -35,7 +35,7 @@ const CreatePool = ({
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:DexNetwork|undefined = useNetworkDex(nw);
+  const network:Network|undefined = useNetworkDex(nw);
 
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,

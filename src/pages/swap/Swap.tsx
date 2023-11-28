@@ -4,7 +4,7 @@ import {
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { DexNetwork, useNetworkDex } from '../../state/networkDex';
+import { Network, useNetworkDex } from '../../state/networkDex';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, SPECIFIED_SWAP_URL, UrlAddressParams } from '../../urls';
@@ -21,7 +21,7 @@ const Swap = (): JSX.Element => {
   const { address1, address2 } = useParams<UrlAddressParams>();
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-  const network:DexNetwork|undefined = useNetworkDex(nw);
+  const network:Network|undefined = useNetworkDex(nw);
 
   const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);
   // hook manages all necessary swap updates
