@@ -9,7 +9,7 @@
     "@polkadot/extension-dapp": "^0.40.3",
     "@popperjs/core": "^2.11.5",
     "@reef-chain/react-lib": "2.0.3",
-    "@reef-chain/evm-provider": "^1.0.15",
+    "@reef-chain/evm-provider": "3.0.0-MR.0",
     "@reef-chain/ui-kit": "^1.1.5",
     "@reef-chain/util-lib": "^1.0.0-rc13",
     "@reef-defi/extension-dapp": "^1.0.14",
@@ -103,6 +103,7 @@
     "rxjs": "7.5.5",
     "react-localization": "1.0.0",
     "@types/react": "17.0.2",
-    "@types/react-dom": "17.0.2"
+    "@types/react-dom": "17.0.2",
+    "@reef-chain/evm-provider": "3.0.0-MR.0"
   }
 }
