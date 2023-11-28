@@ -1,6 +1,6 @@
 import { network } from '@reef-chain/util-lib';
 import { useEffect, useState } from 'react';
-import {Bond, Network as UtilLibNetwork } from '@reef-chain/util-lib/dist/network';
+import { Bond, Network as UtilLibNetwork } from '@reef-chain/util-lib/dist/network';
 
 const dexConfig = {
   mainnet: {
@@ -23,7 +23,6 @@ const bondsConfig = {
     bonds: network.bonds.testnet,
   },
 };
-
 
 interface ExtendedNetwork extends UtilLibNetwork{
   factoryAddress:string;
