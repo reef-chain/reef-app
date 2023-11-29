@@ -47,7 +47,7 @@ const App = (): JSX.Element => {
   // @ts-ignore
   // @ts-ignore
   return (
-    loading
+    loading && !error
       ? (
         <div className="App w-100 h-100 d-flex justify-content-center align-items-middle">
           <Uik.Loading />
