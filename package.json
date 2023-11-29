@@ -104,6 +104,7 @@
     "react-localization": "1.0.0",
     "@types/react": "17.0.2",
     "@types/react-dom": "17.0.2",
-    "@reef-chain/evm-provider": "3.0.0-MR.0"
+    "@reef-chain/evm-provider": "3.0.0-MR.0",
+    "@reef-defi/evm-provider": "2.0.0-MR.0"
   }
 }
