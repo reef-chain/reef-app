@@ -67,7 +67,7 @@ const NoExtension = (): JSX.Element => (
           <span>{strings.download_for_chrome}</span>
         </a>
 
-        <a
+        {/* <a
           href="https://addons.mozilla.org/en-US/firefox/addon/reef-js-extension/"
           target="_blank"
           className="button"
@@ -89,7 +89,7 @@ const NoExtension = (): JSX.Element => (
             />
           </svg>
           <span>{strings.download_for_firefox}</span>
-        </a>
+        </a> */}
       </div>
     </main>
 
