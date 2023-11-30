@@ -36,7 +36,7 @@ import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
 
 const ContentRouter = (): JSX.Element => {
-  const { reefState } = useContext(ReefSigners);
+  const { reefState ,selectedSigner} = useContext(ReefSigners);
 
   // const [tokenPrices, setTokenPrices] = useState({} as AddressToNumber<number>);
   // Its not appropriate to have token state in this component, but the problem was apollo client.
@@ -60,10 +60,18 @@ const tokenPrices = useMemo(
   );
 */
 
+const getLoading = ():boolean=>{
+  if(tokens==null){
+    if(selectedSigner?.balance._hex=="0x00")return false;
+    return true;
+  }
+  return false;
+}
+
   return (
     <div className="content">
       {(
-        <TokenContext.Provider value={{ tokens: tokens || [], loading: tokens == null }}>
+        <TokenContext.Provider value={{ tokens: tokens || [], loading: getLoading()}}>
           <NftContext.Provider value={{ nfts, loading: nftsLoading }}>
             <PoolContext.Provider value={pools}>
               <TokenPrices.Provider value={tokenPrices as AddressToNumber<number>}>
