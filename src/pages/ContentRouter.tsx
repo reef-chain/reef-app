@@ -80,7 +80,7 @@ const tokenPrices = useMemo(
                   <Route exact path={CREATE_ERC20_TOKEN_URL} component={Creator} />
                   <Route exact path={BONDS_URL} component={Bonds} />
                   <Route path={BIND_URL} component={Bind} />
-                  <Route path={BUY_URL} component={Buy} />
+                  <Route path={BUY_URL} component={Onramp} />
                   <Route path={ONRAMP_URL} component={Onramp} />
                   <Route path="/" render={() => (<Redirect to={DASHBOARD_URL} />)} />
                 </Switch>
