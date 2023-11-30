@@ -1,0 +1,1383 @@
+{
+  "version": "6.0",
+  "nxVersion": "17.1.3",
+  "deps": {
+    "@fortawesome/free-regular-svg-icons": "^6.1.0",
+    "@fortawesome/free-solid-svg-icons": "^6.1.0",
+    "@polkadot/extension-dapp": "^0.40.3",
+    "@popperjs/core": "^2.11.5",
+    "@reef-chain/evm-provider": "3.0.0-MR.0",
+    "@reef-chain/react-lib": "2.0.3",
+    "@reef-chain/ui-kit": "^1.1.5",
+    "@reef-chain/util-lib": "^1.0.0-rc13",
+    "@reef-defi/extension-dapp": "^1.0.14",
+    "@swc/helpers": "~0.5.2",
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/user-event": "^12.1.10",
+    "@types/jest": "^26.0.15",
+    "axios": "^0.21.4",
+    "bignumber.js": "^9.0.2",
+    "boostrap": "^2.0.0",
+    "crypto-browserify": "^3.12.0",
+    "d3-dsv": "^3.0.1",
+    "date-fns": "^2.28.0",
+    "encoding": "^0.1.13",
+    "graphql": "^16.2.0",
+    "lightweight-charts": "^4.0.1",
+    "process": "^0.11.10",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-localization": "^1.0.0",
+    "react-router-dom": "^5.3.0",
+    "react-scripts": "^5.0.1",
+    "react-toastify": "^8.2.0",
+    "react-transition-group": "^4.4.2",
+    "rxjs": "^7.5.4",
+    "stream-browserify": "^3.0.0",
+    "subscriptions-transport-ws": "^0.11.0",
+    "web-vitals": "^3.5.0",
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-react": "^7.16.7",
+    "@nx/eslint": "17.1.3",
+    "@nx/eslint-plugin": "17.1.3",
+    "@nx/js": "17.1.3",
+    "@nx/react": "17.1.3",
+    "@nx/vite": "17.1.3",
+    "@nx/workspace": "17.1.3",
+    "@swc-node/register": "~1.6.7",
+    "@swc/cli": "~0.1.62",
+    "@swc/core": "~1.3.85",
+    "@testing-library/react": "14.0.0",
+    "@types/d3-dsv": "^3.0.0",
+    "@types/node": "18.14.2",
+    "@types/react": "18.2.33",
+    "@types/react-dom": "18.2.14",
+    "@types/react-router-dom": "^5.1.8",
+    "@types/react-transition-group": "^4.4.3",
+    "@typescript-eslint/eslint-plugin": "^6.9.1",
+    "@typescript-eslint/parser": "^6.9.1",
+    "@vitejs/plugin-react": "^4.2.0",
+    "@vitest/coverage-v8": "~0.34.6",
+    "@vitest/ui": "~0.34.6",
+    "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
+    "eslint": "~8.46.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-react-app": "^7.0.1",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "2.27.5",
+    "eslint-plugin-jsx-a11y": "6.7.1",
+    "eslint-plugin-react": "7.32.2",
+    "eslint-plugin-react-hooks": "4.6.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.5.0",
+    "jest-watch-typeahead": "^2.2.2",
+    "jsdom": "~22.1.0",
+    "json-loader": "^0.5.7",
+    "nx": "17.1.3",
+    "prettier": "^2.6.2",
+    "react-icons": "^4.2.0",
+    "style-loader": "^3.3.1",
+    "ts-loader": "^9.2.8",
+    "typescript": "~5.2.2",
+    "url-loader": "^4.1.1",
+    "vite": "^5.0.4",
+    "vitest": "^0.34.6",
+    "webpack": "^5.72.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.8.1",
+    "webpack-node-externals": "^3.0.0"
+  },
+  "pathMappings": {},
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "nonProjectFiles": [],
+    "projectFileMap": {
+      "reef-app": [
+        {
+          "file": ".babelrc",
+          "hash": "5990944356623125187"
+        },
+        {
+          "file": ".dockerignore",
+          "hash": "460253987609063513"
+        },
+        {
+          "file": ".editorconfig",
+          "hash": "5443105041930014821"
+        },
+        {
+          "file": ".eslintignore",
+          "hash": "7663861978715868291"
+        },
+        {
+          "file": ".eslintrc.json",
+          "hash": "17866138117546000433"
+        },
+        {
+          "file": ".github/workflows/main.yml",
+          "hash": "1009620430885272900"
+        },
+        {
+          "file": ".gitignore",
+          "hash": "2605354412882507050"
+        },
+        {
+          "file": ".nx/cache/d/daemon.log",
+          "hash": "15392900806617738617"
+        },
+        {
+          "file": ".nx/cache/d/server-process.json",
+          "hash": "9457476422425713302"
+        },
+        {
+          "file": ".nx/cache/file-map.json",
+          "hash": "4420524474957701379"
+        },
+        {
+          "file": ".nx/cache/lockfile.hash",
+          "hash": "17745717652137239092"
+        },
+        {
+          "file": ".nx/cache/parsed-lock-file.json",
+          "hash": "17024171172646777618"
+        },
+        {
+          "file": ".nx/cache/project-graph.json",
+          "hash": "17430088483502345150"
+        },
+        {
+          "file": ".prettierignore",
+          "hash": "16448050467312557263"
+        },
+        {
+          "file": ".prettierrc",
+          "hash": "16267754514737964994"
+        },
+        {
+          "file": ".vscode/extensions.json",
+          "hash": "16884713733442577066"
+        },
+        {
+          "file": ".yarn/releases/yarn-1.22.21.cjs",
+          "hash": "3429181662140821364",
+          "deps": [
+            "npm:path",
+            "npm:util",
+            "npm:fs",
+            "npm:crypto",
+            "npm:stream",
+            "npm:url",
+            "npm:assert",
+            "npm:os",
+            "npm:buffer",
+            "npm:events",
+            "npm:http",
+            "npm:tty",
+            "npm:net",
+            "npm:https",
+            "npm:querystring",
+            "npm:readline",
+            "npm:zlib",
+            "npm:child_process",
+            "npm:punycode",
+            "npm:string_decoder",
+            "npm:constants",
+            "npm:tls",
+            "npm:dns",
+            "npm:domain",
+            [
+              "npm:util",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": ".yarnrc",
+          "hash": "2548578144436229140"
+        },
+        {
+          "file": "Dockerfile",
+          "hash": "324369664876171090"
+        },
+        {
+          "file": "Makefile",
+          "hash": "14807954513034497023"
+        },
+        {
+          "file": "README.md",
+          "hash": "13357655295555300244"
+        },
+        {
+          "file": "docker/nginx.conf",
+          "hash": "14213518690666249602"
+        },
+        {
+          "file": "index.html",
+          "hash": "15470617630181896747"
+        },
+        {
+          "file": "nx.json",
+          "hash": "10190822721368877921"
+        },
+        {
+          "file": "package.json",
+          "hash": "12545608833898471717",
+          "deps": [
+            "npm:@fortawesome/free-regular-svg-icons",
+            "npm:@fortawesome/free-solid-svg-icons",
+            "npm:@polkadot/extension-dapp",
+            "npm:@popperjs/core",
+            "npm:@reef-chain/evm-provider",
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit",
+            "npm:@reef-chain/util-lib",
+            "npm:@reef-defi/extension-dapp",
+            "npm:@swc/helpers",
+            "npm:@testing-library/jest-dom",
+            "npm:@testing-library/user-event",
+            "npm:@types/jest",
+            "npm:axios",
+            "npm:bignumber.js",
+            "npm:boostrap",
+            "npm:crypto-browserify",
+            "npm:d3-dsv",
+            "npm:date-fns",
+            "npm:encoding",
+            "npm:graphql",
+            "npm:lightweight-charts",
+            "npm:process",
+            "npm:react",
+            "npm:react-dom",
+            "npm:react-localization",
+            "npm:react-router-dom",
+            "npm:react-scripts",
+            "npm:react-toastify",
+            "npm:react-transition-group",
+            "npm:rxjs",
+            "npm:stream-browserify",
+            "npm:subscriptions-transport-ws",
+            "npm:web-vitals",
+            "npm:@babel/core",
+            "npm:@babel/preset-env",
+            "npm:@babel/preset-react",
+            "npm:@nx/eslint",
+            "npm:@nx/eslint-plugin",
+            "npm:@nx/js",
+            "npm:@nx/react",
+            "npm:@nx/vite",
+            "npm:@nx/workspace",
+            "npm:@swc-node/register",
+            "npm:@swc/cli",
+            "npm:@swc/core",
+            "npm:@testing-library/react",
+            "npm:@types/d3-dsv",
+            "npm:@types/node",
+            "npm:@types/react",
+            "npm:@types/react-dom",
+            "npm:@types/react-router-dom",
+            "npm:@types/react-transition-group",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:@vitejs/plugin-react",
+            "npm:@vitest/coverage-v8",
+            "npm:@vitest/ui",
+            "npm:babel-loader",
+            "npm:css-loader",
+            "npm:eslint",
+            "npm:eslint-config-airbnb",
+            "npm:eslint-config-prettier",
+            "npm:eslint-config-react-app",
+            "npm:eslint-import-resolver-typescript",
+            "npm:eslint-plugin-import",
+            "npm:eslint-plugin-jsx-a11y",
+            "npm:eslint-plugin-react",
+            "npm:eslint-plugin-react-hooks",
+            "npm:file-loader",
+            "npm:html-webpack-plugin",
+            "npm:jest-watch-typeahead",
+            "npm:jsdom",
+            "npm:json-loader",
+            "npm:nx",
+            "npm:prettier",
+            "npm:react-icons",
+            "npm:style-loader",
+            "npm:ts-loader",
+            "npm:typescript",
+            "npm:url-loader",
+            "npm:vite",
+            "npm:vitest",
+            "npm:webpack",
+            "npm:webpack-cli",
+            "npm:webpack-dev-server",
+            "npm:webpack-node-externals"
+          ]
+        },
+        {
+          "file": "project.json",
+          "hash": "4251877666616595878"
+        },
+        {
+          "file": "public/favicon-32x32.png",
+          "hash": "3683309008166291070"
+        },
+        {
+          "file": "public/favicon.ico",
+          "hash": "2846584831171773041"
+        },
+        {
+          "file": "public/img/1.png",
+          "hash": "1833502092584891713"
+        },
+        {
+          "file": "public/img/2.png",
+          "hash": "1066812250425601573"
+        },
+        {
+          "file": "public/img/3.png",
+          "hash": "15463920058394132277"
+        },
+        {
+          "file": "public/img/4.png",
+          "hash": "9713111427574356187"
+        },
+        {
+          "file": "public/img/5.png",
+          "hash": "272623348210589444"
+        },
+        {
+          "file": "public/img/6.png",
+          "hash": "15956583878489072892"
+        },
+        {
+          "file": "public/img/7.png",
+          "hash": "7273084278835978503"
+        },
+        {
+          "file": "public/img/8.png",
+          "hash": "12956427978431244177"
+        },
+        {
+          "file": "public/img/9.png",
+          "hash": "10976378672216038432"
+        },
+        {
+          "file": "public/img/reef.png",
+          "hash": "3169702130172323444"
+        },
+        {
+          "file": "public/img/reef.svg",
+          "hash": "5395197747030075240"
+        },
+        {
+          "file": "public/img/reef_logo.png",
+          "hash": "6498804647199694389"
+        },
+        {
+          "file": "public/img/token-icons/token-icon-0.png",
+          "hash": "7134659067106456648"
+        },
+        {
+          "file": "public/img/token-icons/token-icon-1.png",
+          "hash": "16554591458696694070"
+        },
+        {
+          "file": "public/img/token-icons/token-icon-2.png",
+          "hash": "14206107764189562278"
+        },
+        {
+          "file": "public/img/token-icons/token-icon-3.png",
+          "hash": "12169900084225262447"
+        },
+        {
+          "file": "public/img/token-icons/token-icon-4.png",
+          "hash": "6646412100765481219"
+        },
+        {
+          "file": "public/img/token-icons/token-icon-5.png",
+          "hash": "2966618826716093866"
+        },
+        {
+          "file": "public/img/token-icons/token-icon-6.png",
+          "hash": "15496330470796221745"
+        },
+        {
+          "file": "public/img/token-icons/token-icon-7.png",
+          "hash": "4922409123063158337"
+        },
+        {
+          "file": "public/img/token-icons/token-icon-8.png",
+          "hash": "2966618826716093866"
+        },
+        {
+          "file": "public/img/token-icons/token-icon-9.png",
+          "hash": "1296738153439642631"
+        },
+        {
+          "file": "public/index-template.html",
+          "hash": "13619020136741869365"
+        },
+        {
+          "file": "public/index.html",
+          "hash": "6169803515930357007"
+        },
+        {
+          "file": "public/manifest.json",
+          "hash": "15392823290978255636"
+        },
+        {
+          "file": "public/robots.txt",
+          "hash": "2790380794362165217"
+        },
+        {
+          "file": "src/App.tsx",
+          "hash": "13912148707698823225",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:react-toastify",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/assets/index.css",
+          "hash": "770039268529064439"
+        },
+        {
+          "file": "src/assets/variables.css",
+          "hash": "12496060358828256696"
+        },
+        {
+          "file": "src/common/Bind/Bind.tsx",
+          "hash": "5746364812480048968",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/common/Bind/bind.css",
+          "hash": "3467140825229118211"
+        },
+        {
+          "file": "src/common/Footer.tsx",
+          "hash": "804182470939201126",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/common/Nav.css",
+          "hash": "11041873977559663230"
+        },
+        {
+          "file": "src/common/Nav.tsx",
+          "hash": "5273743174992369198",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/react-lib",
+            "npm:react-router-dom",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/common/NetworkSwitching.tsx",
+          "hash": "10644104745017160329",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/ui-kit",
+            "npm:react-transition-group",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "src/common/OverlayNFT.tsx",
+          "hash": "17092517636420566809",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react",
+            "npm:@reef-chain/ui-kit",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "src/common/OverlaySend.tsx",
+          "hash": "12853610833565035537",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/common/OverlaySendNft.tsx",
+          "hash": "3432102585701266096",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:@polkadot/react-identicon",
+            "npm:react",
+            "npm:@reef-chain/ui-kit",
+            "npm:ethers",
+            "npm:@reef-defi/evm-provider"
+          ]
+        },
+        {
+          "file": "src/common/OverlaySwap.tsx",
+          "hash": "10464097927284408166",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react",
+            "npm:ethers",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "src/common/Tabs.css",
+          "hash": "1797647359601406098"
+        },
+        {
+          "file": "src/common/Tabs.tsx",
+          "hash": "1174942919021779867",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/common/network-switching.css",
+          "hash": "7976629151717218975"
+        },
+        {
+          "file": "src/common/overlay-nft.css",
+          "hash": "10840941729280784907"
+        },
+        {
+          "file": "src/common/overlay-swap.css",
+          "hash": "14954359699854782862"
+        },
+        {
+          "file": "src/context/HideBalance.ts",
+          "hash": "18372215284442148121",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/context/NetworkSwitch.ts",
+          "hash": "13429658308892935305",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/context/NftContext.ts",
+          "hash": "7894978944579902317",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/react-lib"
+          ]
+        },
+        {
+          "file": "src/context/OptionContext.ts",
+          "hash": "16926180710946039713",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/context/PoolContext.ts",
+          "hash": "4338205304523198402",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/react-lib"
+          ]
+        },
+        {
+          "file": "src/context/ReefSigners.ts",
+          "hash": "1309948572501020341",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/util-lib",
+            "npm:@reef-chain/evm-provider"
+          ]
+        },
+        {
+          "file": "src/context/TokenContext.ts",
+          "hash": "1372144774730319749",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/context/TokenPricesContext.ts",
+          "hash": "17489691161751025329",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/environment.ts",
+          "hash": "13857914643013773735",
+          "deps": [
+            "npm:@reef-chain/react-lib"
+          ]
+        },
+        {
+          "file": "src/index.tsx",
+          "hash": "10222200220278461393",
+          "deps": [
+            "npm:react",
+            "npm:react-dom",
+            "npm:@reef-chain/react-lib",
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "src/l10n/l10n.tsx",
+          "hash": "13002326671808442805",
+          "deps": [
+            "npm:react-localization"
+          ]
+        },
+        {
+          "file": "src/pages/ContentRouter.tsx",
+          "hash": "5246552876665678996",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "src/pages/bind/Bind.tsx",
+          "hash": "6069907085865276204",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/pages/bonds/Bonds.tsx",
+          "hash": "2633548029660751953",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/pages/bonds/BondsComponent.tsx",
+          "hash": "112266268665445577",
+          "deps": [
+            "npm:@polkadot/api-derive",
+            "npm:@polkadot/util",
+            "npm:@reef-chain/evm-provider",
+            "npm:@reef-chain/react-lib",
+            "npm:bn.js",
+            "npm:date-fns",
+            "npm:ethers",
+            "npm:react",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/pages/bonds/bonds.css",
+          "hash": "8297163433206889920"
+        },
+        {
+          "file": "src/pages/bonds/utils/bond-contract.ts",
+          "hash": "15963648031209103526"
+        },
+        {
+          "file": "src/pages/bonds/utils/bonds.ts",
+          "hash": "5157169469135772279"
+        },
+        {
+          "file": "src/pages/buy/Buy.css",
+          "hash": "6989237574124474943"
+        },
+        {
+          "file": "src/pages/buy/Buy.tsx",
+          "hash": "16502367215935032114",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react",
+            "npm:@reef-chain/ui-kit",
+            "npm:@fortawesome/free-solid-svg-icons",
+            "npm:@fortawesome/react-fontawesome"
+          ]
+        },
+        {
+          "file": "src/pages/buy/api-access.ts",
+          "hash": "14383552541051996643",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:axios",
+            "npm:@reef-defi/extension-dapp"
+          ]
+        },
+        {
+          "file": "src/pages/buy/models.ts",
+          "hash": "3950963544946625552"
+        },
+        {
+          "file": "src/pages/creator/ConfirmToken.tsx",
+          "hash": "2904847541074516263",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/pages/creator/Creator.tsx",
+          "hash": "268112718215139710",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/pages/creator/CreatorComponent.tsx",
+          "hash": "9706920716240015678",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react",
+            "npm:@fortawesome/free-regular-svg-icons",
+            "npm:@fortawesome/free-solid-svg-icons",
+            "npm:ethers",
+            "npm:react-router-dom",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/pages/creator/IconUpload.tsx",
+          "hash": "16425881663151638358",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/ui-kit",
+            "npm:@fortawesome/free-regular-svg-icons"
+          ]
+        },
+        {
+          "file": "src/pages/creator/confirm-token.css",
+          "hash": "18327063281362983311"
+        },
+        {
+          "file": "src/pages/creator/creator.css",
+          "hash": "2404734191719514062"
+        },
+        {
+          "file": "src/pages/creator/icon-upload.css",
+          "hash": "14473940836223068326"
+        },
+        {
+          "file": "src/pages/creator/reef20DeployTokenData.ts",
+          "hash": "3074665419458811281"
+        },
+        {
+          "file": "src/pages/creator/tokensDeployData.ts",
+          "hash": "6794862468829170558",
+          "deps": [
+            "npm:ethers"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/ActionButtons.tsx",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "src/pages/dashboard/Activity/Activity.tsx",
+          "hash": "11001724068286781293",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit",
+            "npm:react",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/Activity/ActivityDetails.tsx",
+          "hash": "1842047292325039612",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react",
+            "npm:@reef-chain/ui-kit",
+            "npm:@fortawesome/free-solid-svg-icons",
+            "npm:date-fns"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/Activity/ActivityItem.tsx",
+          "hash": "928565064850537266",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit",
+            "npm:react",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/Activity/activity-details.css",
+          "hash": "10806247891245577320"
+        },
+        {
+          "file": "src/pages/dashboard/Activity/activity-item.css",
+          "hash": "6701673612170735887"
+        },
+        {
+          "file": "src/pages/dashboard/Activity/activity.css",
+          "hash": "14146919697915432666"
+        },
+        {
+          "file": "src/pages/dashboard/Balance.tsx",
+          "hash": "8828842810306034779",
+          "deps": [
+            "npm:@reef-chain/ui-kit",
+            "npm:react",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/BuyReefButton.tsx",
+          "hash": "684269724932363334",
+          "deps": [
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/Dashboard.css",
+          "hash": "7065477484695462656"
+        },
+        {
+          "file": "src/pages/dashboard/Dashboard.tsx",
+          "hash": "8944294492761823636",
+          "deps": [
+            "npm:@reef-chain/ui-kit",
+            "npm:bignumber.js",
+            "npm:react",
+            "npm:@reef-chain/react-lib"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/GetReefTestnetButton.tsx",
+          "hash": "12595952184976809607",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/NFT.tsx",
+          "hash": "10605129134128434716",
+          "deps": [
+            "npm:react",
+            "npm:ethers"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/Nfts.css",
+          "hash": "8418754482585390025"
+        },
+        {
+          "file": "src/pages/dashboard/Nfts.tsx",
+          "hash": "6382301156056461623",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/Rewards.tsx",
+          "hash": "14021176641802649082",
+          "deps": [
+            "npm:@reef-chain/ui-kit",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/SqwidButton/SqwidButton.tsx",
+          "hash": "2239148819445798139",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/SqwidButton/sqwid-button.css",
+          "hash": "11907376478387589908"
+        },
+        {
+          "file": "src/pages/dashboard/Staking.css",
+          "hash": "288935828457407744"
+        },
+        {
+          "file": "src/pages/dashboard/Staking.tsx",
+          "hash": "11831402689499807718",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/TokenBalances.tsx",
+          "hash": "8053277033187467127",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit",
+            "npm:react",
+            "npm:@fortawesome/free-solid-svg-icons",
+            "npm:react-router-dom",
+            "npm:bignumber.js"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/TokenCard.tsx",
+          "hash": "15651319456823646796",
+          "deps": [
+            "npm:@fortawesome/free-solid-svg-icons",
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit",
+            "npm:bignumber.js",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/TokenPill.css",
+          "hash": "8455307635457685786"
+        },
+        {
+          "file": "src/pages/dashboard/TokenPill.tsx",
+          "hash": "2552600179704364825",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:bignumber.js",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/pages/dashboard/buy-reef-button.css",
+          "hash": "5247515099490254274"
+        },
+        {
+          "file": "src/pages/dashboard/loading-animation.css",
+          "hash": "4813680337302152489"
+        },
+        {
+          "file": "src/pages/dashboard/token-card.css",
+          "hash": "7576231526715731148"
+        },
+        {
+          "file": "src/pages/error/Bubbles.tsx",
+          "hash": "15807768084120409160",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/pages/error/NoAccount.tsx",
+          "hash": "7759638682602002066",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/pages/error/NoExtension.tsx",
+          "hash": "17115757882544909110",
+          "deps": [
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/pages/error/css/bubbles.css",
+          "hash": "16420647084772725416"
+        },
+        {
+          "file": "src/pages/error/css/button.css",
+          "hash": "4579854729534463794"
+        },
+        {
+          "file": "src/pages/error/css/footer.css",
+          "hash": "8939208161791611623"
+        },
+        {
+          "file": "src/pages/error/css/header.css",
+          "hash": "9418581695495890927"
+        },
+        {
+          "file": "src/pages/error/css/images.css",
+          "hash": "11185072824472286476"
+        },
+        {
+          "file": "src/pages/error/css/index.css",
+          "hash": "2461804670399114264"
+        },
+        {
+          "file": "src/pages/error/css/main.css",
+          "hash": "1233452475720093842"
+        },
+        {
+          "file": "src/pages/error/css/variables.css",
+          "hash": "17585222666351525198"
+        },
+        {
+          "file": "src/pages/onramp/Onramp.tsx",
+          "hash": "5230968110855854561",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/pages/pools/AddLiquidity.tsx",
+          "hash": "15899267917465246541",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "src/pages/pools/MyPoolsList.tsx",
+          "hash": "4426708239527493848",
+          "deps": [
+            "npm:@fortawesome/free-solid-svg-icons",
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit",
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:bignumber.js",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "src/pages/pools/Pool/Actions.tsx",
+          "hash": "4640500798747628193",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit",
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "src/pages/pools/Pool/Chart.tsx",
+          "hash": "18334282202451937436",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/pages/pools/Pool/CreatePool.tsx",
+          "hash": "17041267706694516291",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:axios",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/pages/pools/Pool/LWChart.tsx",
+          "hash": "8745888589940864784",
+          "deps": [
+            "npm:react",
+            "npm:lightweight-charts"
+          ]
+        },
+        {
+          "file": "src/pages/pools/Pool/Pool.tsx",
+          "hash": "1930695639811622653",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit",
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:ethers",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "src/pages/pools/Pool/PoolSelect.tsx",
+          "hash": "3796524953968961045",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/react-lib"
+          ]
+        },
+        {
+          "file": "src/pages/pools/Pool/PoolTransactions.tsx",
+          "hash": "8244727252734121449",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit"
+          ]
+        },
+        {
+          "file": "src/pages/pools/Pool/Stats.tsx",
+          "hash": "16871537262615181931",
+          "deps": [
+            "npm:@reef-chain/ui-kit",
+            "npm:react",
+            "npm:@reef-chain/react-lib",
+            "npm:@fortawesome/free-solid-svg-icons",
+            "npm:react-router-dom"
+          ]
+        },
+        {
+          "file": "src/pages/pools/Pool/Transactions.tsx",
+          "hash": "7488773364601151259",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/ui-kit",
+            "npm:@reef-chain/react-lib",
+            "npm:@fortawesome/free-solid-svg-icons",
+            "npm:@polkadot/react-identicon",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "src/pages/pools/Pool/actions.css",
+          "hash": "3746130773207242911"
+        },
+        {
+          "file": "src/pages/pools/Pool/chart.css",
+          "hash": "7751492306167070206"
+        },
+        {
+          "file": "src/pages/pools/Pool/create-pool.css",
+          "hash": "4157160456007340351"
+        },
+        {
+          "file": "src/pages/pools/Pool/lw-chart.css",
+          "hash": "2509690665429945380"
+        },
+        {
+          "file": "src/pages/pools/Pool/pool-select.css",
+          "hash": "2637783205962399783"
+        },
+        {
+          "file": "src/pages/pools/Pool/pool-transactions.css",
+          "hash": "13188773558058916341"
+        },
+        {
+          "file": "src/pages/pools/Pool/pool.css",
+          "hash": "11224953765751822880"
+        },
+        {
+          "file": "src/pages/pools/Pool/stats.css",
+          "hash": "17545762447153006561"
+        },
+        {
+          "file": "src/pages/pools/Pool.css",
+          "hash": "13479839201983091516"
+        },
+        {
+          "file": "src/pages/pools/Pools.tsx",
+          "hash": "887621424244208911",
+          "deps": [
+            "npm:react",
+            "npm:bignumber.js",
+            "npm:@fortawesome/free-solid-svg-icons",
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "src/pages/pools/PoolsList.tsx",
+          "hash": "13566156227161891572",
+          "deps": [
+            "npm:@fortawesome/free-solid-svg-icons",
+            "npm:@reef-chain/react-lib",
+            "npm:@reef-chain/ui-kit",
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:bignumber.js",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "src/pages/pools/PoolsSearch.tsx",
+          "hash": "15358933639971693605",
+          "deps": [
+            "npm:react",
+            "npm:@reef-chain/ui-kit",
+            "npm:@fortawesome/free-solid-svg-icons"
+          ]
+        },
+        {
+          "file": "src/pages/pools/RemoveLiquidity.tsx",
+          "hash": "14041617391231773305",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "src/pages/pools/pools.css",
+          "hash": "16983437157760684283"
+        },
+        {
+          "file": "src/pages/swap/Swap.tsx",
+          "hash": "1072629367548889362",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react",
+            "npm:react-router-dom",
+            "npm:axios"
+          ]
+        },
+        {
+          "file": "src/pages/transfer/Transfer.tsx",
+          "hash": "9465745233751492693",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/react-app-env.d.ts",
+          "hash": "3195158367843515590"
+        },
+        {
+          "file": "src/reportWebVitals.ts",
+          "hash": "8494630127874557791",
+          "deps": [
+            "npm:web-vitals",
+            [
+              "npm:web-vitals",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "src/setupTests.ts",
+          "hash": "16903885983588411080",
+          "deps": [
+            "npm:@testing-library/jest-dom"
+          ]
+        },
+        {
+          "file": "src/state/networkDex.tsx",
+          "hash": "13111218920128760370",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:rxjs",
+            "npm:@reef-chain/util-lib"
+          ]
+        },
+        {
+          "file": "src/store/internalStore.ts",
+          "hash": "6688026089855282754"
+        },
+        {
+          "file": "src/urls/index.ts",
+          "hash": "6700431069893580563",
+          "deps": [
+            "npm:@reef-chain/react-lib"
+          ]
+        },
+        {
+          "file": "src/utils/contract.ts",
+          "hash": "3297549931123121791",
+          "deps": [
+            "npm:axios",
+            "npm:ethers"
+          ]
+        },
+        {
+          "file": "src/utils/displayBalance.ts",
+          "hash": "18202719848519961322",
+          "deps": [
+            "npm:bignumber.js",
+            "npm:@reef-chain/react-lib"
+          ]
+        },
+        {
+          "file": "src/utils/magicsquareService.ts",
+          "hash": "13114890878576352844",
+          "deps": [
+            "npm:axios",
+            "npm:react-router",
+            "npm:@reef-chain/react-lib",
+            "npm:react"
+          ]
+        },
+        {
+          "file": "src/utils/preloadImage.tsx",
+          "hash": "5018847697655088100"
+        },
+        {
+          "file": "src/utils/utils.ts",
+          "hash": "462203932470096433",
+          "deps": [
+            "npm:@reef-chain/react-lib",
+            "npm:ethers",
+            "npm:react-toastify"
+          ]
+        },
+        {
+          "file": "src/validated-tokens-mainnet.json",
+          "hash": "2635365341361313708"
+        },
+        {
+          "file": "tsconfig.app.json",
+          "hash": "13508198677617291638"
+        },
+        {
+          "file": "tsconfig.base.json",
+          "hash": "16936441711144470533"
+        },
+        {
+          "file": "tsconfig.json",
+          "hash": "2059282338430183725"
+        },
+        {
+          "file": "tsconfig.spec.json",
+          "hash": "14111179903169258683"
+        },
+        {
+          "file": "vite.config.js",
+          "hash": "9385101604220584641",
+          "deps": [
+            "npm:vite",
+            "npm:@vitejs/plugin-react"
+          ]
+        },
+        {
+          "file": "webpack.config.js",
+          "hash": "9970827627174978737",
+          "deps": [
+            "npm:path",
+            "npm:html-webpack-plugin",
+            "npm:webpack",
+            "npm:process",
+            [
+              "npm:crypto-browserify",
+              "dynamic"
+            ],
+            [
+              "npm:stream-browserify",
+              "dynamic"
+            ]
+          ]
+        },
+        {
+          "file": "yarn.lock",
+          "hash": "443914329816395862"
+        }
+      ]
+    }
+  }
+}
