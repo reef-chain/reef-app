@@ -100,7 +100,7 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
           )
           : (
             isReefBalanceZero?
-<div className='card-bg-light card'>
+<div className='card-bg-light card token-card--no-balance'>
 <div className="no-token-activity">No tokens {network.name=="mainnet"?<Link className='text-btn' to={getUrl()}>get REEF</Link>:<a className='text-btn' href={getUrl()} target="_blank" rel="noopener noreferrer">get REEF</a> }</div>
 </div>
            

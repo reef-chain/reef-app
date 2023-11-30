@@ -42,6 +42,15 @@
   transition: all 0.15s;
 }
 
+.token-card--no-balance{
+  background: white;
+  box-shadow: var(--shadow);
+  border-radius: 15px;
+  border: none;
+  width: 100%;
+  overflow: hidden;
+}
+
 .token-card__image:hover {
   cursor: pointer;
   filter: brightness(1.05);
