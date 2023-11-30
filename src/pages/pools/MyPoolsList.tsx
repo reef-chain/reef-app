@@ -68,6 +68,8 @@ const MyPoolsList = ({ tokens }: Props): JSX.Element => {
   }
 
   const hasToken = ({ name }: TableToken = {}): boolean => {
+    // TODO: remove later @anukulpandey [TEMP FIX]
+    if(name==="Reef")name=name.toUpperCase()
     const token = tokens.find((tkn: Token) => tkn.name === name);
     if (!token) return false;
 
