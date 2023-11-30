@@ -68,7 +68,7 @@ const MyPoolsList = ({ tokens }: Props): JSX.Element => {
   }
 
   const hasToken = ({ name }: TableToken = {}): boolean => {
-    const token = tokens.find((tkn: Token) => tkn.symbol === name);
+    const token = tokens.find((tkn: Token) => tkn.name === name);
     if (!token) return false;
 
     const hasBalance = (new BigNumber(token.balance.toString())).toNumber() > 0;
