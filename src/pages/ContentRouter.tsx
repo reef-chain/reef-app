@@ -60,18 +60,10 @@ const tokenPrices = useMemo(
   );
 */
 
-const getLoading = ():boolean=>{
-  if(tokens==null){
-    if(selectedSigner?.balance._hex=="0x00")return false;
-    return true;
-  }
-  return false;
-}
-
   return (
     <div className="content">
       {(
-        <TokenContext.Provider value={{ tokens: tokens || [], loading: getLoading()}}>
+        <TokenContext.Provider value={{ tokens: tokens || [], loading: tokens === null && !(selectedSigner?.balance._hex === "0x00")}}>
           <NftContext.Provider value={{ nfts, loading: nftsLoading }}>
             <PoolContext.Provider value={pools}>
               <TokenPrices.Provider value={tokenPrices as AddressToNumber<number>}>
