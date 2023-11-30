@@ -2,6 +2,16 @@
   width: 100%;
 }
 
+.text-btn{
+  text-decoration: none;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.text-btn:hover{
+  color: var(--secondary);
+}
+
 .token-card__wrapper {
   display: flex;
   flex-flow: row nowrap;
@@ -30,6 +40,15 @@
   border-radius: 50%;
   border: none;
   transition: all 0.15s;
+}
+
+.token-card--no-balance{
+  background: white;
+  box-shadow: var(--shadow);
+  border-radius: 15px;
+  border: none;
+  width: 100%;
+  overflow: hidden;
 }
 
 .token-card__image:hover {
