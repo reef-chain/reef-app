@@ -9,6 +9,8 @@ import TokenCard from './TokenCard';
 import { CREATE_ERC20_TOKEN_URL } from '../../urls';
 import { localizedStrings } from '../../l10n/l10n';
 import './loading-animation.css';
+import ReefSigners from '../../context/ReefSigners';
+import { isReefswapUI } from '../../environment';
 
 interface TokenBalances {
   tokens: Token[];
@@ -48,6 +50,15 @@ const balanceValue = (token: Token, price = 0): number => (new BigNumber(token.b
 
 export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
+  const {selectedSigner,network} = useContext(ReefSigners);
+
+  const isReefBalanceZero = selectedSigner?.balance._hex == "0x00";
+
+  const getUrl = ()=>{
+    if(network.name=="mainnet")return "/onramp";
+    if(isReefswapUI)return 'https://discord.com/channels/1116016091014123521/1120371707019010128';
+    return 'https://discord.com/channels/793946260171259904/1087737503550816396'
+  }
 
   const tokenCards = tokens
     .filter(({ balance }) => {
@@ -78,7 +89,7 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
   return (
     <div className="dashboard__tokens">
       {
-        tokens.length === 0
+        tokens.length === 0 && !isReefBalanceZero
           ? (
             <>
               <Skeleton />
@@ -88,6 +99,12 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
             </>
           )
           : (
+            isReefBalanceZero?
+<div className='card-bg-light card'>
+<div className="no-token-activity">No tokens {network.name=="mainnet"?<Link to={getUrl()}>get REEF</Link>:<a href={getUrl()}>get REEF</a> }</div>
+</div>
+           
+         :
             <>
               { tokenCards }
               {tokens.length > 1 && <CreateTokenButton />}
