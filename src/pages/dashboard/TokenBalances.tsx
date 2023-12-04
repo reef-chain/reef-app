@@ -88,41 +88,89 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
       />
     ));
 
+  // return (
+  //   <div className="dashboard__tokens">
+  //     {tokens.length === 0 && !isReefBalanceZero ? (
+  //       <>
+  //         <Skeleton />
+  //         <Skeleton />
+  //         <Skeleton />
+  //         <Skeleton />
+  //       </>
+  //     ) : isReefBalanceZero ? (
+  //       <div className="card-bg-light card token-card--no-balance">
+  //         <div className="no-token-activity">
+  //           No tokens found. &nbsp;
+  //           {network.name === "mainnet" ? (
+  //             <Link className="text-btn" to={getUrl()}>
+  //               Get $REEF coins here.
+  //             </Link>
+  //           ) : (
+  //             <a
+  //               className="text-btn"
+  //               href={getUrl()}
+  //               target="_blank"
+  //               rel="noopener noreferrer"
+  //             >
+  //               Get Reef testnet tokens here.
+  //             </a>
+  //           )}
+  //         </div>
+  //       </div>
+  //     ) : (
+  //       <>
+  //         {tokenCards}
+  //         {tokens.length > 1 && <CreateTokenButton />}
+  //       </>
+  //     )}
+  //   </div>
+  // );
+
+  function renderTokensAndCreateButton(tokens): JSX.Element {
+    return (
+      <>
+        {tokenCards}
+        {tokens.length > 1 && <CreateTokenButton />}
+      </>
+    );
+  }
+
+  function renderNoTokenActivity(network, getUrl): JSX.Element {
+    return (
+      <div className="card-bg-light card token-card--no-balance">
+        <div className="no-token-activity">
+          No tokens found. &nbsp;
+          {network.name === "mainnet" ? (
+            <Link className="text-btn" to={getUrl()}>
+              Get $REEF coins here.
+            </Link>
+          ) : (
+            <a
+              className="text-btn"
+              href={getUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Get Reef testnet tokens here.
+            </a>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="dashboard__tokens">
-      {tokens.length === 0 && !isReefBalanceZero ? (
+      {tokens.length === 0 && !isReefBalanceZero && (
         <>
           <Skeleton />
           <Skeleton />
           <Skeleton />
           <Skeleton />
-        </>
-      ) : isReefBalanceZero ? (
-        <div className="card-bg-light card token-card--no-balance">
-          <div className="no-token-activity">
-            No tokens found. &nbsp;
-            {network.name === "mainnet" ? (
-              <Link className="text-btn" to={getUrl()}>
-                Get $REEF coins here.
-              </Link>
-            ) : (
-              <a
-                className="text-btn"
-                href={getUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Get Reef testnet tokens here.
-              </a>
-            )}
-          </div>
-        </div>
-      ) : (
-        <>
-          {tokenCards}
-          {tokens.length > 1 && <CreateTokenButton />}
         </>
       )}
+      {isReefBalanceZero && renderNoTokenActivity(network, getUrl)}
+      {!isReefBalanceZero && renderTokensAndCreateButton(tokens)}
     </div>
   );
 };
