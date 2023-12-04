@@ -1,10 +1,10 @@
-import Uik from '@reef-chain/ui-kit';
-import React, { useContext, useMemo } from 'react';
-import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { toCurrencyFormat } from '../../utils/utils';
-import HideBalance from '../../context/HideBalance';
-import { displayBalance } from '../../utils/displayBalance';
-import { localizedStrings } from '../../l10n/l10n';
+import Uik from "@reef-chain/ui-kit";
+import React, { useContext, useMemo } from "react";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { toCurrencyFormat } from "../../utils/utils";
+import HideBalance from "../../context/HideBalance";
+import { displayBalance } from "../../utils/displayBalance";
+import { localizedStrings } from "../../l10n/l10n";
 
 interface Balance {
   balance: number;
@@ -35,7 +35,9 @@ export const Balance = ({
       return `$${displayBalance(balance)}`;
     }
 
-    return toCurrencyFormat(balance as number, { maximumFractionDigits: balance < 10000 ? 2 : 0 });
+    return toCurrencyFormat(balance as number, {
+      maximumFractionDigits: balance < 10000 ? 2 : 0,
+    });
   }, [balance]);
 
   const toggleHidden = (): void => {
@@ -43,9 +45,10 @@ export const Balance = ({
   };
 
   return (
-    <div className={`
+    <div
+      className={`
       dashboard__balance
-      ${className || ''}
+      ${className || ""}
     `}
     >
       <div className="dashboard__balance-label">
@@ -55,41 +58,38 @@ export const Balance = ({
           type="button"
           className={`
               dashboard__balance-hide-btn
-              ${isHidden ? 'dashboard__balance-hide-btn--hidden' : ''}
+              ${isHidden ? "dashboard__balance-hide-btn--hidden" : ""}
             `}
           onClick={toggle}
         >
           <Uik.Icon icon={isHidden ? faEyeSlash : faEye} />
         </button>
       </div>
-      {
-        loading || getBalance == "US$NaN" ? <Loading />
-          : (
-            <button
-              type="button"
-              className={`
+      {loading || getBalance === "US$NaN" ? (
+        <Loading />
+      ) : (
+        <button
+          type="button"
+          className={`
                 dashboard__balance-value
-                ${isHidden ? 'dashboard__balance-value--hidden' : ''}
+                ${isHidden ? "dashboard__balance-value--hidden" : ""}
               `}
-              onClick={toggleHidden}
-            >
-              {
-                isHidden
-                  ? (
-                    <>
-                      $
-                      <div />
-                      <div />
-                      <div />
-                      <div />
-                      <div />
-                    </>
-                  )
-                  : getBalance
-              }
-            </button>
-          )
-      }
+          onClick={toggleHidden}
+        >
+          {isHidden ? (
+            <>
+              $
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </>
+          ) : (
+            getBalance
+          )}
+        </button>
+      )}
     </div>
   );
 };
