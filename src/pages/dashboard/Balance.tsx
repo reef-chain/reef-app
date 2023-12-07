@@ -1,9 +1,9 @@
 import Uik from "@reef-chain/ui-kit";
 import React, { useContext, useMemo } from "react";
+import { balanceUtils } from "@reef-chain/util-lib";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { toCurrencyFormat } from "../../utils/utils";
 import HideBalance from "../../context/HideBalance";
-import { displayBalance } from "../../utils/displayBalance";
 import { localizedStrings } from "../../l10n/l10n";
 
 interface Balance {
@@ -32,7 +32,7 @@ export const Balance = ({
 
   const getBalance = useMemo((): string => {
     if (balance >= 1000000) {
-      return `$${displayBalance(balance)}`;
+      return `$${balanceUtils.formatDisplayBalance(balance)}`;
     }
 
     return toCurrencyFormat(balance as number, {
