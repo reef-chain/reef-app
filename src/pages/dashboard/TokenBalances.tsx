@@ -90,6 +90,7 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
   return (
     <div className="dashboard__tokens">
       {
+        /* eslint-disable no-nested-ternary */
                 tokens.length === 0 && !isReefBalanceZero
                   ? (
                     <>

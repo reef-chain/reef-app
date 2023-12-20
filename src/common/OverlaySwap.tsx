@@ -6,6 +6,7 @@ import React, {
 } from 'react';
 import { BigNumber } from 'ethers';
 import axios from 'axios';
+import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
 import TokenPricesContext from '../context/TokenPricesContext';
@@ -13,7 +14,6 @@ import { MAX_SLIPPAGE, notify } from '../utils/utils';
 import './overlay-swap.css';
 import ReefSigners from '../context/ReefSigners';
 import { EventType, magicSquareAction } from '../utils/magicsquareService';
-import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 import { resolveDexConfig } from '../environment';
 
 const { Trade, OverlayAction, Finalizing } = Components;

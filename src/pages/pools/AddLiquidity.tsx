@@ -4,12 +4,12 @@ import {
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { ADD_LIQUIDITY_URL, addressReplacer } from '../../urls';
 import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
-import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 import { resolveDexConfig } from '../../environment';
 
 const { AddLiquidity } = Components;

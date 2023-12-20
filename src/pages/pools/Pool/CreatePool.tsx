@@ -3,6 +3,7 @@ import {
 } from '@reef-chain/react-lib';
 import axios from 'axios';
 import React, { useContext, useReducer, useState } from 'react';
+import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import { notify } from '../../../utils/utils';
@@ -13,7 +14,6 @@ import ReefSigners from '../../../context/ReefSigners';
 
 import RedirectingToPool from './RedirectingToPool';
 import { resolveDexConfig } from '../../../environment';
-import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 

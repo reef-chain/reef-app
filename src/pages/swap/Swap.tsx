@@ -4,6 +4,7 @@ import {
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, SPECIFIED_SWAP_URL, UrlAddressParams } from '../../urls';
@@ -11,7 +12,6 @@ import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
 import { EventType, magicSquareAction } from '../../utils/magicsquareService';
 import { resolveDexConfig } from '../../environment';
-import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 
 const { SwapComponent } = Components;
 
@@ -21,7 +21,7 @@ const Swap = (): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
   const { address1, address2 } = useParams<UrlAddressParams>();
 
-  const { selectedSigner: signer, network:nw } = useContext(ReefSigners);
+  const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
   const network:DexProtocolv2 = resolveDexConfig(nw);
 

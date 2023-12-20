@@ -2,14 +2,14 @@ import {
   ReefSigner,
   utils as reefUtils,
 } from '@reef-chain/react-lib';
-import { network as nw } from '@reef-chain/util-lib';
+import { network as nw, reefState } from '@reef-chain/util-lib';
 import React, { useEffect, useState } from 'react';
 import { faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icons';
 import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-icons';
 import { Contract, ContractFactory, utils } from 'ethers';
 import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
-import { reefState } from '@reef-chain/util-lib';
+import { Network } from '@reef-chain/util-lib/dist/network';
 import { verifyContract } from '../../utils/contract';
 import { DeployContractData, deployTokens } from './tokensDeployData';
 import './creator.css';
@@ -17,7 +17,6 @@ import IconUpload from './IconUpload';
 import ConfirmToken from './ConfirmToken';
 import { getAppNetworkOverride } from '../../environment';
 import { localizedStrings as strings } from '../../l10n/l10n';
-import { Network } from '@reef-chain/util-lib/dist/network';
 
 interface CreatorComponent {
   signer: ReefSigner | undefined;

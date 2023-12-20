@@ -10,8 +10,6 @@ import Chart, { TimeData, Timeframe } from './Chart';
 import './pool.css';
 import Stats from './Stats';
 import ReefSigners from '../../../context/ReefSigners';
-import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
-import { resolveDexConfig } from '../../../environment';
 
 interface Params {
   address: string;
@@ -47,8 +45,6 @@ const Pool = (): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-
-  const network:DexProtocolv2 = resolveDexConfig(nw);
 
   const [poolInfo] = hooks.usePoolInfo(
     address,
