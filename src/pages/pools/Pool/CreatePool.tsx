@@ -10,8 +10,10 @@ import '../../../common/overlay-swap.css';
 import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
 import ReefSigners from '../../../context/ReefSigners';
-import { DexNetwork, useNetworkDex } from '../../../state/networkDex';
+
 import RedirectingToPool from './RedirectingToPool';
+import { resolveDexConfig } from '../../../environment';
+import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
@@ -35,7 +37,7 @@ const CreatePool = ({
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:DexNetwork|undefined = useNetworkDex(nw);
+  const network:DexProtocolv2 = resolveDexConfig(nw);
 
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,
@@ -57,7 +59,7 @@ const CreatePool = ({
     state: provideState,
     network,
     signer: signer || undefined,
-    batchTxs: network?.name === 'mainnet',
+    batchTxs: nw?.name === 'mainnet',
     dispatch: provideDispatch,
     notify,
     updateTokenState: async () => {}, // eslint-disable-line

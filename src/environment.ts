@@ -1,5 +1,5 @@
 import { network as nw } from '@reef-chain/util-lib';
-import type { Network } from './state/networkDex';
+import type { Network ,DexProtocolv2} from '@reef-chain/util-lib/dist/network';
 
 export const isReefswapUI = window.location.host.indexOf('reefswap') > -1;
 
@@ -20,3 +20,7 @@ export const appAvailableNetworks = [nw.AVAILABLE_NETWORKS.mainnet, testnetOverr
 export const getAppNetworkOverride = (network: Network): Network => appAvailableNetworks.find((net) => net.name === network.name) || network;
 // export const appAvailableNetworks = [availableNetworks.mainnet, availableNetworks.testnet];
 export const binanceConnectApiUrl = 'https://onramp.reefscan.info';
+
+export const resolveDexConfig = (network:Network):DexProtocolv2=>{
+  return nw.getReefswapNetworkConfig(network)
+}

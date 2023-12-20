@@ -4,14 +4,14 @@ import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';
 import axios from 'axios';
-import type { Network } from '../../../state/networkDex';
-import { useNetworkDex } from '../../../state/networkDex';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import Actions, { ActionTabs } from './Actions';
 import Chart, { TimeData, Timeframe } from './Chart';
 import './pool.css';
 import Stats from './Stats';
 import ReefSigners from '../../../context/ReefSigners';
+import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
+import { resolveDexConfig } from '../../../environment';
 
 interface Params {
   address: string;
@@ -48,7 +48,7 @@ const Pool = (): JSX.Element => {
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:Network = useNetworkDex(nw);
+  const network:DexProtocolv2 = resolveDexConfig(nw);
 
   const [poolInfo] = hooks.usePoolInfo(
     address,
@@ -83,7 +83,7 @@ const Pool = (): JSX.Element => {
         data={poolInfo}
         price1={tokenPrice1}
         price2={tokenPrice2}
-        reefscanUrl={network.reefscanUrl}
+        reefscanUrl={nw.reefscanUrl}
       />
 
       <div className="pool__content">

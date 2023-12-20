@@ -9,7 +9,6 @@ import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-i
 import { Contract, ContractFactory, utils } from 'ethers';
 import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
-import type { Network } from '../../state/networkDex';
 import { reefState } from '@reef-chain/util-lib';
 import { verifyContract } from '../../utils/contract';
 import { DeployContractData, deployTokens } from './tokensDeployData';
@@ -18,6 +17,7 @@ import IconUpload from './IconUpload';
 import ConfirmToken from './ConfirmToken';
 import { getAppNetworkOverride } from '../../environment';
 import { localizedStrings as strings } from '../../l10n/l10n';
+import { Network } from '@reef-chain/util-lib/dist/network';
 
 interface CreatorComponent {
   signer: ReefSigner | undefined;
