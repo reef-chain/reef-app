@@ -66,7 +66,7 @@ const OverlaySwap = ({
   const pools = useContext(PoolContext);
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-  const network:DexProtocolv2 |undefined= useDexConfig(nw);
+  const network:DexProtocolv2 |undefined = useDexConfig(nw);
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(

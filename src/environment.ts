@@ -26,7 +26,7 @@ export const useDexConfig = (network: Network): DexProtocolv2 | undefined => {
   const [dexConfig, setDexConfig] = useState<DexProtocolv2 | undefined>(undefined);
 
   useEffect(() => {
-    const fetchDexConfig = async () => {
+    const fetchDexConfig = async ():Promise<void> => {
       try {
         const config = await nw.getReefswapNetworkConfig(network);
         setDexConfig(config);
