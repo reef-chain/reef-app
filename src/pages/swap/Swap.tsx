@@ -11,7 +11,7 @@ import { addressReplacer, SPECIFIED_SWAP_URL, UrlAddressParams } from '../../url
 import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
 import { EventType, magicSquareAction } from '../../utils/magicsquareService';
-import { resolveDexConfig } from '../../environment';
+import { useDexConfig } from '../../environment';
 
 const { SwapComponent } = Components;
 
@@ -23,7 +23,7 @@ const Swap = (): JSX.Element => {
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:DexProtocolv2 = resolveDexConfig(nw);
+  const network:DexProtocolv2|undefined = useDexConfig(nw);
 
   const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);
   // hook manages all necessary swap updates

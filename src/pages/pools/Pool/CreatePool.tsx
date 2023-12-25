@@ -13,7 +13,7 @@ import { localizedStrings } from '../../../l10n/l10n';
 import ReefSigners from '../../../context/ReefSigners';
 
 import RedirectingToPool from './RedirectingToPool';
-import { resolveDexConfig } from '../../../environment';
+import { useDexConfig } from '../../../environment';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
@@ -37,7 +37,7 @@ const CreatePool = ({
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:DexProtocolv2 = resolveDexConfig(nw);
+  const network:DexProtocolv2|undefined = useDexConfig(nw);
 
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,

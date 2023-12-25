@@ -14,7 +14,7 @@ import { MAX_SLIPPAGE, notify } from '../../../utils/utils';
 import './actions.css';
 import { EventType, magicSquareAction } from '../../../utils/magicsquareService';
 import ReefSigners from '../../../context/ReefSigners';
-import { resolveDexConfig } from '../../../environment';
+import { useDexConfig } from '../../../environment';
 
 const {
   Trade, Provide, Finalizing, Withdraw,
@@ -35,7 +35,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const pools = useContext(PoolContext);
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-  const network:DexProtocolv2 = resolveDexConfig(nw);
+  const network:DexProtocolv2|undefined = useDexConfig(nw);
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(

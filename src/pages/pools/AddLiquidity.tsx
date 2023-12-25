@@ -10,7 +10,7 @@ import TokenPricesContext from '../../context/TokenPricesContext';
 import { ADD_LIQUIDITY_URL, addressReplacer } from '../../urls';
 import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
-import { resolveDexConfig } from '../../environment';
+import { useDexConfig } from '../../environment';
 
 const { AddLiquidity } = Components;
 interface UrlParams {
@@ -24,7 +24,7 @@ const AddPoolLiquidity = (): JSX.Element => {
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-  const network:DexProtocolv2 = resolveDexConfig(nw);
+  const network:DexProtocolv2|undefined = useDexConfig(nw);
 
   const [state, dispatch] = useReducer(store.addLiquidityReducer, store.initialAddLiquidityState);
   hooks.useAddLiquidity({

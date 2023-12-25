@@ -7,7 +7,7 @@ import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
-import { resolveDexConfig } from '../../environment';
+import { useDexConfig } from '../../environment';
 
 const { RemoveLiquidityComponent } = Components;
 
@@ -24,7 +24,7 @@ const RemoveLiquidity = (): JSX.Element => {
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:DexProtocolv2 = resolveDexConfig(nw);
+  const network:DexProtocolv2|undefined = useDexConfig(nw);
 
   const [state, dispatch] = useReducer(
     store.removeLiquidityReducer,

@@ -14,7 +14,7 @@ import { MAX_SLIPPAGE, notify } from '../utils/utils';
 import './overlay-swap.css';
 import ReefSigners from '../context/ReefSigners';
 import { EventType, magicSquareAction } from '../utils/magicsquareService';
-import { resolveDexConfig } from '../environment';
+import { useDexConfig } from '../environment';
 
 const { Trade, OverlayAction, Finalizing } = Components;
 const REEF_ADDRESS = '0x0000000000000000000000000000000001000000';
@@ -66,7 +66,7 @@ const OverlaySwap = ({
   const pools = useContext(PoolContext);
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-  const network:DexProtocolv2 = resolveDexConfig(nw);
+  const network:DexProtocolv2 |undefined= useDexConfig(nw);
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
