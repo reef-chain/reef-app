@@ -5,8 +5,7 @@ import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import type { Network } from '../../../state/networkDex';
-import { useNetworkDex } from '../../../state/networkDex';
+import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 import PoolContext from '../../../context/PoolContext';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
@@ -15,6 +14,7 @@ import { MAX_SLIPPAGE, notify } from '../../../utils/utils';
 import './actions.css';
 import { EventType, magicSquareAction } from '../../../utils/magicsquareService';
 import ReefSigners from '../../../context/ReefSigners';
+import { useDexConfig } from '../../../environment';
 
 const {
   Trade, Provide, Finalizing, Withdraw,
@@ -35,7 +35,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const pools = useContext(PoolContext);
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-  const network: Network = useNetworkDex(nw);
+  const network:DexProtocolv2|undefined = useDexConfig(nw);
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
@@ -58,14 +58,14 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     state: tradeState,
     network,
     account: signer || undefined,
-    batchTxs: network?.name === 'mainnet',
+    batchTxs: nw?.name === 'mainnet',
     dispatch: tradeDispatch,
     notify,
     updateTokenState: async () => {}, // eslint-disable-line
     onSuccess: () => {
       setFinalized(false);
       if (signer) {
-        magicSquareAction(network!.name, EventType.SWAP, signer.address).then();
+        magicSquareAction(nw!.name, EventType.SWAP, signer.address).then();
       }
     },
     onFinalized: () => setFinalized(true),
@@ -97,7 +97,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     state: provideState,
     network,
     signer: signer || undefined,
-    batchTxs: network?.name === 'mainnet',
+    batchTxs: nw?.name === 'mainnet',
     dispatch: provideDispatch,
     notify,
     updateTokenState: async () => {}, // eslint-disable-line
@@ -126,7 +126,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     network,
     state: withdrawState,
     signer: signer || undefined,
-    batchTxs: network?.name === 'mainnet',
+    batchTxs: nw?.name === 'mainnet',
     notify,
     dispatch: withdrawDispatch,
     onSuccess: () => setFinalized(false),

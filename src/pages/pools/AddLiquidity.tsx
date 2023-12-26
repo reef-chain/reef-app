@@ -4,13 +4,13 @@ import {
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
-import type { Network } from '../../state/networkDex';
-import { useNetworkDex } from '../../state/networkDex';
+import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { ADD_LIQUIDITY_URL, addressReplacer } from '../../urls';
 import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
+import { useDexConfig } from '../../environment';
 
 const { AddLiquidity } = Components;
 interface UrlParams {
@@ -24,7 +24,7 @@ const AddPoolLiquidity = (): JSX.Element => {
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-  const network: Network | undefined = useNetworkDex(nw);
+  const network:DexProtocolv2|undefined = useDexConfig(nw);
 
   const [state, dispatch] = useReducer(store.addLiquidityReducer, store.initialAddLiquidityState);
   hooks.useAddLiquidity({
@@ -50,7 +50,7 @@ const AddPoolLiquidity = (): JSX.Element => {
     state,
     network,
     signer: signer || undefined,
-    batchTxs: network?.name === 'mainnet',
+    batchTxs: nw?.name === 'mainnet',
     dispatch,
     notify,
     updateTokenState: async () => {}, // eslint-disable-line
