@@ -32,6 +32,7 @@ export const useDexConfig = (network: Network): DexProtocolv2 | undefined => {
         setDexConfig(config);
       } catch (error) {
         console.error('Error fetching dex config:', error);
+        setDexConfig(null);
       }
     };
 
