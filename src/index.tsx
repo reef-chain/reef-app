@@ -8,15 +8,10 @@ import {
 import reportWebVitals from './reportWebVitals';
 import App from './App';
 import { version } from '../package.json';
+import { createRoot } from 'react-dom/client';
 
 console.log(`Reef-app version: ${version}`);
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <App />
-    </Router>
-  </React.StrictMode>,
-  document.getElementById('root'),
-);
+createRoot(document.getElementById('root')!).render(<React.StrictMode><Router><App /></Router></React.StrictMode>);
+
 reportWebVitals();
