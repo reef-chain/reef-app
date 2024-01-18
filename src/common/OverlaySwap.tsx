@@ -2,6 +2,7 @@ import {
   Components, hooks, Pool, PoolWithReserves, store, Token,
 } from '@reef-chain/react-lib';
 import React, {
+  ReactElement,
   useContext, useEffect, useReducer, useState,
 } from 'react';
 import { BigNumber } from 'ethers';
@@ -56,7 +57,7 @@ const OverlaySwap = ({
   isOpen,
   onPoolsLoaded,
   onClose,
-}: OverlaySwap): JSX.Element => {
+}: OverlaySwap): ReactElement<any, any> => {
   const [address1, setAddress1] = useState(tokenAddress);
   const [address2, setAddress2] = useState('0x');
   const [pool, setPool] = useState<Pool | undefined>(undefined);
@@ -164,12 +165,12 @@ const OverlaySwap = ({
   };
 
   return (
+    <>
     <OverlayAction
       isOpen={isOpen}
       title="Swap"
       onClose={onClose}
-      className="overlay-swap"
-    >
+      className="overlay-swap"/>
       <div className="uik-pool-actions pool-actions">
         {
           finalized
@@ -205,7 +206,7 @@ const OverlaySwap = ({
             : <Finalizing />
         }
       </div>
-    </OverlayAction>
+    </>
   );
 };
 

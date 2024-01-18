@@ -81,14 +81,15 @@ const CreatePool = ({
   };
 
   return (
+    <>
     <OverlayAction
       isOpen={isOpen}
       title={localizedStrings.create_pool}
       onClose={onClose}
       onClosed={onClosed}
       onOpened={onOpened}
-      className="overlay-swap create-pool"
-    >
+      className="overlay-swap create-pool" 
+    />
       <div className="uik-pool-actions pool-actions">
         {
           // eslint-disable-next-line
@@ -114,7 +115,7 @@ const CreatePool = ({
         }
 
       </div>
-    </OverlayAction>
+      </>
   );
 };
 

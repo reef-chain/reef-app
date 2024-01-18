@@ -441,6 +441,7 @@ export const BondsComponent = ({
 
   const fullCard = (
     <ComponentCenter>
+      <>
       <div className="bond-card">
         <div className="bond-card__wrapper">
           <img className="bond-card__token-image" src="/img/reef.png" alt="Reef" />
@@ -636,6 +637,7 @@ export const BondsComponent = ({
         contract={utils.toAddressShortDisplay(bond.bondContractAddress)}
         duration={`Until ${bondTimes?.ending.endDate}`}
       />
+      </>
     </ComponentCenter>
   );
 
