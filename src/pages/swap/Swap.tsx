@@ -3,7 +3,7 @@ import {
 } from '@reef-chain/react-lib';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
@@ -24,14 +24,14 @@ const Swap = (): JSX.Element => {
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
   const network:DexProtocolv2|undefined = useDexConfig(nw);
-
+  const httpClient: AxiosInstance = axios;
   const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);
   // hook manages all necessary swap updates
   hooks.useSwapState({
     address1,
     address2,
     dispatch,
-    httpClient: axios,
+    httpClient,
     state,
     tokens,
     tokenPrices,

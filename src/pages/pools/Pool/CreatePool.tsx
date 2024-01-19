@@ -1,7 +1,7 @@
 import {
   Components, hooks, store, Token,
 } from '@reef-chain/react-lib';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import React, { useContext, useReducer, useState } from 'react';
 import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 import TokenContext from '../../../context/TokenContext';
@@ -29,6 +29,7 @@ const CreatePool = ({
   const [address1, setAddress1] = useState('0x');
   const [address2, setAddress2] = useState('0x');
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const httpClient: AxiosInstance = axios;
 
   const [finalized, setFinalized] = useState(true);
 
@@ -51,7 +52,7 @@ const CreatePool = ({
     state: provideState,
     tokens,
     signer: signer || undefined,
-    httpClient: axios,
+    httpClient,
     tokenPrices,
   });
 

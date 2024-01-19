@@ -4,7 +4,7 @@ import {
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 import PoolContext from '../../../context/PoolContext';
 import TokenContext from '../../../context/TokenContext';
@@ -33,6 +33,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
   const [finalized, setFinalized] = useState(true);
   const pools = useContext(PoolContext);
+  const httpClient: AxiosInstance = axios;
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
   const network:DexProtocolv2|undefined = useDexConfig(nw);
@@ -51,7 +52,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     tokenPrices,
     tokens,
     account: signer || undefined,
-    httpClient: axios,
+    httpClient,
   });
 
   const onSwap = hooks.onSwap({
@@ -89,7 +90,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     state: provideState,
     tokens,
     signer: signer || undefined,
-    httpClient: axios,
+    httpClient,
     tokenPrices,
   });
 
@@ -113,7 +114,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
 
   hooks.useRemoveLiquidity({
     tokens,
-    httpClient: axios,
+    httpClient,
     address1: token1.address,
     address2: token2.address,
     tokenPrices,

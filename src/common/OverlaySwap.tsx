@@ -5,7 +5,7 @@ import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react';
 import { BigNumber } from 'ethers';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
@@ -64,6 +64,7 @@ const OverlaySwap = ({
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
   const pools = useContext(PoolContext);
+  const httpClient: AxiosInstance = axios;
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
   const network:DexProtocolv2 |undefined = useDexConfig(nw);
@@ -135,7 +136,7 @@ const OverlaySwap = ({
     tokenPrices,
     tokens,
     account: signer || undefined,
-    httpClient: axios,
+    httpClient,
     waitForPool: true,
     pool,
   });
