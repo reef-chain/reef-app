@@ -1,4 +1,4 @@
-import { createEmptyTokenWithAmount, hooks, TokenTransfer } from '@reef-chain/react-lib';
+import { createEmptyTokenWithAmount, hooks, Token, TokenTransfer, TransferExtrinsic } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import './activity.css';
@@ -7,14 +7,56 @@ import ActivityItem, { Skeleton } from './ActivityItem';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 import ActivityDetails from './ActivityDetails';
 import ReefSigners from '../../../context/ReefSigners';
+import SwapActivityItem from './SwapActivityItem';
 
 const noActivityTokenDisplay = createEmptyTokenWithAmount();
 noActivityTokenDisplay.address = '0x';
 noActivityTokenDisplay.iconUrl = '';
 noActivityTokenDisplay.name = 'No account history yet.';
 
+interface CummulativeTransfers extends TokenTransfer{
+  isSwap: boolean;
+  token1?:TokenTransfer;
+  token2?:TokenTransfer;
+  fees?:TokenTransfer;
+}
+
+const parseTokenTransfers = (transfers:TokenTransfer[]):CummulativeTransfers[]=>{
+  const updatedTxArray: CummulativeTransfers[] = [];
+  const swapsIdx = [-1];
+
+  transfers.forEach((tx,idx)=>{
+    if(tx.reefswapAction==='Swap' && !swapsIdx.includes(idx)){
+      swapsIdx.push(idx);
+      const swapPair = transfers.find(t=>t.extrinsic.id==tx.extrinsic.id && t.reefswapAction==='Swap' && t.token!=tx.token)
+      const swapPairIdx = transfers.indexOf(swapPair!);
+      swapsIdx.push(swapPairIdx);
+      const feesIdx =swapPairIdx+1;
+      if(feesIdx<=transfers.length){
+        swapsIdx.push(feesIdx);
+        updatedTxArray.push({
+          isSwap: true,
+          token1:tx,
+          token2:swapPair!,
+          fees:transfers[feesIdx]
+        } as CummulativeTransfers) 
+      }
+    }else if(tx.reefswapAction==='Swap' || swapsIdx.includes(idx)){}
+    else{
+      updatedTxArray.push({
+        ...tx,
+        isSwap:false
+      })
+    }
+  })
+  return updatedTxArray;
+}
+
 export const Activity = (): JSX.Element => {
-  const [transfers, loading] :[TokenTransfer[], boolean] = hooks.useTxHistory();
+  const [unparsedTransfers, loading] :[TokenTransfer[], boolean] = hooks.useTxHistory();
+
+  const transfers = parseTokenTransfers(unparsedTransfers);
+  console.log(transfers)
   const {
     selectedSigner, network,
   } = useContext(ReefSigners);
@@ -52,7 +94,7 @@ export const Activity = (): JSX.Element => {
         <div className="no-token-activity">
           Please use&nbsp;
            <a target="_blank"
-            href={`${network?.reefscanUrl}/account/${selectedSigner.address}`}
+            href={`${network?.reefscanUrl}/account/${selectedSigner?.address}`}
           >reefscan account activity</a>&nbsp;
           while indexer is being updated.
         </div>
@@ -68,7 +110,11 @@ export const Activity = (): JSX.Element => {
         {!!transfers && !!transfers.length && (
           <div>
 
-            {transfers.map((item, index) => (
+            {transfers.map((item, index) => {
+              if(item.isSwap){
+                return <SwapActivityItem fees={item.fees!} token1={item.token1!} token2={item.token2!} />
+              }
+              return (
               // eslint-disable-next-line jsx-a11y/no-static-element-interactions
               <div
                 key={`item-wrapper-${item.timestamp + index.toString()}`}
@@ -84,7 +130,7 @@ export const Activity = (): JSX.Element => {
                   inbound={item.inbound}
                 />
               </div>
-            ))}
+            )})}
           </div>
         )}
         {!transfers && (
