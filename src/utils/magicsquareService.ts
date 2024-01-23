@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useLocation } from 'react-router';
 import { AvailableNetworks } from '@reef-chain/react-lib/dist/state/network';
 import { useEffect } from 'react';
@@ -53,9 +52,10 @@ export const magicSquareAction = async (network: AvailableNetworks, eventType: E
     eventType,
     address,
   };
-
-  axios.post(`${baseUrl}/magicsquare`, bodyParams).catch((err) => {
+  /*
+   disable POST
+   axios.post(`${baseUrl}/magicsquare`, bodyParams).catch((err) => {
     // do nothing
     console.log('ms err=', err);
-  });
+  }); */
 };
