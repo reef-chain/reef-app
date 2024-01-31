@@ -46,18 +46,7 @@ export const Activity = (): JSX.Element => {
       </div>
 
       <div className={`col-12 card  ${transfers?.length ? 'card-bg-light' : ''}`}>
-        {/*{!!transfers && !transfers.length && !loading && <div className="no-token-activity">{strings.no_recent_transfer}</div>}*/}
-        {!!transfers && !transfers.length && !loading && network.name !== 'mainnet' && <div className="no-token-activity">{strings.no_recent_transfer}</div>}
-        {!!transfers && !transfers.length && !loading && network.name === 'mainnet' && (
-        <div className="no-token-activity">
-          Please use&nbsp;
-           <a target="_blank"
-            href={`${network?.reefscanUrl}/account/${selectedSigner.address}`}
-          >reefscan account activity</a>&nbsp;
-          while indexer is being updated.
-        </div>
-        )}
-
+        {!!transfers && !transfers.length && !loading && <div className="no-token-activity">{strings.no_recent_transfer}</div>}
         {!!transfers && !transfers.length && loading && (
         <div className="no-token-activity">
           <Uik.Container vertical>
