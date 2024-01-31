@@ -46,6 +46,7 @@ const Swap = (): JSX.Element => {
     dispatch,
     notify,
     onSuccess: () => {
+      // do nothing
     },
     updateTokenState: async () => {}, // eslint-disable-line
   });
