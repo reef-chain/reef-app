@@ -161,6 +161,10 @@
   font-size: 0.87rem!important;
 }
 
+.activity-item__amount-swap-send{
+  color: red!important;
+}
+
 .activity-item__amount--hidden > div {
   display: flex;
   flex-flow: row nowrap;
@@ -268,4 +272,8 @@
   height: 1rem;
   border-radius: 99rem;
   background-color: var(--border-color);
+}
+
+.uik-text--mini{
+  color: #b2b0c8;
 }

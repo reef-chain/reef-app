@@ -3,10 +3,6 @@ import Uik from "@reef-chain/ui-kit";
 import React, { useContext, useMemo } from "react";
 import "./activity-item.css";
 import {
-  faArrowDown,
-  faExchange,
-  faExchangeAlt,
-  faPlay,
   faRepeat,
 } from "@fortawesome/free-solid-svg-icons";
 import HideBalance from "../../../context/HideBalance";
@@ -122,8 +118,8 @@ const SwapActivityItem = ({ token1, token2, fees }: Props): JSX.Element => {
               >
                 {`Swap ${token1.token.symbol}-${token2.token.symbol}`}
               </div>
-<Uik.Text text={(type1==="receive"?"Received ":"Sent ")+token1.token.name} type="light"/>
-<Uik.Text text={(type2==="receive"?"Received ":"Sent ")+token2.token.name} type="light"/>
+<Uik.Text text={(type1==="receive"?"Received ":"Sent ")+token1.token.name} type="mini"/>
+<Uik.Text text={(type2==="receive"?"Received ":"Sent ")+token2.token.name} type="mini"/>
               <div className="activity-item__date">
                 {formatDate(token1.timestamp)}
               </div>
