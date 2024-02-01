@@ -13,7 +13,6 @@ import TokenPricesContext from '../context/TokenPricesContext';
 import { MAX_SLIPPAGE, notify } from '../utils/utils';
 import './overlay-swap.css';
 import ReefSigners from '../context/ReefSigners';
-import { EventType, magicSquareAction } from '../utils/magicsquareService';
 import { useDexConfig } from '../environment';
 
 const { Trade, OverlayAction, Finalizing } = Components;
@@ -150,7 +149,6 @@ const OverlaySwap = ({
     updateTokenState: async () => Promise.resolve(), // eslint-disable-line
     onSuccess: () => {
       setFinalized(false);
-      if (signer)magicSquareAction(nw.name, EventType.SWAP, signer.address);
     },
     onFinalized: () => {
       setFinalized(true);

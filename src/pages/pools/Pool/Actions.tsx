@@ -12,7 +12,6 @@ import TokenPricesContext from '../../../context/TokenPricesContext';
 import { POOL_CHART_URL } from '../../../urls';
 import { MAX_SLIPPAGE, notify } from '../../../utils/utils';
 import './actions.css';
-import { EventType, magicSquareAction } from '../../../utils/magicsquareService';
 import ReefSigners from '../../../context/ReefSigners';
 import { useDexConfig } from '../../../environment';
 
@@ -64,9 +63,6 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     updateTokenState: async () => {}, // eslint-disable-line
     onSuccess: () => {
       setFinalized(false);
-      if (signer) {
-        magicSquareAction(nw!.name, EventType.SWAP, signer.address).then();
-      }
     },
     onFinalized: () => setFinalized(true),
   });
