@@ -1,6 +1,6 @@
 import { Token, TokenTransfer, utils } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React, { useContext, useMemo } from 'react'
+import React, { useContext, useMemo } from 'react';
 import HideBalance from '../../../context/HideBalance';
 import { displayBalanceFromToken } from '../../../utils/displayBalance';
 import { getIpfsGatewayUrl } from '../../../environment';
@@ -15,7 +15,7 @@ interface Props{
 
 const { showBalance } = utils;
 
-function SwapDetails({token1,token2,fees}:Props) {
+function SwapDetails({ token1, token2, fees }:Props):JSX.Element {
   const hideBalance = useContext(HideBalance);
 
   const type1: 'receive' | 'send' = token1.inbound ? 'receive' : 'send';
@@ -70,15 +70,18 @@ function SwapDetails({token1,token2,fees}:Props) {
   }, [token2.token.iconUrl]);
   return (
     <div>
-        <div style={{display:'flex'}}>
-        <div style={{display:'flex',flexDirection:'column',justifyContent:'space-around',width: '14rem'}}>
-        <Uik.Text type='mini' text={`Sent ${token1.token.name}`}/>
-        <div className='mb-3'>
-        <Uik.Text type='mini' text={`Received ${token2.token.name}`}/>
+      <div style={{ display: 'flex' }}>
+        <div style={{
+          display: 'flex', flexDirection: 'column', justifyContent: 'space-around', width: '14rem',
+        }}
+        >
+          <Uik.Text type="mini" text={`Sent ${token1.token.name}`} />
+          <div className="mb-3">
+            <Uik.Text type="mini" text={`Received ${token2.token.name}`} />
+          </div>
         </div>
-        </div>
-        <div style={{display:'flex',flexDirection:'column'}}>
-        <div>
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div>
             <div
               className="activity-item__amount-wrapper"
               title={`${type1 === 'receive' ? '+' : '-'} ${showBalance(
@@ -155,9 +158,9 @@ function SwapDetails({token1,token2,fees}:Props) {
             </div>
           </div>
         </div>
-        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default SwapDetails
+export default SwapDetails;

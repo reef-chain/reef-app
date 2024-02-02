@@ -1,5 +1,5 @@
 import {
-  createEmptyTokenWithAmount, hooks, Token, TokenTransfer, TransferExtrinsic,
+  createEmptyTokenWithAmount, hooks, TokenTransfer,
 } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
@@ -38,7 +38,7 @@ const parseTokenTransfers = (transfers:TokenTransfer[]):CummulativeTransfers[] =
   transfers.forEach((tx, idx) => {
     if (tx.reefswapAction === 'Swap' && !swapsIdx.includes(idx)) {
       swapsIdx.push(idx);
-      const swapPair = transfers.find((t) => t.extrinsic.id == tx.extrinsic.id && t.reefswapAction === 'Swap' && t.token != tx.token);
+      const swapPair = transfers.find((t) => t.extrinsic.id === tx.extrinsic.id && t.reefswapAction === 'Swap' && t.token !== tx.token);
       const swapPairIdx = transfers.indexOf(swapPair!);
       swapsIdx.push(swapPairIdx);
       const feesIdx = swapPairIdx + 1;
@@ -51,7 +51,9 @@ const parseTokenTransfers = (transfers:TokenTransfer[]):CummulativeTransfers[] =
           fees: transfers[feesIdx],
         } as CummulativeTransfers);
       }
-    } else if (tx.reefswapAction === 'Swap' || swapsIdx.includes(idx)) {} else {
+    } else if (tx.reefswapAction === 'Swap' || swapsIdx.includes(idx)) {
+      // @ts-ignore
+    } else {
       updatedTxArray.push({
         ...tx,
         isSwap: false,
