@@ -5,6 +5,7 @@ import HideBalance from '../../../context/HideBalance';
 import { displayBalanceFromToken } from '../../../utils/displayBalance';
 import { getIpfsGatewayUrl } from '../../../environment';
 import './activity-item.css';
+import './activity-details.css';
 
 interface Props{
     token1:TokenTransfer;
@@ -70,7 +71,7 @@ function SwapDetails({token1,token2,fees}:Props) {
   return (
     <div>
         <div style={{display:'flex'}}>
-        <div style={{display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
+        <div style={{display:'flex',flexDirection:'column',justifyContent:'space-around',width: '14rem'}}>
         <Uik.Text type='mini' text={`Sent ${token1.token.name}`}/>
         <div className='mb-3'>
         <Uik.Text type='mini' text={`Received ${token2.token.name}`}/>

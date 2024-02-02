@@ -186,7 +186,7 @@
 }
 
 .activity-item--send .activity-item__amount--hidden div div {
-  background-color: #b2b0c8;
+  background-color: #b2b0c8!important;
 }
 
 .activity-item--receive .activity-item__amount  {
