@@ -3640,10 +3640,10 @@
     react-syntax-highlighter "^15.5.0"
     react-transition-group "^4.4.2"
 
-"@reef-chain/util-lib@2.3.4", "@reef-chain/util-lib@^0.4.0", "@reef-chain/util-lib@^2.3.4":
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/@reef-chain/util-lib/-/util-lib-2.3.4.tgz#938e06ebd3013fd76cc80459246c114677ffee8a"
-  integrity sha512-YzBphpqJ+8+mgV8LD26+5ijLnYX4B+ItvzGOwSe7j7jHcZ6DTsoefFu7fVMQfzWSAwFk8czloEqNfOUp9SP5Bw==
+"@reef-chain/util-lib@2.3.5", "@reef-chain/util-lib@^0.4.0", "@reef-chain/util-lib@^2.3.4", "@reef-chain/util-lib@^2.3.5":
+  version "2.3.5"
+  resolved "https://registry.npmjs.org/@reef-chain/util-lib/-/util-lib-2.3.5.tgz#a8780c6d9b4140578a35f17e80e933c51fc51f69"
+  integrity sha512-9ClaOlJMplFFTC1/MlnC5fq25VEnpYjm0fJNEX6sHmn12iJop/Z8E0DJV9B5oFtEg7ZPAqzIUPdEhRyMpiv0LA==
   dependencies:
     "@polkadot/extension-inject" "^0.46.5"
     "@reef-chain/evm-provider" "^2.0.2"

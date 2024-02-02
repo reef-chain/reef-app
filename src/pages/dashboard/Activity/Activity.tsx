@@ -1,4 +1,6 @@
-import { createEmptyTokenWithAmount, hooks, Token, TokenTransfer, TransferExtrinsic } from '@reef-chain/react-lib';
+import {
+  createEmptyTokenWithAmount, hooks, Token, TokenTransfer, TransferExtrinsic,
+} from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import './activity.css';
@@ -23,48 +25,47 @@ interface CummulativeTransfers extends TokenTransfer{
 }
 
 export interface SwapPair {
-  pair:String;
+  pair:string;
   token1: TokenTransfer;
   token2: TokenTransfer;
   fees: TokenTransfer;
 }
 
-const parseTokenTransfers = (transfers:TokenTransfer[]):CummulativeTransfers[]=>{
+const parseTokenTransfers = (transfers:TokenTransfer[]):CummulativeTransfers[] => {
   const updatedTxArray: CummulativeTransfers[] = [];
   const swapsIdx = [-1];
 
-  transfers.forEach((tx,idx)=>{
-    if(tx.reefswapAction==='Swap' && !swapsIdx.includes(idx)){
+  transfers.forEach((tx, idx) => {
+    if (tx.reefswapAction === 'Swap' && !swapsIdx.includes(idx)) {
       swapsIdx.push(idx);
-      const swapPair = transfers.find(t=>t.extrinsic.id==tx.extrinsic.id && t.reefswapAction==='Swap' && t.token!=tx.token)
+      const swapPair = transfers.find((t) => t.extrinsic.id == tx.extrinsic.id && t.reefswapAction === 'Swap' && t.token != tx.token);
       const swapPairIdx = transfers.indexOf(swapPair!);
       swapsIdx.push(swapPairIdx);
-      const feesIdx =swapPairIdx+1;
-      if(feesIdx<=transfers.length){
+      const feesIdx = swapPairIdx + 1;
+      if (feesIdx <= transfers.length) {
         swapsIdx.push(feesIdx);
         updatedTxArray.push({
           isSwap: true,
-          token1:tx,
-          token2:swapPair!,
-          fees:transfers[feesIdx]
-        } as CummulativeTransfers) 
+          token1: tx,
+          token2: swapPair!,
+          fees: transfers[feesIdx],
+        } as CummulativeTransfers);
       }
-    }else if(tx.reefswapAction==='Swap' || swapsIdx.includes(idx)){}
-    else{
+    } else if (tx.reefswapAction === 'Swap' || swapsIdx.includes(idx)) {} else {
       updatedTxArray.push({
         ...tx,
-        isSwap:false
-      })
+        isSwap: false,
+      });
     }
-  })
+  });
   return updatedTxArray;
-}
+};
 
 export const Activity = (): JSX.Element => {
   const [unparsedTransfers, loading] :[TokenTransfer[], boolean] = hooks.useTxHistory();
 
   const transfers = parseTokenTransfers(unparsedTransfers);
-  console.log(transfers)
+  console.log(transfers);
   const {
     selectedSigner, network,
   } = useContext(ReefSigners);
@@ -79,7 +80,7 @@ export const Activity = (): JSX.Element => {
     setSelectedTransaction(transaction);
   };
 
-  const [swapPair,setSwapPair] = useState<SwapPair|undefined>(undefined);
+  const [swapPair, setSwapPair] = useState<SwapPair|undefined>(undefined);
 
   // @ts-ignore
   return (
@@ -112,40 +113,43 @@ export const Activity = (): JSX.Element => {
           <div>
 
             {transfers.map((item, index) => {
-              if(item.isSwap){
+              if (item.isSwap) {
                 // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-                return <div
-              key={`item-wrapper-${item.timestamp + index.toString()}`}
-              onClick={() => {
-                setSwapPair({
-                  pair:`${item.token1!.token.name}-${item.token2!.token.name}`,
-                  token1:item.token1,
-                  token2:item.token2,
-                  fees:item.fees
-                } as SwapPair)
-                setSwapActivityModalOpen(!isSwapActivityModalOpen);
-              }}
-            >
-                 <SwapActivityItem fees={item.fees!} token1={item.token1!} token2={item.token2!} />
-                 </div>
+                return (
+                  <div
+                    key={`item-wrapper-${item.timestamp + index.toString()}`}
+                    onClick={() => {
+                      setSwapPair({
+                        pair: `${item.token1!.token.name}-${item.token2!.token.name}`,
+                        token1: item.token1,
+                        token2: item.token2,
+                        fees: item.fees,
+                      } as SwapPair);
+                      setSwapActivityModalOpen(!isSwapActivityModalOpen);
+                    }}
+                  >
+                    <SwapActivityItem fees={item.fees!} token1={item.token1!} token2={item.token2!} />
+                  </div>
+                );
               }
               return (
               // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-              <div
-                key={`item-wrapper-${item.timestamp + index.toString()}`}
-                onClick={() => {
-                  setCurrentTransaction(item);
-                  setActivityModalOpen(!isActivityModalOpen);
-                }}
-              >
-                <ActivityItem
-                  key={item.timestamp + index.toString()}
-                  timestamp={item.timestamp}
-                  token={item.token}
-                  inbound={item.inbound}
-                />
-              </div>
-            )})}
+                <div
+                  key={`item-wrapper-${item.timestamp + index.toString()}`}
+                  onClick={() => {
+                    setCurrentTransaction(item);
+                    setActivityModalOpen(!isActivityModalOpen);
+                  }}
+                >
+                  <ActivityItem
+                    key={item.timestamp + index.toString()}
+                    timestamp={item.timestamp}
+                    token={item.token}
+                    inbound={item.inbound}
+                  />
+                </div>
+              );
+            })}
           </div>
         )}
         {!transfers && (
@@ -172,7 +176,7 @@ export const Activity = (): JSX.Element => {
         />
       )}
       {!!transfers && !!transfers.length && isSwapActivityModalOpen && (
-        <SwapActivityDetails isOpen={isSwapActivityModalOpen} onClose={()=>setSwapActivityModalOpen(false)} swapPair={swapPair!}/>
+        <SwapActivityDetails isOpen={isSwapActivityModalOpen} onClose={() => setSwapActivityModalOpen(false)} swapPair={swapPair!} />
       )}
     </div>
   );

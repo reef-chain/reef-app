@@ -1,46 +1,20 @@
-import {
-  Token, TokenTransfer, utils,
-} from '@reef-chain/react-lib';
+import { Token, TokenTransfer, utils } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React, { useContext, useMemo } from 'react';
-import './activity-item.css';
-import {
-  faRepeat,
-} from '@fortawesome/free-solid-svg-icons';
+import React, { useContext, useMemo } from 'react'
 import HideBalance from '../../../context/HideBalance';
 import { displayBalanceFromToken } from '../../../utils/displayBalance';
 import { getIpfsGatewayUrl } from '../../../environment';
-import '../loading-animation.css';
+import './activity-item.css';
+
+interface Props{
+    token1:TokenTransfer;
+    token2:TokenTransfer;
+    fees:TokenTransfer;
+}
 
 const { showBalance } = utils;
 
-interface Props {
-  token1: TokenTransfer;
-  token2: TokenTransfer;
-  fees: TokenTransfer;
-}
-
-const formatDate = (timestamp: number): string => {
-  let date = new Date(timestamp);
-  const offset = date.getTimezoneOffset();
-  date = new Date(date.getTime() - offset * 60 * 1000);
-  const formattedDate = date
-    .toISOString()
-    .split('T')[0]
-    .split('-')
-    .reverse()
-    .join('-');
-  const formattedTime = date
-    .toISOString()
-    .split('T')[1]
-    .split(':')
-    .slice(0, 2)
-    .join(':');
-
-  return `${formattedDate}, ${formattedTime}`;
-};
-
-const SwapActivityItem = ({ token1, token2, fees }: Props): JSX.Element => {
+function SwapDetails({token1,token2,fees}:Props) {
   const hideBalance = useContext(HideBalance);
 
   const type1: 'receive' | 'send' = token1.inbound ? 'receive' : 'send';
@@ -93,40 +67,17 @@ const SwapActivityItem = ({ token1, token2, fees }: Props): JSX.Element => {
       />
     );
   }, [token2.token.iconUrl]);
-
   return (
-    <>
-      <div
-        key={token1.timestamp}
-        className={`
-          activity-item
-          activity-item--send
-        `}
-      >
-        <div className="activity-item__indicator">
-          <Uik.Icon icon={faRepeat} />
+    <div>
+        <div style={{display:'flex'}}>
+        <div style={{display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
+        <Uik.Text type='mini' text={`Sent ${token1.token.name}`}/>
+        <div className='mb-3'>
+        <Uik.Text type='mini' text={`Received ${token2.token.name}`}/>
         </div>
-
-        <div className="activity-item__content">
-          <div
-            className="activity-item__info"
-            style={{ display: 'flex', justifyContent: 'space-between' }}
-          >
-            <div>
-              <div
-                className="activity-item__title"
-                title={`Swap ${token1.token.symbol}-${token2.token.symbol}`}
-              >
-                {`Swap ${token1.token.symbol}-${token2.token.symbol}`}
-              </div>
-              <Uik.Text text={(type1 === 'receive' ? 'Received ' : 'Sent ') + token1.token.name} type="mini" />
-              <Uik.Text text={(type2 === 'receive' ? 'Received ' : 'Sent ') + token2.token.name} type="mini" />
-              <div className="activity-item__date">
-                {formatDate(token1.timestamp)}
-              </div>
-            </div>
-          </div>
-          <div>
+        </div>
+        <div style={{display:'flex',flexDirection:'column'}}>
+        <div>
             <div
               className="activity-item__amount-wrapper"
               title={`${type1 === 'receive' ? '+' : '-'} ${showBalance(
@@ -203,9 +154,9 @@ const SwapActivityItem = ({ token1, token2, fees }: Props): JSX.Element => {
             </div>
           </div>
         </div>
-      </div>
-    </>
-  );
-};
+        </div>
+    </div>
+  )
+}
 
-export default SwapActivityItem;
+export default SwapDetails
