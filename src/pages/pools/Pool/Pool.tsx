@@ -54,7 +54,6 @@ const Pool = (): JSX.Element => {
     signer?.address || '',
     tokenPrices,
     axios,
-    timeData,
   );
 
   const tokenPrice1 = (poolInfo ? tokenPrices[poolInfo.firstToken.address] : 0) || 0;
