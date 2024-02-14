@@ -9,7 +9,7 @@ import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-i
 import { Contract, ContractFactory, utils } from 'ethers';
 import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
-import { Network } from '@reef-chain/util-lib/dist/network';
+import { Network } from '@reef-chain/util-lib/dist/dts/network/index';
 import { verifyContract } from '../../utils/contract';
 import { DeployContractData, deployTokens } from './tokensDeployData';
 import './creator.css';
@@ -205,8 +205,9 @@ const createToken = async ({
       ...updateTokensBalance, visibility: true,
     });
     const tokenBalancesSub = reefState.selectedTokenBalances$.subscribe((e) => {
-      const addresses = e.map((token) => token.address);
-      if (addresses.includes(contract?.address)) {
+      const addresses = e!.map((token) => token.address);
+      // eslint-disable-next-line @typescript-eslint/no-non-null-asserted-optional-chain
+      if (addresses.includes(contract?.address!)) {
         setUpdateTokensBalance({
           message: 'Token balances updated',
           visibility: true,

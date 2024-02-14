@@ -1,8 +1,10 @@
 import { createContext } from 'react';
 import { ReefSigner } from '@reef-chain/react-lib';
-import { Network, reefState } from '@reef-chain/util-lib';
+import { Network } from '@reef-chain/util-lib/dist/dts/network/index';
+import type { reefState } from '@reef-chain/util-lib';
 import { Provider } from '@reef-chain/evm-provider';
 
+// @ts-ignore
 export type ReefState = reefState;
 
 interface ReefSignersContext {

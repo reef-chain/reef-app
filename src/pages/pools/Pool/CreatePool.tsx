@@ -3,7 +3,7 @@ import {
 } from '@reef-chain/react-lib';
 import axios from 'axios';
 import React, { useContext, useReducer, useState } from 'react';
-import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
+import { DexProtocolv2 } from '@reef-chain/util-lib/dist/dts/network/index';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import { notify } from '../../../utils/utils';

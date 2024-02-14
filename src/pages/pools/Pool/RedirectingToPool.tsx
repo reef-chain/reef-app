@@ -7,7 +7,7 @@ import PoolContext from '../../../context/PoolContext';
 import './redirecting.css';
 
 function RedirectingToPool():JSX.Element {
-  const contractEvents = hooks.useObservableState(network.getLatestBlockContractEvents$()) as []|undefined;
+  const contractEvents = hooks.useObservableState(network.getLatestBlockContractEvents$());
   const [poolAddress, setPoolAddress] = useState<string|undefined>();
   const pools = useContext(PoolContext);
 
@@ -20,9 +20,12 @@ function RedirectingToPool():JSX.Element {
     }
   }
 
+  // @ts-ignore
   if (!poolAddress && contractEvents && contractEvents.length) {
+    // @ts-ignore
     if (contractEvents.length >= 3) {
       // TODO how do we know it's the right pool address?
+      // @ts-ignore
       const _poolAddress = contractEvents[contractEvents.length - 1];
       setPoolAddress(_poolAddress);
     }

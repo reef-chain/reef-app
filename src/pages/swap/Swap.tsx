@@ -4,7 +4,7 @@ import {
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
+import { DexProtocolv2 } from '@reef-chain/util-lib/dist/dts/network/index';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, SPECIFIED_SWAP_URL, UrlAddressParams } from '../../urls';

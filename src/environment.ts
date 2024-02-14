@@ -1,5 +1,5 @@
 import { network as nw } from '@reef-chain/util-lib';
-import type { Network, DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
+import type { Network, DexProtocolv2 } from '@reef-chain/util-lib/dist/dts/network/index';
 import { useEffect, useState } from 'react';
 
 export const isReefswapUI = window.location.host.indexOf('reefswap') > -1;
