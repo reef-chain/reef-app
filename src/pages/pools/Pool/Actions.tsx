@@ -2,10 +2,11 @@ import {
   Components, hooks, store, Token,
 } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React, { useContext, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
+import { DexProtocolv2} from '@reef-chain/util-lib/dist/network';
+import {network as nwUtil} from "@reef-chain/util-lib";
 import PoolContext from '../../../context/PoolContext';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
@@ -34,6 +35,13 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const pools = useContext(PoolContext);
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
+
+  const accountBlockUpdate = hooks.useObservableState(nwUtil.getLatestBlockAccountUpdates$([signer?.address!]))
+
+  useEffect(()=>{
+    if(!finalized && accountBlockUpdate)setFinalized(true);
+  },[accountBlockUpdate])
+  
   const network:DexProtocolv2|undefined = useDexConfig(nw);
 
   // Trade
@@ -64,7 +72,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     onSuccess: () => {
       setFinalized(false);
     },
-    onFinalized: () => setFinalized(true),
+    // onFinalized: () => setFinalized(true),
   });
   const onSwitch = (): void => {
     tradeDispatch(store.switchTokensAction());
@@ -98,7 +106,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     notify,
     updateTokenState: async () => {}, // eslint-disable-line
     onSuccess: () => setFinalized(false),
-    onFinalized: () => setFinalized(true),
+    // onFinalized: () => setFinalized(true),
   });
 
   // Withdraw
@@ -126,7 +134,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     notify,
     dispatch: withdrawDispatch,
     onSuccess: () => setFinalized(false),
-    onFinalized: () => setFinalized(true),
+    // onFinalized: () => setFinalized(true),
   });
 
   if (!finalized) return <Finalizing />;
