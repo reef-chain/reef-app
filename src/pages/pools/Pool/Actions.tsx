@@ -2,7 +2,9 @@ import {
   Components, hooks, store, Token,
 } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React, { useContext, useReducer, useState } from 'react';
+import React, {
+  useContext, useEffect, useReducer, useState,
+} from 'react';
 import { useHistory } from 'react-router-dom';
 import axios, { AxiosInstance } from 'axios';
 import { network as libNet } from '@reef-chain/util-lib';
@@ -35,7 +37,14 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
   const httpClient: AxiosInstance = axios;
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-  const network:libNet.DexProtocolv2|undefined = useDexConfig(nw);
+
+    const accountBlockUpdate = hooks.useObservableState(libNet.getLatestBlockAccountUpdates$(signer?.address ? [signer?.address] : undefined));
+
+    useEffect(() => {
+        if (!finalized && accountBlockUpdate)setFinalized(true);
+    }, [accountBlockUpdate]);
+
+    const network:libNet.DexProtocolv2|undefined = useDexConfig(nw);
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
@@ -65,7 +74,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     onSuccess: () => {
       setFinalized(false);
     },
-    onFinalized: () => setFinalized(true),
+    // onFinalized: () => setFinalized(true),
   });
   const onSwitch = (): void => {
     tradeDispatch(store.switchTokensAction());
@@ -99,7 +108,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     notify,
     updateTokenState: async () => {}, // eslint-disable-line
     onSuccess: () => setFinalized(false),
-    onFinalized: () => setFinalized(true),
+    // onFinalized: () => setFinalized(true),
   });
 
   // Withdraw
@@ -127,7 +136,7 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
     notify,
     dispatch: withdrawDispatch,
     onSuccess: () => setFinalized(false),
-    onFinalized: () => setFinalized(true),
+    // onFinalized: () => setFinalized(true),
   });
 
   if (!finalized) return <Finalizing />;
