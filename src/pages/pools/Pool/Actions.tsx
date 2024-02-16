@@ -2,11 +2,12 @@ import {
   Components, hooks, store, Token,
 } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React, { useContext, useEffect, useReducer, useState } from 'react';
+import React, {
+  useContext, useEffect, useReducer, useState,
+} from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
-import { DexProtocolv2} from '@reef-chain/util-lib/dist/network';
-import {network as nwUtil} from "@reef-chain/util-lib";
+import { network as libNet } from '@reef-chain/util-lib';
 import PoolContext from '../../../context/PoolContext';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
@@ -36,13 +37,13 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const accountBlockUpdate = hooks.useObservableState(nwUtil.getLatestBlockAccountUpdates$([signer?.address!]))
+  const accountBlockUpdate = hooks.useObservableState(libNet.getLatestBlockAccountUpdates$(signer?.address ? [signer?.address] : undefined));
 
-  useEffect(()=>{
-    if(!finalized && accountBlockUpdate)setFinalized(true);
-  },[accountBlockUpdate])
-  
-  const network:DexProtocolv2|undefined = useDexConfig(nw);
+  useEffect(() => {
+    if (!finalized && accountBlockUpdate)setFinalized(true);
+  }, [accountBlockUpdate]);
+
+  const network:libNet.DexProtocolv2|undefined = useDexConfig(nw);
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
