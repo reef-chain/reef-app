@@ -2,10 +2,10 @@
   "compilerOptions": {
     "target": "esnext",
     "lib": [
-      "DOM",
+      "dom",
       "DOM.Iterable",
       "esnext",
-      "ScriptHost" 
+      "ScriptHost"
     ],
     "allowJs": true,
     "skipLibCheck": true,

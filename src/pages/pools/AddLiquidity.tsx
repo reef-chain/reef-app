@@ -4,7 +4,7 @@ import {
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
+import { network as libNet } from '@reef-chain/util-lib';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { ADD_LIQUIDITY_URL, addressReplacer } from '../../urls';
@@ -24,7 +24,7 @@ const AddPoolLiquidity = (): JSX.Element => {
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-  const network:DexProtocolv2|undefined = useDexConfig(nw);
+  const network:libNet.DexProtocolv2|undefined = useDexConfig(nw);
 
   const [state, dispatch] = useReducer(store.addLiquidityReducer, store.initialAddLiquidityState);
   hooks.useAddLiquidity({

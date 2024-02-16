@@ -1,14 +1,25 @@
 import { createContext } from 'react';
 import { ReefSigner } from '@reef-chain/react-lib';
-import { Network, reefState } from '@reef-chain/util-lib';
+import { network as nw } from '@reef-chain/util-lib';
 import { Provider } from '@reef-chain/evm-provider';
+import {Observable} from "rxjs";
 
-export type ReefState = reefState;
+interface setAddr {
+  (val: string):void;
+}
+interface setNet {
+  (val: nw.Network):void;
+}
+export interface ReefState {
+  setSelectedAddress: setAddr;
+  setSelectedNetwork: setNet;
+  selectedTokenPrices$: Observable<never>
+}
 
 interface ReefSignersContext {
   accounts: ReefSigner[]|undefined;
   selectedSigner:ReefSigner|undefined;
-  network: Network;
+  network: nw.Network;
   provider: Provider|undefined;
   reefState: ReefState;
 }

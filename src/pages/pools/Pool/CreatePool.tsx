@@ -3,7 +3,7 @@ import {
 } from '@reef-chain/react-lib';
 import axios from 'axios';
 import React, { useContext, useReducer, useState } from 'react';
-import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
+import { network as libNet } from '@reef-chain/util-lib';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import { notify } from '../../../utils/utils';
@@ -37,7 +37,7 @@ const CreatePool = ({
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:DexProtocolv2|undefined = useDexConfig(nw);
+  const network: libNet.DexProtocolv2|undefined = useDexConfig(nw);
 
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,
