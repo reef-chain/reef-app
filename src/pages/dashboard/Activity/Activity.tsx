@@ -8,25 +8,81 @@ import ActivityItem, { Skeleton } from './ActivityItem';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 import ActivityDetails from './ActivityDetails';
 import ReefSigners from '../../../context/ReefSigners';
+import {tokenUtil} from "@reef-chain/util-lib";
+import SwapActivityItem from './SwapActivityItem';
+import SwapActivityDetails from './SwapActivityDetails';
 
 const noActivityTokenDisplay = createEmptyTokenWithAmount();
 noActivityTokenDisplay.address = '0x';
 noActivityTokenDisplay.iconUrl = '';
 noActivityTokenDisplay.name = 'No account history yet.';
 
+interface CummulativeTransfers extends TokenTransfer{
+  isSwap: boolean;
+  token1?:TokenTransfer;
+  token2?:TokenTransfer;
+  fees?:TokenTransfer;
+}
+
+export interface SwapPair {
+  pair:string;
+  token1: TokenTransfer;
+  token2: TokenTransfer;
+  fees: TokenTransfer;
+}
+
+const parseTokenTransfers = (transfers:TokenTransfer[]):CummulativeTransfers[] => {
+  const updatedTxArray: CummulativeTransfers[] = [];
+  const swapsIdx = [-1];
+
+  transfers.forEach((tx, idx) => {
+    if (tx.reefswapAction === 'Swap' && !swapsIdx.includes(idx)) {
+      swapsIdx.push(idx);
+      const swapPair = transfers.find((t) => t.extrinsic.id === tx.extrinsic.id && t.reefswapAction === 'Swap' && t.token !== tx.token);
+      const swapPairIdx = transfers.indexOf(swapPair!);
+      swapsIdx.push(swapPairIdx);
+      const feesIdx = swapPairIdx + 1;
+      if (feesIdx <= transfers.length) {
+        swapsIdx.push(feesIdx);
+        updatedTxArray.push({
+          isSwap: true,
+          token1: tx,
+          token2: swapPair!,
+          fees: transfers[feesIdx],
+        } as CummulativeTransfers);
+      }
+    } else if (tx.reefswapAction === 'Swap' || swapsIdx.includes(idx)) {
+      // @ts-ignore
+    } else {
+      updatedTxArray.push({
+        ...tx,
+        isSwap: false,
+      });
+    }
+  });
+  return updatedTxArray;
+};
+
 export const Activity = (): JSX.Element => {
-  const [transfers, loading] :[tokenUtil.TokenTransfer[], boolean] = hooks.useTxHistory();
+  const [unparsedTransfers, loading] :[tokenUtil.TokenTransfer[], boolean] = hooks.useTxHistory();
+
+  const transfers = parseTokenTransfers(unparsedTransfers);
+  console.log(transfers);
   const {
     selectedSigner, network,
   } = useContext(ReefSigners);
 
   const [isActivityModalOpen, setActivityModalOpen] = useState(false);
+  const [isSwapActivityModalOpen, setSwapActivityModalOpen] = useState(false);
+
   const [selectedTransaction, setSelectedTransaction] = useState<tokenUtil.TokenTransfer|null>(null);
 
   // set current transaction as parameter and call setSelectedTransaction state function.
   const setCurrentTransaction = (transaction : tokenUtil.TokenTransfer): void => {
     setSelectedTransaction(transaction);
   };
+
+  const [swapPair, setSwapPair] = useState<SwapPair|undefined>(undefined);
 
   // @ts-ignore
   return (
@@ -58,23 +114,44 @@ export const Activity = (): JSX.Element => {
         {!!transfers && !!transfers.length && (
           <div>
 
-            {transfers.map((item, index) => (
+            {transfers.map((item, index) => {
+              if (item.isSwap) {
+                // eslint-disable-next-line jsx-a11y/no-static-element-interactions
+                return (
+                  <div
+                    key={`item-wrapper-${item.timestamp + index.toString()}`}
+                    onClick={() => {
+                      setSwapPair({
+                        pair: `${item.token1!.token.name}-${item.token2!.token.name}`,
+                        token1: item.token1,
+                        token2: item.token2,
+                        fees: item.fees,
+                      } as SwapPair);
+                      setSwapActivityModalOpen(!isSwapActivityModalOpen);
+                    }}
+                  >
+                    <SwapActivityItem fees={item.fees!} token1={item.token1!} token2={item.token2!} />
+                  </div>
+                );
+              }
+              return (
               // eslint-disable-next-line jsx-a11y/no-static-element-interactions
-              <div
-                key={`item-wrapper-${item.timestamp + index.toString()}`}
-                onClick={() => {
-                  setCurrentTransaction(item);
-                  setActivityModalOpen(!isActivityModalOpen);
-                }}
-              >
-                <ActivityItem
-                  key={item.timestamp + index.toString()}
-                  timestamp={item.timestamp}
-                  token={item.token}
-                  inbound={item.inbound}
-                />
-              </div>
-            ))}
+                <div
+                  key={`item-wrapper-${item.timestamp + index.toString()}`}
+                  onClick={() => {
+                    setCurrentTransaction(item);
+                    setActivityModalOpen(!isActivityModalOpen);
+                  }}
+                >
+                  <ActivityItem
+                    key={item.timestamp + index.toString()}
+                    timestamp={item.timestamp}
+                    token={item.token}
+                    inbound={item.inbound}
+                  />
+                </div>
+              );
+            })}
           </div>
         )}
         {!transfers && (
@@ -99,7 +176,9 @@ export const Activity = (): JSX.Element => {
           inbound={selectedTransaction.inbound}
           token={selectedTransaction.token}
         />
-
+      )}
+      {!!transfers && !!transfers.length && isSwapActivityModalOpen && (
+        <SwapActivityDetails isOpen={isSwapActivityModalOpen} onClose={() => setSwapActivityModalOpen(false)} swapPair={swapPair!} />
       )}
     </div>
   );
