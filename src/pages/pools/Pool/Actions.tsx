@@ -38,13 +38,15 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-    const accountBlockUpdate = hooks.useObservableState(libNet.getLatestBlockAccountUpdates$(signer?.address ? [signer?.address] : undefined));
+  const accountBlockUpdate = hooks.useObservableState(libNet.getLatestBlockAccountUpdates$(signer?.address ? [signer?.address] : undefined));
 
-    useEffect(() => {
-        if (!finalized && accountBlockUpdate)setFinalized(true);
-    }, [accountBlockUpdate]);
+  useEffect(() => {
+    if (!finalized && accountBlockUpdate) {
+      setFinalized(true);
+    }
+  }, [accountBlockUpdate]);
 
-    const network:libNet.DexProtocolv2|undefined = useDexConfig(nw);
+  const network:libNet.DexProtocolv2|undefined = useDexConfig(nw);
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
