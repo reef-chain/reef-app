@@ -4039,10 +4039,10 @@
     blakejs "~1.2.1"
     ethers "~5.5.0"
 
-"@reef-chain/react-lib@^2.4.1":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@reef-chain/react-lib/-/react-lib-2.4.1.tgz#408ff0690c196082135c28cdf072c42aef33201e"
-  integrity sha512-VzxMduPMVk67PmICdcwc5v4Y5mhEDEA65WZ/1fqb3hTVwd0N8bBaRHzhoehdMDvj9lX6O1/Upa44lujJwIEEyg==
+"@reef-chain/react-lib@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@reef-chain/react-lib/-/react-lib-2.5.0.tgz#45d58b8651c8eae1d5cc849a58fa5168243fe532"
+  integrity sha512-OtZaacjCiDUjtegjSVMnB3S7MBBJSL4+ZaxKFOUm/7c9RZpUKF7WEhAUi9k4ZJvt9OhTqmPnnGnYiA12b4q07Q==
   dependencies:
     "@fortawesome/free-regular-svg-icons" "^6.1.0"
     "@fortawesome/free-solid-svg-icons" "^6.1.0"
@@ -4051,12 +4051,12 @@
     "@polkadot/react-identicon" "^0.86.4"
     "@reef-chain/evm-provider" "^2.0.3"
     "@reef-chain/ui-kit" "^1.1.6"
-    "@reef-chain/util-lib" "^2.3.4"
+    "@reef-chain/util-lib" "^2.4.2"
     "@reef-defi/extension-base" "^1.0.14"
     "@reef-defi/extension-dapp" "^1.0.14"
     "@reef-defi/extension-inject" "^1.0.14"
     "@types/react-router-dom" "^5.3.0"
-    axios "^0.21.4"
+    axios "^1.6.5"
     bignumber.js "^9.0.2"
     bootstrap "^5.1.1"
     eslint-config-prettier "^9.1.0"
@@ -4105,7 +4105,7 @@
     graphql "^16.6.0"
     subscriptions-transport-ws "^0.11.0"
 
-"@reef-chain/util-lib@^2.3.4", "@reef-chain/util-lib@^2.4.2":
+"@reef-chain/util-lib@^2.4.2":
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/@reef-chain/util-lib/-/util-lib-2.4.2.tgz#16edb6ef4fc32c0d579e694d0a9b71c4e8a58aa8"
   integrity sha512-KuSbnjD4nSjGpSZwBztJUusF7O3FeChJTkLupwXWoWTpyUSBlApfqzCwvBRJuzdI/waLOlUlMl0Ze/43JdEU9Q==
@@ -6154,13 +6154,6 @@ axe-core@=4.7.0:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.7.0.tgz#34ba5a48a8b564f67e103f0aa5768d76e15bbbbf"
   integrity sha512-M0JtH+hlOL5pLQwHOLNYZaXuhqmvS8oExsqB1SBYgA4Dk7u/xx+YdGHXaK5pyUfed5mYXdlYiphWq3G8cRi5JQ==
 
-axios@^0.21.4:
-  version "0.21.4"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.4.tgz#c67b90dc0568e5c1cf2b0b858c43ba28e2eda575"
-  integrity sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==
-  dependencies:
-    follow-redirects "^1.14.0"
-
 axios@^0.27.2:
   version "0.27.2"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.27.2.tgz#207658cc8621606e586c85db4b41a750e756d972"
@@ -6169,7 +6162,7 @@ axios@^0.27.2:
     follow-redirects "^1.14.9"
     form-data "^4.0.0"
 
-axios@^1.6.2, axios@^1.6.7:
+axios@^1.6.2, axios@^1.6.5, axios@^1.6.7:
   version "1.6.7"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.6.7.tgz#7b48c2e27c96f9c68a2f8f31e2ab19f59b06b0a7"
   integrity sha512-/hDJGff6/c7u0hDkvkGxR/oy6CbCs8ziCsC7SqmhjfozqiJGc8Z11wrv9z9lYfY4K8l+H9TpjcMDX0xOZmx+RA==
@@ -9732,7 +9725,7 @@ flatten@^1.0.2:
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.3.tgz#c1283ac9f27b368abc1e36d1ff7b04501a30356b"
   integrity sha512-dVsPA/UwQ8+2uoFe5GHtiBMu48dWLTdsuEd7CKGlZlD78r1TTWBvDuFaFGKCo/ZfEr95Uk56vZoX86OsHkUeIg==
 
-follow-redirects@^1.0.0, follow-redirects@^1.14.0, follow-redirects@^1.14.9, follow-redirects@^1.15.4:
+follow-redirects@^1.0.0, follow-redirects@^1.14.9, follow-redirects@^1.15.4:
   version "1.15.5"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.5.tgz#54d4d6d062c0fa7d9d17feb008461550e3ba8020"
   integrity sha512-vSFWUON1B+yAw1VN4xMfxgn5fTUiaOzAJCKBwIIgT/+7CuGy9+r+5gITvP62j3RmaD5Ph65UaERdOSRGUzZtgw==
@@ -17725,9 +17718,9 @@ wcwidth@^1.0.1:
     defaults "^1.0.3"
 
 web-streams-polyfill@^3.0.3:
-  version "3.3.2"
-  resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.3.2.tgz#32e26522e05128203a7de59519be3c648004343b"
-  integrity sha512-3pRGuxRF5gpuZc0W+EpwQRmCD7gRqcDOMt688KmdlDAgAyaB1XlN0zq2njfDNm44XVdIouE7pZ6GzbdyH47uIQ==
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/web-streams-polyfill/-/web-streams-polyfill-3.3.3.tgz#2073b91a2fdb1fbfbd401e7de0ac9f8214cecb4b"
+  integrity sha512-d2JWLCivmZYTSIoge9MsgFCZrt571BikcWGYkjC1khllbTeDlGqZ2D8vD8E/lJa8WGWbb7Plm8/XJYV7IJHZZw==
 
 web-vitals@^1.0.1:
   version "1.1.2"
