@@ -1,6 +1,7 @@
-import { Token, TokenTransfer, utils } from '@reef-chain/react-lib';
+import { Token, utils } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useMemo } from 'react';
+import { tokenUtil } from '@reef-chain/util-lib';
 import HideBalance from '../../../context/HideBalance';
 import { displayBalanceFromToken } from '../../../utils/displayBalance';
 import { getIpfsGatewayUrl } from '../../../environment';
@@ -8,9 +9,9 @@ import './activity-item.css';
 import './activity-details.css';
 
 interface Props{
-    token1:TokenTransfer;
-    token2:TokenTransfer;
-    fees:TokenTransfer;
+    token1:tokenUtil.TokenTransfer;
+    token2:tokenUtil.TokenTransfer;
+    fees:tokenUtil.TokenTransfer;
 }
 
 const { showBalance } = utils;

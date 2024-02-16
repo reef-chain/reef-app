@@ -1,4 +1,3 @@
-import { TokenTransfer } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React from 'react';
 import './activity-item.css';
@@ -6,12 +5,13 @@ import {
   faRepeat,
 } from '@fortawesome/free-solid-svg-icons';
 import '../loading-animation.css';
+import { tokenUtil } from '@reef-chain/util-lib';
 import SwapDetails from './SwapDetails';
 
 interface Props {
-  token1: TokenTransfer;
-  token2: TokenTransfer;
-  fees: TokenTransfer;
+  token1: tokenUtil.TokenTransfer;
+  token2: tokenUtil.TokenTransfer;
+  fees: tokenUtil.TokenTransfer;
 }
 
 const formatDate = (timestamp: number): string => {

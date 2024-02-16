@@ -8,7 +8,6 @@ import ActivityItem, { Skeleton } from './ActivityItem';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 import ActivityDetails from './ActivityDetails';
 import ReefSigners from '../../../context/ReefSigners';
-import {tokenUtil} from "@reef-chain/util-lib";
 import SwapActivityItem from './SwapActivityItem';
 import SwapActivityDetails from './SwapActivityDetails';
 
@@ -17,21 +16,21 @@ noActivityTokenDisplay.address = '0x';
 noActivityTokenDisplay.iconUrl = '';
 noActivityTokenDisplay.name = 'No account history yet.';
 
-interface CummulativeTransfers extends TokenTransfer{
+interface CummulativeTransfers extends tokenUtil.TokenTransfer{
   isSwap: boolean;
-  token1?:TokenTransfer;
-  token2?:TokenTransfer;
-  fees?:TokenTransfer;
+  token1?:tokenUtil.TokenTransfer;
+  token2?:tokenUtil.TokenTransfer;
+  fees?:tokenUtil.TokenTransfer;
 }
 
 export interface SwapPair {
   pair:string;
-  token1: TokenTransfer;
-  token2: TokenTransfer;
-  fees: TokenTransfer;
+  token1: tokenUtil.TokenTransfer;
+  token2: tokenUtil.TokenTransfer;
+  fees: tokenUtil.TokenTransfer;
 }
 
-const parseTokenTransfers = (transfers:TokenTransfer[]):CummulativeTransfers[] => {
+const parseTokenTransfers = (transfers:tokenUtil.TokenTransfer[]):CummulativeTransfers[] => {
   const updatedTxArray: CummulativeTransfers[] = [];
   const swapsIdx = [-1];
 
