@@ -5,7 +5,7 @@ import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useReducer, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios, { AxiosInstance } from 'axios';
-import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
+import { network as libNet } from '@reef-chain/util-lib';
 import PoolContext from '../../../context/PoolContext';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';

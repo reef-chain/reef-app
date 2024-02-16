@@ -1,8 +1,9 @@
-import { createEmptyTokenWithAmount, hooks, TokenTransfer } from '@reef-chain/react-lib';
+import { createEmptyTokenWithAmount, hooks } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import './activity.css';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import { tokenUtil } from '@reef-chain/util-lib';
 import ActivityItem, { Skeleton } from './ActivityItem';
 import { localizedStrings as strings } from '../../../l10n/l10n';
 import ActivityDetails from './ActivityDetails';
@@ -14,16 +15,16 @@ noActivityTokenDisplay.iconUrl = '';
 noActivityTokenDisplay.name = 'No account history yet.';
 
 export const Activity = (): JSX.Element => {
-  const [transfers, loading] :[TokenTransfer[], boolean] = hooks.useTxHistory();
+  const [transfers, loading] :[tokenUtil.TokenTransfer[], boolean] = hooks.useTxHistory();
   const {
     selectedSigner, network,
   } = useContext(ReefSigners);
 
   const [isActivityModalOpen, setActivityModalOpen] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState<TokenTransfer|null>(null);
+  const [selectedTransaction, setSelectedTransaction] = useState<tokenUtil.TokenTransfer|null>(null);
 
   // set current transaction as parameter and call setSelectedTransaction state function.
-  const setCurrentTransaction = (transaction : TokenTransfer): void => {
+  const setCurrentTransaction = (transaction : tokenUtil.TokenTransfer): void => {
     setSelectedTransaction(transaction);
   };
 
