@@ -1,6 +1,6 @@
 import { createEmptyTokenWithAmount, hooks } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './activity.css';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { tokenUtil } from '@reef-chain/util-lib';
@@ -64,9 +64,12 @@ const parseTokenTransfers = (transfers:tokenUtil.TokenTransfer[]):CummulativeTra
 
 export const Activity = (): JSX.Element => {
   const [unparsedTransfers, loading] :[tokenUtil.TokenTransfer[], boolean] = hooks.useTxHistory();
+  const [transfers, setTransfers] = useState([]);
 
-  const transfers = parseTokenTransfers(unparsedTransfers);
-  console.log(transfers);
+  useEffect(() => {
+    setTransfers(parseTokenTransfers(unparsedTransfers));
+  }, [unparsedTransfers]);
+
   const {
     selectedSigner, network,
   } = useContext(ReefSigners);
