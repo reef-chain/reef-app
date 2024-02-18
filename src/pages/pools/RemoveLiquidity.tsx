@@ -1,8 +1,8 @@
 import { Components, hooks, store } from '@reef-chain/react-lib';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import axios from 'axios';
-import type { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
+import axios, { AxiosInstance } from 'axios';
+import type { network as libNet } from '@reef-chain/util-lib';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { notify } from '../../utils/utils';
@@ -21,10 +21,11 @@ const RemoveLiquidity = (): JSX.Element => {
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
   const { address1, address2 } = useParams<UrlParams>();
+  const httpClient: AxiosInstance = axios;
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:DexProtocolv2|undefined = useDexConfig(nw);
+  const network:libNet.DexProtocolv2|undefined = useDexConfig(nw);
 
   const [state, dispatch] = useReducer(
     store.removeLiquidityReducer,
@@ -38,7 +39,7 @@ const RemoveLiquidity = (): JSX.Element => {
     state,
     tokens,
     signer: signer || undefined,
-    httpClient: axios,
+    httpClient,
     tokenPrices,
   });
 
