@@ -8,13 +8,14 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
 import { saveSignerLocalPointer } from '../store/internalStore';
 import {
-  BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL,
+  BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL, WALLETS_URL,
 } from '../urls';
 import { appAvailableNetworks, isReefswapUI } from '../environment';
 import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
 import { localizedStrings } from '../l10n/l10n';
 import ReefSigners from '../context/ReefSigners';
+import { AccountCreationData } from '@reef-chain/ui-kit/dist/ui-kit/components/organisms/AccountSelector/AccountSelector';
 
 export interface Nav {
     display: boolean;
@@ -30,6 +31,7 @@ const Nav = ({ display }: Nav): JSX.Element => {
   let menuItems = [
     { title: localizedStrings.dashboard, url: DASHBOARD_URL },
     { title: localizedStrings.bonds, url: BONDS_URL },
+    { title: "Wallets", url: WALLETS_URL },
   ];
   if (isReefswapUI) {
     menuItems = [
@@ -88,6 +90,43 @@ const Nav = ({ display }: Nav): JSX.Element => {
     return undefined;
   }, [network]);
 
+  const renameAccount = (address: string, newName: string): void => {
+    console.log('renameAccount', address, newName);
+  }
+
+  const exportAccount = (address: string): void => {
+    console.log('exportAccount', address);
+  }
+
+  const importAccount = (): void => {
+    console.log('importAccount');
+  }
+
+  const forgetAccount = (address: string): void => {
+    console.log('forgetAccount', address);
+  }
+
+  const setDefaultWallet = (isDefault: boolean): void => {
+    console.log('setDefaultWallet', isDefault);
+  }
+
+  const updateMetadata = (network: 'mainnet' | 'testnet'): void => {
+    console.log('updateMetadata', network);
+  }
+
+  const generateSeed = async (): Promise<AccountCreationData> => {
+    console.log('startAccountCreation');
+    return {
+      seed: 'seed',
+      address: 'address',
+    };
+
+  }
+
+  const createAccount = (seed: string, name: string): void => {
+    console.log('confirmAccountCreation', seed, name);
+  }
+
   return (
     <div className="nav-content navigation d-flex d-flex-space-between">
       <div className="navigation__wrapper">
@@ -114,6 +153,16 @@ const Nav = ({ display }: Nav): JSX.Element => {
               onLanguageSelect={selectLanguage}
               // availableNetworks={appAvailableNetworks.map((net) => net.name as unknown as Components.Network)}
               availableNetworks={isReefswapUI ? ['testnet'] : ['mainnet', 'testnet']}
+              showSnapOptions={false}
+              isDefaultWallet={false}
+              onRename={renameAccount}
+              onExport={exportAccount}
+              onImport={importAccount}
+              onForget={forgetAccount}
+              onDefaultWalletSelect={setDefaultWallet}
+              onUpdateMetadata={updateMetadata}
+              onStartAccountCreation={generateSeed}
+              onConfirmAccountCreation={createAccount}
             />
             )}
           </nav>
