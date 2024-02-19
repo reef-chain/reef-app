@@ -49,10 +49,9 @@ const SwapActivityItem = ({ token1, token2, fees }: Props): JSX.Element => (
 
       <div className="activity-item__content">
         <div
-          className="activity-item__info"
-          style={{ display: 'flex', justifyContent: 'space-between' }}
+          style={{ display: 'flex', justifyContent: 'space-between',width:"100%" }}
         >
-          <div>
+          <div style={{width:"100%"}}>
             <div
               className="activity-item__title"
               title={`Swap ${token1.token.symbol}-${token2.token.symbol}`}
