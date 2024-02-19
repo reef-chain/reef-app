@@ -70,97 +70,74 @@ function SwapDetails({ token1, token2, fees }:Props):JSX.Element {
     );
   }, [token2.token.iconUrl]);
   return (
+  
+    <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
+  <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
+    <Uik.Text type="mini" text={`${type1 === 'receive'?'Received':"Sent"} ${token1.token.name}`} />
+    <div className="mb-3">
+      <Uik.Text type="mini" text={`${type2 === 'receive'?'Received':"Sent"} ${token2.token.name}`} />
+    </div>
+  </div>
+  <div style={{ display: 'flex', flexDirection: 'column' }}>
     <div>
-      <div style={{ display: 'flex' }}>
-        <div style={{
-          display: 'flex', flexDirection: 'column', justifyContent: 'space-around', width: '14rem',
-        }}
+      <div
+        className="activity-item__amount-wrapper"
+        title={`${type1 === 'receive' ? '+' : '-'} ${showBalance(token1.token as Token)}`}
+      >
+        <div
+          className={`
+            activity-item__amount-swap activity-item__amount
+            ${type1 === 'receive' ? 'activity-item__amount-swap-receive' : ''}
+            ${hideBalance.isHidden ? 'activity-item__amount--hidden' : ''}
+          `}
         >
-          <Uik.Text type="mini" text={`Sent ${token1.token.name}`} />
-          <div className="mb-3">
-            <Uik.Text type="mini" text={`Received ${token2.token.name}`} />
-          </div>
+          {!hideBalance.isHidden ? (
+            amount1
+          ) : (
+            <div>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
+            </div>
+          )}
         </div>
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <div>
-            <div
-              className="activity-item__amount-wrapper"
-              title={`${type1 === 'receive' ? '+' : '-'} ${showBalance(
-                token1.token as Token,
-              )}`}
-            >
-              <div
-                className={`
-                    activity-item__amount-swap activity-item__amount
-                    ${
-                      type1 === 'receive'
-                        ? 'activity-item__amount-swap-receive'
-                        : ''
-                    }
-                    ${
-                      hideBalance.isHidden
-                        ? 'activity-item__amount--hidden'
-                        : ''
-                    }
-                  `}
-              >
-                {!hideBalance.isHidden ? (
-                  amount1
-                ) : (
-                  <div>
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                  </div>
-                )}
-              </div>
-              {activityPreviewIcon1}
+        {activityPreviewIcon1}
+      </div>
+      <div
+        className="activity-item__amount-wrapper"
+        title={`${type2 === 'receive' ? '+' : '-'} ${showBalance(token2.token as Token)}`}
+      >
+        <div
+          className={`
+            activity-item__amount-swap
+            activity-item__amount
+            ${type2 === 'receive' ? 'activity-item__amount-swap-receive' : ''}
+            ${hideBalance.isHidden ? 'activity-item__amount--hidden' : ''}
+          `}
+        >
+          {!hideBalance.isHidden ? (
+            amount2
+          ) : (
+            <div>
+              <div />
+              <div />
+              <div />
+              <div />
+              <div />
             </div>
-            <div
-              className="activity-item__amount-wrapper"
-              title={`${type2 === 'receive' ? '+' : '-'} ${showBalance(
-                token2.token as Token,
-              )}`}
-            >
-              <div
-                className={`
-                    activity-item__amount-swap
-                    activity-item__amount
-                    ${
-                      type2 === 'receive'
-                        ? 'activity-item__amount-swap-receive'
-                        : ''
-                    }
-                    ${
-                      hideBalance.isHidden
-                        ? 'activity-item__amount--hidden'
-                        : ''
-                    }
-                  `}
-              >
-                {!hideBalance.isHidden ? (
-                  amount2
-                ) : (
-                  <div>
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                    <div />
-                  </div>
-                )}
-              </div>
-              {activityPreviewIcon2}
-            </div>
-            <div className="activity-item__amount---swap-fees">
-              {`fee - ${displayBalanceFromToken(fees.token as Token)} REEF`}
-            </div>
-          </div>
+          )}
         </div>
+        {activityPreviewIcon2}
+      </div>
+      <div className="activity-item__amount---swap-fees">
+        {`fee - ${displayBalanceFromToken(fees.token as Token)} REEF`}
       </div>
     </div>
+  </div>
+</div>
+
   );
 }
 
