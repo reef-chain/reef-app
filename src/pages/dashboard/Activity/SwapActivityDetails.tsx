@@ -67,7 +67,7 @@ function SwapActivityDetails({ isOpen, onClose, swapPair }:Props):JSX.Element {
                 </div>
               </div>
               <Uik.Text text="Transfer Details" type="light" className="mt-2" />
-              <div className="transfer-asset__block my-2" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div className="transfer-asset__block my-2" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' ,padding:"2rem"}}>
                 <SwapDetails token1={swapPair.token1} token2={swapPair.token2} fees={swapPair.fees} />
 
               </div>
