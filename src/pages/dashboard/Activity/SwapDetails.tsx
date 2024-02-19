@@ -73,9 +73,9 @@ function SwapDetails({ token1, token2, fees }:Props):JSX.Element {
   
     <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
   <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
-    <Uik.Text type="mini" text={`Sent ${token1.token.name}`} />
+    <Uik.Text type="mini" text={`${type1 === 'receive'?'Received':"Sent"} ${token1.token.name}`} />
     <div className="mb-3">
-      <Uik.Text type="mini" text={`Received ${token2.token.name}`} />
+      <Uik.Text type="mini" text={`${type2 === 'receive'?'Received':"Sent"} ${token2.token.name}`} />
     </div>
   </div>
   <div style={{ display: 'flex', flexDirection: 'column' }}>
