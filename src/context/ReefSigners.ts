@@ -2,7 +2,7 @@ import { createContext } from 'react';
 import { ReefSigner } from '@reef-chain/react-lib';
 import { network as nw } from '@reef-chain/util-lib';
 import { Provider } from '@reef-chain/evm-provider';
-import {Observable} from "rxjs";
+import { Observable } from 'rxjs';
 
 interface setAddr {
   (val: string):void;

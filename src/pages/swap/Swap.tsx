@@ -25,7 +25,7 @@ const Swap = (): JSX.Element => {
   const network:libNet.DexProtocolv2|undefined = useDexConfig(nw);
   const httpClient: AxiosInstance = axios;
 
-    const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);
+  const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);
   // hook manages all necessary swap updates
   hooks.useSwapState({
     address1,
