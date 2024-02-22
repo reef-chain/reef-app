@@ -1,8 +1,9 @@
 import {
   Components, hooks, store, Token,
 } from '@reef-chain/react-lib';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import React, { useContext, useReducer, useState } from 'react';
+import { network as libNet } from '@reef-chain/util-lib';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
 import { notify } from '../../../utils/utils';
@@ -10,8 +11,9 @@ import '../../../common/overlay-swap.css';
 import './create-pool.css';
 import { localizedStrings } from '../../../l10n/l10n';
 import ReefSigners from '../../../context/ReefSigners';
-import { DexNetwork, useNetworkDex } from '../../../state/networkDex';
+
 import RedirectingToPool from './RedirectingToPool';
+import { useDexConfig } from '../../../environment';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
@@ -27,6 +29,7 @@ const CreatePool = ({
   const [address1, setAddress1] = useState('0x');
   const [address2, setAddress2] = useState('0x');
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const httpClient: AxiosInstance = axios;
 
   const [finalized, setFinalized] = useState(true);
 
@@ -35,7 +38,7 @@ const CreatePool = ({
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:DexNetwork|undefined = useNetworkDex(nw);
+  const network: libNet.DexProtocolv2|undefined = useDexConfig(nw);
 
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,
@@ -49,7 +52,7 @@ const CreatePool = ({
     state: provideState,
     tokens,
     signer: signer || undefined,
-    httpClient: axios,
+    httpClient,
     tokenPrices,
   });
 
@@ -57,7 +60,7 @@ const CreatePool = ({
     state: provideState,
     network,
     signer: signer || undefined,
-    batchTxs: network?.name === 'mainnet',
+    batchTxs: nw?.name === 'mainnet',
     dispatch: provideDispatch,
     notify,
     updateTokenState: async () => {}, // eslint-disable-line

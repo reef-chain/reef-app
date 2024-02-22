@@ -1,5 +1,5 @@
 import { network as nw } from '@reef-chain/util-lib';
-import type { Network } from './state/networkDex';
+import { useEffect, useState } from 'react';
 
 export const isReefswapUI = window.location.host.indexOf('reefswap') > -1;
 
@@ -13,10 +13,30 @@ export const testnetOverride = {
   ...nw.AVAILABLE_NETWORKS.testnet,
   rpcUrl: 'wss://rpc-testnet.reefscan.com/ws',
   verificationApiUrl: 'https://api-testnet.reefscan.info',
-} as Network;
+} as nw.Network;
 
 // export const mainnetOverride = { ...availableNetworks.testnet, rpcUrl: 'wss://rpc.reefscan.com/ws', verificationApiUrl: 'https://api-testnet.reefscan.info' } as Network;
 export const appAvailableNetworks = [nw.AVAILABLE_NETWORKS.mainnet, testnetOverride];
-export const getAppNetworkOverride = (network: Network): Network => appAvailableNetworks.find((net) => net.name === network.name) || network;
+export const getAppNetworkOverride = (network: nw.Network): nw.Network => appAvailableNetworks.find((net) => net.name === network.name) || network;
 // export const appAvailableNetworks = [availableNetworks.mainnet, availableNetworks.testnet];
 export const binanceConnectApiUrl = 'https://onramp.reefscan.info';
+
+export const useDexConfig = (network: nw.Network): nw.DexProtocolv2 | undefined => {
+  const [dexConfig, setDexConfig] = useState<nw.DexProtocolv2 | undefined>(undefined);
+
+  useEffect(() => {
+    const fetchDexConfig = async ():Promise<void> => {
+      try {
+        const config = nw.getReefswapNetworkConfig(network);
+        setDexConfig(config);
+      } catch (error) {
+        console.error('Error fetching dex config:', error);
+        setDexConfig(null);
+      }
+    };
+
+    fetchDexConfig().then();
+  }, [network]);
+
+  return dexConfig;
+};

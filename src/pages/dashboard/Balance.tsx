@@ -63,7 +63,7 @@ export const Balance = ({
         </button>
       </div>
       {
-        loading || getBalance == "US$NaN" ? <Loading />
+        loading || getBalance === 'US$NaN' ? <Loading />
           : (
             <button
               type="button"

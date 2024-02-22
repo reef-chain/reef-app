@@ -1,12 +1,13 @@
 import { Components, hooks, store } from '@reef-chain/react-lib';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import axios from 'axios';
-import { DexNetwork, useNetworkDex } from '../../state/networkDex';
+import axios, { AxiosInstance } from 'axios';
+import type { network as libNet } from '@reef-chain/util-lib';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
+import { useDexConfig } from '../../environment';
 
 const { RemoveLiquidityComponent } = Components;
 
@@ -20,10 +21,11 @@ const RemoveLiquidity = (): JSX.Element => {
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
   const { address1, address2 } = useParams<UrlParams>();
+  const httpClient: AxiosInstance = axios;
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:DexNetwork|undefined = useNetworkDex(nw);
+  const network:libNet.DexProtocolv2|undefined = useDexConfig(nw);
 
   const [state, dispatch] = useReducer(
     store.removeLiquidityReducer,
@@ -37,14 +39,14 @@ const RemoveLiquidity = (): JSX.Element => {
     state,
     tokens,
     signer: signer || undefined,
-    httpClient: axios,
+    httpClient,
     tokenPrices,
   });
 
   const onRemoveLiquidity = hooks.onRemoveLiquidity({
     state,
     dispatch,
-    batchTxs: network?.name === 'mainnet',
+    batchTxs: nw?.name === 'mainnet',
     network,
     signer: signer || undefined,
     notify,

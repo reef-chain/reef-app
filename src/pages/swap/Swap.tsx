@@ -3,14 +3,14 @@ import {
 } from '@reef-chain/react-lib';
 import React, { useContext, useReducer } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import axios from 'axios';
-import { DexNetwork, useNetworkDex } from '../../state/networkDex';
+import axios, { AxiosInstance } from 'axios';
+import { network as libNet } from '@reef-chain/util-lib';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { addressReplacer, SPECIFIED_SWAP_URL, UrlAddressParams } from '../../urls';
 import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
-import { EventType, magicSquareAction } from '../../utils/magicsquareService';
+import { useDexConfig } from '../../environment';
 
 const { SwapComponent } = Components;
 
@@ -21,7 +21,9 @@ const Swap = (): JSX.Element => {
   const { address1, address2 } = useParams<UrlAddressParams>();
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-  const network:DexNetwork|undefined = useNetworkDex(nw);
+
+  const network:libNet.DexProtocolv2|undefined = useDexConfig(nw);
+  const httpClient: AxiosInstance = axios;
 
   const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);
   // hook manages all necessary swap updates
@@ -29,7 +31,7 @@ const Swap = (): JSX.Element => {
     address1,
     address2,
     dispatch,
-    httpClient: axios,
+    httpClient,
     state,
     tokens,
     tokenPrices,
@@ -41,13 +43,11 @@ const Swap = (): JSX.Element => {
     state,
     network,
     account: signer || undefined,
-    batchTxs: network?.name === 'mainnet',
+    batchTxs: nw?.name === 'mainnet',
     dispatch,
     notify,
     onSuccess: () => {
-      if (signer) {
-        magicSquareAction(network.name, EventType.SWAP, signer.address).then();
-      }
+      // do nothing
     },
     updateTokenState: async () => {}, // eslint-disable-line
   });

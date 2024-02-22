@@ -2,15 +2,13 @@ import {
   ReefSigner,
   utils as reefUtils,
 } from '@reef-chain/react-lib';
-import { network as nw } from '@reef-chain/util-lib';
+import { network as nw, reefState } from '@reef-chain/util-lib';
 import React, { useEffect, useState } from 'react';
 import { faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icons';
 import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-icons';
 import { Contract, ContractFactory, utils } from 'ethers';
 import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
-import type { Network } from '../../state/networkDex';
-import { reefState } from '@reef-chain/util-lib';
 import { verifyContract } from '../../utils/contract';
 import { DeployContractData, deployTokens } from './tokensDeployData';
 import './creator.css';
@@ -21,7 +19,7 @@ import { localizedStrings as strings } from '../../l10n/l10n';
 
 interface CreatorComponent {
   signer: ReefSigner | undefined;
-  network: Network;
+  network: nw.Network;
   onTxUpdate?: reefUtils.TxStatusHandler;
 }
 
@@ -53,7 +51,7 @@ interface CreateToken {
   initialSupply: string;
   icon?:string;
   tokenOptions: ITokenOptions;
-  network: Network;
+  network: nw.Network;
   onTxUpdate?: reefUtils.TxStatusHandler;
   setVerifiedContract: (contract: Contract) => void;
   setDeployedContract: (contract: Contract) => void;
@@ -62,7 +60,7 @@ interface CreateToken {
 async function verify(
   contract: Contract,
   args: string[],
-  network: Network,
+  network: nw.Network,
   contractData: DeployContractData,
   icon:string,
 ): Promise<boolean> {
