@@ -121,6 +121,7 @@ export const Activity = (): JSX.Element => {
                 // eslint-disable-next-line jsx-a11y/no-static-element-interactions
                 return (
                   <div
+                    role="button"
                     key={`item-wrapper-${item.timestamp + index.toString()}`}
                     onClick={() => {
                       setSwapPair({
