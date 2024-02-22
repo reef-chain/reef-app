@@ -9,7 +9,6 @@ import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-i
 import { Contract, ContractFactory, utils } from 'ethers';
 import { useHistory } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
-import { Network } from '@reef-chain/util-lib/dist/network';
 import { verifyContract } from '../../utils/contract';
 import { DeployContractData, deployTokens } from './tokensDeployData';
 import './creator.css';
@@ -20,7 +19,7 @@ import { localizedStrings as strings } from '../../l10n/l10n';
 
 interface CreatorComponent {
   signer: ReefSigner | undefined;
-  network: Network;
+  network: nw.Network;
   onTxUpdate?: reefUtils.TxStatusHandler;
 }
 
@@ -52,7 +51,7 @@ interface CreateToken {
   initialSupply: string;
   icon?:string;
   tokenOptions: ITokenOptions;
-  network: Network;
+  network: nw.Network;
   onTxUpdate?: reefUtils.TxStatusHandler;
   setVerifiedContract: (contract: Contract) => void;
   setDeployedContract: (contract: Contract) => void;
@@ -61,7 +60,7 @@ interface CreateToken {
 async function verify(
   contract: Contract,
   args: string[],
-  network: Network,
+  network: nw.Network,
   contractData: DeployContractData,
   icon:string,
 ): Promise<boolean> {
