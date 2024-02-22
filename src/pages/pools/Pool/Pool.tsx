@@ -43,6 +43,9 @@ const timeframeToTimeData = (timeframe: Timeframe): TimeData => {
 const Pool = (): JSX.Element => {
   const { address, action } = useParams<Params>();
   const tokenPrices = useContext(TokenPricesContext);
+  const [timeframe, setTimeframe] = useState<Timeframe>('day');
+
+  const timeData = timeframeToTimeData(timeframe);
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
@@ -58,16 +61,15 @@ const Pool = (): JSX.Element => {
   const decimals1 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
   const decimals2 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
 
-  const [timeframe, setTimeframe] = useState<Timeframe>('day');
-
   const [poolData] = hooks.usePoolData({
     address,
     decimals1,
     decimals2,
     price1: tokenPrice1,
     price2: tokenPrice2,
-    timeData: timeframeToTimeData(timeframe),
+    timeData,
   }, axios);
+
 
   if (!poolInfo) {
     return <Uik.Loading />;

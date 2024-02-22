@@ -6,7 +6,7 @@ import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { POOL_CHART_URL } from '../../urls';
 import './pools.css';
@@ -39,18 +39,20 @@ const MyPoolsList = ({ tokens }: Props): JSX.Element => {
   const [changedPage, setChangedPage] = useState(false);
   const [search, setSearch] = useState('');
   const tokenPrices = useContext(TokenPricesContext);
+  const httpClient: AxiosInstance = axios;
 
   const signer = useContext(ReefSigners).selectedSigner;
 
   const [pools,, count] = hooks.usePoolsList({
     limit: perPage,
     offset: (currentPage - 1) * perPage,
-    httpClient: axios,
+    httpClient,
     search,
     signerAddress: signer?.address || '',
     tokenPrices,
     queryType: 'User',
   });
+
 
   const history = useHistory();
   const openPool = (
@@ -65,10 +67,11 @@ const MyPoolsList = ({ tokens }: Props): JSX.Element => {
   interface TableToken {
     name?: string
     image?: string
+    address?:string
   }
 
-  const hasToken = ({ name }: TableToken = {}): boolean => {
-    const token = tokens.find((tkn: Token) => tkn.symbol === name);
+  const hasToken = ({ address }: TableToken = {}): boolean => {
+    const token = tokens.find((tkn: Token) => tkn.address === address);
     if (!token) return false;
 
     const hasBalance = (new BigNumber(token.balance.toString())).toNumber() > 0;

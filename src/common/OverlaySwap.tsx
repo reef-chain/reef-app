@@ -5,15 +5,14 @@ import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react';
 import { BigNumber } from 'ethers';
-import axios from 'axios';
-import { DexProtocolv2 } from '@reef-chain/util-lib/dist/network';
+import axios, { AxiosInstance } from 'axios';
+import { network as libNet } from '@reef-chain/util-lib';
 import PoolContext from '../context/PoolContext';
 import TokenContext from '../context/TokenContext';
 import TokenPricesContext from '../context/TokenPricesContext';
 import { MAX_SLIPPAGE, notify } from '../utils/utils';
 import './overlay-swap.css';
 import ReefSigners from '../context/ReefSigners';
-import { EventType, magicSquareAction } from '../utils/magicsquareService';
 import { useDexConfig } from '../environment';
 
 const { Trade, OverlayAction, Finalizing } = Components;
@@ -64,9 +63,10 @@ const OverlaySwap = ({
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
   const pools = useContext(PoolContext);
+  const httpClient: AxiosInstance = axios;
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-  const network:DexProtocolv2 |undefined = useDexConfig(nw);
+  const network:libNet.DexProtocolv2 |undefined = useDexConfig(nw);
 
   // Trade
   const [tradeState, tradeDispatch] = useReducer(
@@ -135,7 +135,7 @@ const OverlaySwap = ({
     tokenPrices,
     tokens,
     account: signer || undefined,
-    httpClient: axios,
+    httpClient,
     waitForPool: true,
     pool,
   });
@@ -150,7 +150,6 @@ const OverlaySwap = ({
     updateTokenState: async () => Promise.resolve(), // eslint-disable-line
     onSuccess: () => {
       setFinalized(false);
-      if (signer)magicSquareAction(nw.name, EventType.SWAP, signer.address);
     },
     onFinalized: () => {
       setFinalized(true);

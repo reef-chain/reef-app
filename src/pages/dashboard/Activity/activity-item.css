@@ -128,6 +128,12 @@
   margin-top: 0.313rem;
 }
 
+.activity-item__amount---swap-fees{
+  font-size: 0.77rem!important;
+  font-weight: 500;
+  color: #b2b0c8;
+}
+
 .activity-item__amount-wrapper {
   display: flex;
   flex-flow: row nowrap;
@@ -145,6 +151,18 @@
   overflow: hidden;
   max-width: 15rem;
   padding-left: 1rem;
+}
+
+.activity-item__amount-swap {
+  padding: 4px;
+  font-size: 0.97rem!important;
+}
+.activity-item__amount-swap-fee {
+  font-size: 0.87rem!important;
+}
+
+.activity-item__amount-swap-send{
+  color: red!important;
 }
 
 .activity-item__amount--hidden > div {
@@ -168,11 +186,15 @@
 }
 
 .activity-item--send .activity-item__amount--hidden div div {
-  background-color: #b2b0c8;
+  background-color: #b2b0c8!important;
 }
 
-.activity-item--receive .activity-item__amount {
-  color: var(--success);
+.activity-item--receive .activity-item__amount  {
+  color: var(--success)!important;
+}
+
+.activity-item__amount-swap-receive{
+  color: var(--success)!important;
 }
 
 .activity-item--send .activity-item__amount {
@@ -250,4 +272,8 @@
   height: 1rem;
   border-radius: 99rem;
   background-color: var(--border-color);
+}
+
+.uik-text--mini{
+  color: #b2b0c8;
 }
