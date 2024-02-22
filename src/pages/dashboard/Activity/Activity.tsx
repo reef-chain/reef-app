@@ -64,7 +64,7 @@ const parseTokenTransfers = (transfers:tokenUtil.TokenTransfer[]):CummulativeTra
 
 export const Activity = (): JSX.Element => {
   const [unparsedTransfers, loading] :[tokenUtil.TokenTransfer[], boolean] = hooks.useTxHistory();
-  const [transfers, setTransfers] = useState([]);
+  const [transfers, setTransfers] = useState<CummulativeTransfers[]>([]);
 
   useEffect(() => {
     setTransfers(parseTokenTransfers(unparsedTransfers));

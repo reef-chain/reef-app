@@ -1,6 +1,6 @@
 import { ReefSigner } from '@reef-chain/react-lib';
 import axios, { AxiosResponse } from 'axios';
-import { web3FromSource, web3Enable, web3Accounts } from '@reef-defi/extension-dapp';
+import { extension as extReef } from '@reef-chain/util-lib';
 import {
   AddressNonceMessage,
   AuthenticationResponse,
@@ -40,9 +40,9 @@ export const authenticateDEV = (signer: ReefSigner): Promise<AuthenticationRespo
 
 export const authenticate = async (signer: ReefSigner): Promise<AuthenticationResponse | undefined> => {
   const { message } = await getAddressNonceMessage(signer.address);
-  await web3Enable('Reef Wallet App'); // TODO: name to const
-  const [account] = await web3Accounts();
-  const injector = await web3FromSource(account.meta.source);
+  await extReef.web3Enable('Reef Wallet App'); // TODO: name to const
+  const [account] = await extReef.web3Accounts();
+  const injector = await extReef.web3FromSource(account.meta.source);
   const signRaw = await injector?.signer?.signRaw;
 
   if (signRaw != null) {

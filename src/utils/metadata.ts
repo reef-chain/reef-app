@@ -1,5 +1,6 @@
 import type { ApiPromise } from '@polkadot/api';
 import { getSpecTypes } from '@polkadot/types-known';
+import { extension as extReef } from '@reef-chain/util-lib';
 import { Buffer } from 'buffer';
 
 const genesisHashToNetworkName: Record<string, string> = {
@@ -9,7 +10,7 @@ const genesisHashToNetworkName: Record<string, string> = {
     'testnet',
 };
 
-export function getMetadata(api: ApiPromise): any { // MetadataDef { TODO: import type from util-lib
+export function getMetadata(api: ApiPromise): extReef.MetadataDef {
   const systemChain = genesisHashToNetworkName[api.genesisHash.toHex()] || '';
 
   return {
@@ -22,8 +23,12 @@ export function getMetadata(api: ApiPromise): any { // MetadataDef { TODO: impor
     types: getSpecTypes(
       api.registry,
       systemChain,
-      api.runtimeVersion.specName.toString(), // TODO: remove toString() ?
+      api.runtimeVersion.specName,
       api.runtimeVersion.specVersion,
     ) as unknown as Record<string, string>,
+    icon: '',
+    ss58Format: 42,
+    tokenDecimals: 18,
+    tokenSymbol: 'REEF',
   };
 }

@@ -37,6 +37,7 @@ export const sendToSnap = async (
   message: string,
   request?: any,
 ): Promise<any> => {
+  console.log('sendToSnap', message, request);
   const res = await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: {
