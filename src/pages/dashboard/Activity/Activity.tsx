@@ -50,7 +50,6 @@ return BigNumber.from(response.data.data.transfers[0].signedData.fee.partialFee)
 }
 
 const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:Network):Promise<CummulativeTransfers[]> => {
-  // TODO: anukulpandey fix updatedTxArray when reef token is sent before nft ,basically fix redundancy
   const updatedTxArray: CummulativeTransfers[] = [];
   const swapsIdx = [-1];
   const nftPurchasesIdx = [-1];
@@ -87,7 +86,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
           if(tx.from == "0x"){
             const nftBuyPairs:any = [];
             for (const transfer of transfers) {
-                if (transfer.extrinsic.id === tx.extrinsic.id && transfer.token !== tx.token) {
+                if (transfer.extrinsic.id === tx.extrinsic.id && transfer.token !== tx.token && tx.to == transfer.from) {
                     nftBuyPairs.push(transfer);
                 }
             }
@@ -106,11 +105,11 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
                   balance:fees,
                 }
               };
-
+              
               updatedTxArray.push({
                 isNftBuyOperation: true,
                 token1: tx,
-                token2: nftBuyPairs[nftBuyPairs.length-1],
+                token2: nftBuyPairs[0],
                 fees: feesToken,
                 timestamp: tx.timestamp,
               } as CummulativeTransfers);
