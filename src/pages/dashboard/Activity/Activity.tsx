@@ -55,6 +55,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
   const swapsIdx = [-1];
   const nftPurchasesIdx = [-1];
   const nftSalesIdx = [-1];
+  const updatedTxIdx = [-1];
   
   for(let idx=0;idx<transfers.length;idx++){
     const tx = transfers[idx];
@@ -73,6 +74,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
           fees: transfers[feesIdx],
           timestamp: tx.timestamp,
         } as CummulativeTransfers);
+        updatedTxIdx.push(idx);
       }
     } else if (tx.reefswapAction === 'Swap' || swapsIdx.includes(idx) || nftPurchasesIdx.includes(idx)|| nftSalesIdx.includes(idx)) {
       // @ts-ignore
@@ -112,6 +114,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
                 fees: feesToken,
                 timestamp: tx.timestamp,
               } as CummulativeTransfers);
+              updatedTxIdx.push(idx);
             }
           }else{
             // received NFT
@@ -119,6 +122,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
               ...tx,
               isSwap: false,
             });
+            updatedTxIdx.push(idx);
           }
         }
         // selling or sending nft
@@ -143,6 +147,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
                   isNftSellOperation:true,
                   timestamp: tx.timestamp,
                 });
+                updatedTxIdx.push(idx);
               }
             }
             // sent nft
@@ -151,6 +156,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
                 ...tx,
                 isSwap: false,
               });
+              updatedTxIdx.push(idx);
             }
         }
       }
@@ -158,7 +164,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
   }
 
   for(let i=0;i<transfers.length;i++){
-    if(!swapsIdx.includes(i) && !nftPurchasesIdx.includes(i) && !nftSalesIdx.includes(i)){
+    if(!swapsIdx.includes(i) && !nftPurchasesIdx.includes(i) && !nftSalesIdx.includes(i) && !updatedTxIdx.includes(i)){
         updatedTxArray.push({
           ...transfers[i],
           isSwap: false,
