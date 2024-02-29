@@ -55,8 +55,6 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
   const swapsIdx = [-1];
   const nftPurchasesIdx = [-1];
   const nftSalesIdx = [-1];
-
-  // transfers.forEach((tx, idx) => 
   
   for(let idx=0;idx<transfers.length;idx++){
     const tx = transfers[idx];
@@ -66,8 +64,8 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
       const swapPairIdx = transfers.indexOf(swapPair!);
       swapsIdx.push(swapPairIdx);
       const feesIdx = swapPairIdx + 1;
+      swapsIdx.push(feesIdx);
       if (feesIdx <= transfers.length) {
-        swapsIdx.push(feesIdx);
         updatedTxArray.push({
           isSwap: true,
           token1: tx,
@@ -114,9 +112,6 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
                 fees: feesToken,
                 timestamp: tx.timestamp,
               } as CummulativeTransfers);
-            }else{
-              // @ts-ignore 
-              // skipping because last 15 txs don't include enough data regarding nft operation
             }
           }else{
             // received NFT
@@ -148,9 +143,6 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
                   isNftSellOperation:true,
                   timestamp: tx.timestamp,
                 });
-              }else{
-                // @ts-ignore 
-                // skipping because last 15 txs don't include enough data regarding nft operation
               }
             }
             // sent nft
@@ -161,15 +153,18 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
               });
             }
         }
-      }else{
-        updatedTxArray.push({
-          ...tx,
-          isSwap: false,
-        });
       }
     }
   }
 
+  for(let i=0;i<transfers.length;i++){
+    if(!swapsIdx.includes(i) && !nftPurchasesIdx.includes(i) && !nftSalesIdx.includes(i)){
+        updatedTxArray.push({
+          ...transfers[i],
+          isSwap: false,
+        });
+    }
+  }
   //@ts-ignore
   updatedTxArray.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
@@ -264,7 +259,6 @@ export const Activity = (): JSX.Element => {
                     role="button"
                     key={`item-wrapper-${item.timestamp + index.toString()}`}
                     onClick={() => {
-                      //TODO: anukulpandey fix opening modal
                       setSwapPair({
                         pair: `${item.token1!.token.name}-${item.token2!.token.name}`,
                         token1: item.token1,
