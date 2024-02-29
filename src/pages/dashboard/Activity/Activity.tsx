@@ -59,7 +59,7 @@ const parseTokenTransfers = (transfers:tokenUtil.TokenTransfer[]):CummulativeTra
       });
     }
   });
-  return updatedTxArray;
+  return updatedTxArray.slice(0, 10);
 };
 
 export const Activity = (): JSX.Element => {
