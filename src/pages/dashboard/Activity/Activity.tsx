@@ -48,14 +48,17 @@ const fetchFees = async (blockId:string,index:number,nwContext:Network)=>{
 return BigNumber.from(response.data.data.transfers[0].signedData.fee.partialFee);
 }
 
-const parseTokenTransfers = (transfers:tokenUtil.TokenTransfer[],nwContext:Network):CummulativeTransfers[] => {
+const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:Network):Promise<CummulativeTransfers[]> => {
   // TODO: anukulpandey fix updatedTxArray when reef token is sent before nft ,basically fix redundancy
   const updatedTxArray: CummulativeTransfers[] = [];
   const swapsIdx = [-1];
   const nftPurchasesIdx = [-1];
   const nftSalesIdx = [-1];
 
-  transfers.forEach(async(tx, idx) => {
+  // transfers.forEach((tx, idx) => 
+  
+  for(let idx=0;idx<transfers.length;idx++){
+    const tx = transfers[idx];
     if (tx.reefswapAction === 'Swap' && !swapsIdx.includes(idx)) {
       swapsIdx.push(idx);
       const swapPair = transfers.find((t) => t.extrinsic.id === tx.extrinsic.id && t.reefswapAction === 'Swap' && t.token !== tx.token);
@@ -69,6 +72,7 @@ const parseTokenTransfers = (transfers:tokenUtil.TokenTransfer[],nwContext:Netwo
           token1: tx,
           token2: swapPair!,
           fees: transfers[feesIdx],
+          timestamp: tx.timestamp,
         } as CummulativeTransfers);
       }
     } else if (tx.reefswapAction === 'Swap' || swapsIdx.includes(idx) || nftPurchasesIdx.includes(idx)|| nftSalesIdx.includes(idx)) {
@@ -101,12 +105,13 @@ const parseTokenTransfers = (transfers:tokenUtil.TokenTransfer[],nwContext:Netwo
                   balance:fees,
                 }
               };
-              
+
               updatedTxArray.push({
                 isNftBuyOperation: true,
                 token1: tx,
-                token2: nftBuyPairs[0], //@anukulpandey fix this
+                token2: nftBuyPairs[nftBuyPairs.length-1],
                 fees: feesToken,
+                timestamp: tx.timestamp,
               } as CummulativeTransfers);
             }else{
               // @ts-ignore 
@@ -140,6 +145,7 @@ const parseTokenTransfers = (transfers:tokenUtil.TokenTransfer[],nwContext:Netwo
                   ...tx,
                   isSwap: false,
                   isNftSellOperation:true,
+                  timestamp: tx.timestamp,
                 });
                 // TODO: anukulpandey nft sell operation
               }else{
@@ -162,8 +168,10 @@ const parseTokenTransfers = (transfers:tokenUtil.TokenTransfer[],nwContext:Netwo
         });
       }
     }
-  });
-  return updatedTxArray;
+  }
+  //@ts-ignore
+  updatedTxArray.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  return updatedTxArray.reverse();
 };
 
 export const Activity = (): JSX.Element => {
@@ -172,8 +180,11 @@ export const Activity = (): JSX.Element => {
   const {network:nwContext} = useContext(ReefSigners);
 
   useEffect(() => {
-      const parsedTxs = parseTokenTransfers(unparsedTransfers,nwContext);
+    const parseTokens = async()=>{
+      const parsedTxs = await parseTokenTransfers(unparsedTransfers,nwContext);
       setTransfers(parsedTxs as any);
+    }
+    parseTokens();
   }, [unparsedTransfers,nwContext]);
 
   const {
@@ -258,6 +269,7 @@ export const Activity = (): JSX.Element => {
                       //   fees: item.fees,
                       // } as SwapPair);
                       // setSwapActivityModalOpen(!isSwapActivityModalOpen);
+                      console.log(item.timestamp)
                     }}
                   >
                     <NftActivityItem fees={item.fees!} token1={item.token1!} token2={item.token2!} isBought = {true}/>
