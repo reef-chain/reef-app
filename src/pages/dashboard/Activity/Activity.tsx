@@ -34,6 +34,7 @@ export interface SwapPair {
   token1: tokenUtil.TokenTransfer;
   token2: tokenUtil.TokenTransfer;
   fees: tokenUtil.TokenTransfer;
+  isNftBuyOperation?:boolean;
 }
 
 const fetchFees = async (blockId:string,index:number,nwContext:Network)=>{
@@ -147,7 +148,6 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
                   isNftSellOperation:true,
                   timestamp: tx.timestamp,
                 });
-                // TODO: anukulpandey nft sell operation
               }else{
                 // @ts-ignore 
                 // skipping because last 15 txs don't include enough data regarding nft operation
@@ -169,8 +169,10 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
       }
     }
   }
+
   //@ts-ignore
   updatedTxArray.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
   return updatedTxArray.reverse();
 };
 
@@ -246,6 +248,7 @@ export const Activity = (): JSX.Element => {
                         token1: item.token1,
                         token2: item.token2,
                         fees: item.fees,
+                        
                       } as SwapPair);
                       setSwapActivityModalOpen(!isSwapActivityModalOpen);
                     }}
@@ -262,13 +265,14 @@ export const Activity = (): JSX.Element => {
                     key={`item-wrapper-${item.timestamp + index.toString()}`}
                     onClick={() => {
                       //TODO: anukulpandey fix opening modal
-                      // setSwapPair({
-                      //   pair: `${item.token1!.token.name}-${item.token2!.token.name}`,
-                      //   token1: item.token1,
-                      //   token2: item.token2,
-                      //   fees: item.fees,
-                      // } as SwapPair);
-                      // setSwapActivityModalOpen(!isSwapActivityModalOpen);
+                      setSwapPair({
+                        pair: `${item.token1!.token.name}-${item.token2!.token.name}`,
+                        token1: item.token1,
+                        token2: item.token2,
+                        fees: item.fees,
+                        isNftBuyOperation: item.isNftBuyOperation,
+                      } as SwapPair);
+                      setSwapActivityModalOpen(!isSwapActivityModalOpen);
                       console.log(item.timestamp)
                     }}
                   >
