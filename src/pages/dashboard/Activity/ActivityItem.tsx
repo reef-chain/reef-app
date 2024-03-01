@@ -35,7 +35,7 @@ const TokenActivityItem = ({
   token,
   timestamp,
   inbound,
-  isNftSellOperation
+  isNftSellOperation,
 }: Props): JSX.Element => {
   const {
     symbol,

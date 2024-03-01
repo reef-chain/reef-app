@@ -99,20 +99,27 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
               // purchased NFT
               const fees = await fetchFees(nftBuyPairs[0].extrinsic.blockId,nftBuyPairs[0].extrinsic.index,nwContext);
 
-              const feesToken = {
-                'token':{
-                  ...REEF_TOKEN,
-                  balance:fees,
-                }
-              };
-              
-              updatedTxArray.push({
-                isNftBuyOperation: true,
-                token1: tx,
-                token2: nftBuyPairs[0],
-                fees: feesToken,
-                timestamp: tx.timestamp,
-              } as CummulativeTransfers);
+              if(fees){
+                const feesToken = {
+                  'token':{
+                    ...REEF_TOKEN,
+                    balance:fees,
+                  }
+                };
+                
+                updatedTxArray.push({
+                  isNftBuyOperation: true,
+                  token1: tx,
+                  token2: nftBuyPairs[0],
+                  fees: feesToken,
+                  timestamp: tx.timestamp,
+                } as CummulativeTransfers);
+              }else{
+                updatedTxArray.push({
+                  isSwap: false,
+                 ...tx,
+                } as CummulativeTransfers);
+              }
               updatedTxIdx.push(idx);
             }
           }else{
@@ -132,10 +139,6 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
                   nftSellPairs.push(transfer);
                 }
             }
-            for (const nftSellPair of nftSellPairs) {
-              const idx = transfers.indexOf(nftSellPair);
-              nftSalesIdx.push(idx);
-            }
 
             // sold nft
             if(tx.to=="0x"){
@@ -144,10 +147,15 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
                   ...tx,
                   isSwap: false,
                   isNftSellOperation:true,
-                  timestamp: tx.timestamp,
                 });
-                updatedTxIdx.push(idx);
+                
+              }else{
+                updatedTxArray.push({
+                  ...tx,
+                  isSwap: false,
+                });
               }
+              updatedTxIdx.push(idx);
             }
             // sent nft
             else{
