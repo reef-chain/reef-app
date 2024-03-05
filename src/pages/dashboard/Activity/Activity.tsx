@@ -45,7 +45,7 @@ const fetchFees = async (blockId:string,index:number,nwContext:Network)=>{
   }
   `
  const response = await axios.post(nwContext.graphqlExplorerUrl.replace('wss','https'),{query});
- 
+
 return BigNumber.from(response.data.data.transfers[0].signedData.fee.partialFee);
 }
 
@@ -55,7 +55,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
   const nftPurchasesIdx = [-1];
   const nftSalesIdx = [-1];
   const updatedTxIdx = [-1];
-  
+
   for(let idx=0;idx<transfers.length;idx++){
     const tx = transfers[idx];
     if (tx.reefswapAction === 'Swap' && !swapsIdx.includes(idx)) {
@@ -77,7 +77,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
       }
     } else if (tx.reefswapAction === 'Swap' || swapsIdx.includes(idx) || nftPurchasesIdx.includes(idx)|| nftSalesIdx.includes(idx)) {
       // @ts-ignore
-    } 
+    }
     else {
       if(tx.type === "ERC1155"){
         // buying nft or receiving
@@ -106,7 +106,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
                     balance:fees,
                   }
                 };
-                
+
                 updatedTxArray.push({
                   isNftBuyOperation: true,
                   token1: tx,
@@ -148,7 +148,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
                   isSwap: false,
                   isNftSellOperation:true,
                 });
-                
+
               }else{
                 updatedTxArray.push({
                   ...tx,
@@ -181,7 +181,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
   //@ts-ignore
   updatedTxArray.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-  return updatedTxArray.reverse();
+  return updatedTxArray.reverse().slice(0, 10);
 };
 
 export const Activity = (): JSX.Element => {
@@ -256,7 +256,7 @@ export const Activity = (): JSX.Element => {
                         token1: item.token1,
                         token2: item.token2,
                         fees: item.fees,
-                        
+
                       } as SwapPair);
                       setSwapActivityModalOpen(!isSwapActivityModalOpen);
                     }}
