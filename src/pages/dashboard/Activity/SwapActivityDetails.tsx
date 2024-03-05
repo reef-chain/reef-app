@@ -17,7 +17,7 @@ interface Props{
 
 function SwapActivityDetails({ isOpen, onClose, swapPair }:Props):JSX.Element {
   return (
-    <OverlayAction isOpen={isOpen} onClose={onClose} className="overlay-swap" title={`Swap ${swapPair.pair}`}>
+    <OverlayAction isOpen={isOpen} onClose={onClose} className="overlay-swap" title={`${swapPair.isNftBuyOperation? `Purchased ${swapPair.token1.token.name}`:`Swap ${swapPair.pair}`}`}>
       <div className="transfer-asset__container">
         <div className="transfer-asset-summary">
           <div
@@ -29,11 +29,23 @@ function SwapActivityDetails({ isOpen, onClose, swapPair }:Props):JSX.Element {
           >
             <div className="transfer-asset__content-ntf">
               <div className="transfer-asset__block">
+                {swapPair.isNftBuyOperation ? 
                 <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-around', width: '100%',
+              
+                }}
+                >
+                <img src={swapPair.token1.token.iconUrl} alt={swapPair.token1.token.name} style={{
+                      maxWidth: "250px",
+                      borderRadius: "20px",
+                      marginTop: "15px",
+                }}/>
+              </div>
+              :<div style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-around', width: '100%',
                 }}
                 >
-                  <div style={{
+                 <div style={{
                     display: 'flex', alignItems: 'center', justifyContent: 'space-around', flexDirection: 'column',
                   }}
                   >
@@ -64,7 +76,10 @@ function SwapActivityDetails({ isOpen, onClose, swapPair }:Props):JSX.Element {
                     </div>
 
                   </div>
+                  
                 </div>
+              }
+                
               </div>
               <Uik.Text text="Transfer Details" type="light" className="mt-2" />
               <div
