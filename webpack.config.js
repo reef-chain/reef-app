@@ -10,7 +10,7 @@ module.exports = {
   output: {
     path:path.resolve(__dirname, "public"),
   },
-  
+
   module: {
     rules: [
       {
@@ -58,9 +58,10 @@ module.exports = {
     fallback: {
       'crypto': require.resolve('crypto-browserify'),
       'stream': require.resolve('stream-browserify'),
+      'vm': false,
     },
   },
-  
+
   devServer: {
     static: {
       directory: path.join(__dirname, 'public'),
