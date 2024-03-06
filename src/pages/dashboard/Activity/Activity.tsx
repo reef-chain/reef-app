@@ -107,10 +107,12 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
                   }
                 };
 
+                const token2 = nftBuyPairs.find((pair:CummulativeTransfers)=>pair.extrinsic.eventIndex==2);
+
                 updatedTxArray.push({
                   isNftBuyOperation: true,
                   token1: tx,
-                  token2: nftBuyPairs[0],
+                  token2,
                   fees: feesToken,
                   timestamp: tx.timestamp,
                 } as CummulativeTransfers);
