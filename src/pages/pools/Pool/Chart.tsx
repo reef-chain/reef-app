@@ -38,7 +38,8 @@ export interface Props {
   tokens: Tokens,
   data?: Data,
   timeframe: Timeframe,
-  setTimeframe: (value: Timeframe) => void
+  setTimeframe: (value: Timeframe) => void,
+  lastUpdatedOn: string;
 }
 
 const chartTypes = {
@@ -53,6 +54,7 @@ const Chart = ({
   data,
   timeframe,
   setTimeframe,
+  lastUpdatedOn
 }: Props): JSX.Element => {
   const [tab, setTab] = useState('price');
 
@@ -102,7 +104,7 @@ const Chart = ({
           !!getData.length
           && (
           <LWChart
-            key={`${tab}-${timeframe}`}
+            key={`${tab}-${timeframe}-${lastUpdatedOn}`}
             // @ts-ignore-next-line
             type={chartTypes[tab]}
             data={getData}

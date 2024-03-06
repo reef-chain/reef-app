@@ -1,6 +1,6 @@
 {
   "name": "reef-app",
-  "version": "3.4.2",
+  "version": "3.4.3",
   "private": true,
   "type": "commonjs",
   "dependencies": {
@@ -9,9 +9,9 @@
     "@polkadot/extension-dapp": "^0.46.7",
     "@popperjs/core": "^2.11.5",
     "@reef-chain/evm-provider": "^2.0.3",
-    "@reef-chain/react-lib": "~2.5.5",
+    "@reef-chain/react-lib": "^2.6.0",
     "@reef-chain/ui-kit": "^2.0.4",
-    "@reef-chain/util-lib": "^2.4.7",
+    "@reef-chain/util-lib": "^2.4.8",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",

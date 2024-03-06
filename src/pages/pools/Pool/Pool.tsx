@@ -1,6 +1,6 @@
 import { hooks } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';
 import axios from 'axios';
@@ -44,6 +44,7 @@ const Pool = (): JSX.Element => {
   const { address, action } = useParams<Params>();
   const tokenPrices = useContext(TokenPricesContext);
   const [timeframe, setTimeframe] = useState<Timeframe>('day');
+  const [poolUpdatedAt,setPoolUpdatedAt] = useState<string>("");
 
   const timeData = timeframeToTimeData(timeframe);
 
@@ -68,8 +69,12 @@ const Pool = (): JSX.Element => {
     price1: tokenPrice1,
     price2: tokenPrice2,
     timeData,
+    poolUpdatedAt
   }, axios);
 
+  useEffect(()=>{
+    setPoolUpdatedAt(Date.now().toString())
+  },[poolInfo])
 
   if (!poolInfo) {
     return <Uik.Loading />;
@@ -131,6 +136,7 @@ const Pool = (): JSX.Element => {
           }
           timeframe={timeframe}
           setTimeframe={setTimeframe}
+          lastUpdatedOn={poolUpdatedAt}
         />
       </div>
     </div>
