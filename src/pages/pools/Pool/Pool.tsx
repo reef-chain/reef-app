@@ -10,7 +10,6 @@ import Chart, { TimeData, Timeframe } from './Chart';
 import './pool.css';
 import Stats from './Stats';
 import ReefSigners from '../../../context/ReefSigners';
-import { usePoolData, usePoolInfo } from '@reef-chain/react-lib/dist/hooks';
 
 interface Params {
   address: string;
@@ -58,10 +57,6 @@ const Pool = (): JSX.Element => {
     axios,
   );
 
-  useEffect(()=>{
-    setPoolUpdatedAt(Date.now().toString())
-  },[poolInfo])
-
   const tokenPrice1 = (poolInfo ? tokenPrices[poolInfo.firstToken.address] : 0) || 0;
   const tokenPrice2 = (poolInfo ? tokenPrices[poolInfo.secondToken.address] : 0) || 0;
   const decimals1 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
@@ -77,6 +72,9 @@ const Pool = (): JSX.Element => {
     poolUpdatedAt
   }, axios);
 
+  useEffect(()=>{
+    setPoolUpdatedAt(Date.now().toString())
+  },[poolInfo])
 
   if (!poolInfo) {
     return <Uik.Loading />;
@@ -138,6 +136,7 @@ const Pool = (): JSX.Element => {
           }
           timeframe={timeframe}
           setTimeframe={setTimeframe}
+          lastUpdatedOn={poolUpdatedAt}
         />
       </div>
     </div>
