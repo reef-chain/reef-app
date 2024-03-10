@@ -25,16 +25,16 @@ const NoExtension = (): JSX.Element => (
     <main>
       <div className="images">
         <div className="images__image">
-          <img src="img/1.png" alt="Reef Extenstion screenshot" />
+          <img src="img/1.png" alt="Reef Extension screenshot" />
         </div>
         <div className="images__image">
-          <img src="img/3.png" alt="Reef Extenstion screenshot" />
+          <img src="img/3.png" alt="Reef Extension screenshot" />
         </div>
         <div className="images__image">
-          <img src="img/4.png" alt="Reef Extenstion screenshot" />
+          <img src="img/4.png" alt="Reef Extension screenshot" />
         </div>
         <div className="images__image">
-          <img src="img/5.png" alt="Reef Extenstion screenshot" />
+          <img src="img/5.png" alt="Reef Extension screenshot" />
         </div>
       </div>
 

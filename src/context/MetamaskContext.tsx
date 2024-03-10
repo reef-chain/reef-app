@@ -1,7 +1,7 @@
 import type { Dispatch, ReactNode, Reducer } from 'react';
 import React, { createContext, useEffect, useReducer } from 'react';
 
-import type { Snap } from '../pages/wallets/types';
+import type { Snap } from '../pages/snap/types';
 import { detectSnaps, isFlask } from '../utils/metamask';
 import { getSnap } from '../utils/snap';
 

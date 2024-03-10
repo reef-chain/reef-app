@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import {
   Components,
 } from '@reef-chain/react-lib';
@@ -9,7 +9,7 @@ import Uik from '@reef-chain/ui-kit';
 import { saveAs } from 'file-saver';
 import { saveSignerLocalPointer } from '../store/internalStore';
 import {
-  BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL, WALLETS_URL,
+  BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL,
 } from '../urls';
 import { appAvailableNetworks, isReefswapUI } from '../environment';
 import HideBalance from '../context/HideBalance';
@@ -27,15 +27,29 @@ export interface Nav {
 const Nav = ({ display }: Nav): JSX.Element => {
   const history = useHistory();
   const { pathname } = useLocation();
-  const { accounts, provider, selectedSigner, network, reefState, extension } = useContext(ReefSigners);
+  const { accounts, provider, selectedSigner, network, reefState, extensions, selExtName } = useContext(ReefSigners);
   const mainnetSelected = network == null || network?.rpcUrl === nw.AVAILABLE_NETWORKS.mainnet.rpcUrl;
-  const isSnapWallet = extension?.name === reefExt.REEF_SNAP_IDENT;
-  const [isDefaultWallet, setIsDefaultWallet] = useState(!!extension?.isDefaultExtension?.lastSet);
+  const [allAccounts, setAllAccounts] = useState(accounts || []);
+  const [selectedExtensionName, setSelectedExtensionName] = useState<string | undefined>(selExtName);
+  const [showMetadataUpdate, setShowMetadataUpdate] = useState(false);
 
+  useEffect(() => {
+    setAllAccounts(accounts || []);
+  }, [accounts]);
+
+  useEffect(() => {
+    if (provider && selExtName === reefExt.REEF_SNAP_IDENT) {
+      const metadata = getMetadata(provider.api);
+      sendToSnap('listMetadata').then((metadataList) => {
+        const existing = metadataList.find((item) => item.genesisHash === metadata.genesisHash);
+        setShowMetadataUpdate(!existing || existing.specVersion < metadata.specVersion);
+      });
+    }
+  }, [provider, selExtName]);
+  
   let menuItems = [
     { title: localizedStrings.dashboard, url: DASHBOARD_URL },
     { title: localizedStrings.bonds, url: BONDS_URL },
-    { title: "Wallets", url: WALLETS_URL },
   ];
   if (isReefswapUI) {
     menuItems = [
@@ -48,8 +62,20 @@ const Nav = ({ display }: Nav): JSX.Element => {
   const hideBalance = useContext(HideBalance);
   const networkSwitch = useContext(NetworkSwitch);
 
-  const selectAccount = (index: number): void => {
-    saveSignerLocalPointer(index);
+  const selectExtension = (name: string): void => {
+    setSelectedExtensionName(name);
+    selectAccount(null);
+    try {
+      localStorage.setItem("selected_address_reef", "");
+    } catch (e) {
+      // when cookies disabled localStorage can throw
+    }
+    reefState.setSelectedExtension(name);
+    window.location.reload();
+  };
+
+  const selectAccount = (index: number | null): void => {
+    saveSignerLocalPointer(index || 0);
     reefState.setSelectedAddress(index != null ? accounts?.[index].address : undefined);
   };
 
@@ -95,13 +121,10 @@ const Nav = ({ display }: Nav): JSX.Element => {
   }, [network]);
 
   const renameAccount = (address: string, newName: string): void => {
-    console.log('renameAccount', address, newName);
     sendToSnap('renameAccount', { addressRename: address, newName });
   }
 
-  const exportAccount = async (address: string, /* TODO: password: string */): Promise<void> => {
-    const password = "password123";
-    console.log('exportAccount', address);
+  const exportAccount = async (address: string, password: string): Promise<void> => {
     const json = await sendToSnap('exportAccount', { 
       addressExport: address,
       passwordExport: password
@@ -110,48 +133,41 @@ const Nav = ({ display }: Nav): JSX.Element => {
     saveAs(blob, `${address}.json`);
   }
 
-  const importAccount = ({ name, seed, json, password }): void => {
-    console.log('importAccount', name, seed, json);
+  const importAccount = async ({ name, seed, json, password }): Promise<void> => {
     if (name && seed) {
-      sendToSnap('createAccountWithSeed', { seed: seed.trim(), name });
+      await sendToSnap('createAccountWithSeed', { seed: seed.trim(), name });
+      window.location.reload();
     } else if (json && password) {
-      sendToSnap('importAccount', { json: JSON.parse(json), password });
+      await sendToSnap('importAccount', { json: JSON.parse(json), password });
+      window.location.reload();
     } else {
-      alert('Invalid import data');
+      Uik.notify.danger('Invalid import data');
     }
   }
 
   const forgetAccount = async (address: string): Promise<void> => {
-    console.log('forgetAccount', address);
     const res = await sendToSnap('forgetAccount', { addressForget: address });
     if (res) {
       const accountsUpdated = accounts!.filter((acc) => acc.address !== address);
       reefState.setAccounts(accountsUpdated);
+      window.location.reload();
     }
   }
 
-  const setDefaultWallet = async (isDefault: boolean): Promise<void> => {
-    console.log('setDefaultWallet', isDefault);
-    const res = await sendToSnap('setAsDefaultExtension', { isDefault, });
-    setIsDefaultWallet(res);
-    reefState.setAccounts(accounts!);
-  }
-
-  const updateMetadata = (network: 'mainnet' | 'testnet'): void => {
-    console.log('updateMetadata', network);
+  const updateMetadata = async (): Promise<void> => {
     if (!provider) return;
     const metadata = getMetadata(provider.api);
-    sendToSnap('provideMetadata', { metadata });
+    const updated = await sendToSnap('provideMetadata', metadata);
+    if (updated) setShowMetadataUpdate(false);
   }
 
   const generateSeed = async (): Promise<AccountCreationData> => {
-    console.log('startAccountCreation');
     return await sendToSnap('createSeed');
   }
 
-  const createAccount = (seed: string, name: string): void => {
-    console.log('confirmAccountCreation', seed, name);
-    sendToSnap('createAccountWithSeed', { seed, name });
+  const createAccount = async (seed: string, name: string): Promise<void> => {
+    await sendToSnap('createAccountWithSeed', { seed, name });
+    window.location.reload();
   }
 
   return (
@@ -167,31 +183,29 @@ const Nav = ({ display }: Nav): JSX.Element => {
             <ul className="navigation_menu-items ">
               {menuItemsView}
             </ul>
-            {accounts && !!accounts.length && network && (
-
             <Components.AccountSelector
-              accounts={accounts}
+              injectedExtensions={extensions}
+              selExtName={selectedExtensionName}
+              selectExtension={selectExtension}
+              accounts={allAccounts}
               selectedSigner={selectedSigner || undefined}
               selectAccount={selectAccount}
-              onNetworkSelect={selectNetwork}
               selectedNetwork={selectedNetwork}
+              onNetworkSelect={selectNetwork}
+              onLanguageSelect={selectLanguage}
               isBalanceHidden={hideBalance.isHidden}
               showBalance={hideBalance.toggle}
-              onLanguageSelect={selectLanguage}
               // availableNetworks={appAvailableNetworks.map((net) => net.name as unknown as Components.Network)}
               availableNetworks={isReefswapUI ? ['testnet'] : ['mainnet', 'testnet']}
-              showSnapOptions={isSnapWallet}
-              isDefaultWallet={isDefaultWallet}
+              showSnapOptions={true}
               onRename={renameAccount}
               onExport={exportAccount}
               onImport={importAccount}
               onForget={forgetAccount}
-              onDefaultWalletSelect={setDefaultWallet}
-              onUpdateMetadata={provider ? updateMetadata : undefined}
+              onUpdateMetadata={showMetadataUpdate ? updateMetadata : undefined}
               onStartAccountCreation={generateSeed}
               onConfirmAccountCreation={createAccount}
             />
-            )}
           </nav>
         )}
       </div>

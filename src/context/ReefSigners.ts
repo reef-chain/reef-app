@@ -10,12 +10,16 @@ interface setAddr {
 interface setNet {
   (val: nw.Network):void;
 }
+interface setExt {
+  (val: string):void;
+}
 interface setAccs {
   (val: any[]):void;
 }
 export interface ReefState {
   setSelectedAddress: setAddr;
   setSelectedNetwork: setNet;
+  setSelectedExtension: setExt
   setAccounts:setAccs;
   selectedTokenPrices$: Observable<never>
 }
@@ -26,7 +30,8 @@ interface ReefSignersContext {
   network: nw.Network;
   provider: Provider|undefined;
   reefState: ReefState;
-  extension: extReef.InjectedExtension|undefined;
+  extensions: extReef.InjectedExtension[];
+  selExtName: string|undefined;
 }
 export default createContext<ReefSignersContext>({
   accounts: [],
@@ -34,5 +39,6 @@ export default createContext<ReefSignersContext>({
   network: undefined,
   provider: undefined,
   reefState: undefined,
-  extension: undefined,
+  extensions: [],
+  selExtName: undefined,
 });

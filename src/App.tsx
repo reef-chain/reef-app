@@ -21,10 +21,12 @@ import { MetaMaskProvider } from './context/MetamaskContext';
 
 const App = (): JSX.Element => {
   const {
-    loading, error, signers, selectedReefSigner, network, provider, reefState, extension
+    loading, error, signers, selectedReefSigner, network, provider, reefState, extensions
   } = hooks.useInitReefState(
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
+  const selExtension = extensions.length > 0 ? extensions[0] : undefined;
+  const isSnap = selExtension?.name === reefExt.REEF_SNAP_IDENT;
 
   const history = useHistory();
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
@@ -45,7 +47,6 @@ const App = (): JSX.Element => {
   }, [loading]);
 
   // @ts-ignore
-  // @ts-ignore
   return (
     loading && !error
       ? (
@@ -62,7 +63,8 @@ const App = (): JSX.Element => {
               network,
               reefState,
               provider,
-              extension
+              extensions,
+              selExtName: selExtension?.name,
             }}
             >
               <HideBalance.Provider value={hideBalance}>
@@ -70,9 +72,9 @@ const App = (): JSX.Element => {
                   <MetaMaskProvider>
                     <div className="App d-flex w-100 h-100">
                       <div className="w-100 main-content">
-                        {!error || (error.code === 2 && extension?.name === reefExt.REEF_SNAP_IDENT) && (
+                        {(!error || (error.code === 2 && isSnap)) && (
                           <>
-                            <Nav display={!loading && !error} />
+                            <Nav display={true} />
                             <ContentRouter />
                           </>
                         )}
@@ -80,7 +82,7 @@ const App = (): JSX.Element => {
                         <NetworkSwitching isOpen={isNetworkSwitching} />
 
                         {error?.code === 1 && <NoExtension />}
-                        {error?.code === 2 && extension?.name !== reefExt.REEF_SNAP_IDENT && <NoAccount isSnap={extension?.name === reefExt.REEF_SNAP_IDENT} />}
+                        {error?.code === 2 && !isSnap && <NoAccount />}
                         <ToastContainer
                           draggable
                           newestOnTop
