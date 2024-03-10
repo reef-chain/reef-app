@@ -1,17 +1,17 @@
 {
   "name": "reef-app",
-  "version": "3.4.0",
+  "version": "3.4.4",
   "private": true,
   "type": "commonjs",
   "dependencies": {
     "@fortawesome/free-regular-svg-icons": "^6.1.0",
     "@fortawesome/free-solid-svg-icons": "^6.1.0",
-    "@polkadot/extension-dapp": "^0.40.3",
+    "@polkadot/extension-dapp": "^0.46.7",
     "@popperjs/core": "^2.11.5",
     "@reef-chain/evm-provider": "^2.0.3",
-    "@reef-chain/react-lib": "file:.yalc/@reef-chain/react-lib",
+    "@reef-chain/react-lib": "^2.6.0",
     "@reef-chain/ui-kit": "^2.0.4",
-    "@reef-chain/util-lib": "^2.4.4",
+    "@reef-chain/util-lib": "^2.4.8",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -30,7 +30,7 @@
     "graphql": "^16.2.0",
     "lightweight-charts": "^4.0.1",
     "process": "^0.11.10",
-    "react": "file:.yalc/react",
+    "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-localization": "^1.0.0",
     "react-router-dom": "^5.3.0",
@@ -106,6 +106,6 @@
     "@types/react": "17.0.2",
     "@types/react-dom": "17.0.2",
     "@types/bn.js": "5.1.5",
-    "@polkadot/api-derive": "10.11.2"
+    "@polkadot/api-derive": "10.11.3"
   }
 }
