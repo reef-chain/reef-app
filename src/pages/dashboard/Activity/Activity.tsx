@@ -195,7 +195,7 @@ const parseTokenTransfers = async(transfers:tokenUtil.TokenTransfer[],nwContext:
 
 export const Activity = (): JSX.Element => {
   const [unparsedTransfers, loading] :[tokenUtil.TokenTransfer[], boolean] = hooks.useTxHistory();
-  const [transfers, setTransfers] = useState([]);
+  const [transfers, setTransfers] = useStatee<CummulativeTransfers[]>([]);
   const {network:nwContext} = useContext(ReefSigners);
 
   useEffect(() => {

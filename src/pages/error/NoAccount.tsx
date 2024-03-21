@@ -19,16 +19,16 @@ const NoAccount = (): JSX.Element => (
     <main>
       <div className="images">
         <div className="images__image">
-          <img src="img/6.png" alt="Reef Extenstion screenshot" />
+          <img src="img/6.png" alt="Reef Extension screenshot" />
         </div>
         <div className="images__image">
-          <img src="img/7.png" alt="Reef Extenstion screenshot" />
+          <img src="img/7.png" alt="Reef Extension screenshot" />
         </div>
         <div className="images__image">
-          <img src="img/8.png" alt="Reef Extenstion screenshot" />
+          <img src="img/8.png" alt="Reef Extension screenshot" />
         </div>
         <div className="images__image">
-          <img src="img/9.png" alt="Reef Extenstion screenshot" />
+          <img src="img/9.png" alt="Reef Extension screenshot" />
         </div>
       </div>
     </main>

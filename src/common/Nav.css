@@ -25,6 +25,11 @@
   align-items: center;
 }
 
+/* TODO: Fix in ui-kit */
+.uik-account-selector__create_dropdown .uik-dropdown__dropdown {
+  text-wrap: wrap;
+}
+
 .navigation_menu-items {
   display: flex;
   margin: 0;

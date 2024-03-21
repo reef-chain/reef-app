@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Uik from '@reef-chain/ui-kit';
+import { extension as reefExt } from '@reef-chain/util-lib';
 import Nav from './common/Nav';
 import OptionContext from './context/OptionContext';
 import ReefSignersContext from './context/ReefSigners';
@@ -16,13 +17,16 @@ import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
+import { MetaMaskProvider } from './context/MetamaskContext';
 
 const App = (): JSX.Element => {
   const {
-    loading, error, signers, selectedReefSigner, network, provider, reefState,
+    loading, error, signers, selectedReefSigner, network, provider, reefState, extensions
   } = hooks.useInitReefState(
     'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
+  const selExtension = extensions.length > 0 ? extensions[0] : undefined;
+  const isSnap = selExtension?.name === reefExt.REEF_SNAP_IDENT;
 
   const history = useHistory();
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
@@ -43,7 +47,6 @@ const App = (): JSX.Element => {
   }, [loading]);
 
   // @ts-ignore
-  // @ts-ignore
   return (
     loading && !error
       ? (
@@ -55,39 +58,47 @@ const App = (): JSX.Element => {
         <>
           <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
             <ReefSignersContext.Provider value={{
-              accounts: signers, selectedSigner: selectedReefSigner, network, reefState, provider,
+              accounts: signers,
+              selectedSigner: selectedReefSigner,
+              network,
+              reefState,
+              provider,
+              extensions,
+              selExtName: selExtension?.name,
             }}
             >
               <HideBalance.Provider value={hideBalance}>
                 <NetworkSwitch.Provider value={networkSwitch}>
-                  <div className="App d-flex w-100 h-100">
-                    <div className="w-100 main-content">
-                      {!loading && !error && (
-                        <>
-                          <Nav display={!loading && !error} />
-                          <ContentRouter />
-                        </>
-                      )}
+                  <MetaMaskProvider>
+                    <div className="App d-flex w-100 h-100">
+                      <div className="w-100 main-content">
+                        {(!error || (error.code === 2 && isSnap)) && (
+                          <>
+                            <Nav display={true} />
+                            <ContentRouter />
+                          </>
+                        )}
 
-                      <NetworkSwitching isOpen={isNetworkSwitching} />
+                        <NetworkSwitching isOpen={isNetworkSwitching} />
 
-                      {error?.code === 1 && <NoExtension />}
-                      {error?.code === 2 && <NoAccount />}
-                      <ToastContainer
-                        draggable
-                        newestOnTop
-                        closeOnClick
-                        hideProgressBar
-                        position={toast.POSITION.BOTTOM_LEFT}
-                        autoClose={5000}
-                        rtl={false}
-                        pauseOnFocusLoss={false}
-                        pauseOnHover={false}
-                      />
+                        {error?.code === 1 && <NoExtension />}
+                        {error?.code === 2 && !isSnap && <NoAccount />}
+                        <ToastContainer
+                          draggable
+                          newestOnTop
+                          closeOnClick
+                          hideProgressBar
+                          position={toast.POSITION.BOTTOM_LEFT}
+                          autoClose={5000}
+                          rtl={false}
+                          pauseOnFocusLoss={false}
+                          pauseOnHover={false}
+                        />
 
-                      <Bind />
+                        <Bind />
+                      </div>
                     </div>
-                  </div>
+                  </MetaMaskProvider>
                 </NetworkSwitch.Provider>
               </HideBalance.Provider>
             </ReefSignersContext.Provider>

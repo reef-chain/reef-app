@@ -18,6 +18,7 @@ export const BONDS_URL = '/bonds';
 export const BIND_URL = '/bind/:address1';
 export const BUY_URL = '/buy';
 export const ONRAMP_URL = BUY_URL;
+export const SNAP_URL = '/snap';
 
 export const addressReplacer = (url: string, address1: string, address2?: string): string => {
   const replaced = url.replace(':address1', address1);
