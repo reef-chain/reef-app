@@ -91,7 +91,7 @@ const TokenCard = ({
                   ? (
                     <>
                       $
-                      { Uik.utils.formatAmount(Uik.utils.maxDecimals(price, 4)) }
+                      { Uik.utils.formatAmount(Uik.utils.maxDecimals(price, 4)).length? Uik.utils.formatAmount(Uik.utils.maxDecimals(price, 4)): Uik.utils.formatAmount(price.toFixed(20))}
                     </>
                   )
                   : 'N/A'

@@ -48,10 +48,11 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
   interface TableToken {
     name?: string
     image?: string
+    address?:string
   }
 
-  const hasToken = ({ name }: TableToken = {}): boolean => {
-    const token = tokens.find((tkn: Token) => tkn.symbol === name);
+  const hasToken = ({ address }: TableToken = {}): boolean => {
+    const token = tokens.find((tkn: Token) => tkn.address === address);
     if (!token) return false;
 
     const hasBalance = (new BigNumber(token.balance.toString())).toNumber() > 0;

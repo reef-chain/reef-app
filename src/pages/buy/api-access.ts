@@ -1,5 +1,6 @@
 import { ReefSigner } from '@reef-chain/react-lib';
 import axios, { AxiosResponse } from 'axios';
+import { extension } from '@reef-chain/util-lib';
 import { extension as extReef } from '@reef-chain/util-lib';
 import {
   AddressNonceMessage,
@@ -9,6 +10,7 @@ import {
 } from './models';
 import { binanceConnectApiUrl } from '../../environment';
 
+const { web3FromSource, web3Enable, web3Accounts } = extension;
 const binanceConnectApi = axios.create({ baseURL: binanceConnectApiUrl });
 
 const getAuthHeader = (jwt: string): Record<string, unknown> => ({

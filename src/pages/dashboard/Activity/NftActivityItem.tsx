@@ -12,6 +12,7 @@ interface Props {
   token1: tokenUtil.TokenTransfer;
   token2: tokenUtil.TokenTransfer;
   fees: tokenUtil.TokenTransfer;
+  isBought: boolean;
 }
 
 const formatDate = (timestamp: number): string => {
@@ -34,7 +35,7 @@ const formatDate = (timestamp: number): string => {
   return `${formattedDate}, ${formattedTime}`;
 };
 
-const SwapActivityItem = ({ token1, token2, fees }: Props): JSX.Element => (
+const NftActivityItem = ({ token1, token2, fees, isBought }: Props): JSX.Element => (
   <>
     <div
       key={token1.timestamp}
@@ -43,9 +44,9 @@ const SwapActivityItem = ({ token1, token2, fees }: Props): JSX.Element => (
           activity-item--send
         `}
     >
-      <div className="activity-item__indicator">
-        <Uik.Icon icon={faRepeat} />
-      </div>
+       <div className="activity-item__indicator">
+          <Uik.Icon className="activity-item__indicator-icon" icon={faRepeat} />
+        </div>
 
       <div className="activity-item__content">
         <div
@@ -54,9 +55,9 @@ const SwapActivityItem = ({ token1, token2, fees }: Props): JSX.Element => (
           <div style={{ width: '100%' }}>
             <div
               className="activity-item__title"
-              title={`Swap ${token1.token.symbol}-${token2.token.symbol}`}
+              title={`${isBought? "Purchased":"Sold"} ${token1.token.name}`}
             >
-              {`Swap ${token1.token.symbol}-${token2.token.symbol}`}
+              {`${isBought? "Purchased":"Sold"} ${token1.token.name}`}
             </div>
             <SwapDetails token1={token1} token2={token2} fees={fees} />
             <div className="activity-item__date">
@@ -69,4 +70,4 @@ const SwapActivityItem = ({ token1, token2, fees }: Props): JSX.Element => (
   </>
 );
 
-export default SwapActivityItem;
+export default NftActivityItem;
