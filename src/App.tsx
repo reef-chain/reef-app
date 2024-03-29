@@ -18,6 +18,7 @@ import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
 import { MetaMaskProvider } from './context/MetamaskContext';
+import { SNAP_URL } from './urls';
 
 const App = (): JSX.Element => {
   const {
@@ -72,7 +73,7 @@ const App = (): JSX.Element => {
                   <MetaMaskProvider>
                     <div className="App d-flex w-100 h-100">
                       <div className="w-100 main-content">
-                        {(!error || (error.code === 2 && isSnap)) && (
+                        {(!error || (error.code === 2 && isSnap) || history.location.pathname === SNAP_URL) && (
                           <>
                             <Nav display={true} />
                             <ContentRouter />
@@ -81,8 +82,8 @@ const App = (): JSX.Element => {
 
                         <NetworkSwitching isOpen={isNetworkSwitching} />
 
-                        {error?.code === 1 && <NoExtension />}
-                        {error?.code === 2 && !isSnap && <NoAccount />}
+                        {error?.code === 1 && history.location.pathname !== SNAP_URL && <NoExtension />}
+                        {error?.code === 2 && !isSnap && history.location.pathname !== SNAP_URL && <NoAccount />}
                         <ToastContainer
                           draggable
                           newestOnTop
