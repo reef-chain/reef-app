@@ -18,6 +18,7 @@ interface Props {
   timestamp: number;
   inbound: boolean;
   token: Token | NFT;
+  isNftSellOperation?: boolean;
 }
 
 const formatDate = (timestamp: number): string => {
@@ -34,6 +35,7 @@ const TokenActivityItem = ({
   token,
   timestamp,
   inbound,
+  isNftSellOperation,
 }: Props): JSX.Element => {
   const {
     symbol,
@@ -55,6 +57,7 @@ const TokenActivityItem = ({
     };
 
     const action = actionMap[type];
+    if(isNftSellOperation) return `Put ${symbol || name} on sale`
     return `${action} ${symbol || name}`;
   }, [type, symbol, name]);
 
