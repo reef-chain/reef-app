@@ -30,7 +30,7 @@ interface ReefSignersContext {
   network: nw.Network;
   provider: Provider|undefined;
   reefState: ReefState;
-  extensions: extReef.InjectedExtension[];
+  extension: extReef.InjectedExtension;
   selExtName: string|undefined;
 }
 export default createContext<ReefSignersContext>({
@@ -39,6 +39,6 @@ export default createContext<ReefSignersContext>({
   network: undefined,
   provider: undefined,
   reefState: undefined,
-  extensions: [],
+  extension: undefined,
   selExtName: undefined,
 });

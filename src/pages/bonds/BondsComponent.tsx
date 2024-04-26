@@ -1,4 +1,3 @@
-import { DeriveEraRewards, DeriveOwnSlashes, DeriveStakerPoints } from '@polkadot/api-derive/types';
 import {
   BN_THOUSAND, BN_ZERO, isBn, isFunction,
 } from '@polkadot/util';
@@ -201,7 +200,7 @@ export function balanceToNumber(amount: BN | ToBN = BN_ZERO as BN, divisor: BN):
 
 interface ValidatorEra { era: string; slash: number; reward: number }
 
-function extractRewards(erasRewards: DeriveEraRewards[] = [], ownSlashes: DeriveOwnSlashes[] = [], allPoints: DeriveStakerPoints[] = [], divisor: BN): ValidatorEra[] {
+function extractRewards(erasRewards: any[] = [], ownSlashes: any[] = [], allPoints: any[] = [], divisor: BN): ValidatorEra[] {
   const eraValues: ValidatorEra[] = [];
 
   erasRewards.forEach(({ era, eraReward }): void => {

@@ -5,12 +5,11 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Uik from '@reef-chain/ui-kit';
 import { extension as reefExt } from '@reef-chain/util-lib';
+import { Components } from '@reef-chain/react-lib';
 import Nav from './common/Nav';
 import OptionContext from './context/OptionContext';
 import ReefSignersContext from './context/ReefSigners';
 import ContentRouter from './pages/ContentRouter';
-import NoAccount from './pages/error/NoAccount';
-import NoExtension from './pages/error/NoExtension';
 import { notify } from './utils/utils';
 import HideBalance, { getStoredPref, toggleHidden } from './context/HideBalance';
 import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
@@ -20,14 +19,22 @@ import { getIpfsGatewayUrl } from './environment';
 import { MetaMaskProvider } from './context/MetamaskContext';
 import { SNAP_URL } from './urls';
 
+const { WalletSelector } = Components;
+
 const App = (): JSX.Element => {
+  let selectedWallet: string | null = null;
+  try {
+    selectedWallet = localStorage.getItem(reefExt.SELECTED_EXTENSION_IDENT);
+  } catch (e) {
+    // when cookies disabled localStorage can throw
+  }
+
+  const [selExtensionName, setSelExtensionName] = useState<string | undefined>(selectedWallet || undefined);
   const {
-    loading, error, signers, selectedReefSigner, network, provider, reefState, extensions
-  } = hooks.useInitReefState(
-    'Reef Wallet App', { ipfsHashResolverFn: getIpfsGatewayUrl },
+    loading, error, signers, selectedReefSigner, network, provider, reefState, extension
+  } = hooks.useInitReefStateExtension(
+    'Reef App', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
-  const selExtension = extensions.length > 0 ? extensions[0] : undefined;
-  const isSnap = selExtension?.name === reefExt.REEF_SNAP_IDENT;
 
   const history = useHistory();
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
@@ -47,15 +54,38 @@ const App = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading]);
 
+  useEffect(() => {
+    if (selExtensionName === reefExt.REEF_SNAP_IDENT && error?.code === 2) {
+      history.push(SNAP_URL);
+    }
+  }, [extension, error]);
+
   // @ts-ignore
   return (
-    loading && !error
-      ? (
-        <div className="App w-100 h-100 d-flex justify-content-center align-items-middle">
-          <Uik.Loading />
-        </div>
-      )
-      : (
+    <>
+      {loading && !error
+        ? (
+          <>
+            <div className="App w-100 h-100 d-flex justify-content-center align-items-middle">
+              <Uik.Loading />
+            </div>
+
+            {!selExtensionName &&
+              <WalletSelector onExtensionSelect={(extName: string) => setSelExtensionName(extName)} />
+            }
+
+            <Uik.Modal
+              title={"Connecting to wallet"}
+              isOpen={!!selExtensionName}
+            >
+              <div className="connecting-modal-content">
+                <Uik.Loading />
+                <Uik.Button onClick={() => setSelExtensionName(undefined)}>Cancel connection</Uik.Button>
+              </div>
+            </Uik.Modal>
+          </>
+        )
+        : (
         <>
           <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
             <ReefSignersContext.Provider value={{
@@ -64,8 +94,8 @@ const App = (): JSX.Element => {
               network,
               reefState,
               provider,
-              extensions,
-              selExtName: selExtension?.name,
+              extension,
+              selExtName: selExtensionName,
             }}
             >
               <HideBalance.Provider value={hideBalance}>
@@ -73,17 +103,11 @@ const App = (): JSX.Element => {
                   <MetaMaskProvider>
                     <div className="App d-flex w-100 h-100">
                       <div className="w-100 main-content">
-                        {(!error || (error.code === 2 && isSnap) || history.location.pathname === SNAP_URL) && (
-                          <>
-                            <Nav display={true} />
-                            <ContentRouter />
-                          </>
-                        )}
-
+                         <Nav selectExtension={(extName) => setSelExtensionName(extName)} 
+                          accountSelectorOpen={history.location.pathname !== SNAP_URL} />
+                        <ContentRouter />
                         <NetworkSwitching isOpen={isNetworkSwitching} />
 
-                        {error?.code === 1 && history.location.pathname !== SNAP_URL && <NoExtension />}
-                        {error?.code === 2 && !isSnap && history.location.pathname !== SNAP_URL && <NoAccount />}
                         <ToastContainer
                           draggable
                           newestOnTop
@@ -105,7 +129,8 @@ const App = (): JSX.Element => {
             </ReefSignersContext.Provider>
           </OptionContext.Provider>
         </>
-      )
+      )}
+    </>
   );
 };
 

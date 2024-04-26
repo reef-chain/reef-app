@@ -3,6 +3,7 @@ import Bubbles from './Bubbles';
 import './css/index.css';
 import { localizedStrings as strings } from '../../l10n/l10n';
 
+// TODO: Not used anymore
 const NoAccount = (): JSX.Element => (
   <div className="no-extension">
     <header className="header">

@@ -81,6 +81,15 @@ html, body, #root, .App {
     background-color: #eeebf6;
 }
 
+.connecting-modal-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.connecting-modal-content > button {
+    margin-top: 2rem;
+}
+
 svg.fill-white {
     fill: white;
 }
