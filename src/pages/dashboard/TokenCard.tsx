@@ -1,16 +1,21 @@
 import { faPaperPlane, faRepeat } from '@fortawesome/free-solid-svg-icons';
-import { Token } from '@reef-chain/react-lib';
+import { Token,Components } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo, useState } from 'react';
-import OverlaySwap from '../../common/OverlaySwap';
-import OverlaySend from '../../common/OverlaySend';
-import { toCurrencyFormat } from '../../utils/utils';
+import { notify, toCurrencyFormat } from '../../utils/utils';
 import './token-card.css';
 import HideBalance from '../../context/HideBalance';
 import { displayBalance, displayBalanceFromToken } from '../../utils/displayBalance';
 import { localizedStrings } from '../../l10n/l10n';
-import { isReefswapUI } from '../../environment';
+import { isReefswapUI, useDexConfig } from '../../environment';
+import TokenContext from '../../context/TokenContext';
+import ReefSigners from '../../context/ReefSigners';
+import TokenPricesContext from '../../context/TokenPricesContext';
+import PoolContext from '../../context/PoolContext';
+import { network as libNet } from '@reef-chain/util-lib';
+
+const {OverlaySend,OverlaySwap} = Components;
 
 export interface TokenCard {
   price: number;
@@ -28,8 +33,15 @@ const TokenCard = ({
   const [isSwapOpen, setSwapOpen] = useState(false);
   const [isSendOpen, setSendOpen] = useState(false);
   const [hasPool, setHasPool] = useState(false);
+  const { tokens } = useContext(TokenContext);
 
+  const { selectedSigner, provider ,accounts} = useContext(ReefSigners);
   const hideBalance = useContext(HideBalance);
+  const tokenPrices = useContext(TokenPricesContext);
+  const pools = useContext(PoolContext);
+
+  const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
+  const network:libNet.DexProtocolv2 |undefined = useDexConfig(nw);
 
   const copyAddress = (): void => {
     navigator.clipboard.writeText(token.address).then(() => {
@@ -175,12 +187,24 @@ const TokenCard = ({
         isOpen={isSwapOpen}
         onClose={() => setSwapOpen(false)}
         onPoolsLoaded={setHasPool}
+        signer={signer}
+        tokens={tokens}
+        nw={nw}
+        tokenPrices={tokenPrices}
+        pools={pools}
+        network={network}
+        notify={notify}
       />
 
       <OverlaySend
         tokenAddress={token.address}
         isOpen={isSendOpen}
         onClose={() => setSendOpen(false)}
+        tokens={tokens}
+        selectedSigner={selectedSigner}
+        provider={provider}
+        accounts={accounts}
+        notify={notify}
       />
     </div>
   );
