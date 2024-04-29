@@ -1,6 +1,6 @@
 {
   "name": "reef-app",
-  "version": "3.4.4",
+  "version": "3.4.5",
   "private": true,
   "type": "commonjs",
   "dependencies": {
@@ -9,9 +9,9 @@
     "@polkadot/extension-dapp": "^0.46.7",
     "@popperjs/core": "^2.11.5",
     "@reef-chain/evm-provider": "^2.0.3",
-    "@reef-chain/react-lib": "^2.6.0",
-    "@reef-chain/ui-kit": "^2.0.4",
-    "@reef-chain/util-lib": "^2.4.8",
+    "@reef-chain/react-lib": "^2.6.3",
+    "@reef-chain/ui-kit": "^2.0.7",
+    "@reef-chain/util-lib": "^2.5.3",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -105,6 +105,6 @@
     "@types/react": "17.0.2",
     "@types/react-dom": "17.0.2",
     "@types/bn.js": "5.1.5",
-    "@polkadot/api-derive": "10.11.3"
+    "@polkadot/api-derive": "10.13.1"
   }
 }
