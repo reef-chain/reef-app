@@ -1,24 +1,22 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
-import {
-  Components,
-} from '@reef-chain/react-lib';
+import { Components } from '@reef-chain/react-lib';
 import { network as nw, extension as reefExt } from '@reef-chain/util-lib';
-import './Nav.css';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
+import { AccountCreationData, Extension } from '@reef-chain/ui-kit/dist/ui-kit/components/organisms/AccountSelector/AccountSelector';
 import { saveAs } from 'file-saver';
+
+import './Nav.css';
 import { saveSignerLocalPointer } from '../store/internalStore';
-import {
-  BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL,
-} from '../urls';
+import { BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL } from '../urls';
 import { appAvailableNetworks, isReefswapUI } from '../environment';
 import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
 import { localizedStrings } from '../l10n/l10n';
 import ReefSigners from '../context/ReefSigners';
-import { AccountCreationData, Extension } from '@reef-chain/ui-kit/dist/ui-kit/components/organisms/AccountSelector/AccountSelector';
 import { sendToSnap } from '../utils/snap';
 import { getMetadata } from '../utils/metadata';
+import { availableWalletOptions } from '../App';
 
 export interface Nav {
     selectExtension: (name: string) => void;
@@ -31,7 +29,7 @@ const Nav = ({ selectExtension, accountSelectorOpen }: Nav): JSX.Element => {
   const { accounts, provider, selectedSigner, network, reefState, selExtName, extension } = useContext(ReefSigners);
   const mainnetSelected = network == null || network?.rpcUrl === nw.AVAILABLE_NETWORKS.mainnet.rpcUrl;
   const [showMetadataUpdate, setShowMetadataUpdate] = useState(false);
-  const [availableExtensions, setAvailableExtensions] = useState(Components.defaultAvailableExtensions);
+  const [availableExtensions, setAvailableExtensions] = useState(availableWalletOptions);
 
   useEffect(() => {
     if (provider && extension?.name === reefExt.REEF_SNAP_IDENT) {

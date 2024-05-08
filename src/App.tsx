@@ -18,8 +18,16 @@ import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
 import { MetaMaskProvider } from './context/MetamaskContext';
 import { SNAP_URL } from './urls';
+import { connectWc } from './utils/walletConnect';
 
-const { WalletSelector } = Components;
+const { WalletSelector, walletSelectorOptions } = Components;
+
+export const availableWalletOptions = [
+  walletSelectorOptions[reefExt.REEF_EXTENSION_IDENT],
+  walletSelectorOptions[reefExt.REEF_SNAP_IDENT],
+  walletSelectorOptions[reefExt.REEF_EASY_WALLET_IDENT],
+  walletSelectorOptions[reefExt.REEF_WALLET_CONNECT_IDENT]
+];
 
 const App = (): JSX.Element => {
   let selectedWallet: string | null = null;
@@ -60,6 +68,26 @@ const App = (): JSX.Element => {
     }
   }, [extension, error]);
 
+
+  const onExtensionSelected = (ident: string) => {
+    console.log('onExtensionSelected', ident);
+    if (ident === reefExt.REEF_WALLET_CONNECT_IDENT) {
+      connectWc().then(
+        (res: reefExt.WcConnection | undefined) => {
+          console.log('connectWc', res);
+          if (res) {
+            reefExt.injectWcAsExtension(res, { name: reefExt.REEF_WALLET_CONNECT_IDENT, version: "1.0.0" });
+            setSelExtensionName(ident);
+          } else {
+            setSelExtensionName(undefined);
+          }
+        }
+      );
+    } else {
+      setSelExtensionName(ident);
+    }
+  }
+
   // @ts-ignore
   return (
     <>
@@ -71,7 +99,10 @@ const App = (): JSX.Element => {
             </div>
 
             {!selExtensionName &&
-              <WalletSelector onExtensionSelect={(extName: string) => setSelExtensionName(extName)} />
+              <WalletSelector 
+                onExtensionSelect={(extName: string) => onExtensionSelected(extName)} 
+                availableExtensions={availableWalletOptions}
+              />
             }
 
             <Uik.Modal
@@ -103,7 +134,7 @@ const App = (): JSX.Element => {
                   <MetaMaskProvider>
                     <div className="App d-flex w-100 h-100">
                       <div className="w-100 main-content">
-                         <Nav selectExtension={(extName) => setSelExtensionName(extName)} 
+                         <Nav selectExtension={(extName) => onExtensionSelected(extName)} 
                           accountSelectorOpen={history.location.pathname !== SNAP_URL} />
                         <ContentRouter />
                         <NetworkSwitching isOpen={isNetworkSwitching} />
