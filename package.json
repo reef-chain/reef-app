@@ -1,6 +1,6 @@
 {
   "name": "reef-app",
-  "version": "3.4.4",
+  "version": "3.4.5",
   "private": true,
   "type": "commonjs",
   "dependencies": {
@@ -104,6 +104,6 @@
     "ethers": "5.7.0",
     "rxjs": "7.5.5",
     "@types/bn.js": "5.1.5",
-    "@polkadot/api-derive": "10.11.3"
+    "@polkadot/api-derive": "10.13.1"
   }
 }

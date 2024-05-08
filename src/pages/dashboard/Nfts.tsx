@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { NFT as NFTData } from '@reef-chain/react-lib';
+import React, { useContext, useState } from 'react';
+import { NFT as NFTData,Components } from '@reef-chain/react-lib';
 import './Nfts.css';
 import Uik from '@reef-chain/ui-kit';
-import NFT from './NFT';
 import SqwidButton from './SqwidButton/SqwidButton';
 import { localizedStrings } from '../../l10n/l10n';
-import OverlayNFT from '../../common/OverlayNFT';
+import ReefSigners from '../../context/ReefSigners';
+
+const {NFTCard,OverlayNFT} = Components;
 
 export const Skeleton = (): JSX.Element => (
   <div className="nft-skeleton">
@@ -18,7 +19,10 @@ interface NftsProps {
   nfts: NFTData[];
 }
 
+
+
 export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
+  const { accounts, selectedSigner, provider } = useContext(ReefSigners);
   const [selectedNFT, setSelectedNFT] = useState<NFTData | undefined>(undefined);
 
   return (
@@ -40,12 +44,13 @@ export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
                   role="button"
                   onClick={() => setSelectedNFT(nft)}
                 >
-                  <NFT
+                  <NFTCard
                     iconUrl={nft.iconUrl}
                     name={nft.name}
                     balance={nft.balance}
                     mimetype={nft.mimetype}
                   />
+                  
                 </div>
               ))}
 
@@ -60,6 +65,9 @@ export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
                   address={selectedNFT.address}
                   contractType={selectedNFT.contractType}
                   nftId={selectedNFT.nftId}
+                  accounts={accounts}
+                  selectedSigner={selectedSigner}
+                  provider={provider}
                 />
               )}
             </div>
