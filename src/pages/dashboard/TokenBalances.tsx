@@ -12,6 +12,7 @@ import ReefSigners from '../../context/ReefSigners';
 import { isReefswapUI, useDexConfig } from '../../environment';
 import {network as nw} from '@reef-chain/util-lib';
 import PoolContext from '../../context/PoolContext';
+import HideBalance from '../../context/HideBalance';
 
 const {Skeleton,TokenCard} = Components;
 
@@ -39,6 +40,7 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
   const { selectedSigner, network,accounts,provider } = useContext(ReefSigners);
   const pools = useContext(PoolContext);
+  const hidebalance = useContext(HideBalance)
 
   const isReefBalanceZero = selectedSigner?.balance._hex === '0x00';
 
@@ -68,21 +70,23 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
       return -1;
     })
     .map((token) => (
-      <TokenCard
-      accounts={accounts}
-      hideBalance={false}
-      isReefswapUI={isReefswapUI}
-      nw={nw}
-      pools={pools}
-      price={tokenPrices[token.address] || 0}
-      token={token}
-      tokens={tokens}
-      useDexConfig={useDexConfig}
-      provider={provider}
-      selectedSigner={selectedSigner}
-      signer={selectedSigner}
-      tokenPrices={tokenPrices}
-      />
+      <div key={token.address}>
+        <TokenCard
+        accounts={accounts}
+        hideBalance={hidebalance}
+        isReefswapUI={isReefswapUI}
+        nw={nw}
+        pools={pools}
+        price={tokenPrices[token.address] || 0}
+        token={token}
+        tokens={tokens}
+        useDexConfig={useDexConfig}
+        provider={provider}
+        selectedSigner={selectedSigner}
+        signer={selectedSigner}
+        tokenPrices={tokenPrices}
+        />
+      </div>
     ));
 
   return (
