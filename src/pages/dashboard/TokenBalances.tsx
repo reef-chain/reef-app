@@ -1,36 +1,24 @@
-import { Token } from '@reef-chain/react-lib';
+import { Token,Components } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
 import TokenPricesContext from '../../context/TokenPricesContext';
-import TokenCard from './TokenCard';
 import { BUY_URL, CREATE_ERC20_TOKEN_URL } from '../../urls';
 import { localizedStrings } from '../../l10n/l10n';
 import './loading-animation.css';
 import ReefSigners from '../../context/ReefSigners';
-import { isReefswapUI } from '../../environment';
+import { isReefswapUI, useDexConfig } from '../../environment';
+import {network as nw} from '@reef-chain/util-lib';
+import PoolContext from '../../context/PoolContext';
+import HideBalance from '../../context/HideBalance';
+
+const {Skeleton,TokenCard} = Components;
 
 interface TokenBalances {
     tokens: Token[];
 }
-
-export const Skeleton = (): JSX.Element => (
-  <div className="token-card token-card--skeleton">
-    <div className="token-card__wrapper">
-      <div className="token-card__main">
-        <div className="token-card__image loading-animation" />
-        <div className="token-card__info">
-          <div className="token-card__token-info">
-            <span className="token-card__token-name loading-animation" />
-          </div>
-          <div className="token-card__token-price loading-animation" />
-        </div>
-      </div>
-    </div>
-  </div>
-);
 
 const CreateTokenButton = (): JSX.Element => (
   <Link
@@ -50,7 +38,9 @@ const balanceValue = (token: Token, price = 0): number => (new BigNumber(token.b
 
 export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
-  const { selectedSigner, network } = useContext(ReefSigners);
+  const { selectedSigner, network,accounts,provider } = useContext(ReefSigners);
+  const pools = useContext(PoolContext);
+  const hidebalance = useContext(HideBalance)
 
   const isReefBalanceZero = selectedSigner?.balance._hex === '0x00';
 
@@ -80,11 +70,23 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
       return -1;
     })
     .map((token) => (
-      <TokenCard
-        key={token.address}
-        token={token}
+      <div key={token.address}>
+        <TokenCard
+        accounts={accounts}
+        hideBalance={hidebalance}
+        isReefswapUI={isReefswapUI}
+        nw={nw}
+        pools={pools}
         price={tokenPrices[token.address] || 0}
-      />
+        token={token}
+        tokens={tokens}
+        useDexConfig={useDexConfig}
+        provider={provider}
+        selectedSigner={selectedSigner}
+        signer={selectedSigner}
+        tokenPrices={tokenPrices}
+        />
+      </div>
     ));
 
   return (
