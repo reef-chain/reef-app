@@ -24,8 +24,8 @@ const { WalletSelector, walletSelectorOptions } = Components;
 
 export const availableWalletOptions = [
   walletSelectorOptions[reefExt.REEF_EXTENSION_IDENT],
-  walletSelectorOptions[reefExt.REEF_SNAP_IDENT],
-  walletSelectorOptions[reefExt.REEF_EASY_WALLET_IDENT],
+  // walletSelectorOptions[reefExt.REEF_SNAP_IDENT],
+  // walletSelectorOptions[reefExt.REEF_EASY_WALLET_IDENT],
   walletSelectorOptions[reefExt.REEF_WALLET_CONNECT_IDENT]
 ];
 
