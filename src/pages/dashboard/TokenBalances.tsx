@@ -122,7 +122,7 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
                       : (
                         <>
                           {tokenCards}
-                          {tokens.length > 1 && <CreateTokenButton />}
+                          {tokens.length > 1 && isReefswapUI&&<CreateTokenButton />}
                         </>
                       )
                   )
