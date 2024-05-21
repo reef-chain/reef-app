@@ -67,6 +67,47 @@ const App = (): JSX.Element => {
       history.push(SNAP_URL);
     }
   }, [extension, error]);
+  
+  const[errorToast,setErrorToast] = useState<{
+    message:String;
+    type:String;
+  }|undefined>();
+
+  useEffect(()=>{
+    if(errorToast){
+      if(errorToast.type == "danger"){
+        Uik.notify.danger(errorToast.message.toString());
+      }else{
+        Uik.notify.danger({
+          message:errorToast.message.toString(),
+          keepAlive: true,
+          children:<>
+          <Uik.Button
+            text='Reconnect'
+            fill
+            onClick={() => window.location.reload()}
+          />
+        </>
+        })
+      }
+    }
+  },[errorToast])
+
+window.addEventListener("unhandledrejection", (event) => {
+    const errorMessage = event.reason?.message || event.reason;
+    if (errorMessage === "_canceled") {
+      setErrorToast({
+        message:"You rejected the transaction",
+        type:"danger"
+      });
+    }else if(errorMessage==="_invalid"){
+      setErrorToast({
+        message:"Session expired kindly reconnect",
+        type:"info"
+      })
+    }
+});
+
 
 
   const onExtensionSelected = (ident: string) => {
