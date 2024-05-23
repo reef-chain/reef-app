@@ -34,12 +34,14 @@ export const connectWc = async (): Promise<reefExt.WcConnection | undefined> => 
 
     if (uri) {
       web3Modal.openModal({ uri });
+    
     } else {
-      throw new Error("No uri found");
+      throw new Error("_noUriFoundWC");
     }
 
     const session = await approval();
     web3Modal.closeModal();
+    console.log(document.getElementById(".w3m-active"))
     return { client, session };
   } catch (error) {
     console.error("Error connecting WalletConnect:", error);
