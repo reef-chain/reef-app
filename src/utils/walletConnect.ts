@@ -41,7 +41,6 @@ export const connectWc = async (): Promise<reefExt.WcConnection | undefined> => 
 
     const session = await approval();
     web3Modal.closeModal();
-    console.log(document.getElementById(".w3m-active"))
     return { client, session };
   } catch (error) {
     console.error("Error connecting WalletConnect:", error);
