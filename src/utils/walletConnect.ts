@@ -34,8 +34,9 @@ export const connectWc = async (): Promise<reefExt.WcConnection | undefined> => 
 
     if (uri) {
       web3Modal.openModal({ uri });
+    
     } else {
-      throw new Error("No uri found");
+      throw new Error("_noUriFoundWC");
     }
 
     const session = await approval();

@@ -105,25 +105,33 @@ window.addEventListener("unhandledrejection", (event) => {
         message:"Session expired kindly reconnect",
         type:"info"
       })
+    }else if(errorMessage==="_noUriFoundWC"){
+      setErrorToast({
+        message:"Encountered an error in initialization",
+        type:"danger"
+      })
     }
 });
 
+const connectWalletConnect = async(ident:string)=>{
+  const response:reefExt.WcConnection | undefined = await connectWc()
+  console.log('connectWalletConnect',response);
+      if (response) {
+        reefExt.injectWcAsExtension(response, { name: reefExt.REEF_WALLET_CONNECT_IDENT, version: "1.0.0" });
+        setSelExtensionName(ident);
+      } else {
+        // if proposal expired, recursively call
+        Uik.notify.danger("Connection QR expired, reloading")
+        await connectWalletConnect(ident);
+      }
+    }
 
 
-  const onExtensionSelected = (ident: string) => {
+
+  const onExtensionSelected = async(ident: string) => {
     console.log('onExtensionSelected', ident);
     if (ident === reefExt.REEF_WALLET_CONNECT_IDENT) {
-      connectWc().then(
-        (res: reefExt.WcConnection | undefined) => {
-          console.log('connectWc', res);
-          if (res) {
-            reefExt.injectWcAsExtension(res, { name: reefExt.REEF_WALLET_CONNECT_IDENT, version: "1.0.0" });
-            setSelExtensionName(ident);
-          } else {
-            setSelExtensionName(undefined);
-          }
-        }
-      );
+      await connectWalletConnect(ident);
     } else {
       setSelExtensionName(ident);
     }
