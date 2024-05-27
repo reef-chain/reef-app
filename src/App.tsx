@@ -142,10 +142,14 @@ const connectWalletConnect = async(ident:string)=>{
 
   const onExtensionSelected = async(ident: string) => {
     console.log('onExtensionSelected', ident);
-    if (ident === reefExt.REEF_WALLET_CONNECT_IDENT) {
-      await connectWalletConnect(ident);
-    } else {
-      setSelExtensionName(ident);
+    try {
+      if (ident === reefExt.REEF_WALLET_CONNECT_IDENT) {
+        await connectWalletConnect(ident);
+      } else {
+        setSelExtensionName(ident);
+      }
+    } catch (error) {
+     console.log(error); 
     }
   }
 
