@@ -38,6 +38,7 @@ const App = (): JSX.Element => {
   }
 
   const [selExtensionName, setSelExtensionName] = useState<string | undefined>(selectedWallet || undefined);
+  const [wcPreloader,setWcPreloader] = useState<boolean>(false);
   const {
     loading, error, signers, selectedReefSigner, network, provider, reefState, extension
   } = hooks.useInitReefStateExtension(
@@ -113,15 +114,26 @@ window.addEventListener("unhandledrejection", (event) => {
     }
 });
 
+//handle preloader
+useEffect(()=>{
+  // preloader active
+  if(wcPreloader && signers.length){
+    // if account connected , hide preloader
+    setWcPreloader(false)
+  }
+},[signers])
+
 const connectWalletConnect = async(ident:string)=>{
   const response:reefExt.WcConnection | undefined = await connectWc()
   console.log('connectWalletConnect',response);
       if (response) {
         reefExt.injectWcAsExtension(response, { name: reefExt.REEF_WALLET_CONNECT_IDENT, version: "1.0.0" });
         setSelExtensionName(ident);
+        // display preloader 
+        setWcPreloader(true);
       } else {
         // if proposal expired, recursively call
-        Uik.notify.danger("Connection QR expired, reloading")
+        // Uik.notify.danger("Connection QR expired, reloading")
         await connectWalletConnect(ident);
       }
     }
@@ -187,6 +199,18 @@ const connectWalletConnect = async(ident:string)=>{
                           accountSelectorOpen={history.location.pathname !== SNAP_URL} />
                         <ContentRouter />
                         <NetworkSwitching isOpen={isNetworkSwitching} />
+                        <Uik.Modal title="Connecting to Mobile App"
+        isOpen={wcPreloader}>
+          <div>
+          <div className='wc-preloader'>
+            <div className='wc-loader'></div>
+            <img src="/img/wallets/walletconnect.svg" alt="" className='wc-icon-preloader' />
+          </div>
+          <div className='wc-loader-label' >
+            <Uik.Text type="mini" text="wait while we are establishing a connection"/>
+            </div>
+          </div>
+                          </Uik.Modal>
 
                         <ToastContainer
                           draggable
