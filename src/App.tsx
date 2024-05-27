@@ -133,7 +133,7 @@ const connectWalletConnect = async(ident:string)=>{
         setWcPreloader(true);
       } else {
         // if proposal expired, recursively call
-        // Uik.notify.danger("Connection QR expired, reloading")
+        Uik.notify.danger("Connection QR expired, reloading")
         await connectWalletConnect(ident);
       }
     }
