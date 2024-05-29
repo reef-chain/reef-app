@@ -24,7 +24,7 @@ const appMetadata: CoreTypes.Metadata = {
   icons: [window.location.origin + '/favicon.ico'],
 };
 
-export const connectWc = async (): Promise<reefExt.WcConnection | undefined> => {
+export const connectWc = async (setWcPreloader:any): Promise<reefExt.WcConnection | undefined> => {
   try {
     const client = await reefExt.initWcClient(appMetadata);
 
@@ -34,7 +34,7 @@ export const connectWc = async (): Promise<reefExt.WcConnection | undefined> => 
 
     if (uri) {
       web3Modal.openModal({ uri });
-    
+      setWcPreloader(false);
     } else {
       throw new Error("_noUriFoundWC");
     }
