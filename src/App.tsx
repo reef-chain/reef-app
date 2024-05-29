@@ -21,6 +21,7 @@ import { SNAP_URL } from './urls';
 import { connectWc } from './utils/walletConnect';
 import useConnectedWallet from './hooks/useConnectedWallet';
 import useWcPreloader from './hooks/useWcPreloader';
+import WcPreloader from './common/WcPreloader';
 
 const { WalletSelector, walletSelectorOptions } = Components;
 
@@ -204,18 +205,7 @@ useEffect(()=>{
                           accountSelectorOpen={history.location.pathname !== SNAP_URL} />
                         <ContentRouter />
                         <NetworkSwitching isOpen={isNetworkSwitching} />
-                        <Uik.Modal title="Connecting to Mobile App"
-        isOpen={wcPreloader}>
-          <div>
-          <div className='wc-preloader'>
-            <div className='wc-loader'></div>
-            <img src="/img/wallets/walletconnect.svg" alt="" className='wc-icon-preloader' />
-          </div>
-          <div className='wc-loader-label' >
-            <Uik.Text type="mini" text="wait while we are establishing a connection"/>
-            </div>
-          </div>
-                          </Uik.Modal>
+                        <WcPreloader wcPreloader={wcPreloader} />
 
                         <ToastContainer
                           draggable
