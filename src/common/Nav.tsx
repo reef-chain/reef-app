@@ -16,7 +16,9 @@ import { localizedStrings } from '../l10n/l10n';
 import ReefSigners from '../context/ReefSigners';
 import { sendToSnap } from '../utils/snap';
 import { getMetadata } from '../utils/metadata';
-import { availableWalletOptions } from '../App';
+import { availableWalletOptions, connectWalletConnect } from '../App';
+import useConnectedWallet from '../hooks/useConnectedWallet';
+import useWcPreloader from '../hooks/useWcPreloader';
 
 export interface Nav {
     selectExtension: (name: string) => void;
@@ -30,6 +32,8 @@ const Nav = ({ selectExtension, accountSelectorOpen }: Nav): JSX.Element => {
   const mainnetSelected = network == null || network?.rpcUrl === nw.AVAILABLE_NETWORKS.mainnet.rpcUrl;
   const [showMetadataUpdate, setShowMetadataUpdate] = useState(false);
   const [availableExtensions, setAvailableExtensions] = useState(availableWalletOptions);
+
+  const {setSelExtensionName} = useConnectedWallet();
 
   useEffect(() => {
     if (provider && extension?.name === reefExt.REEF_SNAP_IDENT) {
@@ -159,6 +163,8 @@ const Nav = ({ selectExtension, accountSelectorOpen }: Nav): JSX.Element => {
     window.location.reload();
   }
 
+  const {setLoading:setWcPreloader}=useWcPreloader();
+
   return (
     <div className="nav-content navigation d-flex d-flex-space-between">
       <div className="navigation__wrapper">
@@ -194,6 +200,7 @@ const Nav = ({ selectExtension, accountSelectorOpen }: Nav): JSX.Element => {
             onStartAccountCreation={generateSeed}
             onConfirmAccountCreation={createAccount}
             open={accountSelectorOpen}
+            handleWalletConnect={()=>connectWalletConnect(reefExt.REEF_WALLET_CONNECT_IDENT,setSelExtensionName,setWcPreloader)}
           />
         </nav>
       </div>
