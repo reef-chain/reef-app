@@ -58,7 +58,6 @@ export const connectWalletConnect = async(ident:string,setSelExtensionName:any,s
 
 const App = (): JSX.Element => {
   const {selExtensionName,setSelExtensionName} = useConnectedWallet();
-  // const [selExtensionName, setSelExtensionName] = useState<string | undefined>(selectedWallet || undefined);
   const {loading:wcPreloader,setLoading:setWcPreloader} = useWcPreloader()
   const {
     loading, error, signers, selectedReefSigner, network, provider, reefState, extension
