@@ -34,7 +34,10 @@ export const connectWc = async (setWcPreloader:any): Promise<reefExt.WcConnectio
 
     if (uri) {
       web3Modal.openModal({ uri });
-      setWcPreloader(false);
+      setWcPreloader({
+        value:false,
+        message:""
+      });
     } else {
       throw new Error("_noUriFoundWC");
     }

@@ -1,17 +1,32 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
-import { extension as reefExt } from '@reef-chain/util-lib';
+import React, { createContext, useState, ReactNode } from 'react';
+
 
 interface WcPreloaderProps {
-  loading: boolean;
-  setLoading: (_loading:boolean) => void;
+  loading: {
+    value:boolean;
+    message:string;
+  };
+  setLoading: (_loading:{
+    value:boolean;
+    message:string;
+  }) => void;
 }
 
 const WcPreloaderContext = createContext<WcPreloaderProps | undefined>(undefined);
 
 export const WcPreloaderProvider = ({ children }: { children: ReactNode }) => {
-  const [loading, setIsLoading] = useState<boolean>(false);
+  const [loading, setIsLoading] = useState<{
+    value:boolean;
+    message:string;
+  }>({
+    value:false,
+    message:""
+  });
 
-  const setLoading = (_loading: boolean) => {
+  const setLoading = (_loading:{
+    value:boolean;
+    message:string;
+  }) => {
     setIsLoading(_loading);
   };
 

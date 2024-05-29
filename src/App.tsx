@@ -33,7 +33,10 @@ export const availableWalletOptions = [
 ];
 
 export const connectWalletConnect = async(ident:string,setSelExtensionName:any,setWcPreloader:any)=>{
-  setWcPreloader(true);
+  setWcPreloader({
+    value:true,
+    message:"initializing mobile app connection"
+  });
   setSelExtensionName(undefined); //force setting this to different value from the ident initially or else it doesn't call useInitReefState hook
 
   const response:reefExt.WcConnection | undefined = await connectWc(setWcPreloader)
@@ -42,7 +45,10 @@ export const connectWalletConnect = async(ident:string,setSelExtensionName:any,s
         reefExt.injectWcAsExtension(response, { name: reefExt.REEF_WALLET_CONNECT_IDENT, version: "1.0.0" });
         setSelExtensionName(ident);
         // display preloader 
-        setWcPreloader(true);
+        setWcPreloader({
+          value:true,
+          message:"wait while we are establishing a connection"
+        });
       } else {
         // if proposal expired, recursively call
         Uik.notify.danger("Connection QR expired, reloading")
@@ -59,8 +65,6 @@ const App = (): JSX.Element => {
   } = hooks.useInitReefStateExtension(
     'Reef App', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
-
-  console.log("signers===",signers)
 
   const history = useHistory();
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
@@ -134,9 +138,12 @@ window.addEventListener("unhandledrejection", (event) => {
 //handle preloader
 useEffect(()=>{
   // preloader active
-  if(wcPreloader && signers.length){
+  if(wcPreloader.value && signers.length){
     // if account connected , hide preloader
-    setWcPreloader(false)
+    setWcPreloader({
+      value:false,
+      message:""
+    })
   }
 },[signers])
 
