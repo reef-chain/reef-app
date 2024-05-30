@@ -138,7 +138,8 @@ window.addEventListener("unhandledrejection", (event) => {
 useEffect(()=>{
   // preloader active
   if(wcPreloader.value && signers.length){
-    // if account connected , hide preloader
+    // if account connected , hide preloader & set account address
+    reefState.setSelectedAddress(signers[0].address)
     setWcPreloader({
       value:false,
       message:""
