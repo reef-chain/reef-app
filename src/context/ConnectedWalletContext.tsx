@@ -3,7 +3,7 @@ import { extension as reefExt } from '@reef-chain/util-lib';
 
 interface ConnectedWalletContextProps {
   selExtensionName: string|undefined;
-  setSelExtensionName: (_ident: string) => void;
+  setSelExtensionName: (_ident: string|undefined) => void;
 }
 
 const ConnectedWalletContext = createContext<ConnectedWalletContextProps | undefined>(undefined);
@@ -18,7 +18,7 @@ export const ConnectedWalletProvider = ({ children }: { children: ReactNode }) =
 
   const [ident, setIdent] = useState<string|undefined>(selectedWallet||undefined);
 
-  const setSelExtensionName = (_ident: string) => {
+  const setSelExtensionName = (_ident: string|undefined) => {
     setIdent(_ident);
   };
 
