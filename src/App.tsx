@@ -1,4 +1,4 @@
-import { defaultOptions, hooks } from '@reef-chain/react-lib';
+import { ReefSigner, defaultOptions, hooks } from '@reef-chain/react-lib';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -59,11 +59,23 @@ export const connectWalletConnect = async(ident:string,setSelExtensionName:any,s
 const App = (): JSX.Element => {
   const {selExtensionName,setSelExtensionName} = useConnectedWallet();
   const {loading:wcPreloader,setLoading:setWcPreloader} = useWcPreloader()
+  const [accounts,setAccounts] = useState<ReefSigner[]>([]);
+  const [selectedSigner,setSelectedSigner] = useState<ReefSigner | undefined>(undefined);
   const {
     loading, error, signers, selectedReefSigner, network, provider, reefState, extension
   } = hooks.useInitReefStateExtension(
     'Reef App', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
+
+  useEffect(()=>{
+    setAccounts([]);
+    setSelectedSigner(undefined);
+  },[selExtensionName])
+
+  useEffect(()=>{
+    setAccounts(signers);
+    setSelectedSigner(selectedReefSigner);
+  },[selectedReefSigner,signers])
 
   const history = useHistory();
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
@@ -194,8 +206,8 @@ useEffect(()=>{
         <>
           <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
             <ReefSignersContext.Provider value={{
-              accounts: signers,
-              selectedSigner: selectedReefSigner,
+              accounts,
+              selectedSigner,
               network,
               reefState,
               provider,
