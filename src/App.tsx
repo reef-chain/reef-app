@@ -77,7 +77,7 @@ const App = (): JSX.Element => {
     setSelectedSigner(selectedReefSigner);
 
     // if account connected , hide preloader & set account address
-    if(signers?.length){
+    if(signers?.length && signers?.indexOf(selectedReefSigner!)==-1){
       reefState.setSelectedAddress(signers[0].address)
     }
   },[selectedReefSigner,signers])
