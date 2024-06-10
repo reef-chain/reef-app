@@ -16,10 +16,13 @@ import { isReefswapUI } from '../../environment';
 import { localizedStrings } from '../../l10n/l10n';
 import GetReefTestnetButton from './GetReefTestnetButton';
 import ReefSigners from '../../context/ReefSigners';
+import useAccountSelector from '../../hooks/useAccountSelector';
 
 const Dashboard = (): JSX.Element => {
   const { network } = useContext(ReefSigners);
   const { nfts } = useContext(NftContext);
+  const { selectedSigner} = useContext(ReefSigners);
+  const {setIsAccountSelectorOpen} = useAccountSelector();
   const tabs = (() => [
     { value: 'tokens', text: localizedStrings.tokens_pill || 'Tokens' },
     { value: 'bonds', text: localizedStrings.bonds || 'Bonds' },
@@ -42,6 +45,7 @@ const Dashboard = (): JSX.Element => {
   [tokenPrices, tokens]);
 
   return (
+    selectedSigner?
     <div className="dashboard">
       <div className="dashboard__top">
         <div className="dashboard__top-left">
@@ -76,6 +80,10 @@ const Dashboard = (): JSX.Element => {
           <Activity />
         </div>
       </div>
+    </div>:<div className='no-account-dashboard'>
+    <Uik.Text text="No account selected" type="light" className="mb-2"/>
+<Uik.Button text="Select Account" onClick={()=>setIsAccountSelectorOpen(true)} fill/>
+
     </div>
   );
 };

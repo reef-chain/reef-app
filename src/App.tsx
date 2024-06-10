@@ -22,6 +22,7 @@ import { connectWc } from './utils/walletConnect';
 import useConnectedWallet from './hooks/useConnectedWallet';
 import useWcPreloader from './hooks/useWcPreloader';
 import WcPreloader from './common/WcPreloader';
+import useAccountSelector from './hooks/useAccountSelector';
 
 const { WalletSelector, walletSelectorOptions } = Components;
 
@@ -177,6 +178,8 @@ useEffect(()=>{
     }
   }
 
+  const {isAccountSelectorOpen} = useAccountSelector()
+
   // @ts-ignore
   return (
     <>
@@ -224,7 +227,7 @@ useEffect(()=>{
                     <div className="App d-flex w-100 h-100">
                       <div className="w-100 main-content">
                          <Nav selectExtension={(extName) => onExtensionSelected(extName)} 
-                          accountSelectorOpen={history.location.pathname !== SNAP_URL} />
+                         />
                         <ContentRouter />
                         <NetworkSwitching isOpen={isNetworkSwitching} />
                         <WcPreloader wcPreloader={wcPreloader} />
