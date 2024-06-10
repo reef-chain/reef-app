@@ -135,6 +135,10 @@ const App = (): JSX.Element => {
 window.addEventListener("unhandledrejection", (event) => {
     const errorMessage = event.reason?.message || event.reason;
     if (errorMessage === "_canceled") {
+      // disable wallet connect loader if exists 
+      setWcPreloader({
+        value:false,message:""
+      })
       setErrorToast({
         message:"You rejected the transaction",
         type:"danger"
