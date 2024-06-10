@@ -19,13 +19,13 @@ import { getMetadata } from '../utils/metadata';
 import { availableWalletOptions, connectWalletConnect } from '../App';
 import useConnectedWallet from '../hooks/useConnectedWallet';
 import useWcPreloader from '../hooks/useWcPreloader';
+import useAccountSelector from '../hooks/useAccountSelector';
 
 export interface Nav {
     selectExtension: (name: string) => void;
-    accountSelectorOpen: boolean;
 }
 
-const Nav = ({ selectExtension, accountSelectorOpen }: Nav): JSX.Element => {
+const Nav = ({ selectExtension }: Nav): JSX.Element => {
   const history = useHistory();
   const { pathname } = useLocation();
   const { accounts, provider, selectedSigner, network, reefState, selExtName, extension } = useContext(ReefSigners);
@@ -164,6 +164,7 @@ const Nav = ({ selectExtension, accountSelectorOpen }: Nav): JSX.Element => {
   }
 
   const {setLoading:setWcPreloader}=useWcPreloader();
+  const {isAccountSelectorOpen,setIsAccountSelectorOpen} = useAccountSelector();
 
   return (
     <div className="nav-content navigation d-flex d-flex-space-between">
@@ -174,9 +175,10 @@ const Nav = ({ selectExtension, accountSelectorOpen }: Nav): JSX.Element => {
         </button>
 
         <nav className="d-flex justify-content-end d-flex-vert-center">
-          <ul className="navigation_menu-items ">
+          {selectedSigner && <ul className="navigation_menu-items ">
             {menuItemsView}
-          </ul>
+          </ul>}
+          
           <Components.AccountSelector
             selExtName={selExtName}
             availableExtensions={availableExtensions}
@@ -199,7 +201,8 @@ const Nav = ({ selectExtension, accountSelectorOpen }: Nav): JSX.Element => {
             onUpdateMetadata={showMetadataUpdate ? updateMetadata : undefined}
             onStartAccountCreation={generateSeed}
             onConfirmAccountCreation={createAccount}
-            open={accountSelectorOpen}
+            open={isAccountSelectorOpen}
+            setOpen={setIsAccountSelectorOpen}
             handleWalletConnect={()=>connectWalletConnect(reefExt.REEF_WALLET_CONNECT_IDENT,setSelExtensionName,setWcPreloader)}
           />
         </nav>
