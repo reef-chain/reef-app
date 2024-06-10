@@ -13,6 +13,9 @@ import { isReefswapUI, useDexConfig } from '../../environment';
 import {network as nw} from '@reef-chain/util-lib';
 import PoolContext from '../../context/PoolContext';
 import HideBalance from '../../context/HideBalance';
+import useConnectedWallet from '../../hooks/useConnectedWallet';
+import { extension as reefExt } from '@reef-chain/util-lib';
+import useWcPreloader from '../../hooks/useWcPreloader';
 
 const {Skeleton,TokenCard} = Components;
 
@@ -41,6 +44,18 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
   const { selectedSigner, network,accounts,provider } = useContext(ReefSigners);
   const pools = useContext(PoolContext);
   const hidebalance = useContext(HideBalance)
+  const {selExtensionName} = useConnectedWallet();
+  const {setLoading:setWcPreloader} = useWcPreloader();
+  const { walletSelectorOptions } = Components;
+
+  const isWalletConnect = selExtensionName == walletSelectorOptions[reefExt.REEF_WALLET_CONNECT_IDENT].name
+
+  const handleWalletConnectModal = (hasStarted:boolean)=>{
+      setWcPreloader({
+value:hasStarted,
+message:"waiting for transaction approval"
+      })
+  }
 
   const isReefBalanceZero = selectedSigner?.balance._hex === '0x00';
 
@@ -85,6 +100,8 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
         selectedSigner={selectedSigner}
         signer={selectedSigner}
         tokenPrices={tokenPrices}
+        isWalletConnect={isWalletConnect}
+        handleWalletConnectModal={handleWalletConnectModal}
         />
       </div>
     ));
