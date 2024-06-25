@@ -81,6 +81,15 @@ html, body, #root, .App {
     background-color: #eeebf6;
 }
 
+.connecting-modal-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.connecting-modal-content > button {
+    margin-top: 2rem;
+}
+
 svg.fill-white {
     fill: white;
 }
@@ -333,3 +342,39 @@ input.form-control:focus {
     z-index: 999 !important;
     opacity: 0 !important;
 }
+
+.wc-icon-preloader{
+    width: 4rem;
+    height: 4rem;
+    position: absolute;
+}
+
+.wc-preloader{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wc-loader {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3496ff;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+.wc-loader-label{
+    padding-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+  

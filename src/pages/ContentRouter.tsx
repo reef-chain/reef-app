@@ -17,6 +17,7 @@ import {
   POOL_CHART_URL,
   POOLS_URL,
   REMOVE_LIQUIDITY_URL,
+  SNAP_URL,
   SPECIFIED_SWAP_URL,
   TRANSFER_TOKEN,
 } from '../urls';
@@ -34,6 +35,7 @@ import { Transfer } from './transfer/Transfer';
 import { isReefswapUI } from '../environment';
 import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
+import Snap from './snap/Snap';
 
 const ContentRouter = (): JSX.Element => {
   const { reefState, selectedSigner } = useContext(ReefSigners);
@@ -82,6 +84,7 @@ const tokenPrices = useMemo(
                   <Route path={BIND_URL} component={Bind} />
                   <Route path={BUY_URL} component={Onramp} />
                   <Route path={ONRAMP_URL} component={Onramp} />
+                  <Route path={SNAP_URL} component={Snap} />
                   <Route path="/" render={() => (<Redirect to={DASHBOARD_URL} />)} />
                 </Switch>
                 )}
@@ -101,6 +104,7 @@ const tokenPrices = useMemo(
                   <Route path={BIND_URL} component={Bind} />
                   <Route path={BUY_URL} component={Buy} />
                   <Route path={ONRAMP_URL} component={Onramp} />
+                  <Route path={SNAP_URL} component={Snap} />
                   <Route path="/" render={() => (<Redirect to={DASHBOARD_URL} />)} />
                 </Switch>
                 )}

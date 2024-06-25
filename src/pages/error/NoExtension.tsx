@@ -4,6 +4,7 @@ import Bubbles from './Bubbles';
 import './css/index.css';
 import { localizedStrings as strings } from '../../l10n/l10n';
 
+// TODO: Not used anymore
 const NoExtension = (): JSX.Element => (
   <div className="no-extension">
     <header className="header">
@@ -25,16 +26,16 @@ const NoExtension = (): JSX.Element => (
     <main>
       <div className="images">
         <div className="images__image">
-          <img src="img/1.png" alt="Reef Extenstion screenshot" />
+          <img src="img/1.png" alt="Reef Extension screenshot" />
         </div>
         <div className="images__image">
-          <img src="img/3.png" alt="Reef Extenstion screenshot" />
+          <img src="img/3.png" alt="Reef Extension screenshot" />
         </div>
         <div className="images__image">
-          <img src="img/4.png" alt="Reef Extenstion screenshot" />
+          <img src="img/4.png" alt="Reef Extension screenshot" />
         </div>
         <div className="images__image">
-          <img src="img/5.png" alt="Reef Extenstion screenshot" />
+          <img src="img/5.png" alt="Reef Extension screenshot" />
         </div>
       </div>
 
