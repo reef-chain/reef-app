@@ -51,7 +51,7 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
     });
     setAvailableExtensions(availableExtensions);
   }, [extension, selExtName]);
-  
+
   let menuItems = [
     { title: localizedStrings.dashboard, url: DASHBOARD_URL },
     { title: localizedStrings.bonds, url: BONDS_URL },
@@ -118,7 +118,7 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
   }
 
   const exportAccount = async (address: string, password: string): Promise<void> => {
-    const json = await sendToSnap('exportAccount', { 
+    const json = await sendToSnap('exportAccount', {
       addressExport: address,
       passwordExport: password
     });
@@ -178,7 +178,7 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
           {selectedSigner && <ul className="navigation_menu-items ">
             {menuItemsView}
           </ul>}
-          
+
           <Components.AccountSelector
             selExtName={selExtName}
             availableExtensions={availableExtensions}
@@ -192,7 +192,7 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
             isBalanceHidden={hideBalance.isHidden}
             showBalance={hideBalance.toggle}
             // availableNetworks={appAvailableNetworks.map((net) => net.name as unknown as Components.Network)}
-            availableNetworks={isReefswapUI ? ['testnet'] : ['mainnet', 'testnet']}
+            availableNetworks={['mainnet', 'testnet']}
             showSnapOptions={true}
             onRename={renameAccount}
             onExport={exportAccount}

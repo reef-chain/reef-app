@@ -10,7 +10,6 @@ import { localizedStrings } from '../../l10n/l10n';
 import './loading-animation.css';
 import ReefSigners from '../../context/ReefSigners';
 import { isReefswapUI, useDexConfig } from '../../environment';
-import {network as nw} from '@reef-chain/util-lib';
 import PoolContext from '../../context/PoolContext';
 import HideBalance from '../../context/HideBalance';
 import useConnectedWallet from '../../hooks/useConnectedWallet';
@@ -90,7 +89,7 @@ message:"waiting for transaction approval"
         accounts={accounts}
         hideBalance={hidebalance}
         isReefswapUI={isReefswapUI}
-        nw={nw}
+        nw={network}
         pools={pools}
         price={tokenPrices[token.address] || 0}
         token={token}
