@@ -38,14 +38,15 @@ const CreatePool = ({
 
   const history = useHistory();
 
-  useEffect(()=>{
+  useEffect(() => {
     if (poolAddress) {
-        const poolAddresses = pools.map((p) => p.address);
-        if (poolAddresses.includes(poolAddress)) {
-          history.push(`/chart/${poolAddress}/trade`);
-        }
+      // todo undo later anukulpandey
+      const timer = setTimeout(() => {
+        history.push(`/chart/${poolAddress}/trade`);
+      }, 20000);
+      return () => clearTimeout(timer);
     }
-  },[poolAddress,pools])
+  }, [poolAddress, pools, history]);
 
   if (!poolAddress && contractEvents) {
     if ((contractEvents as any).length >= 3) {
