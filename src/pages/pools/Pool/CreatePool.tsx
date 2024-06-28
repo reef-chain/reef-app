@@ -2,7 +2,7 @@ import {
   Components, hooks, store, Token,
 } from '@reef-chain/react-lib';
 import axios, { AxiosInstance } from 'axios';
-import React, { useContext, useReducer, useState } from 'react';
+import React, { useContext, useEffect, useReducer, useState } from 'react';
 import { network as libNet } from '@reef-chain/util-lib';
 import TokenContext from '../../../context/TokenContext';
 import TokenPricesContext from '../../../context/TokenPricesContext';
@@ -13,6 +13,8 @@ import ReefSigners from '../../../context/ReefSigners';
 
 import RedirectingToPool from './RedirectingToPool';
 import { useDexConfig } from '../../../environment';
+import PoolContext from '../../../context/PoolContext';
+import { useHistory } from 'react-router-dom';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
@@ -29,6 +31,30 @@ const CreatePool = ({
   const [address2, setAddress2] = useState('0x');
   const [isRedirecting, setIsRedirecting] = useState(false);
   const httpClient: AxiosInstance = axios;
+  const contractEvents = hooks.useObservableState(libNet.getLatestBlockContractEvents$());
+
+  const [poolAddress, setPoolAddress] = useState<string|undefined>();
+  const pools = useContext(PoolContext);
+
+  const history = useHistory();
+
+  useEffect(() => {
+    if (poolAddress) {
+      // todo undo later anukulpandey
+      const timer = setTimeout(() => {
+        history.push(`/chart/${poolAddress}/trade`);
+      }, 20000);
+      return () => clearTimeout(timer);
+    }
+  }, [poolAddress, pools, history]);
+
+  if (!poolAddress && contractEvents) {
+    if ((contractEvents as any).length >= 3) {
+      // TODO how do we know it's the right pool address?
+      const _poolAddress = contractEvents[(contractEvents as any).length - 1];
+      setPoolAddress(_poolAddress);
+    }
+  }
 
   const [finalized, setFinalized] = useState(true);
 
