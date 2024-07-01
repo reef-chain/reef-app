@@ -1,26 +1,32 @@
-import { Components } from '@reef-chain/react-lib';
-import React, { useContext } from 'react';
+import { Components } from '@reef-chain/react-lib'
+import React, { useContext } from 'react'
 import TokenContext from '../../context/TokenContext';
-import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
+import { notify } from '../../utils/utils';
+import Uik from "@reef-chain/ui-kit";
 
-const { Send } = Components;
+function Transfer() {
+  const {OverlaySend} = Components;
 
-export const Transfer = (): JSX.Element => {
-  const { selectedSigner, provider, accounts } = useContext(ReefSigners);
   const { tokens } = useContext(TokenContext);
-
-  if (!accounts || !selectedSigner || !provider) {
-    return <div />;
+  const { selectedSigner, provider, accounts } = useContext(ReefSigners);
+  const token = tokens?tokens[0]:undefined
+  
+  if(!token){
+    return <Uik.Loading />
   }
 
   return (
-    <Send
-      notify={notify}
-      accounts={accounts}
-      provider={provider}
-      signer={selectedSigner}
-      tokens={tokens.filter(({ balance }) => balance.gt(0))}
-    />
-  );
-};
+    <OverlaySend
+        tokenAddress={token.address}
+        isOpen={true}
+        tokens={tokens}
+        selectedSigner={selectedSigner}
+        provider={provider}
+        accounts={accounts}
+        notify={notify}
+      />
+  )
+}
+
+export default Transfer

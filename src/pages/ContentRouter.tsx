@@ -31,7 +31,7 @@ import Pools from './pools/Pools';
 import RemoveLiquidity from './pools/RemoveLiquidity';
 import Swap from './swap/Swap';
 import Buy from './buy/Buy';
-import { Transfer } from './transfer/Transfer';
+import Transfer  from './transfer/Transfer';
 import { isReefswapUI } from '../environment';
 import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
