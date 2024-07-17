@@ -184,6 +184,10 @@
   border-radius: 50%;
 }
 
+.pool-stats__token-image:hover{
+  cursor: pointer;
+}
+
 .pool-stats__token-image--reef {
   filter: brightness(1.1);
 }

@@ -1,12 +1,13 @@
 import './stats.css';
 import Uik from '@reef-chain/ui-kit';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { hooks } from '@reef-chain/react-lib';
 import { faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
 import PoolSelect from './PoolSelect';
 import PoolTransactions from './PoolTransactions';
 import { localizedStrings } from '../../../l10n/l10n';
+import ReefSigners from '../../../context/ReefSigners';
 
 interface StatsProps {
   data: hooks.PoolStats;
@@ -27,59 +28,71 @@ const displayAmount = (amount: string | number): string => {
   return Uik.utils.formatHumanAmount(amount);
 };
 
-const Token = ({ token, price }: TokenStatsProps): JSX.Element => (
-  <div className="pool-stats__token">
-    <div className="pool-stats__token-info">
-      <div className="pool-stats__token-main">
-        <img
-          src={token.icon}
-          alt={token.symbol}
-          className={`
-              pool-stats__token-image
-              pool-stats__token-image--${Uik.utils.slug(token.symbol)}
-            `}
-        />
+const Token = ({ token, price }: TokenStatsProps): JSX.Element => {
+  const { network } = useContext(ReefSigners);
+
+  return (
+    <div className="pool-stats__token">
+      <div className="pool-stats__token-info">
+        <div className="pool-stats__token-main">
+          <div onClick={() => window.open(`${network.reefscanUrl}/token/${token.address}`)} className='pool-stats__token-image'>
+            <Uik.Tooltip
+              text={token.address}
+              position="bottom"
+              children={
+                <img
+                  src={token.icon}
+                  alt={token.symbol}
+                  className={`
+                pool-stats__token-image
+                pool-stats__token-image--${Uik.utils.slug(token.symbol)}
+              `}
+                />
+              }
+            />
+          </div>
+
+          <div>
+            <div className="pool-stats__token-name">{token.symbol}</div>
+            <div className="pool-stats__token-percentage">
+              {token.percentage}
+              %
+            </div>
+          </div>
+        </div>
 
         <div>
-          <div className="pool-stats__token-name">{ token.symbol }</div>
-          <div className="pool-stats__token-percentage">
-            { token.percentage }
-            %
+          <div className="pool-stats__token-price">
+            $
+            {typeof price !== 'number' ? '?' : price.toFixed(4)}
+          </div>
+          <div className="pool-stats__token-value-ratio">
+            {displayAmount(token.ratio.amount)}
+            {' '}
+            {token.ratio.symbol}
           </div>
         </div>
       </div>
 
-      <div>
-        <div className="pool-stats__token-price">
-          $
-          {typeof price !== 'number' ? '?' : price.toFixed(4)}
+      <div className="pool-stats__token-stats">
+        <div className="pool-stats__token-stat">
+          <div className="pool-stats__token-stat-label">Total Liquidity</div>
+          <div className="pool-stats__token-stat-value">{displayAmount(token.amountLocked)}</div>
         </div>
-        <div className="pool-stats__token-value-ratio">
-          {displayAmount(token.ratio.amount)}
-          {' '}
-          {token.ratio.symbol}
+
+        <div className="pool-stats__token-stat">
+          <div className="pool-stats__token-stat-label">My Liquidity</div>
+          <div className="pool-stats__token-stat-value">{displayAmount(token.mySupply)}</div>
+        </div>
+
+        <div className="pool-stats__token-stat">
+          <div className="pool-stats__token-stat-label">Fees 24h</div>
+          <div className="pool-stats__token-stat-value">{displayAmount(token.fees24h)}</div>
         </div>
       </div>
     </div>
-
-    <div className="pool-stats__token-stats">
-      <div className="pool-stats__token-stat">
-        <div className="pool-stats__token-stat-label">Total Liquidity</div>
-        <div className="pool-stats__token-stat-value">{ displayAmount(token.amountLocked) }</div>
-      </div>
-
-      <div className="pool-stats__token-stat">
-        <div className="pool-stats__token-stat-label">My Liquidity</div>
-        <div className="pool-stats__token-stat-value">{ displayAmount(token.mySupply) }</div>
-      </div>
-
-      <div className="pool-stats__token-stat">
-        <div className="pool-stats__token-stat-label">Fees 24h</div>
-        <div className="pool-stats__token-stat-value">{ displayAmount(token.fees24h) }</div>
-      </div>
-    </div>
-  </div>
-);
+  )
+};
 
 interface UrlParams {
   address: string;
@@ -122,11 +135,11 @@ const Stats = ({
                 />
               </div>
               <span className="pool-stats__pool-select-name">
-                { data.firstToken.symbol }
+                {data.firstToken.symbol}
                 {' '}
                 /
                 {' '}
-                { data.secondToken.symbol }
+                {data.secondToken.symbol}
               </span>
             </div>
 
@@ -145,7 +158,7 @@ const Stats = ({
               <div className="pool-stats__main-stat-value">
                 $
                 {' '}
-                { displayAmount(data.tvlUSD) }
+                {displayAmount(data.tvlUSD)}
               </div>
             </div>
 
@@ -154,7 +167,7 @@ const Stats = ({
               <div className="pool-stats__main-stat-value">
                 $
                 {' '}
-                { displayAmount(data.mySupplyUSD) }
+                {displayAmount(data.mySupplyUSD)}
               </div>
             </div>
 
@@ -164,7 +177,7 @@ const Stats = ({
                 <span>
                   $
                   {' '}
-                  { displayAmount(data.volume24hUSD) }
+                  {displayAmount(data.volume24hUSD)}
                 </span>
                 <Uik.Trend
                   type={data.volumeChange24h >= 0 ? 'good' : 'bad'}
