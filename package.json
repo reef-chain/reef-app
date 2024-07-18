@@ -1,6 +1,6 @@
 {
   "name": "reef-app",
-  "version": "3.4.7",
+  "version": "3.4.8",
   "private": true,
   "type": "commonjs",
   "dependencies": {
@@ -8,9 +8,9 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.0",
     "@popperjs/core": "^2.11.5",
     "@reef-chain/evm-provider": "^2.0.3",
-    "@reef-chain/react-lib": "^4.0.3",
+    "@reef-chain/react-lib": "^4.0.4",
     "@reef-chain/ui-kit": "^3.0.2",
-    "@reef-chain/util-lib": "^2.5.8",
+    "@reef-chain/util-lib": "^2.5.12",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
