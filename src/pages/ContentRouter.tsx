@@ -37,6 +37,7 @@ import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
 import Snap from './snap/Snap';
 import {getReefTokenPrice} from "../utils/priceUtils"
+import { utils } from '@reef-chain/react-lib';
 
 const ContentRouter = (): JSX.Element => {
   const [reefPrice,setReefPrice] = useState<number>(0);
@@ -64,9 +65,9 @@ const ContentRouter = (): JSX.Element => {
   // first iterate all pairs which have one token as reef, calculate their prices and create a map
   // in the next iteration find all the pairs which don't have reef in token pair , and check for the known value of any of the pairs if both are not determined yet, leave them for the last iteration
   // in the last iteration just set price of all the remaining tokens as 0
-
+  const {REEF_ADDRESS} = utils;
   let tokenPrices = {
-    "0x0000000000000000000000000000000001000000": reefPrice 
+    [REEF_ADDRESS] : reefPrice 
   };
 
   function calculateTokenPrices(pairs, tokenPrices) {
