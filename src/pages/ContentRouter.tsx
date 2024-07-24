@@ -48,13 +48,6 @@ const ContentRouter = (): JSX.Element => {
 
   const [nfts, nftsLoading] = hooks.useAllNfts();
   const pools = hooks.useAllPools(axios);
-  // const tokenPrices = useMemo(
-  //   () => (tokens ? tokens.reduce((prices: AddressToNumber<number>, tkn) => {
-  //     prices[tkn.address] = tkn.price;// eslint-disable-line
-  //     return prices;
-  //   }, {}) : []),
-  //   [tokens],
-  // );
 
   //hard coded reef price i will replace it later
   const reefPrice = 0.001;
@@ -101,20 +94,6 @@ const ContentRouter = (): JSX.Element => {
   }
 
   calculateTokenPrices(pools,tokenPrices);
-
-  // const tokenPrices = useMemo(
-  //   () => (tokens ? tokens.reduce((prices: AddressToNumber<number>, tkn) => {
-  //     prices[tkn.address] = tkn.price;// eslint-disable-line
-  //     return prices;
-  //   }, {}) : []),
-  //   [tokens],
-  // );
-
-// const tokenPrices = useMemo(
-//     () => hooks.estimatePrice(tokens||[], pools, reefPrice || 0),
-//     [tokens, pools, reefPrice],
-//   );
-
 
   return (
     <div className="content">
