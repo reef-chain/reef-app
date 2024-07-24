@@ -48,19 +48,73 @@ const ContentRouter = (): JSX.Element => {
 
   const [nfts, nftsLoading] = hooks.useAllNfts();
   const pools = hooks.useAllPools(axios);
-  const tokenPrices = useMemo(
-    () => (tokens ? tokens.reduce((prices: AddressToNumber<number>, tkn) => {
-      prices[tkn.address] = tkn.price;// eslint-disable-line
-      return prices;
-    }, {}) : []),
-    [tokens],
-  );
-  /*
-const tokenPrices = useMemo(
-    () => hooks.estimatePrice(tokens||[], pools, reefPrice || 0),
-    [tokens, pools, reefPrice],
-  );
-*/
+  // const tokenPrices = useMemo(
+  //   () => (tokens ? tokens.reduce((prices: AddressToNumber<number>, tkn) => {
+  //     prices[tkn.address] = tkn.price;// eslint-disable-line
+  //     return prices;
+  //   }, {}) : []),
+  //   [tokens],
+  // );
+
+  //hard coded reef price i will replace it later
+  const reefPrice = 0.001;
+
+  //steps i will follow
+  // first iterate all pairs which have one token as reef, calculate their prices and create a map
+  // in the next iteration find all the pairs which don't have reef in token pair , and check for the known value of any of the pairs if both are not determined yet, leave them for the last iteration
+  // in the last iteration just set price of all the remaining tokens as 0
+
+  let tokenPrices = {
+    "0x0000000000000000000000000000000001000000": reefPrice 
+  };
+
+  function calculateTokenPrices(pairs, tokenPrices) {
+    let updated = false;
+  
+    pairs.forEach(pair => {
+      const { token1, token2, reserved1, reserved2 } = pair;
+      const reserve1 = parseFloat(reserved1);
+      const reserve2 = parseFloat(reserved2);
+  
+      if (tokenPrices[token1] !== undefined && tokenPrices[token2] === undefined) {
+        tokenPrices[token2] = (reserve1 / reserve2) * tokenPrices[token1];
+        updated = true;
+      } else if (tokenPrices[token2] !== undefined && tokenPrices[token1] === undefined) {
+        tokenPrices[token1] = (reserve2 / reserve1) * tokenPrices[token2];
+        updated = true;
+      }
+    });
+  
+    if (updated) {
+      calculateTokenPrices(pairs, tokenPrices);
+    } else {
+      pairs.forEach(pair => {
+        const { token1, token2 } = pair;
+        if (tokenPrices[token1] === undefined) {
+          tokenPrices[token1] = 0;
+        }
+        if (tokenPrices[token2] === undefined) {
+          tokenPrices[token2] = 0;
+        }
+      });
+    }
+  }
+
+  calculateTokenPrices(pools,tokenPrices);
+
+  // const tokenPrices = useMemo(
+  //   () => (tokens ? tokens.reduce((prices: AddressToNumber<number>, tkn) => {
+  //     prices[tkn.address] = tkn.price;// eslint-disable-line
+  //     return prices;
+  //   }, {}) : []),
+  //   [tokens],
+  // );
+
+// const tokenPrices = useMemo(
+//     () => hooks.estimatePrice(tokens||[], pools, reefPrice || 0),
+//     [tokens, pools, reefPrice],
+//   );
+
 
   return (
     <div className="content">
