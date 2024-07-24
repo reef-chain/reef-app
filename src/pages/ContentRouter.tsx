@@ -1,5 +1,5 @@
 import { AddressToNumber, hooks, TokenWithAmount } from '@reef-chain/react-lib';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import NftContext from '../context/NftContext';
@@ -36,8 +36,10 @@ import { isReefswapUI } from '../environment';
 import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
 import Snap from './snap/Snap';
+import {getReefTokenPrice} from "../utils/priceUtils"
 
 const ContentRouter = (): JSX.Element => {
+  const [reefPrice,setReefPrice] = useState<number>(0);
   const { reefState, selectedSigner } = useContext(ReefSigners);
 
   // const [tokenPrices, setTokenPrices] = useState({} as AddressToNumber<number>);
@@ -49,8 +51,14 @@ const ContentRouter = (): JSX.Element => {
   const [nfts, nftsLoading] = hooks.useAllNfts();
   const pools = hooks.useAllPools(axios);
 
-  //hard coded reef price i will replace it later
-  const reefPrice = 0.001;
+  useEffect(()=>{
+    const fetchReefPrice = async()=>{
+      const res = await getReefTokenPrice();
+      setReefPrice(res);
+    }
+    fetchReefPrice()
+  },[])
+  
 
   //steps i will follow
   // first iterate all pairs which have one token as reef, calculate their prices and create a map
