@@ -60,11 +60,6 @@ const ContentRouter = (): JSX.Element => {
     fetchReefPrice()
   },[])
   
-
-  //steps i will follow
-  // first iterate all pairs which have one token as reef, calculate their prices and create a map
-  // in the next iteration find all the pairs which don't have reef in token pair , and check for the known value of any of the pairs if both are not determined yet, leave them for the last iteration
-  // in the last iteration just set price of all the remaining tokens as 0
   const {REEF_ADDRESS} = utils;
   let tokenPrices = {
     [REEF_ADDRESS] : reefPrice 
