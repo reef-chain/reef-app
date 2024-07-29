@@ -60,8 +60,6 @@ const ContentRouter = (): JSX.Element => {
   
     tokenPriceUtils.calculateTokenPrices(pools, tokenPrices);
 
-    console.log("tokenPrices===",tokenPrices)
-
   return (
     <div className="content">
       {(
