@@ -1,5 +1,5 @@
 import { AddressToNumber, hooks, TokenWithAmount } from '@reef-chain/react-lib';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useContext} from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import NftContext from '../context/NftContext';
@@ -36,11 +36,10 @@ import { isReefswapUI } from '../environment';
 import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
 import Snap from './snap/Snap';
-import {getReefTokenPrice} from "../utils/priceUtils"
 import { utils } from '@reef-chain/react-lib';
+import {tokenPriceUtils, tokenUtil} from '@reef-chain/util-lib';
 
 const ContentRouter = (): JSX.Element => {
-  const [reefPrice,setReefPrice] = useState<number>(0);
   const { reefState, selectedSigner } = useContext(ReefSigners);
 
   // const [tokenPrices, setTokenPrices] = useState({} as AddressToNumber<number>);
@@ -52,52 +51,16 @@ const ContentRouter = (): JSX.Element => {
   const [nfts, nftsLoading] = hooks.useAllNfts();
   const pools = hooks.useAllPools(axios);
 
-  useEffect(()=>{
-    const fetchReefPrice = async()=>{
-      const res = await getReefTokenPrice();
-      setReefPrice(res);
-    }
-    fetchReefPrice()
-  },[])
-  
   const {REEF_ADDRESS} = utils;
-  let tokenPrices = {
-    [REEF_ADDRESS] : reefPrice 
-  };
+  const reefPrice = hooks.useObservableState(tokenUtil.reefPrice$)
 
-  function calculateTokenPrices(pairs, tokenPrices) {
-    let updated = false;
+    let tokenPrices = {
+      [REEF_ADDRESS] : reefPrice?(reefPrice as any).data:0
+    };
   
-    pairs.forEach(pair => {
-      const { token1, token2, reserved1, reserved2 } = pair;
-      const reserve1 = parseFloat(reserved1);
-      const reserve2 = parseFloat(reserved2);
-  
-      if (tokenPrices[token1] !== undefined && tokenPrices[token2] === undefined) {
-        tokenPrices[token2] = (reserve1 / reserve2) * tokenPrices[token1];
-        updated = true;
-      } else if (tokenPrices[token2] !== undefined && tokenPrices[token1] === undefined) {
-        tokenPrices[token1] = (reserve2 / reserve1) * tokenPrices[token2];
-        updated = true;
-      }
-    });
-  
-    if (updated) {
-      calculateTokenPrices(pairs, tokenPrices);
-    } else {
-      pairs.forEach(pair => {
-        const { token1, token2 } = pair;
-        if (tokenPrices[token1] === undefined) {
-          tokenPrices[token1] = 0;
-        }
-        if (tokenPrices[token2] === undefined) {
-          tokenPrices[token2] = 0;
-        }
-      });
-    }
-  }
+    tokenPriceUtils.calculateTokenPrices(pools, tokenPrices);
 
-  calculateTokenPrices(pools,tokenPrices);
+    console.log("tokenPrices===",tokenPrices)
 
   return (
     <div className="content">
