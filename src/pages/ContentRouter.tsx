@@ -1,5 +1,5 @@
 import { AddressToNumber, hooks, TokenWithAmount } from '@reef-chain/react-lib';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext} from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import NftContext from '../context/NftContext';
@@ -36,6 +36,8 @@ import { isReefswapUI } from '../environment';
 import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
 import Snap from './snap/Snap';
+import { utils } from '@reef-chain/react-lib';
+import {tokenPriceUtils, tokenUtil} from '@reef-chain/util-lib';
 
 const ContentRouter = (): JSX.Element => {
   const { reefState, selectedSigner } = useContext(ReefSigners);
@@ -48,19 +50,15 @@ const ContentRouter = (): JSX.Element => {
 
   const [nfts, nftsLoading] = hooks.useAllNfts();
   const pools = hooks.useAllPools(axios);
-  const tokenPrices = useMemo(
-    () => (tokens ? tokens.reduce((prices: AddressToNumber<number>, tkn) => {
-      prices[tkn.address] = tkn.price;// eslint-disable-line
-      return prices;
-    }, {}) : []),
-    [tokens],
-  );
-  /*
-const tokenPrices = useMemo(
-    () => hooks.estimatePrice(tokens||[], pools, reefPrice || 0),
-    [tokens, pools, reefPrice],
-  );
-*/
+
+  const {REEF_ADDRESS} = utils;
+  const reefPrice = hooks.useObservableState(tokenUtil.reefPrice$)
+
+    let tokenPrices = {
+      [REEF_ADDRESS] : reefPrice?(reefPrice as any).data:0
+    };
+  
+    tokenPriceUtils.calculateTokenPrices(pools, tokenPrices);
 
   return (
     <div className="content">

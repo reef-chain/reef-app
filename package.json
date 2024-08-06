@@ -1,6 +1,6 @@
 {
   "name": "reef-app",
-  "version": "3.4.8",
+  "version": "3.4.9",
   "private": true,
   "type": "commonjs",
   "dependencies": {
@@ -10,7 +10,7 @@
     "@reef-chain/evm-provider": "^2.0.3",
     "@reef-chain/react-lib": "^4.0.4",
     "@reef-chain/ui-kit": "^3.0.2",
-    "@reef-chain/util-lib": "^2.5.12",
+    "@reef-chain/util-lib": "^2.6.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
