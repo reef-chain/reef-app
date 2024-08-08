@@ -39,7 +39,7 @@ const formatDate = (timestamp: number): string => {
 const getTokenUrl = (tokenUrl:string):string => {
   const ipfsProtocol = 'ipfs://';
   if (tokenUrl?.startsWith(ipfsProtocol)) {
-    return `https://cloudflare-ipfs.com/ipfs/${tokenUrl.substring(ipfsProtocol.length)}`;
+    return `https://reef.infura-ipfs.io/ipfs/${tokenUrl.substring(ipfsProtocol.length)}`;
   }
   return tokenUrl;
 };
