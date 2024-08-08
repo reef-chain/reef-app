@@ -3415,10 +3415,10 @@
     blakejs "~1.2.1"
     ethers "~5.5.0"
 
-"@reef-chain/react-lib@^4.0.4":
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/@reef-chain/react-lib/-/react-lib-4.0.4.tgz#01cb3cb8980d1606ad1aa7c21d2dbd78d61d0934"
-  integrity sha512-qJn0a/DZN0LE2wKBp1XvJP4+4fw5ZgivxToTnaKuhfU9nYR09yQwlAlSG1wJrDF/uMIKfUwL+n/X2Nzv7ZLCAA==
+"@reef-chain/react-lib@^4.0.5":
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/@reef-chain/react-lib/-/react-lib-4.0.5.tgz#17acda23e11d1bd5a4b97373e80caeb96409d091"
+  integrity sha512-rXrhHRxVHsziGy1QOuswG+ZLwdmAqLpLTGuxjhTochx/l0AooKCdTQylDP1lzIMamz2YZl7E5Vn2d6ZjBpPudA==
   dependencies:
     "@fortawesome/free-regular-svg-icons" "^6.1.0"
     "@fortawesome/free-solid-svg-icons" "^6.1.0"
@@ -3426,7 +3426,7 @@
     "@polkadot/react-identicon" "^3.6.6"
     "@reef-chain/evm-provider" "^2.0.3"
     "@reef-chain/ui-kit" "^3.0.2"
-    "@reef-chain/util-lib" "^2.5.12"
+    "@reef-chain/util-lib" "^2.6.1"
     "@types/react-router-dom" "^5.3.0"
     axios "^1.6.5"
     bignumber.js "^9.0.2"
@@ -3462,7 +3462,7 @@
     react-syntax-highlighter "^15.5.0"
     react-transition-group "^4.4.2"
 
-"@reef-chain/util-lib@^2.5.12", "@reef-chain/util-lib@^2.5.7", "@reef-chain/util-lib@^2.6.1":
+"@reef-chain/util-lib@^2.5.7", "@reef-chain/util-lib@^2.6.1":
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/@reef-chain/util-lib/-/util-lib-2.6.1.tgz#94c654fe03d0e37b766bc9f0ad95627430aa3ab9"
   integrity sha512-4tXZS5ZABvwCQQbR/EDNvOUf2ZO+DC/vfEivyvmabXtPAQUw4g9MHEbnQxZnx/tfyvcWh9DfxeeIQ0G19lvrkQ==

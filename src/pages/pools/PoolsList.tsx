@@ -81,6 +81,10 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
     && !changedPage
   ) return (<></>);
 
+  const canUnstake=(val:string)=>{
+    return parseFloat(val)>0;
+  }
+
   return (
     <div className="pools__list pools__list--all">
       <div className="pools__table-top">
@@ -148,7 +152,7 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
                     </Uik.Td>
                     <Uik.Td align="right">
                       {
-                        !!item.myLiquidity
+                        canUnstake(item.myLiquidity!)
                         && (
                         <Uik.Button
                           text={localizedStrings.unstake}
