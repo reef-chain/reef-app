@@ -324,36 +324,55 @@ const Licence = (): JSX.Element => (
   </a>
 );
 
+
 const LWChart = ({
   type = 'histogram',
   data,
-  // subData,
   timeVisible = true,
   currency = '$',
   isPriceChart = false,
 }: Props): JSX.Element => {
-  const chartWrapper = useRef(null);
+  const chartWrapper = useRef<HTMLDivElement | null>(null);
+  const chartRef = useRef<IChartApi | null>(null);
   const [isRendered, setRendered] = useState(false);
 
   useEffect(() => {
-    if (!isRendered && data?.length) {
-      renderChart({
-        el: chartWrapper.current,
-        type,
-        data: formatData(type, data),
-        // subData,
-        timeVisible,
-        currency,
-        isPriceChart,
+    if (data?.length) {
+      if (chartRef.current) {
+        chartRef.current.remove();
+      }
+
+      const newChart = createChart(chartWrapper.current as HTMLElement, {
+        height: chartWrapper.current?.getBoundingClientRect().height,
+        //@ts-ignore
+        ...chartOptions(timeVisible, currency, 0),
       });
+
+      chartRef.current = newChart;
+
+      if (type === 'histogram') {
+        addHistogramSeries(chartRef.current, data as HistogramData[]);
+      } else if (type === 'area') {
+        addAreaSeries(chartRef.current, data as AreaData[]);
+      } else if (type === 'candlestick') {
+        addCandlestickSeries(chartRef.current, data as CandlestickData[]);
+      }
+
+      chartRef.current.timeScale().fitContent();
       setRendered(true);
     }
+
+    return () => {
+      if (chartRef.current) {
+        chartRef.current.remove();
+        chartRef.current = null;
+      }
+    };
   }, [data, type, timeVisible]);
 
   return (
     <div className="lw-chart__wrapper">
       <Licence />
-
       <div
         ref={chartWrapper}
         className="lw-chart"
