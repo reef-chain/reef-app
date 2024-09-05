@@ -159,15 +159,13 @@ window.addEventListener("unhandledrejection", (event) => {
 //handle preloader
 useEffect(()=>{
   // preloader active
-  if(wcPreloader.value && signers && signers.length){
+  if(wcPreloader.value && accounts && accounts.length){
     setWcPreloader({
       value:false,
       message:""
     })
   }
-},[signers])
-
-
+},[accounts])
 
   const onExtensionSelected = async(ident: string) => {
     console.log('onExtensionSelected', ident);
