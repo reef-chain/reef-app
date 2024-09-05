@@ -1,6 +1,6 @@
-import { Token,Components } from '@reef-chain/react-lib';
+import { Token,Components, hooks } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
@@ -40,7 +40,8 @@ const balanceValue = (token: Token, price = 0): number => (new BigNumber(token.b
 
 export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
-  const { selectedSigner, network,accounts,provider } = useContext(ReefSigners);
+  const [isReefBalanceZero,setIsReefBalanceZero] = useState(true);
+  const { selectedSigner,network,accounts,provider,reefState } = useContext(ReefSigners);
   const pools = useContext(PoolContext);
   const hidebalance = useContext(HideBalance)
   const {selExtensionName} = useConnectedWallet();
@@ -49,6 +50,9 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
 
   const isWalletConnect = selExtensionName == walletSelectorOptions[reefExt.REEF_WALLET_CONNECT_IDENT].name
 
+  const signers = hooks.useObservableState((reefState as any).accounts$);
+  const selectedAddress = hooks.useObservableState((reefState as any).selectedAddress$);
+
   const handleWalletConnectModal = (hasStarted:boolean)=>{
       setWcPreloader({
 value:hasStarted,
@@ -56,7 +60,19 @@ message:"waiting for transaction approval"
       })
   }
 
-  const isReefBalanceZero = selectedSigner?.balance._hex === '0x00';
+  useEffect(()=>{
+    if(selectedAddress){
+      (signers as any).forEach((sgnr)=>{
+        if(sgnr.address == selectedAddress){
+          if(!sgnr.balance){
+            setIsReefBalanceZero(true);
+          }else{
+            setIsReefBalanceZero(false);
+          }
+        }
+      })
+    }
+  },[signers,selectedAddress])
 
   const getUrl = (): string => {
     if (network.name === 'mainnet') return BUY_URL;
