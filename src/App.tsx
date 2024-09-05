@@ -38,7 +38,7 @@ export const connectWalletConnect = async(ident:string,setSelExtensionName:any,s
     value:true,
     message:"initializing mobile app connection"
   });
-  setSelExtensionName(undefined); //force setting this to different value from the ident initially or else it doesn't call useInitReefState hook
+  setSelExtensionName(ident); //force setting this to different value from the ident initially or else it doesn't call useInitReefState hook
 
   const response:reefExt.WcConnection | undefined = await connectWc(setWcPreloader)
   console.log('connectWalletConnect',response);
@@ -78,7 +78,7 @@ const App = (): JSX.Element => {
     setSelectedSigner(selectedReefSigner);
 
     // if account connected , hide preloader & set account address
-    if(signers?.length && signers?.indexOf(selectedReefSigner!)==-1){
+    if(signers && signers?.length && signers?.indexOf(selectedReefSigner!)==-1){
       reefState.setSelectedAddress(signers[0].address)
     }
   },[selectedReefSigner,signers])
@@ -159,7 +159,7 @@ window.addEventListener("unhandledrejection", (event) => {
 //handle preloader
 useEffect(()=>{
   // preloader active
-  if(wcPreloader.value && signers.length){
+  if(wcPreloader.value && signers && signers.length){
     setWcPreloader({
       value:false,
       message:""
