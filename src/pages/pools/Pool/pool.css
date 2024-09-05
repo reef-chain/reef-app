@@ -10,6 +10,20 @@
   animation: pool-appear 0.4s;
 }
 
+.no-pool{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  width: 100vw;
+  flex-direction: column;
+}
+
+.no-pool__title{
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
 @keyframes pool-appear {
   from {
     opacity: 0;
