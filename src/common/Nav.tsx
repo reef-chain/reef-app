@@ -163,8 +163,6 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
     window.location.reload();
   }
 
-  console.log(accounts)
-
   const {setLoading:setWcPreloader}=useWcPreloader();
   const {isAccountSelectorOpen,setIsAccountSelectorOpen} = useAccountSelector();
 
