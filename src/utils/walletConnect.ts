@@ -24,9 +24,20 @@ const appMetadata: CoreTypes.Metadata = {
   icons: [window.location.origin + '/favicon.ico'],
 };
 
+export const getWcClient = async()=>{
+  return await reefExt.initWcClient(appMetadata); 
+}
+
 export const connectWc = async (setWcPreloader:any): Promise<reefExt.WcConnection | undefined> => {
   try {
-    const client = await reefExt.initWcClient(appMetadata);
+    const client = await getWcClient();
+
+    const wcSessionDataString = localStorage.getItem("wcSessionData");
+
+    if(wcSessionDataString){
+      const session= JSON.parse(wcSessionDataString);
+      return {client,session}
+    }
 
     const { uri, approval } = await client.connect({
       requiredNamespaces: reefExt.getWcRequiredNamespaces(),
