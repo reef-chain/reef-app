@@ -18,7 +18,7 @@ import NetworkSwitching from './common/NetworkSwitching';
 import { getIpfsGatewayUrl } from './environment';
 import { MetaMaskProvider } from './context/MetamaskContext';
 import { SNAP_URL } from './urls';
-import { connectWc } from './utils/walletConnect';
+import { connectWc, getWcClient } from './utils/walletConnect';
 import useConnectedWallet from './hooks/useConnectedWallet';
 import useWcPreloader from './hooks/useWcPreloader';
 import WcPreloader from './common/WcPreloader';
@@ -33,6 +33,31 @@ export const availableWalletOptions = [
   walletSelectorOptions[reefExt.REEF_WALLET_CONNECT_IDENT]
 ];
 
+const connectWcFromRes = (res:any,setSelExtensionName:any,ident:any,setWcPreloader:any)=>{
+  const sessionData = {
+    topic: res.session.topic,
+    relay: res.session.relay,
+    expiry: res.session.expiry,
+    namespaces: res.session.namespaces,
+    acknowledged: res.session.acknowledged,
+    pairingTopic: res.session.pairingTopic,
+  };
+
+  localStorage.setItem("wcSessionData", JSON.stringify(sessionData));
+  reefExt.injectWcAsExtension(res, {
+    name: reefExt.REEF_WALLET_CONNECT_IDENT,
+    version: "1.0.0"
+  });
+
+  setSelExtensionName(ident);
+
+  // Display preloader
+  setWcPreloader({
+    value: true,
+    message: "Wait while we are establishing a connection"
+  });
+}
+
 export const connectWalletConnect = async(ident:string,setSelExtensionName:any,setWcPreloader:any)=>{
   setWcPreloader({
     value:true,
@@ -40,22 +65,16 @@ export const connectWalletConnect = async(ident:string,setSelExtensionName:any,s
   });
   setSelExtensionName(undefined); //force setting this to different value from the ident initially or else it doesn't call useInitReefState hook
 
-  const response:reefExt.WcConnection | undefined = await connectWc(setWcPreloader)
-  console.log('connectWalletConnect',response);
-      if (response) {
-        reefExt.injectWcAsExtension(response, { name: reefExt.REEF_WALLET_CONNECT_IDENT, version: "1.0.0" });
-        setSelExtensionName(ident);
-        // display preloader 
-        setWcPreloader({
-          value:true,
-          message:"wait while we are establishing a connection"
-        });
-      } else {
-        // if proposal expired, recursively call
-        Uik.notify.danger("Connection QR expired, reloading")
-        await connectWalletConnect(ident,setSelExtensionName,setWcPreloader);
-      }
-    }
+  const response: reefExt.WcConnection | undefined = await connectWc(setWcPreloader);
+
+if (response) {
+  connectWcFromRes(response,setSelExtensionName,ident,setWcPreloader);
+} else {
+  // If the proposal expired, recursively call
+  Uik.notify.danger("Connection QR expired, reloading");
+  await connectWalletConnect(ident, setSelExtensionName, setWcPreloader);
+}
+}
 
 const App = (): JSX.Element => {
   const {selExtensionName,setSelExtensionName} = useConnectedWallet();
@@ -72,6 +91,18 @@ const App = (): JSX.Element => {
     setAccounts([]);
     setSelectedSigner(undefined);
   },[selExtensionName])
+
+  //checking for previous wc session
+useEffect(()=>{
+  const handleWcPreviousSession =  async()=>{
+    if(selExtensionName==reefExt.REEF_WALLET_CONNECT_IDENT){
+    connectWalletConnect(reefExt.REEF_WALLET_CONNECT_IDENT,setSelExtensionName,setWcPreloader)
+    }
+  }
+  
+  handleWcPreviousSession();
+  
+  },[])
 
   useEffect(()=>{
     setAccounts(signers);
@@ -170,7 +201,6 @@ useEffect(()=>{
 
 
   const onExtensionSelected = async(ident: string) => {
-    console.log('onExtensionSelected', ident);
     try {
       if (ident === reefExt.REEF_WALLET_CONNECT_IDENT) {
         await connectWalletConnect(ident,setSelExtensionName,setWcPreloader);
@@ -181,8 +211,6 @@ useEffect(()=>{
      console.log(error); 
     }
   }
-
-  const {isAccountSelectorOpen} = useAccountSelector()
 
   // @ts-ignore
   return (
