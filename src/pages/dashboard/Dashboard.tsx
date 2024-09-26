@@ -17,12 +17,15 @@ import { localizedStrings } from '../../l10n/l10n';
 import GetReefTestnetButton from './GetReefTestnetButton';
 import ReefSigners from '../../context/ReefSigners';
 import useAccountSelector from '../../hooks/useAccountSelector';
+import { useHistory } from 'react-router-dom';
+import { POOLS_URL } from '../../urls';
 
 const Dashboard = (): JSX.Element => {
+  const history = useHistory();
   const { network } = useContext(ReefSigners);
   const { nfts } = useContext(NftContext);
-  const { selectedSigner} = useContext(ReefSigners);
-  const {setIsAccountSelectorOpen} = useAccountSelector();
+  const { selectedSigner } = useContext(ReefSigners);
+  const { setIsAccountSelectorOpen } = useAccountSelector();
   const tabs = (() => [
     { value: 'tokens', text: localizedStrings.tokens_pill || 'Tokens' },
     { value: 'bonds', text: localizedStrings.bonds || 'Bonds' },
@@ -42,49 +45,63 @@ const Dashboard = (): JSX.Element => {
     ),
     new BigNumber(0),
   ).toNumber(),
-  [tokenPrices, tokens]);
+    [tokenPrices, tokens]);
 
   return (
-    selectedSigner?
-    <div className="dashboard">
-      <div className="dashboard__top">
-        <div className="dashboard__top-left">
-          <Balance balance={totalBalance} loading={loading} />
-          {/* <Rewards rewards={0} /> */}
+    selectedSigner ?
+      <div className="dashboard">
+        <div className="dashboard__top">
+          <div className="dashboard__top-left">
+            <Balance balance={totalBalance} loading={loading} />
+            {/* <Rewards rewards={0} /> */}
+          </div>
+          <div className="dashboard__top-right">
+            {network?.name !== nw.AVAILABLE_NETWORKS.mainnet.name && <GetReefTestnetButton />}
+            {network?.name === nw.AVAILABLE_NETWORKS.mainnet.name && <BuyReefButton />}
+          </div>
         </div>
-        <div className="dashboard__top-right">
-          {network?.name !== nw.AVAILABLE_NETWORKS.mainnet.name && <GetReefTestnetButton />}
-          {network?.name === nw.AVAILABLE_NETWORKS.mainnet.name && <BuyReefButton />}
+
+        <div className="dashboard__main">
+          <div className="dashboard__left">
+
+            {!isReefswapUI && (
+              <Uik.Tabs
+                className="dashboard__tabs "
+                options={tabs}
+                value={tab}
+                onChange={(e) => setTab(e)}
+              />
+            )}
+            {isReefswapUI && (<Uik.Text type="title" text="Tokens" className="tokens__title" />)}
+
+            {tab === 'tokens' ? <TokenBalances tokens={tokens} /> : ''}
+            {tab === 'bonds' ? <Staking /> : ''}
+            {tab === 'nfts' ? <Nfts nfts={nfts} /> : ''}
+          </div>
+
+          <div className="dashboard__right">
+            <Activity />
+          </div>
         </div>
+      </div> : <div className='no-account-dashboard'>
+        {isReefswapUI ?
+          <>
+            <div>
+              <Uik.Text text="Wallet is not connected, Navigate to Pools or Connect Wallet" type="light" className="mb-2" />
+              <div className='reef-swap-ui-btn-group'>
+                <Uik.Button text="Open Pools" className="mr-1" onClick={() => history.push(POOLS_URL)} />
+                <Uik.Button text="Connect Wallet" onClick={() => setIsAccountSelectorOpen(true)} fill />
+              </div>
+            </div>
+          </>
+          :
+          <>
+            <Uik.Text text="No account selected" type="light" className="mb-2" />
+            <Uik.Button text="Select Account" onClick={() => setIsAccountSelectorOpen(true)} fill />
+          </>
+        }
+
       </div>
-
-      <div className="dashboard__main">
-        <div className="dashboard__left">
-
-          {!isReefswapUI && (
-          <Uik.Tabs
-            className="dashboard__tabs "
-            options={tabs}
-            value={tab}
-            onChange={(e) => setTab(e)}
-          />
-          )}
-          {isReefswapUI && (<Uik.Text type="title" text="Tokens" className="tokens__title" />)}
-
-          { tab === 'tokens' ? <TokenBalances tokens={tokens} /> : '' }
-          { tab === 'bonds' ? <Staking /> : '' }
-          { tab === 'nfts' ? <Nfts nfts={nfts} /> : '' }
-        </div>
-
-        <div className="dashboard__right">
-          <Activity />
-        </div>
-      </div>
-    </div>:<div className='no-account-dashboard'>
-    <Uik.Text text="No account selected" type="light" className="mb-2"/>
-<Uik.Button text="Select Account" onClick={()=>setIsAccountSelectorOpen(true)} fill/>
-
-    </div>
   );
 };
 

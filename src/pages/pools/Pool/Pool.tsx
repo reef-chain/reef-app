@@ -109,6 +109,7 @@ const Pool = (): JSX.Element => {
             balance: BigNumber.from(0),
             decimals: decimals2,
           }}
+          signer={signer}
         />
         <Chart
           tokens={{

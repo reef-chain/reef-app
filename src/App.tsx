@@ -182,8 +182,6 @@ useEffect(()=>{
     }
   }
 
-  const {isAccountSelectorOpen} = useAccountSelector()
-
   // @ts-ignore
   return (
     <>

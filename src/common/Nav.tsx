@@ -57,11 +57,11 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
     { title: localizedStrings.bonds, url: BONDS_URL },
   ];
   if (isReefswapUI) {
-    menuItems = [
+    menuItems = selectedSigner?[
       { title: localizedStrings.tokens_pill, url: DASHBOARD_URL },
       { title: localizedStrings.pools, url: POOLS_URL },
       { title: localizedStrings.creator, url: CREATE_ERC20_TOKEN_URL },
-    ];
+    ]:[{ title: localizedStrings.pools, url: POOLS_URL }];
   }
 
   const hideBalance = useContext(HideBalance);
@@ -175,7 +175,7 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
         </button>
 
         <nav className="d-flex justify-content-end d-flex-vert-center">
-          {selectedSigner && <ul className="navigation_menu-items ">
+          {<ul className="navigation_menu-items ">
             {menuItemsView}
           </ul>}
 
