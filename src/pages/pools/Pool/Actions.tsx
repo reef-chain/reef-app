@@ -1,5 +1,5 @@
 import {
-  Components, hooks, store, Token,
+  Components, hooks, ReefSigner, store, Token,
 } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, {
@@ -205,9 +205,10 @@ const Actions = ({ token1, token2, tab }: ActionsProps): JSX.Element => {
 
 interface ActionsWrapperProps extends ActionsProps {
   poolAddress: string;
+  signer:ReefSigner | undefined
 }
 const ActionsWrapper = ({
-  token1, token2, poolAddress, tab,
+  token1, token2, poolAddress, tab,signer
 }: ActionsWrapperProps): JSX.Element => {
   const history = useHistory();
 
@@ -219,17 +220,22 @@ const ActionsWrapper = ({
     );
   };
 
+  const getOptions = ()=>{
+    if(!signer)return [{ value: 'trade', text: 'Trade' },]
+    return [
+      { value: 'trade', text: 'Trade' },
+      { value: 'stake', text: 'Stake' },
+      { value: 'unstake', text: 'Unstake' },
+    ]
+  }
+
   return (
     <div className="uik-pool-actions pool-actions">
       <div className="uik-pool-actions__top">
         <Uik.Tabs
           value={tab}
           onChange={(value) => selectTab(value)}
-          options={[
-            { value: 'trade', text: 'Trade' },
-            { value: 'stake', text: 'Stake' },
-            { value: 'unstake', text: 'Unstake' },
-          ]}
+          options={getOptions()}
         />
       </div>
       <Actions
