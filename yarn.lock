@@ -2247,9 +2247,9 @@
     webextension-polyfill "^0.10.0"
 
 "@metamask/rpc-errors@^6.0.0", "@metamask/rpc-errors@^6.2.1":
-  version "6.3.1"
-  resolved "https://registry.yarnpkg.com/@metamask/rpc-errors/-/rpc-errors-6.3.1.tgz#d5bb4740e070c3d87e91717ff4c3c6061a081cab"
-  integrity sha512-ugDY7cKjF4/yH5LtBaOIKHw/AiGGSAmzptAUEiAEGr/78LwuzcXAxmzEQfSfMIfI+f9Djr8cttq1pRJJKfTuCg==
+  version "6.4.0"
+  resolved "https://registry.yarnpkg.com/@metamask/rpc-errors/-/rpc-errors-6.4.0.tgz#a7ce01c06c9a347ab853e55818ac5654a73bd006"
+  integrity sha512-1ugFO1UoirU2esS3juZanS/Fo8C8XYocCuBpfZI5N7ECtoG+zu0wF+uWZASik6CkO6w9n/Iebt4iI4pT0vptpg==
   dependencies:
     "@metamask/utils" "^9.0.0"
     fast-safe-stringify "^2.0.6"
@@ -3427,10 +3427,10 @@
     blakejs "~1.2.1"
     ethers "~5.5.0"
 
-"@reef-chain/react-lib@^4.0.6":
-  version "4.0.6"
-  resolved "https://registry.yarnpkg.com/@reef-chain/react-lib/-/react-lib-4.0.6.tgz#6fc8e7c7fc541df5c4f1a3873819e27e6cd340e3"
-  integrity sha512-jaDJox8Pz34Ot+FgoeaBZaD/xwKIVH+qUOV7XpiQTSkrQOUofJMij7xYsFkd8G+4V5qdJzzQeeR9jk9OT89M4A==
+"@reef-chain/react-lib@^4.0.7":
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/@reef-chain/react-lib/-/react-lib-4.0.7.tgz#e506e8968c78b97c0731f28186752e2fc86ae82f"
+  integrity sha512-wmijDM3NlcH3+VX0zWOkPYocE3Y5cyrGZrq0tms+SZYgTVjPgc/pPSj7fqBszcWP2wybmPi0CTu2jRueG3Pstw==
   dependencies:
     "@fortawesome/free-regular-svg-icons" "^6.1.0"
     "@fortawesome/free-solid-svg-icons" "^6.1.0"
@@ -3441,7 +3441,7 @@
     "@reef-chain/util-lib" "^2.6.1"
     "@types/react-router-dom" "^5.3.0"
     axios "^1.6.5"
-    bignumber.js "^9.0.2"
+    bignumber.js "^9.1.2"
     bootstrap "^5.1.1"
     eslint-config-prettier "^9.1.0"
     eslint-import-resolver-typescript "^2.4.0"
@@ -3979,10 +3979,10 @@
   dependencies:
     "@babel/types" "^7.20.7"
 
-"@types/bn.js@5.1.5", "@types/bn.js@^5.1.1", "@types/bn.js@^5.1.5":
-  version "5.1.5"
-  resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-5.1.5.tgz#2e0dacdcce2c0f16b905d20ff87aedbc6f7b4bf0"
-  integrity sha512-V46N0zwKRF5Q00AZ6hWtN0T8gGmDUaUzLWQvHFo5yThtVwK/VCenFY3wXVbOvNfajEpsTfQM4IN9k/d6gUVX3A==
+"@types/bn.js@^5.1.1", "@types/bn.js@^5.1.5":
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-5.1.6.tgz#9ba818eec0c85e4d3c679518428afdf611d03203"
+  integrity sha512-Xh8vSwUeMKeYYrj3cX4lGQgFSF/N03r+tv4AiLl1SucqV+uTQpxRcnM8AkXKHwYP9ZPXOYXRr2KPXpVlIvqh9w==
   dependencies:
     "@types/node" "*"
 
@@ -12083,9 +12083,9 @@ number-allocator@^1.0.14:
     js-sdsl "4.3.0"
 
 nwsapi@^2.2.0:
-  version "2.2.12"
-  resolved "https://registry.yarnpkg.com/nwsapi/-/nwsapi-2.2.12.tgz#fb6af5c0ec35b27b4581eb3bbad34ec9e5c696f8"
-  integrity sha512-qXDmcVlZV4XRtKFzddidpfVP4oMSGhga+xdMc25mv8kaLUHtgzCDhUxkrN8exkGdTlLNaXj7CV3GtON7zuGZ+w==
+  version "2.2.13"
+  resolved "https://registry.yarnpkg.com/nwsapi/-/nwsapi-2.2.13.tgz#e56b4e98960e7a040e5474536587e599c4ff4655"
+  integrity sha512-cTGB9ptp9dY9A5VbMSe7fQBcl/tt22Vcqdq8+eN93rblOuE0aCFu4aZ2vMwct/2t+lFnosm8RkQW1I0Omb1UtQ==
 
 oauth-sign@~0.9.0:
   version "0.9.0"
@@ -15283,9 +15283,9 @@ terser-webpack-plugin@^5.2.5, terser-webpack-plugin@^5.3.10:
     terser "^5.26.0"
 
 terser@^5.0.0, terser@^5.10.0, terser@^5.26.0:
-  version "5.34.0"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.34.0.tgz#62f2496542290bc6d8bf886edaee7fac158e37e4"
-  integrity sha512-y5NUX+U9HhVsK/zihZwoq4r9dICLyV2jXGOriDAVOeKhq3LKVjgJbGO90FisozXLlJfvjHqgckGmJFBb9KYoWQ==
+  version "5.34.1"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.34.1.tgz#af40386bdbe54af0d063e0670afd55c3105abeb6"
+  integrity sha512-FsJZ7iZLd/BXkz+4xrRTGJ26o/6VTjQytUk8b8OxkwcD2I+79VPJlz7qss1+zE7h8GNIScFqXcDyJ/KqBYZFVA==
   dependencies:
     "@jridgewell/source-map" "^0.3.3"
     acorn "^8.8.2"
