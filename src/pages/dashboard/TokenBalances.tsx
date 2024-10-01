@@ -72,8 +72,7 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
     .filter(({ balance }) => {
       try {
         return balance.gt(0);
-      } catch (error) {
-      }
+      } catch (error) {}
       return false;
     })
     .sort((a, b) => {
@@ -83,49 +82,32 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
       if (balanceA > balanceB) return -1;
       return 1;
     })
-    .sort((a) => {
-      if (a.symbol !== 'REEF') return 1;
-      return -1;
-    })
-    .map((token) => (
-      <div key={token.address}>
+    .sort((a) => (a.symbol !== 'REEF' ? 1 : -1))
+    .map((token) => {
+      const shouldRenderTokenCard = isReefswapUI ? doesPoolExist(token.address) : true;
 
-        {isReefswapUI? doesPoolExist(token.address)?
-        <TokenCard
-          accounts={accounts}
-          hideBalance={hidebalance}
-          isReefswapUI={isReefswapUI}
-          nw={network}
-          pools={pools}
-          price={tokenPrices[token.address] || 0}
-          token={token}
-          tokens={tokens}
-          useDexConfig={useDexConfig}
-          provider={provider}
-          selectedSigner={selectedSigner}
-          signer={selectedSigner}
-          tokenPrices={tokenPrices}
-          isWalletConnect={isWalletConnect}
-          handleWalletConnectModal={handleWalletConnectModal}
-        />:<></>:<TokenCard
-        accounts={accounts}
-        hideBalance={hidebalance}
-        isReefswapUI={isReefswapUI}
-        nw={network}
-        pools={pools}
-        price={tokenPrices[token.address] || 0}
-        token={token}
-        tokens={tokens}
-        useDexConfig={useDexConfig}
-        provider={provider}
-        selectedSigner={selectedSigner}
-        signer={selectedSigner}
-        tokenPrices={tokenPrices}
-        isWalletConnect={isWalletConnect}
-        handleWalletConnectModal={handleWalletConnectModal}
-      />}
-      </div>
-    ));
+      return shouldRenderTokenCard ? (
+        <div key={token.address}>
+          <TokenCard
+            accounts={accounts}
+            hideBalance={hidebalance}
+            isReefswapUI={isReefswapUI}
+            nw={network}
+            pools={pools}
+            price={tokenPrices[token.address] || 0}
+            token={token}
+            tokens={tokens}
+            useDexConfig={useDexConfig}
+            provider={provider}
+            selectedSigner={selectedSigner}
+            signer={selectedSigner}
+            tokenPrices={tokenPrices}
+            isWalletConnect={isWalletConnect}
+            handleWalletConnectModal={handleWalletConnectModal}
+          />
+        </div>
+      ) : null;
+    });
 
   return (
     <div className="dashboard__tokens">
