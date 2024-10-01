@@ -89,7 +89,8 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
     })
     .map((token) => (
       <div key={token.address}>
-        {doesPoolExist(token.address) && isReefswapUI?
+
+        {isReefswapUI? doesPoolExist(token.address)?
         <TokenCard
           accounts={accounts}
           hideBalance={hidebalance}
@@ -106,7 +107,23 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
           tokenPrices={tokenPrices}
           isWalletConnect={isWalletConnect}
           handleWalletConnectModal={handleWalletConnectModal}
-        />:<></>}
+        />:<></>:<TokenCard
+        accounts={accounts}
+        hideBalance={hidebalance}
+        isReefswapUI={isReefswapUI}
+        nw={network}
+        pools={pools}
+        price={tokenPrices[token.address] || 0}
+        token={token}
+        tokens={tokens}
+        useDexConfig={useDexConfig}
+        provider={provider}
+        selectedSigner={selectedSigner}
+        signer={selectedSigner}
+        tokenPrices={tokenPrices}
+        isWalletConnect={isWalletConnect}
+        handleWalletConnectModal={handleWalletConnectModal}
+      />}
       </div>
     ));
 
