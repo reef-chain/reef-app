@@ -1,4 +1,4 @@
-import { Token,Components } from '@reef-chain/react-lib';
+import { Token, Components, PoolWithReserves } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -16,10 +16,10 @@ import useConnectedWallet from '../../hooks/useConnectedWallet';
 import { extension as reefExt } from '@reef-chain/util-lib';
 import useWcPreloader from '../../hooks/useWcPreloader';
 
-const {Skeleton,TokenCard} = Components;
+const { Skeleton, TokenCard } = Components;
 
 interface TokenBalances {
-    tokens: Token[];
+  tokens: Token[];
 }
 
 const CreateTokenButton = (): JSX.Element => (
@@ -40,20 +40,20 @@ const balanceValue = (token: Token, price = 0): number => (new BigNumber(token.b
 
 export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
-  const { selectedSigner, network,accounts,provider } = useContext(ReefSigners);
+  const { selectedSigner, network, accounts, provider } = useContext(ReefSigners);
   const pools = useContext(PoolContext);
   const hidebalance = useContext(HideBalance)
-  const {selExtensionName} = useConnectedWallet();
-  const {setLoading:setWcPreloader} = useWcPreloader();
+  const { selExtensionName } = useConnectedWallet();
+  const { setLoading: setWcPreloader } = useWcPreloader();
   const { walletSelectorOptions } = Components;
 
   const isWalletConnect = selExtensionName == walletSelectorOptions[reefExt.REEF_WALLET_CONNECT_IDENT].name
 
-  const handleWalletConnectModal = (hasStarted:boolean)=>{
-      setWcPreloader({
-value:hasStarted,
-message:"waiting for transaction approval"
-      })
+  const handleWalletConnectModal = (hasStarted: boolean) => {
+    setWcPreloader({
+      value: hasStarted,
+      message: "waiting for transaction approval"
+    })
   }
 
   const isReefBalanceZero = selectedSigner?.balance._hex === '0x00';
@@ -64,12 +64,15 @@ message:"waiting for transaction approval"
     return 'https://discord.com/channels/793946260171259904/1087737503550816396';
   };
 
+  const doesPoolExist=(addr:string):PoolWithReserves|undefined => {
+    return pools.find((p) => p.token1 === addr || p.token2 === addr);
+  };
+
   const tokenCards = tokens
     .filter(({ balance }) => {
       try {
         return balance.gt(0);
-      } catch (error) {
-      }
+      } catch (error) {}
       return false;
     })
     .sort((a, b) => {
@@ -79,70 +82,71 @@ message:"waiting for transaction approval"
       if (balanceA > balanceB) return -1;
       return 1;
     })
-    .sort((a) => {
-      if (a.symbol !== 'REEF') return 1;
-      return -1;
-    })
-    .map((token) => (
-      <div key={token.address}>
-        <TokenCard
-        accounts={accounts}
-        hideBalance={hidebalance}
-        isReefswapUI={isReefswapUI}
-        nw={network}
-        pools={pools}
-        price={tokenPrices[token.address] || 0}
-        token={token}
-        tokens={tokens}
-        useDexConfig={useDexConfig}
-        provider={provider}
-        selectedSigner={selectedSigner}
-        signer={selectedSigner}
-        tokenPrices={tokenPrices}
-        isWalletConnect={isWalletConnect}
-        handleWalletConnectModal={handleWalletConnectModal}
-        />
-      </div>
-    ));
+    .sort((a) => (a.symbol !== 'REEF' ? 1 : -1))
+    .map((token) => {
+      const shouldRenderTokenCard = isReefswapUI ? doesPoolExist(token.address) : true;
+
+      return shouldRenderTokenCard ? (
+        <div key={token.address}>
+          <TokenCard
+            accounts={accounts}
+            hideBalance={hidebalance}
+            isReefswapUI={isReefswapUI}
+            nw={network}
+            pools={pools}
+            price={tokenPrices[token.address] || 0}
+            token={token}
+            tokens={tokens}
+            useDexConfig={useDexConfig}
+            provider={provider}
+            selectedSigner={selectedSigner}
+            signer={selectedSigner}
+            tokenPrices={tokenPrices}
+            isWalletConnect={isWalletConnect}
+            handleWalletConnectModal={handleWalletConnectModal}
+          />
+        </div>
+      ) : null;
+    });
 
   return (
     <div className="dashboard__tokens">
       {
         /* eslint-disable no-nested-ternary */
-                tokens.length === 0 && !isReefBalanceZero
-                  ? (
-                    <>
-                      <Skeleton />
-                      <Skeleton />
-                      <Skeleton />
-                      <Skeleton />
-                    </>
-                  )
-                  : (
-                    isReefBalanceZero
-                      ? (
-                        <div className="card-bg-light card token-card--no-balance">
-                          <div className="no-token-activity">
-                            No tokens found. &nbsp;
-                            {network.name === 'mainnet'
-                              ? <Link className="text-btn" to={getUrl()}>Get $REEF coins here.</Link>
-                              : (
-                                <a className="text-btn" href={getUrl()} target="_blank" rel="noopener noreferrer">
-                                  Get Reef testnet tokens here.
-                                </a>
-                              )}
-                          </div>
-                        </div>
-                      )
-
+        tokens.length === 0 && !isReefBalanceZero
+          ? (
+            <>
+              <Skeleton />
+              <Skeleton />
+              <Skeleton />
+              <Skeleton />
+            </>
+          )
+          : (
+            isReefBalanceZero
+              ? (
+                <div className="card-bg-light card token-card--no-balance">
+                  <div className="no-token-activity">
+                    No tokens found. &nbsp;
+                    {network.name === 'mainnet'
+                      ? <Link className="text-btn" to={getUrl()}>Get $REEF coins here.</Link>
                       : (
-                        <>
-                          {tokenCards}
-                          {tokens.length > 1 && isReefswapUI&&<CreateTokenButton />}
-                        </>
-                      )
-                  )
-            }
+                        <a className="text-btn" href={getUrl()} target="_blank" rel="noopener noreferrer">
+                          Get Reef testnet tokens here.
+                        </a>
+                      )}
+                  </div>
+                </div>
+              )
+
+              : (
+                <>
+                  {tokenCards}
+                  {tokens.length > 1 && isReefswapUI && <CreateTokenButton />}
+                </>
+              )
+          )
+      }
     </div>
   );
 };
