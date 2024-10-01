@@ -89,7 +89,7 @@ export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
     })
     .map((token) => (
       <div key={token.address}>
-        {doesPoolExist(token.address)?
+        {doesPoolExist(token.address) && isReefswapUI?
         <TokenCard
           accounts={accounts}
           hideBalance={hidebalance}
