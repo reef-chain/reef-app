@@ -179,6 +179,7 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
             {menuItemsView}
           </ul>}
 
+
           <Components.AccountSelector
             selExtName={selExtName}
             availableExtensions={availableExtensions}

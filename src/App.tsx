@@ -8,6 +8,7 @@ import { extension as reefExt } from '@reef-chain/util-lib';
 import { Components } from '@reef-chain/react-lib';
 import Nav from './common/Nav';
 import OptionContext from './context/OptionContext';
+import { BigNumber} from "ethers";
 import ReefSignersContext from './context/ReefSigners';
 import ContentRouter from './pages/ContentRouter';
 import { notify } from './utils/utils';
@@ -62,11 +63,31 @@ const App = (): JSX.Element => {
   const {loading:wcPreloader,setLoading:setWcPreloader} = useWcPreloader()
   const [accounts,setAccounts] = useState<ReefSigner[]>([]);
   const [selectedSigner,setSelectedSigner] = useState<ReefSigner | undefined>(undefined);
+
+ 
   const {
     loading, error, signers, selectedReefSigner, network, provider, reefState, extension
   } = hooks.useInitReefStateExtension(
     'Reef App', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
+
+  const accountsBalances = hooks.useObservableState(reefState.accounts$);
+
+  useEffect(()=>{
+    let updatedAccountsList:any = []
+    if(signers && accountsBalances){
+      signers.forEach((sgnr,idx)=>{
+        let accountUpdatedBal = {
+          ...sgnr,
+          freeBalance: accountsBalances[idx].freeBalance?? BigNumber.from("0"),
+          lockedBalance:accountsBalances[idx].lockedBalance?? BigNumber.from("0")
+        }
+        updatedAccountsList.push(accountUpdatedBal);
+      })
+    
+      setAccounts(updatedAccountsList);
+    }
+  },[accountsBalances,signers])
 
   useEffect(()=>{
     setAccounts([]);
@@ -74,7 +95,6 @@ const App = (): JSX.Element => {
   },[selExtensionName])
 
   useEffect(()=>{
-    setAccounts(signers);
     setSelectedSigner(selectedReefSigner);
 
     // if account connected , hide preloader & set account address
@@ -181,8 +201,6 @@ useEffect(()=>{
      console.log(error); 
     }
   }
-
-  const {isAccountSelectorOpen} = useAccountSelector()
 
   // @ts-ignore
   return (
