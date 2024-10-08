@@ -8,7 +8,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.1.0",
     "@popperjs/core": "^2.11.5",
     "@reef-chain/evm-provider": "^3.0.0",
-    "@reef-chain/react-lib": "^5.0.0",
+    "@reef-chain/react-lib": "^5.0.1",
     "@reef-chain/ui-kit": "^4.0.0",
     "@reef-chain/util-lib": "^3.0.0",
     "@testing-library/jest-dom": "^5.11.4",
