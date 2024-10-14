@@ -201,7 +201,7 @@ const createToken = async ({
       ...updateTokensBalance, visibility: true,
     });
     const tokenBalancesSub = reefState.selectedTokenBalances$.subscribe((e) => {
-      const addresses = e.map((token) => token.address);
+      const addresses = e?.map((token) => token.address);
       if (addresses.includes(contract?.address)) {
         setUpdateTokensBalance({
           message: 'Token balances updated',
