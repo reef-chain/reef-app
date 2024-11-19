@@ -38,11 +38,33 @@ const CreatePool = ({
 
   const history = useHistory();
 
+  const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
+
+  const network: libNet.DexProtocolv2|undefined = useDexConfig(nw);
+
   useEffect(() => {
     if (poolAddress) {
+      const query = 
+       ` query VerifyPoolId {
+          poolById(id: "${poolAddress}") {
+            token1 {
+              id
+            }
+            token2 {
+              id
+            }
+          }
+        }`;
       // todo undo later anukulpandey
-      const timer = setTimeout(() => {
-        history.push(`/chart/${poolAddress}/trade`);
+      const timer = setTimeout(async() => {
+        const {data} = await axios.post(network.graphqlDexsUrl.replace('wss','https'),{query});
+        const {poolById} = data.data;
+        const poolIds = [poolById.token1.id,poolById.token2.id]
+        if(poolIds.includes(address1)&&poolIds.includes(address2)){
+          history.push(`/chart/${poolAddress}/trade`);
+        }else{
+          setPoolAddress(undefined);
+        }
       }, 20000);
       return () => clearTimeout(timer);
     }
@@ -50,7 +72,6 @@ const CreatePool = ({
 
   if (!poolAddress && contractEvents) {
     if ((contractEvents as any).length >= 3) {
-      // TODO how do we know it's the right pool address?
       const _poolAddress = contractEvents[(contractEvents as any).length - 1];
       setPoolAddress(_poolAddress);
     }
@@ -60,10 +81,6 @@ const CreatePool = ({
 
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
-
-  const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
-
-  const network: libNet.DexProtocolv2|undefined = useDexConfig(nw);
 
   const [provideState, provideDispatch] = useReducer(
     store.addLiquidityReducer,
