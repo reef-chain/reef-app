@@ -1,7 +1,7 @@
 import { hooks } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { BigNumber } from 'ethers';
 import axios from 'axios';
 import TokenPricesContext from '../../../context/TokenPricesContext';
@@ -10,6 +10,9 @@ import Chart, { TimeData, Timeframe } from './Chart';
 import './pool.css';
 import Stats from './Stats';
 import ReefSigners from '../../../context/ReefSigners';
+import { appAvailableNetworks } from '../../../environment';
+import NetworkSwitch from '../../../context/NetworkSwitch';
+import { DASHBOARD_URL } from '../../../urls';
 
 interface Params {
   address: string;
@@ -44,23 +47,30 @@ const Pool = (): JSX.Element => {
   const { address, action } = useParams<Params>();
   const tokenPrices = useContext(TokenPricesContext);
   const [timeframe, setTimeframe] = useState<Timeframe>('day');
+  const { network,reefState } = useContext(ReefSigners);
   const [poolUpdatedAt,setPoolUpdatedAt] = useState<string>("");
+
+  const networkSwitch = useContext(NetworkSwitch);
+  const history = useHistory();
 
   const timeData = timeframeToTimeData(timeframe);
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const [poolInfo] = hooks.usePoolInfo(
+  const [poolDetails] = hooks.usePoolInfo(
     address,
     signer?.address || '',
     tokenPrices,
     axios,
   );
 
-  const tokenPrice1 = (poolInfo ? tokenPrices[poolInfo.firstToken.address] : 0) || 0;
-  const tokenPrice2 = (poolInfo ? tokenPrices[poolInfo.secondToken.address] : 0) || 0;
-  const decimals1 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
-  const decimals2 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
+  const {data:poolInfo,status:doesPoolExist} = poolDetails;
+
+  const tokenPrice1 = (doesPoolExist && poolInfo ? tokenPrices[poolInfo.firstToken.address] : 0) || 0;
+  const tokenPrice2 = (poolInfo && doesPoolExist ? tokenPrices[poolInfo.secondToken.address] : 0) || 0;
+  const decimals1 = (poolInfo && doesPoolExist? poolInfo.firstToken.decimals : 0) || 0;
+  const decimals2 = (poolInfo && doesPoolExist ? poolInfo.firstToken.decimals : 0) || 0;
+
 
   const [poolData] = hooks.usePoolData({
     address,
@@ -76,6 +86,24 @@ const Pool = (): JSX.Element => {
     setPoolUpdatedAt(Date.now().toString())
   },[poolInfo])
 
+  const selectNetwork = (key: 'mainnet' | 'testnet'): void => {
+    const toSelect = appAvailableNetworks.find((item) => item.name === key);
+    networkSwitch.setSwitching(true);
+    history.push(`/chart/${address}/${action}`);
+
+    if (toSelect) {
+      reefState.setSelectedNetwork(toSelect);
+    }
+  };
+
+  if(!doesPoolExist){
+    return <div className='no-pool'>
+      <Uik.Text text="No Pool found!" type="light" className="mb-2 no-pool__title"/>
+      <Uik.Text text={`This pool doesn't exist on ${network?.name.charAt(0).toUpperCase() + network?.name.slice(1)}, kindly switch to ${network?.name=="mainnet"?"Testnet":"Mainnet"}.`} className="mb-2" type="light" />
+      <Uik.Button fill text={`Switch to ${network?.name=="mainnet"?"Testnet":"Mainnet"}`} onClick={()=>selectNetwork(network?.name=="mainnet"?"testnet":"mainnet")}/>
+    </div>
+  }
+  
   if (!poolInfo) {
     return <Uik.Loading />;
   }
@@ -138,7 +166,7 @@ const Pool = (): JSX.Element => {
           setTimeframe={setTimeframe}
           lastUpdatedOn={poolUpdatedAt}
         />
-      </div>
+      </div> 
     </div>
   );
 };
