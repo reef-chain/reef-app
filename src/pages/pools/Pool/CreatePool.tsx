@@ -14,7 +14,7 @@ import ReefSigners from '../../../context/ReefSigners';
 import RedirectingToPool from './RedirectingToPool';
 import { useDexConfig } from '../../../environment';
 import PoolContext from '../../../context/PoolContext';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const { Provide, OverlayAction, Finalizing } = Components;
 
@@ -36,13 +36,13 @@ const CreatePool = ({
   const [poolAddress, setPoolAddress] = useState<string|undefined>();
   const pools = useContext(PoolContext);
 
-  const history = useHistory();
+  const history = useNavigate();
 
   useEffect(() => {
     if (poolAddress) {
       // todo undo later anukulpandey
       const timer = setTimeout(() => {
-        history.push(`/chart/${poolAddress}/trade`);
+        history(`/chart/${poolAddress}/trade`);
       }, 20000);
       return () => clearTimeout(timer);
     }

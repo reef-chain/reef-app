@@ -11,10 +11,6 @@ import './pool.css';
 import Stats from './Stats';
 import ReefSigners from '../../../context/ReefSigners';
 
-interface Params {
-  address: string;
-  action: ActionTabs;
-}
 interface Time {
   time: Date;
 }
@@ -41,7 +37,10 @@ const timeframeToTimeData = (timeframe: Timeframe): TimeData => {
 };
 
 const Pool = (): JSX.Element => {
-  const { address, action } = useParams<Params>();
+  const { address, action } = useParams<{
+    address: string;
+    action: ActionTabs;
+  }>();
   const tokenPrices = useContext(TokenPricesContext);
   const [timeframe, setTimeframe] = useState<Timeframe>('day');
   const [poolUpdatedAt,setPoolUpdatedAt] = useState<string>("");
@@ -51,7 +50,7 @@ const Pool = (): JSX.Element => {
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
   const [poolInfo] = hooks.usePoolInfo(
-    address,
+    address!,
     signer?.address || '',
     tokenPrices,
     axios,
@@ -63,7 +62,7 @@ const Pool = (): JSX.Element => {
   const decimals2 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
 
   const [poolData] = hooks.usePoolData({
-    address,
+    address:address!,
     decimals1,
     decimals2,
     price1: tokenPrice1,
@@ -91,8 +90,8 @@ const Pool = (): JSX.Element => {
 
       <div className="pool__content">
         <Actions
-          tab={action}
-          poolAddress={address}
+          tab={action!}
+          poolAddress={address!}
           token1={{
             address: poolInfo.firstToken.address,
             name: poolInfo.firstToken.name,

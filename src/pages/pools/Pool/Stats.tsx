@@ -94,10 +94,6 @@ const Token = ({ token, price }: TokenStatsProps): JSX.Element => {
   )
 };
 
-interface UrlParams {
-  address: string;
-}
-
 const Stats = ({
   data,
   price1,
@@ -107,7 +103,7 @@ const Stats = ({
   const [isSelectOpen, setSelectOpen] = useState(false);
   const [isTransactionsOpen, setTransactionsOpen] = useState(false);
 
-  const { address } = useParams<UrlParams>();
+  const { address } = useParams();
 
   return (
     <div className="pool-stats">
@@ -203,7 +199,7 @@ const Stats = ({
       />
 
       <PoolTransactions
-        address={address}
+        address={address!}
         reefscanUrl={reefscanUrl}
         isOpen={isTransactionsOpen}
         onClose={() => setTransactionsOpen(false)}
