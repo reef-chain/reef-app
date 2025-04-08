@@ -71,23 +71,32 @@ const App = (): JSX.Element => {
     'Reef App', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
 
-  const accountsBalances = hooks.useObservableState(reefState.accounts$);
+  const accountsBalances:any[] = hooks.useObservableState(reefState.accounts$);
 
-  useEffect(()=>{
-    let updatedAccountsList:any = []
-    if(signers && accountsBalances){
-      signers.forEach((sgnr,idx)=>{
-        let accountUpdatedBal = {
-          ...sgnr,
-          freeBalance: accountsBalances[idx].freeBalance?? BigNumber.from("0"),
-          lockedBalance:accountsBalances[idx].lockedBalance?? BigNumber.from("0")
-        }
-        updatedAccountsList.push(accountUpdatedBal);
-      })
+  useEffect(() => {
+    let updatedAccountsList: any = [];
     
+    if (signers && accountsBalances) {
+      signers.forEach((sgnr, idx) => {
+        
+        const accountBalance = accountsBalances.find((bal) => bal.address === sgnr.address);
+
+
+        if(accountBalance){
+          let accountUpdatedBal = {
+            ...sgnr,
+            name:accountBalance.name,
+            freeBalance: accountBalance ? accountBalance.freeBalance : BigNumber.from("0"),
+            lockedBalance: accountBalance ? accountBalance.lockedBalance : BigNumber.from("0")
+          };
+          updatedAccountsList.push(accountUpdatedBal);
+        }
+      });
+
       setAccounts(updatedAccountsList);
     }
-  },[accountsBalances,signers])
+  }, [accountsBalances, signers]);
+  
 
   useEffect(()=>{
     setAccounts([]);
