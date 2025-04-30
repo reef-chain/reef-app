@@ -1,16 +1,16 @@
-FROM ubuntu:23.04 as builder
+FROM ubuntu:24.10 AS builder
 
 # Install any needed packages
 RUN apt-get update && apt-get install -y curl git gnupg
 
-# install nodejs
-RUN curl -sL https://deb.nodesource.com/setup_18.x | bash -
+# Install Node.js 20
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
 RUN apt-get install -y nodejs build-essential sed
 
 WORKDIR /apps
 COPY . .
 
-RUN npm install yarn -g
+RUN npm install -g yarn
 RUN yarn && NODE_ENV=production yarn build
 
 CMD ["ls", "-al", "build"]

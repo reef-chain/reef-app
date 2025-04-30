@@ -7,7 +7,10 @@ if (isReefswapUI) {
   document.title = 'ReefSwap DEX';
 }
 export const getIpfsGatewayUrl = (hash: string): string => `https://reef.infura-ipfs.io/ipfs/${hash}`;
-export const appAvailableNetworks = [nw.AVAILABLE_NETWORKS.mainnet, nw.AVAILABLE_NETWORKS.testnet];
+export const appAvailableNetworks = [
+  nw.AVAILABLE_NETWORKS.mainnet,
+  // nw.AVAILABLE_NETWORKS.testnet //commented out for now @anukulpandey disable testnet
+];
 export const binanceConnectApiUrl = 'https://onramp.reefscan.info';
 
 export const useDexConfig = (network: nw.Network): nw.DexProtocolv2 | undefined => {

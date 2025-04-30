@@ -1,6 +1,6 @@
 import { Components, hooks, store } from '@reef-chain/react-lib';
 import React, { useContext, useReducer } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosInstance } from 'axios';
 import type { network as libNet } from '@reef-chain/util-lib';
 import TokenContext from '../../context/TokenContext';
@@ -8,19 +8,15 @@ import TokenPricesContext from '../../context/TokenPricesContext';
 import { notify } from '../../utils/utils';
 import ReefSigners from '../../context/ReefSigners';
 import { useDexConfig } from '../../environment';
+import { UrlAddressParams } from '../../urls';
 
 const { RemoveLiquidityComponent } = Components;
 
-interface UrlParams {
-  address1: string;
-  address2: string;
-}
-
 const RemoveLiquidity = (): JSX.Element => {
-  const history = useHistory();
+  const history = useNavigate();
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
-  const { address1, address2 } = useParams<UrlParams>();
+  const { address1, address2 } = useParams<Partial<UrlAddressParams>>(); 
   const httpClient: AxiosInstance = axios;
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
@@ -33,8 +29,8 @@ const RemoveLiquidity = (): JSX.Element => {
   );
 
   hooks.useRemoveLiquidity({
-    address1,
-    address2,
+    address1:address1??"",
+    address2:address2??"",
     dispatch,
     state,
     tokens,
@@ -60,7 +56,7 @@ const RemoveLiquidity = (): JSX.Element => {
       state={state}
       actions={{
         onRemoveLiquidity,
-        back: history.goBack,
+        back:()=> history(-1),
         setSettings: (settings) => dispatch(store.setSettingsAction(settings)),
         setPercentage: (percentage) => dispatch(store.setPercentageAction(percentage)),
       }}

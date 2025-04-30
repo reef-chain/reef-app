@@ -373,7 +373,8 @@ export const BondsComponent = ({
 
   useEffect(() => {
     if (!account) { return; }
-
+    
+    //@ts-ignore
     const updatedContract = getReefBondContract(bond!, account.signer);
     setContract(updatedContract);
 

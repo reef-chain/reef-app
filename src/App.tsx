@@ -1,6 +1,6 @@
 import { ReefSigner, defaultOptions, hooks } from '@reef-chain/react-lib';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Uik from '@reef-chain/ui-kit';
@@ -16,20 +16,19 @@ import HideBalance, { getStoredPref, toggleHidden } from './context/HideBalance'
 import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
-import { getIpfsGatewayUrl } from './environment';
+import { appAvailableNetworks, getIpfsGatewayUrl } from './environment';
 import { MetaMaskProvider } from './context/MetamaskContext';
 import { SNAP_URL } from './urls';
 import { connectWc } from './utils/walletConnect';
 import useConnectedWallet from './hooks/useConnectedWallet';
 import useWcPreloader from './hooks/useWcPreloader';
 import WcPreloader from './common/WcPreloader';
-import useAccountSelector from './hooks/useAccountSelector';
 
 const { WalletSelector, walletSelectorOptions } = Components;
 
 export const availableWalletOptions = [
   walletSelectorOptions[reefExt.REEF_EXTENSION_IDENT],
-  // walletSelectorOptions[reefExt.REEF_SNAP_IDENT],
+  walletSelectorOptions[reefExt.REEF_SNAP_IDENT],
   // walletSelectorOptions[reefExt.REEF_EASY_WALLET_IDENT],
   walletSelectorOptions[reefExt.REEF_WALLET_CONNECT_IDENT]
 ];
@@ -68,26 +67,37 @@ const App = (): JSX.Element => {
   const {
     loading, error, signers, selectedReefSigner, network, provider, reefState, extension
   } = hooks.useInitReefStateExtension(
-    'Reef App', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl },
+    'Reef App', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl,
+      network:appAvailableNetworks[0] //forcefully set mainnet - comment out when testnet is back @anukulpandey disable testnet
+    },
   );
 
-  const accountsBalances = hooks.useObservableState(reefState.accounts$);
+  const accountsBalances:any[] = hooks.useObservableState(reefState.accounts$);
 
-  useEffect(()=>{
-    let updatedAccountsList:any = []
-    if(signers && accountsBalances){
-      signers.forEach((sgnr,idx)=>{
-        let accountUpdatedBal = {
-          ...sgnr,
-          freeBalance: accountsBalances[idx].freeBalance?? BigNumber.from("0"),
-          lockedBalance:accountsBalances[idx].lockedBalance?? BigNumber.from("0")
-        }
-        updatedAccountsList.push(accountUpdatedBal);
-      })
+  useEffect(() => {
+    let updatedAccountsList: any = [];
     
+    if (signers && accountsBalances) {
+      signers.forEach((sgnr, idx) => {
+        
+        const accountBalance = accountsBalances.find((bal) => bal.address === sgnr.address);
+
+
+        if(accountBalance){
+          let accountUpdatedBal = {
+            ...sgnr,
+            name:accountBalance.name,
+            freeBalance: accountBalance ? accountBalance.freeBalance : BigNumber.from("0"),
+            lockedBalance: accountBalance ? accountBalance.lockedBalance : BigNumber.from("0")
+          };
+          updatedAccountsList.push(accountUpdatedBal);
+        }
+      });
+
       setAccounts(updatedAccountsList);
     }
-  },[accountsBalances,signers])
+  }, [accountsBalances, signers]);
+  
 
   useEffect(()=>{
     setAccounts([]);
@@ -103,7 +113,7 @@ const App = (): JSX.Element => {
     }
   },[selectedReefSigner,signers])
 
-  const history = useHistory();
+  const history = useNavigate();
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
   const hideBalance = {
     isHidden: isBalanceHidden,
@@ -123,7 +133,7 @@ const App = (): JSX.Element => {
 
   useEffect(() => {
     if (selExtensionName === reefExt.REEF_SNAP_IDENT && error?.code === 2) {
-      history.push(SNAP_URL);
+      history(SNAP_URL);
     }
   }, [extension, error]);
   
@@ -232,7 +242,7 @@ useEffect(()=>{
         )
         : (
         <>
-          <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
+          <OptionContext.Provider value={{ ...defaultOptions, back: ()=>history(-1), notify }}>
             <ReefSignersContext.Provider value={{
               accounts,
               selectedSigner,
