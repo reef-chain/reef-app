@@ -196,7 +196,9 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
             isBalanceHidden={hideBalance.isHidden}
             showBalance={hideBalance.toggle}
             // availableNetworks={appAvailableNetworks.map((net) => net.name as unknown as Components.Network)}
-            availableNetworks={['mainnet', 'testnet']}
+            availableNetworks={['mainnet', 
+              // 'testnet' //commented out for now @anukulpandey disable testnet
+            ]}
             showSnapOptions={true}
             onRename={renameAccount}
             onExport={exportAccount}

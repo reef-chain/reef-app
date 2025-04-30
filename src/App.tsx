@@ -16,14 +16,13 @@ import HideBalance, { getStoredPref, toggleHidden } from './context/HideBalance'
 import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
-import { getIpfsGatewayUrl } from './environment';
+import { appAvailableNetworks, getIpfsGatewayUrl } from './environment';
 import { MetaMaskProvider } from './context/MetamaskContext';
 import { SNAP_URL } from './urls';
 import { connectWc } from './utils/walletConnect';
 import useConnectedWallet from './hooks/useConnectedWallet';
 import useWcPreloader from './hooks/useWcPreloader';
 import WcPreloader from './common/WcPreloader';
-import useAccountSelector from './hooks/useAccountSelector';
 
 const { WalletSelector, walletSelectorOptions } = Components;
 
@@ -68,7 +67,9 @@ const App = (): JSX.Element => {
   const {
     loading, error, signers, selectedReefSigner, network, provider, reefState, extension
   } = hooks.useInitReefStateExtension(
-    'Reef App', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl },
+    'Reef App', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl,
+      network:appAvailableNetworks[0] //forcefully set mainnet - comment out when testnet is back @anukulpandey disable testnet
+    },
   );
 
   const accountsBalances:any[] = hooks.useObservableState(reefState.accounts$);
