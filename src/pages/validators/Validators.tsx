@@ -66,7 +66,7 @@ const Validators = (): JSX.Element => {
     const api = provider.api as ApiPromise;
     await api.tx.staking
       .nominate([address])
-      .signAndSend(selectedSigner.address, { signer: selectedSigner.signer });
+      .signAndSend(selectedSigner.address, { signer: selectedSigner.sign });
   };
 
   const unbond = async (): Promise<void> => {
@@ -74,7 +74,7 @@ const Validators = (): JSX.Element => {
     const api = provider.api as ApiPromise;
     await api.tx.staking
       .unbond(new BN(0))
-      .signAndSend(selectedSigner.address, { signer: selectedSigner.signer });
+      .signAndSend(selectedSigner.address, { signer: selectedSigner.sign });
   };
 
   return (
