@@ -1,0 +1,19 @@
+.validators-page {
+  width: 100%;
+  padding: 2.5rem 3.5rem;
+}
+
+.validators-page__title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.validators-page__filter {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 1rem;
+}
+
+.validators-page__id {
+  word-break: break-all;
+}
