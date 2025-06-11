@@ -66,6 +66,12 @@ Install `cross-env` if needed:
 yarn add -D cross-env
 ```
 
+If `yarn lint` fails with an "Internal Error" complaining about the lockfile,
+activate Yarn classic:
+```bash
+corepack prepare yarn@1.22.19 --activate
+```
+
 
 # Steps before Deployment when developing with react-lib * 
 Do not forget to publish the lib before app deployment! 

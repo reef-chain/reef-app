@@ -22,6 +22,10 @@
   margin-bottom: 20px;
 }
 
+.validators-page__stake {
+  margin-bottom: 20px;
+}
+
 .validators-page__nominations-list {
   list-style: none;
   padding-left: 0;
