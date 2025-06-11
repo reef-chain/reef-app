@@ -1,18 +1,71 @@
-# Reef App
+# 🛠️ Local development with @reef-chain/react-lib and reef-app (Yarn 4)
 
-# Developer section
+This guide explains how to develop `@reef-chain/react-lib` locally and link it dynamically to `reef-app` using **Yarn 4.9.2**.
 
-## Developing with @reef-chain/react-lib
+---
 
-For developing the app and lib simultaneously you will need to do certain steps:
+## 📁 Folder structure
 
-1. Fork/Clone [@reef-chain/react-lib](git@github.com:reef-chain/react-lib.git) besides reef-app project.
-2. run `yarn install` in reef-app and react-lib clones
-3. cd to react-lib and run `yarn link`
-4. cd to react-lib/node_modules/react and run `yarn link`
-5. cd to reef-app and run `yarn link "@reef-chain/react-lib"` and `yarn link "react"`
-6. cd to react-lib and run `yarn start`
-7. cd back to reef-app and run `yarn start`
+```
+/react-lib       # Local clone of the library
+/reef-app        # Local clone of the application
+```
+
+## 🚀 Setup steps
+
+| Step | Command |
+|------|---------|
+| 1 | `git clone https://github.com/reef-chain/react-lib.git ~/react-lib` |
+| 2 | `git clone https://github.com/reef-chain/reef-app.git ~/reef-app` |
+| 3 | `cd ~/react-lib && yarn install` |
+| 4 | Edit `~/reef-app/package.json` and replace the dependency line: <br> `"@reef-chain/react-lib": "portal:[FOLDER_LOCATION]/react-lib"` |
+| 5 | `cd ~/reef-app && yarn install` |
+
+Also, in `~/reef-app`, add a `.yarnrc.yml` file with:
+
+```yaml
+nodeLinker: node-modules
+```
+
+## ✅ Pre-requisites
+
+- Yarn 4.9.2 enabled with Corepack:
+
+```bash
+corepack enable
+yarn --version  # must show 4.9.2
+```
+
+## 🔍 How to check if the link is active
+
+```bash
+ls -l node_modules/@reef-chain/react-lib
+# → should point to /home/pierre/react-lib
+
+yarn why @reef-chain/react-lib
+# → should show "portal:/home/pierre/react-lib"
+
+🎉 It means the link is working!
+```
+
+You can also modify a file inside `react-lib/src` and check if the change is reflected immediately in `reef-app`.
+
+---
+
+## 🛠 Update `package.json` in reef-app
+
+```json
+"scripts": {
+  "start": "cross-env NODE_OPTIONS='--preserve-symlinks' webpack-dev-server -d source-map --output-pathinfo"
+}
+```
+
+Install `cross-env` if needed:
+
+```bash
+yarn add -D cross-env
+```
+
 
 # Steps before Deployment when developing with react-lib * 
 Do not forget to publish the lib before app deployment! 
