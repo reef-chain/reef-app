@@ -17,3 +17,12 @@
 .validators-page__id {
   word-break: break-all;
 }
+
+.validators-page__nominations {
+  margin-bottom: 20px;
+}
+
+.validators-page__nominations-list {
+  list-style: none;
+  padding-left: 0;
+}

@@ -19,6 +19,7 @@ const Validators = (): JSX.Element => {
   const [filter, setFilter] = useState<'active' | 'waiting'>('active');
   const [validators, setValidators] = useState<ValidatorInfo[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
+  const [nominations, setNominations] = useState<string[]>([]);
 
   useEffect(() => {
     const load = async (): Promise<void> => {
@@ -51,6 +52,29 @@ const Validators = (): JSX.Element => {
     };
     load();
   }, [provider, filter]);
+
+  useEffect(() => {
+    const loadNominations = async (): Promise<void> => {
+      if (!provider?.api || !selectedSigner) {
+        setNominations([]);
+        return;
+      }
+      const api = provider.api as ApiPromise;
+      try {
+        const nominators = await api.query.staking.nominators(selectedSigner.address);
+        if ((nominators as any)?.isSome) {
+          const targets = (nominators as any).unwrap().targets as any;
+          setNominations(targets.map((t: any) => t.toString()));
+        } else {
+          setNominations([]);
+        }
+      } catch (e) {
+        console.warn('Error loading nominations', e);
+        setNominations([]);
+      }
+    };
+    loadNominations();
+  }, [provider, selectedSigner]);
 
   const toggleSelect = (addr: string): void => {
     setSelected((prev) => {
@@ -94,6 +118,20 @@ const Validators = (): JSX.Element => {
           onClick={() => setFilter('waiting')}
         />
       </div>
+      {selectedSigner && (
+        <div className="validators-page__nominations">
+          <Uik.Text type="title">{strings.current_nominations}</Uik.Text>
+          {nominations.length ? (
+            <ul className="validators-page__nominations-list">
+              {nominations.map((n) => (
+                <li key={n}>{n}</li>
+              ))}
+            </ul>
+          ) : (
+            <Uik.Text>{strings.no_nominations}</Uik.Text>
+          )}
+        </div>
+      )}
       <Uik.Table seamless>
         <Uik.THead>
           <Uik.Tr>
