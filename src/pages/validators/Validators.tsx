@@ -31,15 +31,15 @@ const Validators = (): JSX.Element => {
           filter === 'active' ? overview.validators : overview.waiting;
         const vals: ValidatorInfo[] = [];
         for (const addr of addresses) {
-          const [info, exposure, prefs] = await Promise.all([
-            api.derive.accounts.info(addr),
-            api.query.staking.erasStakers(overview.activeEra, addr),
-            api.query.staking.validators(addr),
-          ]);
+            const [info, exposure, prefs] = await Promise.all([
+              api.derive.accounts.info(addr),
+              api.query.staking.erasStakers(overview.activeEra as any, addr),
+              api.query.staking.validators(addr),
+            ]);
           vals.push({
             address: addr,
             identity: info.identity?.display || '',
-            totalBonded: exposure?.total?.toString() || '0',
+            totalBonded: (exposure as any)?.total?.toString() || '0',
             commission: prefs?.commission?.toString() || '0',
             isActive: overview.validators.includes(addr),
           });
@@ -64,13 +64,17 @@ const Validators = (): JSX.Element => {
   const bond = async (address: string): Promise<void> => {
     if (!provider?.api || !selectedSigner) return;
     const api = provider.api as ApiPromise;
-    await api.tx.staking.nominate([address]).signAndSend(selectedSigner.signer);
+    await api.tx.staking
+      .nominate([address])
+      .signAndSend(selectedSigner.address, { signer: selectedSigner.signer });
   };
 
   const unbond = async (): Promise<void> => {
     if (!provider?.api || !selectedSigner) return;
     const api = provider.api as ApiPromise;
-    await api.tx.staking.unbond(new BN(0)).signAndSend(selectedSigner.signer);
+    await api.tx.staking
+      .unbond(new BN(0))
+      .signAndSend(selectedSigner.address, { signer: selectedSigner.signer });
   };
 
   return (
