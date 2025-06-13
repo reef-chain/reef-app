@@ -4,7 +4,7 @@ import { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
 import ReefSigners from '../../context/ReefSigners';
 import { localizedStrings as strings } from '../../l10n/l10n';
-import { displayBalance } from '../../utils/displayBalance';
+import { formatReefAmount } from '../../utils/formatReefAmount';
 import './validators.css';
 
 interface ValidatorInfo {
@@ -143,9 +143,7 @@ const Validators = (): JSX.Element => {
           <Uik.Text type="title">
             {strings.your_stake}
             :
-            {displayBalance(nominatorStake)}
-            {' '}
-            REEF
+            {formatReefAmount(new BN(nominatorStake))}
           </Uik.Text>
         </div>
       )}
@@ -189,9 +187,7 @@ const Validators = (): JSX.Element => {
                 </div>
               </Uik.Td>
               <Uik.Td>
-                {displayBalance(v.totalBonded)}
-                {' '}
-                REEF
+                {formatReefAmount(new BN(v.totalBonded))}
               </Uik.Td>
               <Uik.Td>
                 {(Number(v.commission) / 10000000).toFixed(2)}
