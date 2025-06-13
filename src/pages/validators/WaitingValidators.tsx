@@ -41,7 +41,11 @@ const WaitingValidators = (): JSX.Element => {
       const api = provider.api as ApiPromise;
       try {
         if (tab === 'waiting') {
-          const { waiting, info } = await api.derive.staking.waitingInfo();
+          const waitingInfo = await api.derive.staking.waitingInfo({
+            withPrefs: true,
+            withExposureErasStakersLegacy: true,
+          });
+          const { waiting, info } = waitingInfo;
           const vals: ValidatorInfo[] = [];
           for (let i = 0; i < waiting.length; i++) {
             const addr = waiting[i].toString();
