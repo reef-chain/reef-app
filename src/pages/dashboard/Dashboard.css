@@ -442,3 +442,15 @@
     padding-bottom: 0.5em;
     padding-top: 0.8em;
 }
+
+.dashboard__balance-sub {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.dashboard__balance-item {
+    display: flex;
+    flex-direction: column;
+}

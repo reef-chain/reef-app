@@ -4,10 +4,11 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { toCurrencyFormat } from '../../utils/utils';
 import HideBalance from '../../context/HideBalance';
 import { displayBalance } from '../../utils/displayBalance';
-import { localizedStrings } from '../../l10n/l10n';
 
 interface Balance {
-  balance: number;
+  total: number;
+  available: number;
+  staked: number;
   loading: boolean;
   className?: string;
 }
@@ -24,19 +25,25 @@ export const Loading = (): JSX.Element => (
 );
 
 export const Balance = ({
-  balance,
+  total,
+  available,
+  staked,
   loading,
   className,
 }: Balance): JSX.Element => {
   const { isHidden, toggle } = useContext(HideBalance);
 
-  const getBalance = useMemo((): string => {
-    if (balance >= 1000000) {
-      return `$${displayBalance(balance)}`;
+  const getTotal = useMemo((): string => {
+    if (total >= 1000000) {
+      return `$${displayBalance(total)}`;
     }
 
-    return toCurrencyFormat(balance as number, { maximumFractionDigits: balance < 10000 ? 2 : 0 });
-  }, [balance]);
+    return toCurrencyFormat(total as number, { maximumFractionDigits: total < 10000 ? 2 : 0 });
+  }, [total]);
+
+  const getAvailable = useMemo((): string => toCurrencyFormat(available, { maximumFractionDigits: available < 10000 ? 2 : 0 }), [available]);
+
+  const getStaked = useMemo((): string => toCurrencyFormat(staked, { maximumFractionDigits: staked < 10000 ? 2 : 0 }), [staked]);
 
   const toggleHidden = (): void => {
     if (isHidden) toggle();
@@ -49,7 +56,7 @@ export const Balance = ({
     `}
     >
       <div className="dashboard__balance-label">
-        <Uik.Text type="lead">{localizedStrings.balance}</Uik.Text>
+        <Uik.Text type="lead">Total</Uik.Text>
         <button
           key={String(isHidden)}
           type="button"
@@ -63,7 +70,7 @@ export const Balance = ({
         </button>
       </div>
       {
-        loading || getBalance === 'US$NaN' ? <Loading />
+        loading || getTotal === 'US$NaN' ? <Loading />
           : (
             <button
               type="button"
@@ -85,11 +92,23 @@ export const Balance = ({
                       <div />
                     </>
                   )
-                  : getBalance
+                  : getTotal
               }
             </button>
           )
       }
+      <div className="dashboard__balance-sub">
+        <div className="dashboard__balance-item">
+          <Uik.Text type="lead">Available</Uik.Text>
+          {loading ? <Uik.Loading size="small" />
+            : <Uik.Text type="title">{isHidden ? '***' : getAvailable}</Uik.Text>}
+        </div>
+        <div className="dashboard__balance-item">
+          <Uik.Text type="lead">Staked</Uik.Text>
+          {loading ? <Uik.Loading size="small" />
+            : <Uik.Text type="title">{isHidden ? '***' : getStaked}</Uik.Text>}
+        </div>
+      </div>
     </div>
   );
 };
