@@ -28,9 +28,10 @@ const Validators = (): JSX.Element => {
       if (!provider?.api) return;
       const api = provider.api as ApiPromise;
       try {
-        // overview provides active and waiting validator addresses
+        // overview provides active and next elected validator addresses
         const overview: any = await api.derive.staking.overview();
-        const addresses: string[] = filter === 'active' ? overview.validators : overview.waiting;
+        const waiting: string[] = overview.nextElected.filter((a: string) => !overview.validators.includes(a));
+        const addresses: string[] = filter === 'active' ? overview.validators : waiting;
         const vals: ValidatorInfo[] = [];
         for (const addr of addresses) {
           const [info, exposure, prefs] = await Promise.all([
@@ -105,21 +106,6 @@ const Validators = (): JSX.Element => {
     });
   };
 
-  const bond = async (address: string): Promise<void> => {
-    if (!provider?.api || !selectedSigner) return;
-    const api = provider.api as ApiPromise;
-    await api.tx.staking
-      .nominate([address])
-      .signAndSend(selectedSigner.address, { signer: selectedSigner.sign });
-  };
-
-  const unbond = async (): Promise<void> => {
-    if (!provider?.api || !selectedSigner) return;
-    const api = provider.api as ApiPromise;
-    await api.tx.staking
-      .unbond(new BN(0))
-      .signAndSend(selectedSigner.address, { signer: selectedSigner.sign });
-  };
 
   return (
     <div className="validators-page">
@@ -193,10 +179,7 @@ const Validators = (): JSX.Element => {
                 {(Number(v.commission) / 10000000).toFixed(2)}
                 %
               </Uik.Td>
-              <Uik.Td>
-                <Uik.Button size="small" text={strings.bond} onClick={() => bond(v.address)} />
-                <Uik.Button size="small" text={strings.unbond} onClick={unbond} />
-              </Uik.Td>
+              <Uik.Td />
             </Uik.Tr>
           ))}
         </Uik.TBody>
