@@ -464,8 +464,3 @@
     white-space: nowrap;
     overflow: hidden;
 }
-@media (max-width: 480px) {
-    .dashboard__balance-item {
-        flex-basis: 100%;
-    }
-}
