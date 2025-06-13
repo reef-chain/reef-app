@@ -3,10 +3,14 @@ import Uik from '@reef-chain/ui-kit';
 import { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
 import ReefSigners from '../../context/ReefSigners';
+import TokenPricesContext from '../../context/TokenPricesContext';
+import { utils } from '@reef-chain/react-lib';
+import { utils as ethUtils } from 'ethers';
 import { localizedStrings as strings } from '../../l10n/l10n';
 import { formatReefAmount } from '../../utils/formatReefAmount';
-import { shortAddress } from '../../utils/utils';
+import { shortAddress, toCurrencyFormat } from '../../utils/utils';
 import './validators.css';
+import StakingActions from './StakingActions';
 
 interface ValidatorInfo {
   address: string;
@@ -18,21 +22,25 @@ interface ValidatorInfo {
 
 const Validators = (): JSX.Element => {
   const { provider, selectedSigner } = useContext(ReefSigners);
-  const [filter, setFilter] = useState<'active' | 'waiting'>('active');
+  const tokenPrices = useContext(TokenPricesContext);
+  const { REEF_ADDRESS } = utils;
+  const [tab, setTab] = useState<'active' | 'waiting' | 'actions'>('active');
   const [validators, setValidators] = useState<ValidatorInfo[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [nominations, setNominations] = useState<string[]>([]);
   const [nominatorStake, setNominatorStake] = useState<string>('0');
+  const stakeNumber = Number(ethUtils.formatUnits(nominatorStake || '0', 18));
+  const stakeUsd = stakeNumber * (tokenPrices[REEF_ADDRESS] || 0);
 
   useEffect(() => {
     const load = async (): Promise<void> => {
-      if (!provider?.api) return;
+      if (!provider?.api || tab === 'actions') return;
       const api = provider.api as ApiPromise;
       try {
         // overview provides active and next elected validator addresses
         const overview: any = await api.derive.staking.overview();
         const waiting: string[] = overview.nextElected.filter((a: string) => !overview.validators.includes(a));
-        const addresses: string[] = filter === 'active' ? overview.validators : waiting;
+        const addresses: string[] = tab === 'active' ? overview.validators : waiting;
         const vals: ValidatorInfo[] = [];
         for (const addr of addresses) {
           const [info, exposure, prefs] = await Promise.all([
@@ -64,7 +72,7 @@ const Validators = (): JSX.Element => {
       }
     };
     load();
-  }, [provider, filter]);
+  }, [provider, tab]);
 
   useEffect(() => {
     const loadNominations = async (): Promise<void> => {
@@ -124,27 +132,29 @@ const Validators = (): JSX.Element => {
         {strings.validators}
       </Uik.Text>
       <div className="validators-page__filter">
-        <Uik.Button
-          text="Active"
-          fill={filter === 'active'}
-          onClick={() => setFilter('active')}
-        />
-        <Uik.Button
-          text="Waiting"
-          fill={filter === 'waiting'}
-          onClick={() => setFilter('waiting')}
+        <Uik.Tabs
+          value={tab}
+          onChange={(val) => setTab(val as any)}
+          options={[
+            { value: 'active', text: 'Active' },
+            { value: 'waiting', text: 'Waiting' },
+            { value: 'actions', text: 'Actions' },
+          ]}
         />
       </div>
-      {selectedSigner && (
+      {tab === 'actions' && selectedSigner && (
         <div className="validators-page__stake">
           <Uik.Text type="title">
             {strings.your_stake}
             :
             {formatReefAmount(new BN(nominatorStake))}
           </Uik.Text>
+          <Uik.Text type="title">
+            {toCurrencyFormat(stakeUsd, { maximumFractionDigits: 2 })}
+          </Uik.Text>
         </div>
       )}
-      {selectedSigner && (
+      {tab === 'actions' && selectedSigner && (
         <div className="validators-page__nominations">
           <Uik.Text type="title">{strings.current_nominations}</Uik.Text>
           {nominations.length ? (
@@ -158,6 +168,10 @@ const Validators = (): JSX.Element => {
           )}
         </div>
       )}
+      {tab === 'actions' && (
+        <StakingActions validators={validators} />
+      )}
+      {tab !== 'actions' && (
       <Uik.Table seamless>
         <Uik.THead>
           <Uik.Tr>
@@ -195,6 +209,7 @@ const Validators = (): JSX.Element => {
           ))}
         </Uik.TBody>
       </Uik.Table>
+      )}
     </div>
   );
 };
