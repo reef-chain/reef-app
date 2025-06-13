@@ -5,6 +5,7 @@ import BN from 'bn.js';
 import ReefSigners from '../../context/ReefSigners';
 import { localizedStrings as strings } from '../../l10n/l10n';
 import { formatReefAmount } from '../../utils/formatReefAmount';
+import { shortAddress } from '../../utils/utils';
 import './validators.css';
 
 interface ValidatorInfo {
@@ -39,9 +40,19 @@ const Validators = (): JSX.Element => {
             api.query.staking.erasStakers(overview.activeEra as any, addr),
             api.query.staking.validators(addr),
           ]);
+          let identity = '';
+          if (info.identity) {
+            const parent = (info.identity as any).displayParent;
+            const display = info.identity.display;
+            if (parent) {
+              identity = `${parent}/${display}`;
+            } else if (display) {
+              identity = display;
+            }
+          }
           vals.push({
             address: addr,
-            identity: info.identity?.display || '',
+            identity,
             totalBonded: (exposure as any)?.total?.toString() || '0',
             commission: prefs?.commission?.toString() || '0',
             isActive: overview.validators.includes(addr),
@@ -169,7 +180,7 @@ const Validators = (): JSX.Element => {
               </Uik.Td>
               <Uik.Td>
                 <div className="validators-page__id">
-                  {v.identity || v.address}
+                  {v.identity ? v.identity : shortAddress(v.address)}
                 </div>
               </Uik.Td>
               <Uik.Td>
