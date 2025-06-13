@@ -70,7 +70,8 @@ export const Balance = ({
         </button>
       </div>
       {
-        loading || getTotal === 'US$NaN' ? <Loading />
+        loading || getTotal === 'US$NaN'
+          ? <Loading />
           : (
             <button
               type="button"
@@ -84,7 +85,7 @@ export const Balance = ({
                 isHidden
                   ? (
                     <>
-                      $
+                      <Uik.Text type="headline">$</Uik.Text>
                       <div />
                       <div />
                       <div />
@@ -92,7 +93,7 @@ export const Balance = ({
                       <div />
                     </>
                   )
-                  : getTotal
+                  : <Uik.Text type="headline">{getTotal}</Uik.Text>
               }
             </button>
           )
@@ -101,12 +102,12 @@ export const Balance = ({
         <div className="dashboard__balance-item">
           <Uik.Text type="lead">Available</Uik.Text>
           {loading ? <Uik.Loading size="small" />
-            : <Uik.Text type="title">{isHidden ? '***' : getAvailable}</Uik.Text>}
+            : <Uik.Text type="headline">{isHidden ? '***' : getAvailable}</Uik.Text>}
         </div>
         <div className="dashboard__balance-item">
           <Uik.Text type="lead">Staked</Uik.Text>
           {loading ? <Uik.Loading size="small" />
-            : <Uik.Text type="title">{isHidden ? '***' : getStaked}</Uik.Text>}
+            : <Uik.Text type="headline">{isHidden ? '***' : getStaked}</Uik.Text>}
         </div>
       </div>
     </div>
