@@ -2,11 +2,11 @@ import React, { useEffect, useState, useContext } from 'react';
 import Uik from '@reef-chain/ui-kit';
 import { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
-import ReefSigners from '../../context/ReefSigners';
-import TokenPricesContext from '../../context/TokenPricesContext';
 import { utils } from '@reef-chain/react-lib';
 import { utils as ethUtils } from 'ethers';
 import { useHistory } from 'react-router-dom';
+import TokenPricesContext from '../../context/TokenPricesContext';
+import ReefSigners from '../../context/ReefSigners';
 import { VALIDATORS_URL, WAITING_VALIDATORS_URL } from '../../urls';
 import { localizedStrings as strings } from '../../l10n/l10n';
 import { formatReefAmount } from '../../utils/formatReefAmount';
@@ -22,12 +22,12 @@ interface ValidatorInfo {
   isActive: boolean;
 }
 
-const Validators = (): JSX.Element => {
+const WaitingValidators = (): JSX.Element => {
   const { provider, selectedSigner } = useContext(ReefSigners);
   const tokenPrices = useContext(TokenPricesContext);
   const { REEF_ADDRESS } = utils;
   const history = useHistory();
-  const [tab, setTab] = useState<'active' | 'waiting' | 'actions'>('active');
+  const [tab, setTab] = useState<'active' | 'waiting' | 'actions'>('waiting');
   const [validators, setValidators] = useState<ValidatorInfo[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [nominations, setNominations] = useState<string[]>([]);
@@ -40,36 +40,68 @@ const Validators = (): JSX.Element => {
       if (!provider?.api || tab === 'actions') return;
       const api = provider.api as ApiPromise;
       try {
-        // overview provides active and next elected validator addresses
-        const overview: any = await api.derive.staking.overview();
-        const waiting: string[] = overview.nextElected.filter((a: string) => !overview.validators.includes(a));
-        const addresses: string[] = tab === 'active' ? overview.validators : waiting;
-        const vals: ValidatorInfo[] = [];
-        for (const addr of addresses) {
-          const [info, exposure, prefs] = await Promise.all([
-            api.derive.accounts.info(addr),
-            api.query.staking.erasStakers(overview.activeEra as any, addr),
-            api.query.staking.validators(addr),
-          ]);
-          let identity = '';
-          if (info.identity) {
-            const parent = (info.identity as any).displayParent;
-            const display = info.identity.display;
-            if (parent) {
-              identity = `${parent}/${display}`;
-            } else if (display) {
-              identity = display;
-            }
-          }
-          vals.push({
-            address: addr,
-            identity,
-            totalBonded: (exposure as any)?.total?.toString() || '0',
-            commission: prefs?.commission?.toString() || '0',
-            isActive: overview.validators.includes(addr),
+        if (tab === 'waiting') {
+          const waitingInfo = await api.derive.staking.waitingInfo({
+            withPrefs: true,
+            withExposureErasStakersLegacy: true,
           });
+          const { waiting, info } = waitingInfo;
+          const vals: ValidatorInfo[] = [];
+          for (let i = 0; i < waiting.length; i++) {
+            const addr = waiting[i].toString();
+            const accountInfo = await api.derive.accounts.info(addr);
+            let identity = '';
+            if (accountInfo.identity) {
+              const parent = (accountInfo.identity as any).displayParent;
+              const { display } = accountInfo.identity;
+              if (parent) {
+                identity = `${parent}/${display}`;
+              } else if (display) {
+                identity = display;
+              }
+            }
+            const total = (info[i].exposureEraStakers as any)?.total?.toString() || '0';
+            const commission = info[i].validatorPrefs?.commission?.toString() || '0';
+            vals.push({
+              address: addr,
+              identity,
+              totalBonded: total,
+              commission,
+              isActive: false,
+            });
+          }
+          setValidators(vals);
+        } else {
+          // Active validators
+          const overview: any = await api.derive.staking.overview();
+          const addresses: string[] = overview.validators;
+          const vals: ValidatorInfo[] = [];
+          for (const addr of addresses) {
+            const [info, exposure, prefs] = await Promise.all([
+              api.derive.accounts.info(addr),
+              api.query.staking.erasStakers(overview.activeEra as any, addr),
+              api.query.staking.validators(addr),
+            ]);
+            let identity = '';
+            if (info.identity) {
+              const parent = (info.identity as any).displayParent;
+              const { display } = info.identity;
+              if (parent) {
+                identity = `${parent}/${display}`;
+              } else if (display) {
+                identity = display;
+              }
+            }
+            vals.push({
+              address: addr,
+              identity,
+              totalBonded: (exposure as any)?.total?.toString() || '0',
+              commission: prefs?.commission?.toString() || '0',
+              isActive: true,
+            });
+          }
+          setValidators(vals);
         }
-        setValidators(vals);
       } catch (e) {
         console.warn('Error loading validators', e);
       }
@@ -127,7 +159,6 @@ const Validators = (): JSX.Element => {
       return [...prev, addr];
     });
   };
-
 
   return (
     <div className="validators-page">
@@ -222,4 +253,4 @@ const Validators = (): JSX.Element => {
   );
 };
 
-export default Validators;
+export default WaitingValidators;
