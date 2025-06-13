@@ -1,9 +1,7 @@
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useMemo } from 'react';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { toCurrencyFormat } from '../../utils/utils';
 import HideBalance from '../../context/HideBalance';
-import { displayBalance } from '../../utils/displayBalance';
 
 interface Balance {
   total: number;
@@ -33,17 +31,19 @@ export const Balance = ({
 }: Balance): JSX.Element => {
   const { isHidden, toggle } = useContext(HideBalance);
 
-  const getTotal = useMemo((): string => {
-    if (total >= 1000000) {
-      return `$${displayBalance(total)}`;
-    }
+  const formatCompactUSD = (value: number): string => `${
+    Intl.NumberFormat(navigator.language, {
+      notation: 'compact',
+      compactDisplay: 'short',
+      maximumFractionDigits: 2,
+    }).format(value)
+  }$US`;
 
-    return toCurrencyFormat(total as number, { maximumFractionDigits: total < 10000 ? 2 : 0 });
-  }, [total]);
+  const getTotal = useMemo((): string => formatCompactUSD(total), [total]);
 
-  const getAvailable = useMemo((): string => toCurrencyFormat(available, { maximumFractionDigits: available < 10000 ? 2 : 0 }), [available]);
+  const getAvailable = useMemo((): string => formatCompactUSD(available), [available]);
 
-  const getStaked = useMemo((): string => toCurrencyFormat(staked, { maximumFractionDigits: staked < 10000 ? 2 : 0 }), [staked]);
+  const getStaked = useMemo((): string => formatCompactUSD(staked), [staked]);
 
   const toggleHidden = (): void => {
     if (isHidden) toggle();
