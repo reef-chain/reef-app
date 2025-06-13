@@ -2,11 +2,11 @@ import React, { useEffect, useState, useContext } from 'react';
 import Uik from '@reef-chain/ui-kit';
 import { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
-import ReefSigners from '../../context/ReefSigners';
-import TokenPricesContext from '../../context/TokenPricesContext';
 import { utils } from '@reef-chain/react-lib';
 import { utils as ethUtils } from 'ethers';
 import { useHistory } from 'react-router-dom';
+import TokenPricesContext from '../../context/TokenPricesContext';
+import ReefSigners from '../../context/ReefSigners';
 import { VALIDATORS_URL, WAITING_VALIDATORS_URL } from '../../urls';
 import { localizedStrings as strings } from '../../l10n/l10n';
 import { formatReefAmount } from '../../utils/formatReefAmount';
@@ -22,12 +22,12 @@ interface ValidatorInfo {
   isActive: boolean;
 }
 
-const Validators = (): JSX.Element => {
+const WaitingValidators = (): JSX.Element => {
   const { provider, selectedSigner } = useContext(ReefSigners);
   const tokenPrices = useContext(TokenPricesContext);
   const { REEF_ADDRESS } = utils;
   const history = useHistory();
-  const [tab, setTab] = useState<'active' | 'waiting' | 'actions'>('active');
+  const [tab, setTab] = useState<'active' | 'waiting' | 'actions'>('waiting');
   const [validators, setValidators] = useState<ValidatorInfo[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [nominations, setNominations] = useState<string[]>([]);
@@ -54,7 +54,7 @@ const Validators = (): JSX.Element => {
           let identity = '';
           if (info.identity) {
             const parent = (info.identity as any).displayParent;
-            const display = info.identity.display;
+            const { display } = info.identity;
             if (parent) {
               identity = `${parent}/${display}`;
             } else if (display) {
@@ -127,7 +127,6 @@ const Validators = (): JSX.Element => {
       return [...prev, addr];
     });
   };
-
 
   return (
     <div className="validators-page">
@@ -222,4 +221,4 @@ const Validators = (): JSX.Element => {
   );
 };
 
-export default Validators;
+export default WaitingValidators;
