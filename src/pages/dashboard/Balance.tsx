@@ -110,69 +110,75 @@ export const Balance = ({
           )
       }
 
-      <div className="dashboard__balance-label">
-        <Uik.Text type="lead">Available</Uik.Text>
-      </div>
-      {
-        loading || getAvailable === 'US$NaN' ? <Loading />
-          : (
-            <button
-              type="button"
-              className={`
-                dashboard__balance-value dashboard__balance-value--small
-                ${isHidden ? 'dashboard__balance-value--hidden' : ''}
-              `}
-              onClick={toggleHidden}
-            >
-              {
-                isHidden
-                  ? (
-                    <>
-                      $
-                      <div />
-                      <div />
-                      <div />
-                      <div />
-                      <div />
-                    </>
-                  )
-                  : getAvailable
-              }
-            </button>
-          )
-      }
+      <div className="dashboard__balance-row">
+        <div className="dashboard__balance-section">
+          <div className="dashboard__balance-label">
+            <Uik.Text type="lead">Available</Uik.Text>
+          </div>
+          {
+            loading || getAvailable === 'US$NaN' ? <Loading />
+              : (
+                <button
+                  type="button"
+                  className={`
+                    dashboard__balance-value dashboard__balance-value--small
+                    ${isHidden ? 'dashboard__balance-value--hidden' : ''}
+                  `}
+                  onClick={toggleHidden}
+                >
+                  {
+                    isHidden
+                      ? (
+                        <>
+                          $
+                          <div />
+                          <div />
+                          <div />
+                          <div />
+                          <div />
+                        </>
+                      )
+                      : getAvailable
+                  }
+                </button>
+              )
+          }
+        </div>
 
-      <div className="dashboard__balance-label">
-        <Uik.Text type="lead">Staked</Uik.Text>
+        <div className="dashboard__balance-section">
+          <div className="dashboard__balance-label">
+            <Uik.Text type="lead">Staked</Uik.Text>
+          </div>
+          {
+            loading || getStaked === 'US$NaN' ? <Loading />
+              : (
+                <button
+                  type="button"
+                  className={`
+                    dashboard__balance-value dashboard__balance-value--small
+                    ${isHidden ? 'dashboard__balance-value--hidden' : ''}
+                  `}
+                  onClick={toggleHidden}
+                >
+                  {
+                    isHidden
+                      ? (
+                        <>
+                          $
+                          <div />
+                          <div />
+                          <div />
+                          <div />
+                          <div />
+                        </>
+                      )
+                      : getStaked
+                  }
+                </button>
+              )
+          }
+        </div>
       </div>
-      {
-        loading || getStaked === 'US$NaN' ? <Loading />
-          : (
-            <button
-              type="button"
-              className={`
-                dashboard__balance-value dashboard__balance-value--small
-                ${isHidden ? 'dashboard__balance-value--hidden' : ''}
-              `}
-              onClick={toggleHidden}
-            >
-              {
-                isHidden
-                  ? (
-                    <>
-                      $
-                      <div />
-                      <div />
-                      <div />
-                      <div />
-                      <div />
-                    </>
-                  )
-                  : getStaked
-              }
-            </button>
-          )
-      }
     </div>
   );
 };
