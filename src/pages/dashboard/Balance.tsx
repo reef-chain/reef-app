@@ -105,7 +105,17 @@ export const Balance = ({
             <Uik.Loading size="small" />
           ) : (
             <Uik.Text type="headline" className="dashboard__sub-balance-value">
-              {isHidden ? '***' : getAvailable}
+              {isHidden ? (
+                <>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </>
+              ) : (
+                getAvailable
+              )}
             </Uik.Text>
           )}
         </div>
@@ -115,7 +125,17 @@ export const Balance = ({
             <Uik.Loading size="small" />
           ) : (
             <Uik.Text type="headline" className="dashboard__sub-balance-value">
-              {isHidden ? '***' : getStaked}
+              {isHidden ? (
+                <>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </>
+              ) : (
+                getStaked
+              )}
             </Uik.Text>
           )}
         </div>
