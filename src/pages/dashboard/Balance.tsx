@@ -81,20 +81,17 @@ export const Balance = ({
               `}
               onClick={toggleHidden}
             >
-              {
-                isHidden
-                  ? (
-                    <>
-                      <Uik.Text type="headline">$</Uik.Text>
-                      <div />
-                      <div />
-                      <div />
-                      <div />
-                      <div />
-                    </>
-                  )
-                  : <Uik.Text type="headline">{getTotal}</Uik.Text>
-              }
+              <Uik.Text type="headline" className="dashboard__balance-text">
+                {getTotal}
+              </Uik.Text>
+              <span className="dashboard__balance-mask">
+                <Uik.Text type="headline">$</Uik.Text>
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </span>
             </button>
           )
       }
@@ -108,17 +105,14 @@ export const Balance = ({
               type="headline"
               className={`dashboard__sub-balance-value ${isHidden ? 'dashboard__balance-value--hidden' : ''}`}
             >
-              {isHidden ? (
-                <>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </>
-              ) : (
-                getAvailable
-              )}
+              <span className="dashboard__balance-text">{getAvailable}</span>
+              <span className="dashboard__balance-mask">
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </span>
             </Uik.Text>
           )}
         </div>
@@ -131,17 +125,14 @@ export const Balance = ({
               type="headline"
               className={`dashboard__sub-balance-value ${isHidden ? 'dashboard__balance-value--hidden' : ''}`}
             >
-              {isHidden ? (
-                <>
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </>
-              ) : (
-                getStaked
-              )}
+              <span className="dashboard__balance-text">{getStaked}</span>
+              <span className="dashboard__balance-mask">
+                <div />
+                <div />
+                <div />
+                <div />
+                <div />
+              </span>
             </Uik.Text>
           )}
         </div>

@@ -47,20 +47,15 @@ export const Rewards = ({
           `}
         onClick={toggleHidden}
       >
-        {
-            isHidden
-              ? (
-                <>
-                  $
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                  <div />
-                </>
-              )
-              : getRewards
-          }
+        <span className="dashboard__balance-text">{getRewards}</span>
+        <span className="dashboard__balance-mask">
+          $
+          <div />
+          <div />
+          <div />
+          <div />
+          <div />
+        </span>
       </button>
     </div>
   );
