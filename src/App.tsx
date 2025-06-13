@@ -9,7 +9,7 @@ import { Components } from '@reef-chain/react-lib';
 import Nav from './common/Nav';
 import OptionContext from './context/OptionContext';
 import { BigNumber} from "ethers";
-import ReefSignersContext from './context/ReefSigners';
+import ReefSignersContext, { SignerWithLocked } from './context/ReefSigners';
 import ContentRouter from './pages/ContentRouter';
 import { notify } from './utils/utils';
 import HideBalance, { getStoredPref, toggleHidden } from './context/HideBalance';
@@ -61,8 +61,8 @@ export const connectWalletConnect = async(ident:string,setSelExtensionName:any,s
 const App = (): JSX.Element => {
   const {selExtensionName,setSelExtensionName} = useConnectedWallet();
   const {loading:wcPreloader,setLoading:setWcPreloader} = useWcPreloader()
-  const [accounts,setAccounts] = useState<ReefSigner[]>([]);
-  const [selectedSigner,setSelectedSigner] = useState<ReefSigner | undefined>(undefined);
+  const [accounts,setAccounts] = useState<SignerWithLocked[]>([]);
+  const [selectedSigner,setSelectedSigner] = useState<SignerWithLocked | undefined>(undefined);
 
  
   const {
@@ -95,13 +95,15 @@ const App = (): JSX.Element => {
   },[selExtensionName])
 
   useEffect(()=>{
-    setSelectedSigner(selectedReefSigner);
+    if (selectedReefSigner) {
+      const account = accounts.find((acc) => acc.address === selectedReefSigner.address);
+      setSelectedSigner(account);
 
-    // if account connected , hide preloader & set account address
-    if(signers?.length && signers?.indexOf(selectedReefSigner!)==-1){
-      reefState.setSelectedAddress(signers[0].address)
+      if(signers?.length && signers?.indexOf(selectedReefSigner!)===-1){
+        reefState.setSelectedAddress(signers[0].address);
+      }
     }
-  },[selectedReefSigner,signers])
+  },[selectedReefSigner, accounts, signers])
 
   const history = useHistory();
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());

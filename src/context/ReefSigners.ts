@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 import { ReefSigner } from '@reef-chain/react-lib';
+import { BigNumber } from 'ethers';
 import { network as nw, extension as extReef } from '@reef-chain/util-lib';
 import { Provider } from '@reef-chain/evm-provider';
 import { Observable } from 'rxjs';
@@ -24,9 +25,14 @@ export interface ReefState {
   selectedTokenPrices$: Observable<never>
 }
 
+export interface SignerWithLocked extends ReefSigner {
+  lockedBalance?: BigNumber;
+  freeBalance?: BigNumber;
+}
+
 interface ReefSignersContext {
-  accounts: ReefSigner[]|undefined;
-  selectedSigner:ReefSigner|undefined;
+  accounts: SignerWithLocked[]|undefined;
+  selectedSigner:SignerWithLocked|undefined;
   network: nw.Network;
   provider: Provider|undefined;
   reefState: ReefState;

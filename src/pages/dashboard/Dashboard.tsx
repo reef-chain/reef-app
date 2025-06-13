@@ -18,6 +18,8 @@ import GetReefTestnetButton from './GetReefTestnetButton';
 import ReefSigners from '../../context/ReefSigners';
 import useAccountSelector from '../../hooks/useAccountSelector';
 
+const reefTokenAddress = '0x0000000000000000000000000000000001000000';
+
 const Dashboard = (): JSX.Element => {
   const { network } = useContext(ReefSigners);
   const { nfts } = useContext(NftContext);
@@ -54,8 +56,6 @@ const Dashboard = (): JSX.Element => {
 
     return baseTotal.toNumber();
   }, [tokenPrices, tokens, selectedSigner]);
-
-  const reefTokenAddress = '0x0000000000000000000000000000000001000000';
 
   const availableBalance = useMemo(() => {
     const reefToken = tokens.find((t) => t.address === reefTokenAddress);

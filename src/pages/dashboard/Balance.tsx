@@ -68,7 +68,7 @@ export const Balance = ({
     `}
     >
       <div className="dashboard__balance-label">
-        <Uik.Text type="lead">Total</Uik.Text>
+        <Uik.Text type="lead">Balance</Uik.Text>
         <button
           key={String(isHidden)}
           type="button"
