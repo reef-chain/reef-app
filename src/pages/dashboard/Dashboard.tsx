@@ -1,7 +1,8 @@
 import Uik from '@reef-chain/ui-kit';
 import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo, useState } from 'react';
-import { network as nw, utils } from '@reef-chain/util-lib';
+import { network as nw } from '@reef-chain/util-lib';
+import { utils } from '@reef-chain/react-lib';
 import NftContext from '../../context/NftContext';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
@@ -49,12 +50,12 @@ const Dashboard = (): JSX.Element => {
       new BigNumber(0),
     ).toNumber(), [tokenPrices, tokens]);
 
-  const availableBalance = useMemo(() => new BigNumber(selectedSigner?.freeBalance?.toString() || 0)
+  const availableBalance = useMemo(() => new BigNumber((selectedSigner as any)?.freeBalance?.toString() || 0)
     .div(new BigNumber(10).pow(18))
     .multipliedBy(reefPrice)
     .toNumber() + tokensWithoutReefValue, [reefPrice, selectedSigner, tokensWithoutReefValue]);
 
-  const stakedBalance = useMemo(() => new BigNumber(selectedSigner?.lockedBalance?.toString() || 0)
+  const stakedBalance = useMemo(() => new BigNumber((selectedSigner as any)?.lockedBalance?.toString() || 0)
     .div(new BigNumber(10).pow(18))
     .multipliedBy(reefPrice)
     .toNumber(), [reefPrice, selectedSigner]);
