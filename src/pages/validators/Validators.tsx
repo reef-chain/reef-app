@@ -4,6 +4,8 @@ import { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
 import ReefSigners from '../../context/ReefSigners';
 import { localizedStrings as strings } from '../../l10n/l10n';
+import { formatReefAmount } from '../../utils/formatReefAmount';
+import { shortAddress } from '../../utils/utils';
 import './validators.css';
 
 interface ValidatorInfo {
@@ -20,26 +22,37 @@ const Validators = (): JSX.Element => {
   const [validators, setValidators] = useState<ValidatorInfo[]>([]);
   const [selected, setSelected] = useState<string[]>([]);
   const [nominations, setNominations] = useState<string[]>([]);
+  const [nominatorStake, setNominatorStake] = useState<string>('0');
 
   useEffect(() => {
     const load = async (): Promise<void> => {
       if (!provider?.api) return;
       const api = provider.api as ApiPromise;
       try {
-        // overview provides active and waiting validator addresses
+        // overview provides active and next elected validator addresses
         const overview: any = await api.derive.staking.overview();
-        const addresses: string[] =
-          filter === 'active' ? overview.validators : overview.waiting;
+        const waiting: string[] = overview.nextElected.filter((a: string) => !overview.validators.includes(a));
+        const addresses: string[] = filter === 'active' ? overview.validators : waiting;
         const vals: ValidatorInfo[] = [];
         for (const addr of addresses) {
-            const [info, exposure, prefs] = await Promise.all([
-              api.derive.accounts.info(addr),
-              api.query.staking.erasStakers(overview.activeEra as any, addr),
-              api.query.staking.validators(addr),
-            ]);
+          const [info, exposure, prefs] = await Promise.all([
+            api.derive.accounts.info(addr),
+            api.query.staking.erasStakers(overview.activeEra as any, addr),
+            api.query.staking.validators(addr),
+          ]);
+          let identity = '';
+          if (info.identity) {
+            const parent = (info.identity as any).displayParent;
+            const display = info.identity.display;
+            if (parent) {
+              identity = `${parent}/${display}`;
+            } else if (display) {
+              identity = display;
+            }
+          }
           vals.push({
             address: addr,
-            identity: info.identity?.display || '',
+            identity,
             totalBonded: (exposure as any)?.total?.toString() || '0',
             commission: prefs?.commission?.toString() || '0',
             isActive: overview.validators.includes(addr),
@@ -76,6 +89,25 @@ const Validators = (): JSX.Element => {
     loadNominations();
   }, [provider, selectedSigner]);
 
+  useEffect(() => {
+    const loadStake = async (): Promise<void> => {
+      if (!provider?.api || !selectedSigner) {
+        setNominatorStake('0');
+        return;
+      }
+      const api = provider.api as ApiPromise;
+      try {
+        const stakingInfo: any = await api.derive.staking.account(selectedSigner.address);
+        const active = stakingInfo?.stakingLedger?.active as BN | undefined;
+        setNominatorStake(active ? active.toString() : '0');
+      } catch (e) {
+        console.warn('Error loading nominator stake', e);
+        setNominatorStake('0');
+      }
+    };
+    loadStake();
+  }, [provider, selectedSigner]);
+
   const toggleSelect = (addr: string): void => {
     setSelected((prev) => {
       const exists = prev.includes(addr);
@@ -85,21 +117,6 @@ const Validators = (): JSX.Element => {
     });
   };
 
-  const bond = async (address: string): Promise<void> => {
-    if (!provider?.api || !selectedSigner) return;
-    const api = provider.api as ApiPromise;
-    await api.tx.staking
-      .nominate([address])
-      .signAndSend(selectedSigner.address, { signer: selectedSigner.sign });
-  };
-
-  const unbond = async (): Promise<void> => {
-    if (!provider?.api || !selectedSigner) return;
-    const api = provider.api as ApiPromise;
-    await api.tx.staking
-      .unbond(new BN(0))
-      .signAndSend(selectedSigner.address, { signer: selectedSigner.sign });
-  };
 
   return (
     <div className="validators-page">
@@ -119,6 +136,15 @@ const Validators = (): JSX.Element => {
         />
       </div>
       {selectedSigner && (
+        <div className="validators-page__stake">
+          <Uik.Text type="title">
+            {strings.your_stake}
+            :
+            {formatReefAmount(new BN(nominatorStake))}
+          </Uik.Text>
+        </div>
+      )}
+      {selectedSigner && (
         <div className="validators-page__nominations">
           <Uik.Text type="title">{strings.current_nominations}</Uik.Text>
           {nominations.length ? (
@@ -137,7 +163,7 @@ const Validators = (): JSX.Element => {
           <Uik.Tr>
             <Uik.Th />
             <Uik.Th>{strings.account}</Uik.Th>
-            <Uik.Th>{strings.balance}</Uik.Th>
+            <Uik.Th>{strings.total_staked}</Uik.Th>
             <Uik.Th>Commission</Uik.Th>
             <Uik.Th />
           </Uik.Tr>
@@ -154,15 +180,17 @@ const Validators = (): JSX.Element => {
               </Uik.Td>
               <Uik.Td>
                 <div className="validators-page__id">
-                  {v.identity || v.address}
+                  {v.identity ? v.identity : shortAddress(v.address)}
                 </div>
               </Uik.Td>
-              <Uik.Td>{v.totalBonded}</Uik.Td>
-              <Uik.Td>{v.commission}</Uik.Td>
               <Uik.Td>
-                <Uik.Button size="small" text={strings.bond} onClick={() => bond(v.address)} />
-                <Uik.Button size="small" text={strings.unbond} onClick={unbond} />
+                {formatReefAmount(new BN(v.totalBonded))}
               </Uik.Td>
+              <Uik.Td>
+                {(Number(v.commission) / 10000000).toFixed(2)}
+                %
+              </Uik.Td>
+              <Uik.Td />
             </Uik.Tr>
           ))}
         </Uik.TBody>
