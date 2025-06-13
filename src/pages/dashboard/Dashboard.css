@@ -442,3 +442,25 @@
     padding-bottom: 0.5em;
     padding-top: 0.8em;
 }
+
+.dashboard__balance-sub {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.dashboard__balance-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.dashboard__sub-balance-value.uik-text--headline {
+    font-size: 2rem;
+    white-space: nowrap;
+    overflow: hidden;
+}

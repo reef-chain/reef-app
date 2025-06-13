@@ -1,13 +1,12 @@
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useMemo } from 'react';
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { toCurrencyFormat } from '../../utils/utils';
 import HideBalance from '../../context/HideBalance';
-import { displayBalance } from '../../utils/displayBalance';
-import { localizedStrings } from '../../l10n/l10n';
 
 interface Balance {
-  balance: number;
+  total: number;
+  available: number;
+  staked: number;
   loading: boolean;
   className?: string;
 }
@@ -24,19 +23,27 @@ export const Loading = (): JSX.Element => (
 );
 
 export const Balance = ({
-  balance,
+  total,
+  available,
+  staked,
   loading,
   className,
 }: Balance): JSX.Element => {
   const { isHidden, toggle } = useContext(HideBalance);
 
-  const getBalance = useMemo((): string => {
-    if (balance >= 1000000) {
-      return `$${displayBalance(balance)}`;
-    }
+  const formatCompactUSD = (value: number): string => `${
+    Intl.NumberFormat(navigator.language, {
+      notation: 'compact',
+      compactDisplay: 'short',
+      maximumFractionDigits: 2,
+    }).format(value)
+  }$US`;
 
-    return toCurrencyFormat(balance as number, { maximumFractionDigits: balance < 10000 ? 2 : 0 });
-  }, [balance]);
+  const getTotal = useMemo((): string => formatCompactUSD(total), [total]);
+
+  const getAvailable = useMemo((): string => formatCompactUSD(available), [available]);
+
+  const getStaked = useMemo((): string => formatCompactUSD(staked), [staked]);
 
   const toggleHidden = (): void => {
     if (isHidden) toggle();
@@ -49,7 +56,7 @@ export const Balance = ({
     `}
     >
       <div className="dashboard__balance-label">
-        <Uik.Text type="lead">{localizedStrings.balance}</Uik.Text>
+        <Uik.Text type="lead">Total</Uik.Text>
         <button
           key={String(isHidden)}
           type="button"
@@ -63,7 +70,8 @@ export const Balance = ({
         </button>
       </div>
       {
-        loading || getBalance === 'US$NaN' ? <Loading />
+        loading || getTotal === 'US$NaN'
+          ? <Loading />
           : (
             <button
               type="button"
@@ -77,7 +85,7 @@ export const Balance = ({
                 isHidden
                   ? (
                     <>
-                      $
+                      <Uik.Text type="headline">$</Uik.Text>
                       <div />
                       <div />
                       <div />
@@ -85,11 +93,59 @@ export const Balance = ({
                       <div />
                     </>
                   )
-                  : getBalance
+                  : <Uik.Text type="headline">{getTotal}</Uik.Text>
               }
             </button>
           )
       }
+      <div className="dashboard__balance-sub">
+        <div className="dashboard__balance-item">
+          <Uik.Text type="lead">Available</Uik.Text>
+          {loading ? (
+            <Uik.Loading size="small" />
+          ) : (
+            <Uik.Text
+              type="headline"
+              className={`dashboard__sub-balance-value ${isHidden ? 'dashboard__balance-value--hidden' : ''}`}
+            >
+              {isHidden ? (
+                <>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </>
+              ) : (
+                getAvailable
+              )}
+            </Uik.Text>
+          )}
+        </div>
+        <div className="dashboard__balance-item">
+          <Uik.Text type="lead">Staked</Uik.Text>
+          {loading ? (
+            <Uik.Loading size="small" />
+          ) : (
+            <Uik.Text
+              type="headline"
+              className={`dashboard__sub-balance-value ${isHidden ? 'dashboard__balance-value--hidden' : ''}`}
+            >
+              {isHidden ? (
+                <>
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                  <div />
+                </>
+              ) : (
+                getStaked
+              )}
+            </Uik.Text>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
