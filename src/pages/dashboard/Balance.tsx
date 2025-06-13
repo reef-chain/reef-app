@@ -104,7 +104,10 @@ export const Balance = ({
           {loading ? (
             <Uik.Loading size="small" />
           ) : (
-            <Uik.Text type="headline" className="dashboard__sub-balance-value">
+            <Uik.Text
+              type="headline"
+              className={`dashboard__sub-balance-value ${isHidden ? 'dashboard__balance-value--hidden' : ''}`}
+            >
               {isHidden ? (
                 <>
                   <div />
@@ -124,7 +127,10 @@ export const Balance = ({
           {loading ? (
             <Uik.Loading size="small" />
           ) : (
-            <Uik.Text type="headline" className="dashboard__sub-balance-value">
+            <Uik.Text
+              type="headline"
+              className={`dashboard__sub-balance-value ${isHidden ? 'dashboard__balance-value--hidden' : ''}`}
+            >
               {isHidden ? (
                 <>
                   <div />

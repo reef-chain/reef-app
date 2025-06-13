@@ -444,8 +444,8 @@
 }
 
 .dashboard__balance-sub {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
     width: 100%;
     margin-top: 8px;
@@ -454,8 +454,8 @@
 .dashboard__balance-item {
     display: flex;
     flex-direction: column;
-    flex: 1 1 180px;
-    min-width: 150px;
+    align-items: flex-start;
+    min-width: 0;
     overflow: hidden;
 }
 
