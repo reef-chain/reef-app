@@ -34,15 +34,26 @@ const Dashboard = (): JSX.Element => {
 
   const [tab, setTab] = useState<string>(tabs[0].value);
 
-  const totalBalance = useMemo(() => tokens.reduce(
-    (acc, { balance, decimals, address }) => acc.plus(
-      new BigNumber(balance.toString())
-        .div(new BigNumber(10).pow(decimals))
-        .multipliedBy(Number.isNaN(+tokenPrices[address]) ? 0 : tokenPrices[address]),
-    ),
-    new BigNumber(0),
-  ).toNumber(),
-  [tokenPrices, tokens]);
+  const totalBalance = useMemo(() => {
+    const baseTotal = tokens.reduce(
+      (acc, { balance, decimals, address }) => acc.plus(
+        new BigNumber(balance.toString())
+          .div(new BigNumber(10).pow(decimals))
+          .multipliedBy(Number.isNaN(+tokenPrices[address]) ? 0 : tokenPrices[address]),
+      ),
+      new BigNumber(0),
+    );
+
+    const reefToken = tokens.find((t) => t.address === reefTokenAddress);
+    if (selectedSigner?.lockedBalance && reefToken) {
+      const lockedVal = new BigNumber(selectedSigner.lockedBalance.toString())
+        .div(new BigNumber(10).pow(reefToken.decimals))
+        .multipliedBy(Number.isNaN(+tokenPrices[reefToken.address]) ? 0 : tokenPrices[reefToken.address]);
+      return baseTotal.plus(lockedVal).toNumber();
+    }
+
+    return baseTotal.toNumber();
+  }, [tokenPrices, tokens, selectedSigner]);
 
   const reefTokenAddress = '0x0000000000000000000000000000000001000000';
 
@@ -56,7 +67,15 @@ const Dashboard = (): JSX.Element => {
       .toNumber();
   }, [tokens, tokenPrices]);
 
-  const stakedBalance = 0;
+  const stakedBalance = useMemo(() => {
+    const reefToken = tokens.find((t) => t.address === reefTokenAddress);
+    if (!reefToken || !selectedSigner?.lockedBalance) return 0;
+
+    return new BigNumber(selectedSigner.lockedBalance.toString())
+      .div(new BigNumber(10).pow(reefToken.decimals))
+      .multipliedBy(Number.isNaN(+tokenPrices[reefToken.address]) ? 0 : tokenPrices[reefToken.address])
+      .toNumber();
+  }, [selectedSigner, tokens, tokenPrices]);
 
   return (
     selectedSigner?

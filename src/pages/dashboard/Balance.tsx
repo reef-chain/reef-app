@@ -4,7 +4,6 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { toCurrencyFormat } from '../../utils/utils';
 import HideBalance from '../../context/HideBalance';
 import { displayBalance } from '../../utils/displayBalance';
-import { localizedStrings } from '../../l10n/l10n';
 
 interface BalanceProps {
   balance: number;
@@ -69,7 +68,7 @@ export const Balance = ({
     `}
     >
       <div className="dashboard__balance-label">
-        <Uik.Text type="lead">{localizedStrings.balance}</Uik.Text>
+        <Uik.Text type="lead">Total</Uik.Text>
         <button
           key={String(isHidden)}
           type="button"
