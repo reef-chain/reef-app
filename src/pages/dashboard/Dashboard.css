@@ -457,3 +457,14 @@
     min-width: 0;
     overflow: hidden;
 }
+
+.dashboard__balance-item + .dashboard__balance-item {
+    margin-left: 8px;
+}
+
+.dashboard__sub-balance-value.uik-text--headline {
+    font-size: 2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

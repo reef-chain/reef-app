@@ -101,13 +101,23 @@ export const Balance = ({
       <div className="dashboard__balance-sub">
         <div className="dashboard__balance-item">
           <Uik.Text type="lead">Available</Uik.Text>
-          {loading ? <Uik.Loading size="small" />
-            : <Uik.Text type="headline">{isHidden ? '***' : getAvailable}</Uik.Text>}
+          {loading ? (
+            <Uik.Loading size="small" />
+          ) : (
+            <Uik.Text type="headline" className="dashboard__sub-balance-value">
+              {isHidden ? '***' : getAvailable}
+            </Uik.Text>
+          )}
         </div>
         <div className="dashboard__balance-item">
           <Uik.Text type="lead">Staked</Uik.Text>
-          {loading ? <Uik.Loading size="small" />
-            : <Uik.Text type="headline">{isHidden ? '***' : getStaked}</Uik.Text>}
+          {loading ? (
+            <Uik.Loading size="small" />
+          ) : (
+            <Uik.Text type="headline" className="dashboard__sub-balance-value">
+              {isHidden ? '***' : getStaked}
+            </Uik.Text>
+          )}
         </div>
       </div>
     </div>
