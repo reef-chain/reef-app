@@ -44,12 +44,31 @@ const Dashboard = (): JSX.Element => {
   ).toNumber(),
   [tokenPrices, tokens]);
 
+  const reefTokenAddress = '0x0000000000000000000000000000000001000000';
+
+  const availableBalance = useMemo(() => {
+    const reefToken = tokens.find((t) => t.address === reefTokenAddress);
+    if (!reefToken) return 0;
+
+    return new BigNumber(reefToken.balance.toString())
+      .div(new BigNumber(10).pow(reefToken.decimals))
+      .multipliedBy(Number.isNaN(+tokenPrices[reefToken.address]) ? 0 : tokenPrices[reefToken.address])
+      .toNumber();
+  }, [tokens, tokenPrices]);
+
+  const stakedBalance = 0;
+
   return (
     selectedSigner?
     <div className="dashboard">
       <div className="dashboard__top">
         <div className="dashboard__top-left">
-          <Balance balance={totalBalance} loading={loading} />
+          <Balance
+            balance={totalBalance}
+            available={availableBalance}
+            staked={stakedBalance}
+            loading={loading}
+          />
           {/* <Rewards rewards={0} /> */}
         </div>
         <div className="dashboard__top-right">
