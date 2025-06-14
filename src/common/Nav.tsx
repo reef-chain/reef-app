@@ -8,7 +8,7 @@ import { saveAs } from 'file-saver';
 
 import './Nav.css';
 import { saveSignerLocalPointer } from '../store/internalStore';
-import { BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL, VALIDATORS_URL } from '../urls';
+import { BONDS_URL, CREATE_ERC20_TOKEN_URL, DASHBOARD_URL, POOLS_URL } from '../urls';
 import { appAvailableNetworks, isReefswapUI } from '../environment';
 import HideBalance from '../context/HideBalance';
 import NetworkSwitch from '../context/NetworkSwitch';
@@ -55,7 +55,6 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
   let menuItems = [
     { title: localizedStrings.dashboard, url: DASHBOARD_URL },
     { title: localizedStrings.bonds, url: BONDS_URL },
-    { title: localizedStrings.validators, url: VALIDATORS_URL },
   ];
   if (isReefswapUI) {
     menuItems = [
