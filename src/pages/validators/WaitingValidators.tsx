@@ -13,14 +13,15 @@ import { formatReefAmount } from '../../utils/formatReefAmount';
 import { shortAddress, toCurrencyFormat } from '../../utils/utils';
 import './validators.css';
 import StakingActions from './StakingActions';
+import {
+  loadValidators,
+  saveValidators,
+  CACHE_ACTIVE_KEY,
+  CACHE_WAITING_KEY,
+  CachedValidator,
+} from '../../utils/validatorsCache';
 
-interface ValidatorInfo {
-  address: string;
-  identity?: string;
-  totalBonded: string;
-  commission: string;
-  isActive: boolean;
-}
+type ValidatorInfo = CachedValidator;
 
 const WaitingValidators = (): JSX.Element => {
   const { provider, selectedSigner } = useContext(ReefSigners);
@@ -40,6 +41,15 @@ const WaitingValidators = (): JSX.Element => {
       if (!provider?.api || tab === 'actions') return;
       const api = provider.api as ApiPromise;
       try {
+        const overview: any = await api.derive.staking.overview();
+        const era = overview.activeEra?.toString() || `${overview.activeEra}`;
+        const cacheKey = tab === 'waiting' ? CACHE_WAITING_KEY : CACHE_ACTIVE_KEY;
+        const cached = loadValidators(cacheKey, era);
+        if (cached) {
+          setValidators(cached);
+          return;
+        }
+
         if (tab === 'waiting') {
           const waitingInfo = await api.derive.staking.waitingInfo({
             withPrefs: true,
@@ -71,9 +81,9 @@ const WaitingValidators = (): JSX.Element => {
             });
           }
           setValidators(vals);
+          saveValidators(cacheKey, era, vals);
         } else {
           // Active validators
-          const overview: any = await api.derive.staking.overview();
           const addresses: string[] = overview.validators;
           const vals: ValidatorInfo[] = [];
           for (const addr of addresses) {
@@ -101,6 +111,7 @@ const WaitingValidators = (): JSX.Element => {
             });
           }
           setValidators(vals);
+          saveValidators(cacheKey, era, vals);
         }
       } catch (e) {
         console.warn('Error loading validators', e);
