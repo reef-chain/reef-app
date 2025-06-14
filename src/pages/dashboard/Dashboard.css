@@ -298,6 +298,9 @@
     font-weight: 900 !important;
     line-height: 1.2;
     font-family: 'Lato', sans-serif;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
 }
 
 .dashboard__balance-value:hover {
@@ -328,17 +331,34 @@
     line-height: 1.25;
     font-family: 'Lato', sans-serif;
 }
-
 .dashboard__balance-value--hidden {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: flex-start;
-    align-items: center;
     cursor: pointer;
 }
 
 .dashboard__balance-value--hidden:hover {
     cursor: pointer;
+}
+
+.dashboard__balance-mask {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.dashboard__balance-value--hidden .dashboard__balance-mask {
+    display: flex;
+}
+
+.dashboard__balance-text {
+    display: inline-flex;
+}
+
+.dashboard__balance-value--hidden .dashboard__balance-text {
+    visibility: hidden;
 }
 
 .dashboard__balance-value--hidden div {
@@ -349,6 +369,7 @@
     margin-left: 0.625rem;
     animation: dashboard-balance-hidden-dot 0.15s;
 }
+
 
 .dashboard__rewards-value.dashboard__balance-value--hidden div {
     width: 8px;
@@ -441,4 +462,29 @@
 .tokens__title {
     padding-bottom: 0.5em;
     padding-top: 0.8em;
+}
+
+.dashboard__balance-sub {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+    margin-top: 8px;
+}
+
+.dashboard__balance-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.dashboard__sub-balance-value.uik-text--headline {
+    font-size: 2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
 }
