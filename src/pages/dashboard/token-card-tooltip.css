@@ -1,0 +1,18 @@
+.token-card-tooltip-wrapper {
+  position: relative;
+}
+
+.token-card-tooltip-icon {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.token-card-tooltip-wrapper .uik-tooltip__tooltip {
+  z-index: 1000;
+}
+
+.token-card-tooltip-wrapper .uik-tooltip__tooltip-text {
+  white-space: pre-line;
+}
