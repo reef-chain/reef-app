@@ -10,6 +10,8 @@ import {
   ADD_LIQUIDITY_URL,
   BIND_URL,
   BONDS_URL,
+  VALIDATORS_URL,
+  WAITING_VALIDATORS_URL,
   BUY_URL,
   CREATE_ERC20_TOKEN_URL,
   DASHBOARD_URL,
@@ -36,6 +38,8 @@ import { isReefswapUI } from '../environment';
 import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
 import Snap from './snap/Snap';
+import Validators from './validators/Validators';
+import WaitingValidators from './validators/WaitingValidators';
 import { utils } from '@reef-chain/react-lib';
 import {tokenPriceUtils, tokenUtil} from '@reef-chain/util-lib';
 
@@ -79,6 +83,8 @@ const ContentRouter = (): JSX.Element => {
                   <Route exact path={TRANSFER_TOKEN} component={Transfer} />
                   <Route exact path={CREATE_ERC20_TOKEN_URL} component={Creator} />
                   <Route exact path={BONDS_URL} component={Bonds} />
+                  <Route exact path={VALIDATORS_URL} component={Validators} />
+                  <Route exact path={WAITING_VALIDATORS_URL} component={WaitingValidators} />
                   <Route path={BIND_URL} component={Bind} />
                   <Route path={BUY_URL} component={Onramp} />
                   <Route path={ONRAMP_URL} component={Onramp} />
