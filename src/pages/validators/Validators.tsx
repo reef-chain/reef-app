@@ -31,13 +31,12 @@ const Validators = (): JSX.Element => {
   const [tab, setTab] = useState<'active' | 'actions'>('active');
   const [validators, setValidators] = useState<ValidatorInfo[]>(() => {
     try {
-      const cached = loadCachedValidators(CACHE_ACTIVE_KEY);
+      const cached = loadCachedValidators(CACHE_ACTIVE_KEY) as ValidatorInfo[] | null;
       return cached || [];
     } catch (e) {
       return [];
     }
   });
-  const [selected, setSelected] = useState<string[]>([]);
   const [nominations, setNominations] = useState<string[]>([]);
   const [nominatorStake, setNominatorStake] = useState<string>('0');
   const stakeNumber = Number(ethUtils.formatUnits(nominatorStake || '0', 18));
@@ -52,7 +51,7 @@ const Validators = (): JSX.Element => {
         const overview: any = await api.derive.staking.overview();
         const era = overview.activeEra?.toString() || `${overview.activeEra}`;
         const cacheKey = CACHE_ACTIVE_KEY;
-        const cached = loadValidators(cacheKey, era);
+        const cached = loadValidators(cacheKey, era) as ValidatorInfo[] | null;
         if (cached) {
           setValidators(cached);
           return;
@@ -75,12 +74,25 @@ const Validators = (): JSX.Element => {
               identity = display;
             }
           }
+          const others = (exposure as any)?.others || [];
+          let minRequired = '0';
+          if (others.length) {
+            const sorted = others
+              .map((o: any) => new BN(o.value?.toString() || '0'))
+              .sort((a, b) => b.cmp(a));
+            const top = sorted.slice(0, 64);
+            const last = top[top.length - 1];
+            if (last) {
+              minRequired = last.toString();
+            }
+          }
           vals.push({
             address: addr,
             identity,
             totalBonded: (exposure as any)?.total?.toString() || '0',
             commission: prefs?.commission?.toString() || '0',
             isActive: overview.validators.includes(addr),
+            minRequired,
           });
         }
         setValidators(vals);
@@ -134,14 +146,6 @@ const Validators = (): JSX.Element => {
     loadStake();
   }, [provider, selectedSigner]);
 
-  const toggleSelect = (addr: string): void => {
-    setSelected((prev) => {
-      const exists = prev.includes(addr);
-      if (exists) return prev.filter((a) => a !== addr);
-      if (prev.length >= 16) return prev;
-      return [...prev, addr];
-    });
-  };
 
   return (
     <div className="validators-page">
@@ -195,9 +199,9 @@ const Validators = (): JSX.Element => {
       <Uik.Table seamless>
         <Uik.THead>
           <Uik.Tr>
-            <Uik.Th />
             <Uik.Th>{strings.account}</Uik.Th>
             <Uik.Th>{strings.total_staked}</Uik.Th>
+            <Uik.Th>{strings.min_required}</Uik.Th>
             <Uik.Th>Commission</Uik.Th>
             <Uik.Th />
           </Uik.Tr>
@@ -205,13 +209,6 @@ const Validators = (): JSX.Element => {
         <Uik.TBody>
           {validators.map((v) => (
             <Uik.Tr key={v.address}>
-              <Uik.Td>
-                <input
-                  type="checkbox"
-                  checked={selected.includes(v.address)}
-                  onChange={() => toggleSelect(v.address)}
-                />
-              </Uik.Td>
               <Uik.Td>
                 <div className="validators-page__id">
                   {v.identity ? v.identity : shortAddress(v.address)}
@@ -221,8 +218,10 @@ const Validators = (): JSX.Element => {
                 {formatReefAmount(new BN(v.totalBonded))}
               </Uik.Td>
               <Uik.Td>
-                {(Number(v.commission) / 10000000).toFixed(2)}
-                %
+                {formatReefAmount(new BN(v.minRequired))}
+              </Uik.Td>
+              <Uik.Td>
+                {(Number(v.commission) / 10000000).toFixed(2)}%
               </Uik.Td>
               <Uik.Td />
             </Uik.Tr>

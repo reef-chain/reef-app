@@ -4,6 +4,7 @@ export interface CachedValidator {
   totalBonded: string;
   commission: string;
   isActive: boolean;
+  minRequired: string;
 }
 
 interface CacheEntry {
