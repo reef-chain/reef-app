@@ -37,7 +37,6 @@ const Validators = (): JSX.Element => {
       return [];
     }
   });
-  const [selected, setSelected] = useState<string[]>([]);
   const [nominations, setNominations] = useState<string[]>([]);
   const [nominatorStake, setNominatorStake] = useState<string>('0');
   const stakeNumber = Number(ethUtils.formatUnits(nominatorStake || '0', 18));
@@ -147,14 +146,6 @@ const Validators = (): JSX.Element => {
     loadStake();
   }, [provider, selectedSigner]);
 
-  const toggleSelect = (addr: string): void => {
-    setSelected((prev) => {
-      const exists = prev.includes(addr);
-      if (exists) return prev.filter((a) => a !== addr);
-      if (prev.length >= 16) return prev;
-      return [...prev, addr];
-    });
-  };
 
   return (
     <div className="validators-page">
@@ -208,24 +199,16 @@ const Validators = (): JSX.Element => {
       <Uik.Table seamless>
         <Uik.THead>
           <Uik.Tr>
-            <Uik.Th />
             <Uik.Th>{strings.account}</Uik.Th>
             <Uik.Th>{strings.total_staked}</Uik.Th>
-            <Uik.Th>Commission</Uik.Th>
             <Uik.Th>{strings.min_required}</Uik.Th>
+            <Uik.Th>Commission</Uik.Th>
             <Uik.Th />
           </Uik.Tr>
         </Uik.THead>
         <Uik.TBody>
           {validators.map((v) => (
             <Uik.Tr key={v.address}>
-              <Uik.Td>
-                <input
-                  type="checkbox"
-                  checked={selected.includes(v.address)}
-                  onChange={() => toggleSelect(v.address)}
-                />
-              </Uik.Td>
               <Uik.Td>
                 <div className="validators-page__id">
                   {v.identity ? v.identity : shortAddress(v.address)}
@@ -235,10 +218,10 @@ const Validators = (): JSX.Element => {
                 {formatReefAmount(new BN(v.totalBonded))}
               </Uik.Td>
               <Uik.Td>
-                {(Number(v.commission) / 10000000).toFixed(2)}%
+                {formatReefAmount(new BN(v.minRequired))}
               </Uik.Td>
               <Uik.Td>
-                {formatReefAmount(new BN(v.minRequired || '0'))}
+                {(Number(v.commission) / 10000000).toFixed(2)}%
               </Uik.Td>
               <Uik.Td />
             </Uik.Tr>
