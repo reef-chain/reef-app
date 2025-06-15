@@ -75,12 +75,18 @@ const Validators = (): JSX.Element => {
               identity = display;
             }
           }
-          const nominators = ((exposure as any)?.others || []) as any[];
-          nominators.sort((a, b) => new BN(a.value.toString()).cmp(new BN(b.value.toString())) * -1);
-          const top64 = nominators.slice(0, 64);
-          const minRequired = top64.length
-            ? top64[top64.length - 1].value.toString()
-            : '0';
+          const others = (exposure as any)?.others || [];
+          let minRequired = '0';
+          if (others.length) {
+            const sorted = others
+              .map((o: any) => new BN(o.value?.toString() || '0'))
+              .sort((a, b) => b.cmp(a));
+            const top = sorted.slice(0, 64);
+            const last = top[top.length - 1];
+            if (last) {
+              minRequired = last.toString();
+            }
+          }
           vals.push({
             address: addr,
             identity,
