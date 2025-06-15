@@ -2,25 +2,26 @@ import React, { useEffect, useState, useContext } from 'react';
 import Uik from '@reef-chain/ui-kit';
 import { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
-import ReefSigners from '../../context/ReefSigners';
-import TokenPricesContext from '../../context/TokenPricesContext';
 import { utils } from '@reef-chain/react-lib';
 import { utils as ethUtils } from 'ethers';
 import { useHistory } from 'react-router-dom';
+import TokenPricesContext from '../../context/TokenPricesContext';
+import ReefSigners from '../../context/ReefSigners';
 import { VALIDATORS_URL, WAITING_VALIDATORS_URL } from '../../urls';
 import { localizedStrings as strings } from '../../l10n/l10n';
 import { formatReefAmount } from '../../utils/formatReefAmount';
 import { shortAddress, toCurrencyFormat } from '../../utils/utils';
 import './validators.css';
 import StakingActions from './StakingActions';
+import {
+  loadValidators,
+  saveValidators,
+  CACHE_ACTIVE_KEY,
+  CACHE_WAITING_KEY,
+  CachedValidator,
+} from '../../utils/validatorsCache';
 
-interface ValidatorInfo {
-  address: string;
-  identity?: string;
-  totalBonded: string;
-  commission: string;
-  isActive: boolean;
-}
+type ValidatorInfo = CachedValidator;
 
 const Validators = (): JSX.Element => {
   const { provider, selectedSigner } = useContext(ReefSigners);
@@ -42,6 +43,14 @@ const Validators = (): JSX.Element => {
       try {
         // overview provides active and next elected validator addresses
         const overview: any = await api.derive.staking.overview();
+        const era = overview.activeEra?.toString() || `${overview.activeEra}`;
+        const cacheKey = tab === 'active' ? CACHE_ACTIVE_KEY : CACHE_WAITING_KEY;
+        const cached = loadValidators(cacheKey, era);
+        if (cached) {
+          setValidators(cached);
+          return;
+        }
+
         const waiting: string[] = overview.nextElected.filter((a: string) => !overview.validators.includes(a));
         const addresses: string[] = tab === 'active' ? overview.validators : waiting;
         const vals: ValidatorInfo[] = [];
@@ -54,7 +63,7 @@ const Validators = (): JSX.Element => {
           let identity = '';
           if (info.identity) {
             const parent = (info.identity as any).displayParent;
-            const display = info.identity.display;
+            const { display } = info.identity;
             if (parent) {
               identity = `${parent}/${display}`;
             } else if (display) {
@@ -70,6 +79,7 @@ const Validators = (): JSX.Element => {
           });
         }
         setValidators(vals);
+        saveValidators(cacheKey, era, vals);
       } catch (e) {
         console.warn('Error loading validators', e);
       }
@@ -127,7 +137,6 @@ const Validators = (): JSX.Element => {
       return [...prev, addr];
     });
   };
-
 
   return (
     <div className="validators-page">
