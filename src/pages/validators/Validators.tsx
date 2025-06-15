@@ -13,15 +13,15 @@ import { formatReefAmount } from '../../utils/formatReefAmount';
 import { shortAddress, toCurrencyFormat } from '../../utils/utils';
 import './validators.css';
 import StakingActions from './StakingActions';
+import {
+  loadValidators,
+  saveValidators,
+  loadCachedValidators,
+  CACHE_ACTIVE_KEY,
+  CachedValidator,
+} from '../../utils/validatorsCache';
 
-interface ValidatorInfo {
-  address: string;
-  identity?: string;
-  totalBonded: string;
-  commission: string;
-  isActive: boolean;
-  minRequired: string;
-}
+type ValidatorInfo = CachedValidator;
 
 const Validators = (): JSX.Element => {
   const { provider, selectedSigner } = useContext(ReefSigners);
@@ -29,7 +29,14 @@ const Validators = (): JSX.Element => {
   const { REEF_ADDRESS } = utils;
   const history = useHistory();
   const [tab, setTab] = useState<'active' | 'actions'>('active');
-  const [validators, setValidators] = useState<ValidatorInfo[]>([]);
+  const [validators, setValidators] = useState<ValidatorInfo[]>(() => {
+    try {
+      const cached = loadCachedValidators(CACHE_ACTIVE_KEY) as ValidatorInfo[] | null;
+      return cached || [];
+    } catch (e) {
+      return [];
+    }
+  });
   const [nominations, setNominations] = useState<string[]>([]);
   const [nominatorStake, setNominatorStake] = useState<string>('0');
   const stakeNumber = Number(ethUtils.formatUnits(nominatorStake || '0', 18));
@@ -42,6 +49,13 @@ const Validators = (): JSX.Element => {
       try {
         // overview provides active and next elected validator addresses
         const overview: any = await api.derive.staking.overview();
+        const era = overview.activeEra?.toString() || `${overview.activeEra}`;
+        const cacheKey = CACHE_ACTIVE_KEY;
+        const cached = loadValidators(cacheKey, era) as ValidatorInfo[] | null;
+        if (cached) {
+          setValidators(cached);
+          return;
+        }
         const addresses: string[] = overview.validators;
         const vals: ValidatorInfo[] = [];
         for (const addr of addresses) {
@@ -82,6 +96,7 @@ const Validators = (): JSX.Element => {
           });
         }
         setValidators(vals);
+        saveValidators(cacheKey, era, vals);
       } catch (e) {
         console.warn('Error loading validators', e);
       }
