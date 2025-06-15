@@ -12,7 +12,6 @@ interface CacheEntry {
 }
 
 export const CACHE_ACTIVE_KEY = 'cached-active-validators';
-export const CACHE_WAITING_KEY = 'cached-waiting-validators';
 
 export const saveValidators = (
   key: string,
@@ -36,6 +35,20 @@ export const loadValidators = (
     if (!raw) return null;
     const parsed = JSON.parse(raw) as CacheEntry;
     if (parsed.era === era) return parsed.validators;
+  } catch (e) {
+    // ignore parsing errors
+  }
+  return null;
+};
+
+export const loadCachedValidators = (
+  key: string,
+): CachedValidator[] | null => {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as CacheEntry;
+    return parsed.validators;
   } catch (e) {
     // ignore parsing errors
   }
