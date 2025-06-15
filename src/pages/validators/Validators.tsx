@@ -20,6 +20,7 @@ import {
   CACHE_ACTIVE_KEY,
   CachedValidator,
 } from '../../utils/validatorsCache';
+import calculateStakingAPY from '../../utils/calculateStakingAPY';
 
 type ValidatorInfo = CachedValidator;
 
@@ -42,6 +43,9 @@ const Validators = (): JSX.Element => {
   const [nominatorStake, setNominatorStake] = useState<string>('0');
   const stakeNumber = Number(ethUtils.formatUnits(nominatorStake || '0', 18));
   const stakeUsd = stakeNumber * (tokenPrices[REEF_ADDRESS] || 0);
+  const [totalSupply, setTotalSupply] = useState<number>(0);
+  const TOTAL_POINTS_TARGET = 172800;
+  const INFLATION_RATE = 0.0468;
 
   useEffect(() => {
     const load = async (): Promise<void> => {
@@ -114,6 +118,20 @@ const Validators = (): JSX.Element => {
     };
     loadNominations();
   }, [provider, selectedSigner]);
+
+  useEffect(() => {
+    const loadSupply = async (): Promise<void> => {
+      if (!provider?.api) return;
+      const api = provider.api as ApiPromise;
+      try {
+        const issuance = await api.query.balances.totalIssuance();
+        setTotalSupply(Number(ethUtils.formatUnits(issuance.toString(), 18)));
+      } catch (e) {
+        console.warn('Error loading total supply', e);
+      }
+    };
+    loadSupply();
+  }, [provider]);
 
   useEffect(() => {
     const loadStake = async (): Promise<void> => {
@@ -199,6 +217,7 @@ const Validators = (): JSX.Element => {
             <Uik.Th>{strings.account}</Uik.Th>
             <Uik.Th>{strings.total_staked}</Uik.Th>
             <Uik.Th>Commission</Uik.Th>
+            <Uik.Th>APY</Uik.Th>
             <Uik.Th />
           </Uik.Tr>
         </Uik.THead>
@@ -223,6 +242,23 @@ const Validators = (): JSX.Element => {
               <Uik.Td>
                 {(Number(v.commission) / 10000000).toFixed(2)}
                 %
+              </Uik.Td>
+              <Uik.Td>
+                {(() => {
+                  const bonded = Number(ethUtils.formatUnits(v.totalBonded, 18));
+                  const commissionRate = Number(v.commission) / 1000000000;
+                  const avgPoints = validators.length ? TOTAL_POINTS_TARGET / validators.length : 0;
+                  const apy = calculateStakingAPY(
+                    1,
+                    bonded,
+                    commissionRate,
+                    avgPoints,
+                    TOTAL_POINTS_TARGET,
+                    INFLATION_RATE,
+                    totalSupply,
+                  );
+                  return `${(apy * 100).toFixed(2)}%`;
+                })()}
               </Uik.Td>
               <Uik.Td />
             </Uik.Tr>
