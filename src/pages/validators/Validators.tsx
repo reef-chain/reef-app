@@ -10,8 +10,7 @@ import ReefSigners from '../../context/ReefSigners';
 import { VALIDATORS_URL } from '../../urls';
 import { localizedStrings as strings } from '../../l10n/l10n';
 import { formatReefAmount } from '../../utils/formatReefAmount';
-import { shortAddress, toCurrencyFormat } from '../../utils/utils';
-import { displayBalance } from '../../utils/displayBalance';
+import { shortAddress } from '../../utils/utils';
 import './validators.css';
 import {
   loadValidators,
@@ -48,12 +47,14 @@ const Validators = (): JSX.Element => {
     () => formatReefAmount(new BN(nominatorStake)).replace(' REEF', ''),
     [nominatorStake],
   );
-  const formattedStakeUsd = useMemo(() => {
-    if (stakeUsd >= 1000000) {
-      return `$${displayBalance(stakeUsd)}`;
-    }
-    return toCurrencyFormat(stakeUsd, { maximumFractionDigits: 2 });
-  }, [stakeUsd]);
+  const formatCompactUSD = (value: number): string => `${
+    Intl.NumberFormat(navigator.language, {
+      notation: 'compact',
+      compactDisplay: 'short',
+      maximumFractionDigits: 2,
+    }).format(value)
+  }$US`;
+  const formattedStakeUsd = useMemo(() => formatCompactUSD(stakeUsd), [stakeUsd]);
   const [isNominationsOpen, setNominationsOpen] = useState(false);
   const [totalSupply, setTotalSupply] = useState<number>(0);
   const TOTAL_POINTS_TARGET = 172800;
@@ -159,23 +160,12 @@ const Validators = (): JSX.Element => {
   }, [provider]);
 
   useEffect(() => {
-    const loadStake = async (): Promise<void> => {
-      if (!provider?.api || !selectedSigner) {
-        setNominatorStake('0');
-        return;
-      }
-      const api = provider.api as ApiPromise;
-      try {
-        const stakingInfo: any = await api.derive.staking.account(selectedSigner.address);
-        const active = stakingInfo?.stakingLedger?.active as BN | undefined;
-        setNominatorStake(active ? active.toString() : '0');
-      } catch (e) {
-        console.warn('Error loading nominator stake', e);
-        setNominatorStake('0');
-      }
-    };
-    loadStake();
-  }, [provider, selectedSigner]);
+    if (selectedSigner?.lockedBalance) {
+      setNominatorStake(selectedSigner.lockedBalance.toString());
+    } else {
+      setNominatorStake('0');
+    }
+  }, [selectedSigner]);
 
 
   return (
