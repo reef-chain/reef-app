@@ -200,12 +200,12 @@ const Validators = (): JSX.Element => {
       {tab === 'actions' && selectedSigner && (
         <div className="validators-page__stake">
           <Uik.Text type="lead" className="uik-text--lead">{strings.your_stake}</Uik.Text>
-          <Uik.Text type="headline" className="dashboard__balance-text">
-            {formattedStake}
+          <Uik.Text type="headline" className="dashboard__sub-balance-value">
+            <span className="dashboard__balance-text">{formattedStake}</span>
             <Uik.ReefIcon />
-            {' ('}
-            {formattedStakeUsd}
-            {')'}
+            <span className="validators-page__stake-usd">
+              ({formattedStakeUsd})
+            </span>
           </Uik.Text>
           <Uik.Button text="My nominations" fill onClick={() => setNominationsOpen(true)} />
         </div>
