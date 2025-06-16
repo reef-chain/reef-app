@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Uik from '@reef-chain/ui-kit';
+import Uik, { notify } from '@reef-chain/ui-kit';
 import { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
 import { bnToBn } from '@polkadot/util';
@@ -23,6 +23,11 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
   const [bondAmt, setBondAmt] = useState(0);
   const [unbondAmt, setUnbondAmt] = useState(0);
   const [loading, setLoading] = useState(false);
+  const zero = new BN(0);
+  const poolData = {
+    firstToken: { name: 'Reef', symbol: 'REEF', price: 0, available: 0 },
+    secondToken: { name: 'Reef', symbol: 'REEF', price: 0, available: 0 },
+  };
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -65,14 +70,14 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
       setLoading(true);
       await extrinsic.signAndSend(accountAddress, ({ status }: any) => {
         if (status.isInBlock || status.isFinalized) {
-          Uik.Toast.success(success);
+          notify.success(success);
           setLoading(false);
           onClose();
         }
       });
     } catch (e) {
       setLoading(false);
-      Uik.Toast.error(error);
+      notify.danger(error);
     }
   };
 
@@ -107,37 +112,36 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
   };
 
   return (
-    <Uik.ActionModal isOpen={isOpen} onClose={onClose} title={strings.staking_bond_unbond}>
+    <Uik.Modal isOpen={isOpen} onClose={onClose} title={strings.staking_bond_unbond}>
       <Uik.Tabs
-        current={tab}
+        value={tab}
         onChange={(id: string) => setTab(id as 'bond' | 'unbond' | 'chill')}
-        items={[
-          { id: 'bond', text: strings.staking_bond },
-          { id: 'unbond', text: strings.staking_unbond },
-          { id: 'chill', text: strings.staking_chill },
+        tabs={[
+          { value: 'bond', text: strings.staking_bond },
+          { value: 'unbond', text: strings.staking_unbond },
+          { value: 'chill', text: strings.staking_chill },
         ]}
       />
 
       {tab === 'bond' && (
         <div className="flex flex-col gap-6">
           <Uik.Card>
-            <Uik.PoolActionsToken />
+            <Uik.PoolActions data={poolData} />
           </Uik.Card>
           <Uik.Card>
             <Uik.Slider
-              min={0}
-              max={(available ?? new BN(0)).toNumber()}
               value={bondAmt}
+              max={(available ?? zero).toNumber()}
               onChange={(v: number) => setBondAmt(v)}
-              labelFormatter={(v: number) => `${v} REEF`}
             />
+            <small>{bondAmt} REEF</small>
           </Uik.Card>
-          <Uik.Card flat>
+          <Uik.Card variant="flat">
             <Uik.Button
-              primary
+              type="primary"
               text={strings.staking_bond}
               loading={loading}
-              disabled={(available ?? new BN(0)).isZero()}
+              disabled={available?.isZero() ?? true}
               onClick={onBond}
             />
           </Uik.Card>
@@ -147,23 +151,22 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
       {tab === 'unbond' && (
         <div className="flex flex-col gap-6">
           <Uik.Card>
-            <Uik.PoolActionsToken />
+            <Uik.PoolActions data={poolData} />
           </Uik.Card>
           <Uik.Card>
             <Uik.Slider
-              min={0}
-              max={(staked ?? new BN(0)).toNumber()}
               value={unbondAmt}
+              max={(staked ?? zero).toNumber()}
               onChange={(v: number) => setUnbondAmt(v)}
-              labelFormatter={(v: number) => `${v} REEF`}
             />
+            <small>{unbondAmt} REEF</small>
           </Uik.Card>
-          <Uik.Card flat>
+          <Uik.Card variant="flat">
             <Uik.Button
-              primary
+              type="primary"
               text={strings.staking_unbond}
               loading={loading}
-              disabled={(staked ?? new BN(0)).isZero()}
+              disabled={staked?.isZero() ?? true}
               onClick={handleUnbond}
             />
           </Uik.Card>
@@ -172,9 +175,9 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
 
       {tab === 'chill' && (
         <div className="flex flex-col gap-6">
-          <Uik.Card flat>
+          <Uik.Card variant="flat">
             <Uik.Button
-              danger
+              type="danger"
               text={strings.staking_chill}
               loading={loading}
               onClick={handleChill}
@@ -182,6 +185,6 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
           </Uik.Card>
         </div>
       )}
-    </Uik.ActionModal>
+    </Uik.Modal>
   );
 }
