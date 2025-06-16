@@ -27,7 +27,9 @@ type ValidatorInfo = CachedValidator;
 const AVATAR_COUNT = 36;
 
 const avatarFor = (address: string): string => {
-  const sum = Array.from(address).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+  const sum = address
+    .split('')
+    .reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
   const index = (sum % AVATAR_COUNT) + 1;
   return `/images/avatars/${index}.png`;
 };
@@ -285,37 +287,43 @@ const Validators = (): JSX.Element => {
           <Uik.Tr>
             <Uik.Th>{strings.account}</Uik.Th>
             <Uik.Th>{strings.total_staked}</Uik.Th>
-            <Uik.Th
-              className="validators-page__sortable"
-              onClick={() => toggleSort('minRequired')}
-            >
-              {strings.min_required}
-              {sortBy === 'minRequired' && (sortDir === 1 ? ' ▲' : ' ▼')}
+            <Uik.Th>
+              <span
+                className="validators-page__sortable"
+                onClick={() => toggleSort('minRequired')}
+              >
+                {strings.min_required}
+                {sortBy === 'minRequired' && (sortDir === 1 ? ' ▲' : ' ▼')}
+              </span>
             </Uik.Th>
-            <Uik.Th
-              className="validators-page__sortable"
-              onClick={() => toggleSort('commission')}
-            >
-              Commission
-              {sortBy === 'commission' && (sortDir === 1 ? ' ▲' : ' ▼')}
+            <Uik.Th>
+              <span
+                className="validators-page__sortable"
+                onClick={() => toggleSort('commission')}
+              >
+                Commission
+                {sortBy === 'commission' && (sortDir === 1 ? ' ▲' : ' ▼')}
+              </span>
             </Uik.Th>
-            <Uik.Th
-              className="validators-page__sortable"
-              onClick={() => toggleSort('apy')}
-            >
-              APY
-              {sortBy === 'apy' && (sortDir === 1 ? ' ▲' : ' ▼')}
+            <Uik.Th>
+              <span
+                className="validators-page__sortable"
+                onClick={() => toggleSort('apy')}
+              >
+                APY
+                {sortBy === 'apy' && (sortDir === 1 ? ' ▲' : ' ▼')}
+              </span>
             </Uik.Th>
             <Uik.Th />
           </Uik.Tr>
         </Uik.THead>
         <Uik.TBody>
           {loading && (
-            <Uik.Tr>
-              <Uik.Td colSpan={6} style={{ textAlign: 'center' }}>
+            <tr>
+              <td colSpan={6} style={{ textAlign: 'center' }}>
                 <Uik.Loading text="Loading" />
-              </Uik.Td>
-            </Uik.Tr>
+              </td>
+            </tr>
           )}
           {sortedValidators.map((v) => (
             <Uik.Tr key={v.address}>
