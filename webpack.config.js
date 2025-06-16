@@ -26,7 +26,13 @@ module.exports = {
       {
         test: /\.(png|svg|jpe?g|gif)$/i,
         loader: 'file-loader',
-        exclude: /node_modules/,
+        include: [
+          path.resolve(__dirname, 'src'),
+          path.resolve(
+            __dirname,
+            'node_modules/@reef-chain/ui-kit/src/ui-kit/assets/avatars',
+          ),
+        ],
       },
       {
         test: /\.m?js/,

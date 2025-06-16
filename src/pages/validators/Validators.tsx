@@ -24,6 +24,22 @@ import calculateStakingAPY from '../../utils/calculateStakingAPY';
 
 type ValidatorInfo = CachedValidator;
 
+// Load avatar images directly from the ui-kit package so they stay in sync with
+// the library. We point the loader to the package's source assets folder
+// within node_modules.
+const avatarContext = (require as any).context(
+  '../../../node_modules/@reef-chain/ui-kit/src/ui-kit/assets/avatars',
+  false,
+  /\.png$/,
+);
+const AVATARS: string[] = avatarContext
+  .keys()
+  .map((k: string) => avatarContext(k).default ?? avatarContext(k));
+
+const hashAddress = (addr: string): number =>
+  addr.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+
+
 const Validators = (): JSX.Element => {
   const { provider, selectedSigner } = useContext(ReefSigners);
   const tokenPrices = useContext(TokenPricesContext);
@@ -38,6 +54,7 @@ const Validators = (): JSX.Element => {
       return [];
     }
   });
+  const [loading, setLoading] = useState<boolean>(false);
   const [nominations, setNominations] = useState<string[]>([]);
   const [nominatorStake, setNominatorStake] = useState<string>('0');
   const stakeNumber = Number(ethUtils.formatUnits(nominatorStake || '0', 18));
@@ -45,12 +62,95 @@ const Validators = (): JSX.Element => {
   const [totalSupply, setTotalSupply] = useState<number>(0);
   const TOTAL_POINTS_TARGET = 172800;
   const INFLATION_RATE = 0.0468;
+  const [sortBy, setSortBy] = useState<'commission' | 'minRequired' | 'apy' | 'totalBonded' | null>(null);
+  const [sortDir, setSortDir] = useState<1 | -1>(1);
+
+  const toggleSort = (column: 'commission' | 'minRequired' | 'apy' | 'totalBonded'): void => {
+    if (sortBy === column) {
+      setSortDir(sortDir === 1 ? -1 : 1);
+    } else {
+      setSortBy(column);
+      setSortDir(1);
+    }
+  };
+
+  const getAPY = (v: ValidatorInfo): number => {
+    const bonded = Number(ethUtils.formatUnits(v.totalBonded, 18));
+    const commissionRate = Number(v.commission) / 1000000000;
+    const avgPoints = validators.length ? TOTAL_POINTS_TARGET / validators.length : 0;
+    const apy = calculateStakingAPY(
+      1,
+      bonded,
+      commissionRate,
+      avgPoints,
+      TOTAL_POINTS_TARGET,
+      INFLATION_RATE,
+      totalSupply,
+    );
+    return apy;
+  };
+
+  const sortedValidators = React.useMemo(() => {
+    const vals = [...validators];
+    if (!sortBy) return vals;
+    vals.sort((a, b) => {
+      if (sortBy === 'commission') {
+        const aVal = Number(a.commission);
+        const bVal = Number(b.commission);
+        return (aVal - bVal) * sortDir;
+      }
+      if (sortBy === 'minRequired') {
+        const aVal = new BN(a.minRequired);
+        const bVal = new BN(b.minRequired);
+        if (aVal.eq(bVal)) return 0;
+        return (aVal.gt(bVal) ? 1 : -1) * sortDir;
+      }
+      if (sortBy === 'totalBonded') {
+        const aVal = new BN(a.totalBonded);
+        const bVal = new BN(b.totalBonded);
+        if (aVal.eq(bVal)) return 0;
+        return (aVal.gt(bVal) ? 1 : -1) * sortDir;
+      }
+      if (sortBy === 'apy') {
+        const aVal = getAPY(a);
+        const bVal = getAPY(b);
+        if (aVal === bVal) return 0;
+        return (aVal > bVal ? 1 : -1) * sortDir;
+      }
+      return 0;
+    });
+    return vals;
+  }, [validators, sortBy, sortDir, totalSupply]);
+
+  const avatarMap = React.useMemo(() => {
+    const addresses = [...validators.map((v) => v.address)].sort();
+    const used = new Set<number>();
+    const map = new Map<string, string>();
+    for (const addr of addresses) {
+      let base = hashAddress(addr) % AVATARS.length;
+      for (let i = 0; i < AVATARS.length; i += 1) {
+        const idx = (base + i) % AVATARS.length;
+        if (!used.has(idx)) {
+          used.add(idx);
+          map.set(addr, AVATARS[idx]);
+          break;
+        }
+      }
+    }
+    return map;
+  }, [validators]);
+
+  const avatarFor = React.useCallback(
+    (address: string): string => avatarMap.get(address) ?? AVATARS[0],
+    [avatarMap],
+  );
 
   useEffect(() => {
     const load = async (): Promise<void> => {
       if (!provider?.api || tab === 'actions') return;
       const api = provider.api as ApiPromise;
       try {
+        setLoading(true);
         // overview provides active and next elected validator addresses
         const overview: any = await api.derive.staking.overview();
         const era = overview.activeEra?.toString() || `${overview.activeEra}`;
@@ -58,6 +158,7 @@ const Validators = (): JSX.Element => {
         const cached = loadValidators(cacheKey, era) as ValidatorInfo[] | null;
         if (cached) {
           setValidators(cached);
+          setLoading(false);
           return;
         }
         const addresses: string[] = overview.validators;
@@ -101,8 +202,10 @@ const Validators = (): JSX.Element => {
         }
         setValidators(vals);
         saveValidators(cacheKey, era, vals);
+        setLoading(false);
       } catch (e) {
         console.warn('Error loading validators', e);
+        setLoading(false);
       }
     };
     load();
@@ -218,18 +321,58 @@ const Validators = (): JSX.Element => {
         <Uik.THead>
           <Uik.Tr>
             <Uik.Th>{strings.account}</Uik.Th>
-            <Uik.Th>{strings.total_staked}</Uik.Th>
-            <Uik.Th>{strings.min_required}</Uik.Th>
-            <Uik.Th>Commission</Uik.Th>
-            <Uik.Th>APY</Uik.Th>
+            <Uik.Th>
+              <span
+                className="validators-page__sortable"
+                onClick={() => toggleSort('totalBonded')}
+              >
+                {strings.total_staked}
+                {sortBy === 'totalBonded' && (sortDir === 1 ? ' ▲' : ' ▼')}
+              </span>
+            </Uik.Th>
+            <Uik.Th>
+              <span
+                className="validators-page__sortable"
+                onClick={() => toggleSort('minRequired')}
+              >
+                {strings.min_required}
+                {sortBy === 'minRequired' && (sortDir === 1 ? ' ▲' : ' ▼')}
+              </span>
+            </Uik.Th>
+            <Uik.Th>
+              <span
+                className="validators-page__sortable"
+                onClick={() => toggleSort('commission')}
+              >
+                Commission
+                {sortBy === 'commission' && (sortDir === 1 ? ' ▲' : ' ▼')}
+              </span>
+            </Uik.Th>
+            <Uik.Th>
+              <span
+                className="validators-page__sortable"
+                onClick={() => toggleSort('apy')}
+              >
+                APY
+                {sortBy === 'apy' && (sortDir === 1 ? ' ▲' : ' ▼')}
+              </span>
+            </Uik.Th>
             <Uik.Th />
           </Uik.Tr>
         </Uik.THead>
         <Uik.TBody>
-          {validators.map((v) => (
+          {loading && (
+            <tr>
+              <td colSpan={6} style={{ textAlign: 'center' }}>
+                <Uik.Loading text="Loading" />
+              </td>
+            </tr>
+          )}
+          {sortedValidators.map((v) => (
             <Uik.Tr key={v.address}>
               <Uik.Td>
                 <div className="validators-page__id">
+                  <Uik.Avatar image={avatarFor(v.address)} size="small" />
                   {v.identity ? v.identity : shortAddress(v.address)}
                 </div>
               </Uik.Td>
@@ -243,21 +386,7 @@ const Validators = (): JSX.Element => {
                 {(Number(v.commission) / 10000000).toFixed(2)}%
               </Uik.Td>
               <Uik.Td>
-                {(() => {
-                  const bonded = Number(ethUtils.formatUnits(v.totalBonded, 18));
-                  const commissionRate = Number(v.commission) / 1000000000;
-                  const avgPoints = validators.length ? TOTAL_POINTS_TARGET / validators.length : 0;
-                  const apy = calculateStakingAPY(
-                    1,
-                    bonded,
-                    commissionRate,
-                    avgPoints,
-                    TOTAL_POINTS_TARGET,
-                    INFLATION_RATE,
-                    totalSupply,
-                  );
-                  return `${(apy * 100).toFixed(2)}%`;
-                })()}
+                {`${(getAPY(v) * 100).toFixed(2)}%`}
               </Uik.Td>
               <Uik.Td />
             </Uik.Tr>
