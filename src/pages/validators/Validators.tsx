@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
 import Uik from '@reef-chain/ui-kit';
 import { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
-import { utils } from '@reef-chain/react-lib';
+import { utils, Components } from '@reef-chain/react-lib';
 import { utils as ethUtils } from 'ethers';
 import { useHistory } from 'react-router-dom';
 import TokenPricesContext from '../../context/TokenPricesContext';
@@ -11,8 +11,8 @@ import { VALIDATORS_URL } from '../../urls';
 import { localizedStrings as strings } from '../../l10n/l10n';
 import { formatReefAmount } from '../../utils/formatReefAmount';
 import { shortAddress, toCurrencyFormat } from '../../utils/utils';
+import { displayBalance } from '../../utils/displayBalance';
 import './validators.css';
-import StakingActions from './StakingActions';
 import {
   loadValidators,
   saveValidators,
@@ -21,6 +21,8 @@ import {
   CachedValidator,
 } from '../../utils/validatorsCache';
 import calculateStakingAPY from '../../utils/calculateStakingAPY';
+
+const { OverlayAction } = Components;
 
 type ValidatorInfo = CachedValidator;
 
@@ -42,6 +44,17 @@ const Validators = (): JSX.Element => {
   const [nominatorStake, setNominatorStake] = useState<string>('0');
   const stakeNumber = Number(ethUtils.formatUnits(nominatorStake || '0', 18));
   const stakeUsd = stakeNumber * (tokenPrices[REEF_ADDRESS] || 0);
+  const formattedStake = useMemo(
+    () => formatReefAmount(new BN(nominatorStake)).replace(' REEF', ''),
+    [nominatorStake],
+  );
+  const formattedStakeUsd = useMemo(() => {
+    if (stakeUsd >= 1000000) {
+      return `$${displayBalance(stakeUsd)}`;
+    }
+    return toCurrencyFormat(stakeUsd, { maximumFractionDigits: 2 });
+  }, [stakeUsd]);
+  const [isNominationsOpen, setNominationsOpen] = useState(false);
   const [totalSupply, setTotalSupply] = useState<number>(0);
   const TOTAL_POINTS_TARGET = 172800;
   const INFLATION_RATE = 0.0468;
@@ -186,33 +199,41 @@ const Validators = (): JSX.Element => {
       </div>
       {tab === 'actions' && selectedSigner && (
         <div className="validators-page__stake">
-          <Uik.Text type="title">
-            {strings.your_stake}
-            :
-            {formatReefAmount(new BN(nominatorStake))}
+          <Uik.Text type="lead" className="uik-text--lead">{strings.your_stake}</Uik.Text>
+          <Uik.Text type="headline" className="dashboard__balance-text">
+            {formattedStake}
+            <Uik.ReefIcon />
+            {' ('}
+            {formattedStakeUsd}
+            {')'}
           </Uik.Text>
-          <Uik.Text type="title">
-            {toCurrencyFormat(stakeUsd, { maximumFractionDigits: 2 })}
-          </Uik.Text>
+          <Uik.Button text="My nominations" fill onClick={() => setNominationsOpen(true)} />
         </div>
       )}
-      {tab === 'actions' && selectedSigner && (
-        <div className="validators-page__nominations">
-          <Uik.Text type="title">{strings.current_nominations}</Uik.Text>
-          {nominations.length ? (
-            <ul className="validators-page__nominations-list">
-              {nominations.map((n) => (
-                <li key={n}>{n}</li>
-              ))}
-            </ul>
-          ) : (
-            <Uik.Text>{strings.no_nominations}</Uik.Text>
-          )}
-        </div>
-      )}
-      {tab === 'actions' && (
-        <StakingActions validators={validators} />
-      )}
+      <OverlayAction
+        isOpen={isNominationsOpen}
+        onClose={() => setNominationsOpen(false)}
+        title="My nominations"
+      >
+        <Uik.Table seamless>
+          <Uik.THead>
+            <Uik.Tr>
+              <Uik.Th>Validator</Uik.Th>
+            </Uik.Tr>
+          </Uik.THead>
+          <Uik.TBody>
+            {nominations.map((n) => (
+              <Uik.Tr key={n}>
+                <Uik.Td>
+                  <div className="validators-page__id">
+                    {validators.find((v) => v.address === n)?.identity || shortAddress(n)}
+                  </div>
+                </Uik.Td>
+              </Uik.Tr>
+            ))}
+          </Uik.TBody>
+        </Uik.Table>
+      </OverlayAction>
       {tab !== 'actions' && (
       <Uik.Table seamless>
         <Uik.THead>

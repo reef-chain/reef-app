@@ -18,19 +18,16 @@
   word-break: break-all;
 }
 
-.validators-page__nominations {
-  margin-bottom: 20px;
-}
-
 .validators-page__stake {
   margin-bottom: 20px;
 }
 
-.validators-page__nominations-list {
-  list-style: none;
-  padding-left: 0;
+.validators-page__stake .uik-reef-icon {
+  height: 1em;
+  width: 1em;
+  margin-left: 0.25rem;
 }
 
-.staking-actions {
-  margin-top: 20px;
+.validators-page__stake-usd {
+  margin-left: 0.25rem;
 }
