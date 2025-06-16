@@ -31,3 +31,15 @@
 .validators-page__stake-usd {
   margin-left: 0.25rem;
 }
+.dashboard__sub-balance-value.uik-text--headline {
+  font-size: 2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.dashboard__balance-text {
+  display: inline-flex;
+}
