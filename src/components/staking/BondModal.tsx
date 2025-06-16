@@ -37,7 +37,8 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
 
     api.query.system
       .account(accountAddress, (acc) => {
-        setAvailable(new BN((acc.data as any).free.toString()));
+        const free = new BN((acc.data as any).free.toString());
+        setAvailable(free.div(DECIMALS));
       })
       .then((unsub) => {
         unsubBalance = unsub;
@@ -47,7 +48,8 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
     api.derive.staking
       .account(accountAddress)
       .then((info: any) => {
-        setStaked(info.stakingLedger?.active || bnToBn(0));
+        const active = new BN(info.stakingLedger?.active?.toString() || '0');
+        setStaked(active.div(DECIMALS));
       })
       .catch(() => {});
 
@@ -138,7 +140,7 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
           </Uik.Card>
           <Uik.Card>
             <Uik.Button
-              primary
+              success
               text={strings.staking_bond}
               loading={loading}
               disabled={available?.isZero() ?? true}
@@ -162,7 +164,7 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
           </Uik.Card>
           <Uik.Card>
             <Uik.Button
-              primary
+              success
               text={strings.staking_unbond}
               loading={loading}
               disabled={staked?.isZero() ?? true}
