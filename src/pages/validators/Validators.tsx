@@ -24,11 +24,10 @@ import calculateStakingAPY from '../../utils/calculateStakingAPY';
 
 type ValidatorInfo = CachedValidator;
 
-// Load avatar images from the ui-kit package using webpack's require.context.
-// This avoids the need to copy the files to the public folder and ensures
-// they are bundled with the application.
+// Load avatar images that are copied from the ui-kit package into the public
+// folder during postinstall.
 const avatarContext = (require as any).context(
-  '@reef-chain/ui-kit/src/ui-kit/assets/avatars',
+  '../../../public/images/avatars',
   false,
   /\.png$/,
 );

@@ -36,4 +36,5 @@ yarn-error.log*
 
 /.yalc
 
-# UI kit avatars (no longer copied)
+# UI kit avatars generated at install time
+public/images/avatars/

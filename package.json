@@ -46,7 +46,7 @@
   "scripts": {
     "start": "webpack-dev-server -d source-map --output-pathinfo",
     "start:clean": "yarn clean && yarn start",
-    "postinstall": "node scripts/add-global-process.js",
+    "postinstall": "node scripts/add-global-process.js && node scripts/copy-avatars.js",
     "clean": "rm -rf node_modules&&rm -f yarn.lock&&yarn install",
     "build": "webpack --mode production",
     "test": "react-scripts test",
