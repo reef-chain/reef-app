@@ -36,13 +36,9 @@ const AVATARS: string[] = avatarContext
   .keys()
   .map((k: string) => avatarContext(k).default ?? avatarContext(k));
 
-const avatarFor = (address: string): string => {
-  const sum = address
-    .split('')
-    .reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-  const index = sum % AVATARS.length;
-  return AVATARS[index];
-};
+const hashAddress = (addr: string): number =>
+  addr.split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+
 
 const Validators = (): JSX.Element => {
   const { provider, selectedSigner } = useContext(ReefSigners);
@@ -125,6 +121,29 @@ const Validators = (): JSX.Element => {
     });
     return vals;
   }, [validators, sortBy, sortDir, totalSupply]);
+
+  const avatarMap = React.useMemo(() => {
+    const addresses = [...validators.map((v) => v.address)].sort();
+    const used = new Set<number>();
+    const map = new Map<string, string>();
+    for (const addr of addresses) {
+      let base = hashAddress(addr) % AVATARS.length;
+      for (let i = 0; i < AVATARS.length; i += 1) {
+        const idx = (base + i) % AVATARS.length;
+        if (!used.has(idx)) {
+          used.add(idx);
+          map.set(addr, AVATARS[idx]);
+          break;
+        }
+      }
+    }
+    return map;
+  }, [validators]);
+
+  const avatarFor = React.useCallback(
+    (address: string): string => avatarMap.get(address) ?? AVATARS[0],
+    [avatarMap],
+  );
 
   useEffect(() => {
     const load = async (): Promise<void> => {
