@@ -16,6 +16,17 @@
 
 .validators-page__id {
   word-break: break-all;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.validators-page__sortable {
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .validators-page__nominations {

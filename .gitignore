@@ -35,4 +35,6 @@ yarn-error.log*
 /.idea/workspace.xml
 
 /.yalc
-yalc.lock
+
+# UI kit avatars
+public/images/avatars/
