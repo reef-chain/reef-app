@@ -19,6 +19,7 @@ import {
   CachedValidator,
 } from '../../utils/validatorsCache';
 import './validators.css';
+import BondModal from '../../components/staking/BondModal';
 
 const { OverlayAction } = Components;
 
@@ -55,6 +56,7 @@ const Actions: React.FC = () => {
   }$US`;
   const formattedStakeUsd = useMemo(() => formatCompactUSD(stakeUsd), [stakeUsd]);
   const [isNominationsOpen, setNominationsOpen] = useState(false);
+  const [isBondOpen, setBondOpen] = useState(false);
 
   useEffect(() => {
     const load = async (): Promise<void> => {
@@ -155,6 +157,7 @@ const Actions: React.FC = () => {
             </span>
           </Uik.Text>
           <Uik.Button text="My nominations" fill onClick={() => setNominationsOpen(true)} />
+          <Uik.Button text={strings.staking_bond_unbond} fill onClick={() => setBondOpen(true)} />
         </div>
       )}
       <OverlayAction
@@ -181,6 +184,12 @@ const Actions: React.FC = () => {
           </Uik.TBody>
         </Uik.Table>
       </OverlayAction>
+      <BondModal
+        isOpen={isBondOpen}
+        onClose={() => setBondOpen(false)}
+        api={provider?.api as ApiPromise}
+        accountAddress={selectedSigner?.address || ''}
+      />
     </div>
   );
 };
