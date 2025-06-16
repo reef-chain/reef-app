@@ -24,14 +24,24 @@ import calculateStakingAPY from '../../utils/calculateStakingAPY';
 
 type ValidatorInfo = CachedValidator;
 
-const AVATAR_COUNT = 36;
+// Load avatar images from the ui-kit package using webpack's require.context.
+// This avoids the need to copy the files to the public folder and ensures
+// they are bundled with the application.
+const avatarContext = (require as any).context(
+  '@reef-chain/ui-kit/src/ui-kit/assets/avatars',
+  false,
+  /\.png$/,
+);
+const AVATARS: string[] = avatarContext
+  .keys()
+  .map((k: string) => avatarContext(k).default ?? avatarContext(k));
 
 const avatarFor = (address: string): string => {
   const sum = address
     .split('')
     .reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-  const index = (sum % AVATAR_COUNT) + 1;
-  return `/images/avatars/${index}.png`;
+  const index = sum % AVATARS.length;
+  return AVATARS[index];
 };
 
 const Validators = (): JSX.Element => {
@@ -56,10 +66,10 @@ const Validators = (): JSX.Element => {
   const [totalSupply, setTotalSupply] = useState<number>(0);
   const TOTAL_POINTS_TARGET = 172800;
   const INFLATION_RATE = 0.0468;
-  const [sortBy, setSortBy] = useState<'commission' | 'minRequired' | 'apy' | null>(null);
+  const [sortBy, setSortBy] = useState<'commission' | 'minRequired' | 'apy' | 'totalBonded' | null>(null);
   const [sortDir, setSortDir] = useState<1 | -1>(1);
 
-  const toggleSort = (column: 'commission' | 'minRequired' | 'apy'): void => {
+  const toggleSort = (column: 'commission' | 'minRequired' | 'apy' | 'totalBonded'): void => {
     if (sortBy === column) {
       setSortDir(sortDir === 1 ? -1 : 1);
     } else {
@@ -96,6 +106,12 @@ const Validators = (): JSX.Element => {
       if (sortBy === 'minRequired') {
         const aVal = new BN(a.minRequired);
         const bVal = new BN(b.minRequired);
+        if (aVal.eq(bVal)) return 0;
+        return (aVal.gt(bVal) ? 1 : -1) * sortDir;
+      }
+      if (sortBy === 'totalBonded') {
+        const aVal = new BN(a.totalBonded);
+        const bVal = new BN(b.totalBonded);
         if (aVal.eq(bVal)) return 0;
         return (aVal.gt(bVal) ? 1 : -1) * sortDir;
       }
@@ -286,7 +302,15 @@ const Validators = (): JSX.Element => {
         <Uik.THead>
           <Uik.Tr>
             <Uik.Th>{strings.account}</Uik.Th>
-            <Uik.Th>{strings.total_staked}</Uik.Th>
+            <Uik.Th>
+              <span
+                className="validators-page__sortable"
+                onClick={() => toggleSort('totalBonded')}
+              >
+                {strings.total_staked}
+                {sortBy === 'totalBonded' && (sortDir === 1 ? ' ▲' : ' ▼')}
+              </span>
+            </Uik.Th>
             <Uik.Th>
               <span
                 className="validators-page__sortable"
