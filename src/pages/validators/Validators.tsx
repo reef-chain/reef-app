@@ -24,10 +24,11 @@ import calculateStakingAPY from '../../utils/calculateStakingAPY';
 
 type ValidatorInfo = CachedValidator;
 
-// Load avatar images that are copied from the ui-kit package into the public
-// folder during postinstall.
+// Load avatar images directly from the ui-kit package so they stay in sync with
+// the library. We point the loader to the package's source assets folder
+// within node_modules.
 const avatarContext = (require as any).context(
-  '../../../public/images/avatars',
+  '../../../node_modules/@reef-chain/ui-kit/src/ui-kit/assets/avatars',
   false,
   /\.png$/,
 );
