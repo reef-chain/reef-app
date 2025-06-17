@@ -1,0 +1,14 @@
+.bond-action-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-top: 20px;
+}
+.bond-action-card {
+  background: #E6E2F1;
+}
+.bond-action-card-button {
+  display: flex;
+  justify-content: center;
+}
+

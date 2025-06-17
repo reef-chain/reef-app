@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import Uik from '@reef-chain/ui-kit';
-import SliderWithLabel from './SliderWithLabel';
 import { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
 import { bnToBn } from '@polkadot/util';
 import { extension as reefExt } from '@reef-chain/util-lib';
+import SliderWithLabel from './SliderWithLabel';
 import { localizedStrings as strings } from '../../l10n/l10n';
 
 const { web3Enable, web3FromSource } = reefExt;
@@ -19,16 +19,11 @@ interface Props {
 
 export default function BondModal({ isOpen, onClose, api, accountAddress }: Props): JSX.Element {
   const [tab, setTab] = useState<'bond' | 'unbond' | 'chill'>('bond');
-  const [available, setAvailable] = useState<BN>(new BN(0));
-  const [staked, setStaked] = useState<BN>(new BN(0));
-  const [bondAmt, setBondAmt] = useState(0);
-  const [unbondAmt, setUnbondAmt] = useState(0);
+  const [availableBalance, setAvailableBalance] = useState<BN>(new BN(0));
+  const [stakedBalance, setStakedBalance] = useState<BN>(new BN(0));
+  const [bondAmount, setBondAmount] = useState(0);
+  const [unbondAmount, setUnbondAmount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const zero = new BN(0);
-  const poolData = {
-    firstToken: { name: 'Reef', symbol: 'REEF', price: 0, available: 0 },
-    secondToken: { name: 'Reef', symbol: 'REEF', price: 0, available: 0 },
-  };
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -38,7 +33,7 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
     api.query.system
       .account(accountAddress, (acc) => {
         const free = new BN((acc.data as any).free.toString());
-        setAvailable(free.div(DECIMALS));
+        setAvailableBalance(free.div(DECIMALS));
       })
       .then((unsub) => {
         unsubBalance = unsub;
@@ -49,7 +44,7 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
       .account(accountAddress)
       .then((info: any) => {
         const active = new BN(info.stakingLedger?.active?.toString() || '0');
-        setStaked(active.div(DECIMALS));
+        setStakedBalance(active.div(DECIMALS));
       })
       .catch(() => {});
 
@@ -84,23 +79,19 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
     }
   };
 
-  const onBond = (): void => {
-    const value = bnToBn(bondAmt).mul(DECIMALS);
-
+  const handleBond = (): void => {
+    const valueBN = bnToBn(bondAmount).mul(DECIMALS);
     sendTx(
-      api.tx.staking.bond(
-        value,
-        'Staked',
-      ),
+      api.tx.staking.bond(valueBN, 'Staked'),
       strings.staking_bond_success,
       strings.staking_bond_error,
     );
   };
 
   const handleUnbond = (): void => {
-    const value = bnToBn(unbondAmt).mul(DECIMALS);
+    const valueBN = bnToBn(unbondAmount).mul(DECIMALS);
     sendTx(
-      api.tx.staking.unbond(value),
+      api.tx.staking.unbond(valueBN),
       strings.staking_unbond_success,
       strings.staking_unbond_error,
     );
@@ -118,7 +109,7 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
     <Uik.Modal isOpen={isOpen} onClose={onClose} title={strings.staking_bond_unbond}>
       <Uik.Tabs
         value={tab}
-        onChange={(id: string) => setTab(id as 'bond' | 'unbond' | 'chill')}
+        onChange={(v: string) => setTab(v as 'bond' | 'unbond' | 'chill')}
         options={[
           { value: 'bond', text: strings.staking_bond },
           { value: 'unbond', text: strings.staking_unbond },
@@ -128,14 +119,12 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
 
       {tab === 'bond' && (
         <div className="flex flex-col gap-6">
-          <Uik.Card>
-            <Uik.PoolActions data={poolData} />
-          </Uik.Card>
+          <Uik.ReefAmount value={availableBalance.toString()} />
           <Uik.Card>
             <SliderWithLabel
-              value={bondAmt}
-              max={(available ?? zero).toNumber()}
-              onChange={(v: number) => setBondAmt(v)}
+              value={bondAmount}
+              max={availableBalance.toNumber()}
+              onChange={(v: number) => setBondAmount(v)}
             />
           </Uik.Card>
           <Uik.Card>
@@ -143,8 +132,8 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
               success
               text={strings.staking_bond}
               loading={loading}
-              disabled={available?.isZero() ?? true}
-              onClick={onBond}
+              disabled={!stakedBalance.isZero()}
+              onClick={handleBond}
             />
           </Uik.Card>
         </div>
@@ -152,14 +141,12 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
 
       {tab === 'unbond' && (
         <div className="flex flex-col gap-6">
-          <Uik.Card>
-            <Uik.PoolActions data={poolData} />
-          </Uik.Card>
+          <Uik.ReefAmount value={stakedBalance.toString()} />
           <Uik.Card>
             <SliderWithLabel
-              value={unbondAmt}
-              max={(staked ?? zero).toNumber()}
-              onChange={(v: number) => setUnbondAmt(v)}
+              value={unbondAmount}
+              max={stakedBalance.toNumber()}
+              onChange={(v: number) => setUnbondAmount(v)}
             />
           </Uik.Card>
           <Uik.Card>
@@ -167,7 +154,7 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
               success
               text={strings.staking_unbond}
               loading={loading}
-              disabled={staked?.isZero() ?? true}
+              disabled={stakedBalance.isZero()}
               onClick={handleUnbond}
             />
           </Uik.Card>
@@ -176,6 +163,7 @@ export default function BondModal({ isOpen, onClose, api, accountAddress }: Prop
 
       {tab === 'chill' && (
         <div className="flex flex-col gap-6">
+          <Uik.ReefAmount value={stakedBalance.toString()} />
           <Uik.Card>
             <Uik.Button
               danger

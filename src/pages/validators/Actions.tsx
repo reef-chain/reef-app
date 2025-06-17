@@ -19,7 +19,7 @@ import {
   CachedValidator,
 } from '../../utils/validatorsCache';
 import './validators.css';
-import BondModal from '../../components/staking/BondModal';
+import BondActionModal from '../../components/staking/BondActionModal';
 
 const { OverlayAction } = Components;
 
@@ -184,7 +184,7 @@ const Actions: React.FC = () => {
           </Uik.TBody>
         </Uik.Table>
       </OverlayAction>
-      <BondModal
+      <BondActionModal
         isOpen={isBondOpen}
         onClose={() => setBondOpen(false)}
         api={provider?.api as ApiPromise}
