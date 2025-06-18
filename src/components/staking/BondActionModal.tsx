@@ -5,7 +5,9 @@ import { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
 import { bnToBn } from '@polkadot/util';
 import { extension as reefExt } from '@reef-chain/util-lib';
-import PercentSlider from './PercentSlider';
+import BondTab from './tabs/BondTab';
+import StakingTab from './tabs/StakingTab';
+import ChillTab from './tabs/ChillTab';
 import './bond-action.css';
 import { localizedStrings as strings } from '../../l10n/l10n';
 
@@ -26,11 +28,16 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
   const [availableBalance, setAvailableBalance] = useState<BN>(new BN(0));
   const [stakedBalance, setStakedBalance] = useState<BN>(new BN(0));
   const [redeemableBalance, setRedeemableBalance] = useState<BN>(new BN(0));
-  const [amount, setAmount] = useState(0);
+  const [bondAmount, setBondAmount] = useState(0);
+  const [stakeAmount, setStakeAmount] = useState(0);
+  const [remainingEras, setRemainingEras] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return undefined;
+
+    setBondAmount(0);
+    setStakeAmount(0);
 
     let unsubBalance: () => void;
 
@@ -51,6 +58,10 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
         setStakedBalance(active.div(DECIMALS));
         const redeemable = new BN(info.redeemable?.toString() || '0');
         setRedeemableBalance(redeemable.div(DECIMALS));
+        const unlockInfo = Array.isArray(info.unlocking) && info.unlocking.length > 0
+          ? info.unlocking[0].remainingEras?.toNumber()
+          : null;
+        setRemainingEras(unlockInfo);
       })
       .catch(() => {});
 
@@ -86,7 +97,7 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
   };
 
   const handleBond = (): void => {
-    const valueBN = bnToBn(amount).mul(DECIMALS);
+    const valueBN = bnToBn(bondAmount).mul(DECIMALS);
     sendTx(
       api.tx.staking.bond(valueBN, 'Staked'),
       strings.staking_bond_success,
@@ -95,7 +106,7 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
   };
 
   const handleStake = (): void => {
-    const valueBN = bnToBn(amount).mul(DECIMALS);
+    const valueBN = bnToBn(stakeAmount).mul(DECIMALS);
     sendTx(
       api.tx.staking.bondExtra(valueBN),
       strings.staking_bond_success,
@@ -104,7 +115,7 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
   };
 
   const handleUnbond = (): void => {
-    const valueBN = bnToBn(amount).mul(DECIMALS);
+    const valueBN = bnToBn(bondAmount).mul(DECIMALS);
     sendTx(
       api.tx.staking.unbond(valueBN),
       strings.staking_unbond_success,
@@ -120,6 +131,10 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
     );
   };
 
+  const withdrawText = remainingEras && remainingEras > 0
+    ? `${strings.withdraw} (${remainingEras} eras)`
+    : strings.withdraw;
+
   const handleChill = (): void => {
     sendTx(
       api.tx.staking.chill(),
@@ -129,103 +144,56 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
   };
 
   const feeReserve = 10;
-  const maxValue = (() => {
-    if (tab === 'staking') {
-      return Math.max(0, availableBalance.toNumber() - feeReserve);
-    }
-    if (stakeNumber > 0) {
-      return stakedBalance.toNumber();
-    }
-    return availableBalance.toNumber();
-  })();
+  const bondMaxValue = stakeNumber > 0 ? stakedBalance.toNumber() : availableBalance.toNumber();
+  const stakingMaxValue = Math.max(0, availableBalance.toNumber() - feeReserve);
 
   return (
     <OverlayAction isOpen={isOpen} onClose={onClose} title={strings.staking_bond_unbond} className="overlay-swap">
       <div className="uik-pool-actions pool-actions">
         <Uik.Tabs
           value={tab}
-          onChange={(v: string) => { setTab(v as 'bond' | 'staking' | 'chill'); setAmount(0); }}
+          onChange={(v: string) => {
+            setTab(v as 'bond' | 'staking' | 'chill');
+            setBondAmount(0);
+            setStakeAmount(0);
+          }}
           options={[
             { value: 'bond', text: strings.staking_bond_unbond },
             { value: 'staking', text: strings.staking_tab },
             { value: 'chill', text: strings.staking_chill },
           ]}
         />
-        <div className="bond-action-wrapper">
-          <Uik.Card className="bond-action-card">
-            <div className="uik-pool-actions-token">
-              <div className="uik-pool-actions-token__token">
-                <div className="uik-pool-actions-token__select-wrapper">
-                  <Uik.ReefIcon />
-                  <span>REEF</span>
-                </div>
-                {tab !== 'chill' && (
-                  <div className="uik-pool-actions-token__value">
-                    <Uik.Input
-                      type="number"
-                      value={amount.toString()}
-                      min={0}
-                      max={maxValue}
-                      onInput={(e) =>
-                        setAmount(Number((e.target as HTMLInputElement).value))
-                      }
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          </Uik.Card>
-
-          {tab !== 'chill' && (
-            <Uik.Card className="bond-action-card">
-              <PercentSlider max={maxValue} value={amount} onChange={setAmount} />
-            </Uik.Card>
-          )}
-
-          {tab === 'staking' && (
-            <Uik.Text type="mini" className="bond-action-warning">
-              {strings.staking_fees_warning}
-            </Uik.Text>
-          )}
-
-          <Uik.Card className="bond-action-card bond-action-card-button">
-            {tab === 'bond' && (
-              <>
-                <Uik.Button
-                  success
-                  text={stakeNumber === 0 ? strings.staking_bond : strings.staking_unbond}
-                  loading={loading}
-                  onClick={stakeNumber === 0 ? handleBond : handleUnbond}
-                />
-                {redeemableBalance.gt(new BN(0)) && (
-                  <Uik.Button
-                    success
-                    text={strings.withdraw}
-                    loading={loading}
-                    onClick={handleWithdraw}
-                  />
-                )}
-              </>
-            )}
-            {tab === 'staking' && (
-              <Uik.Button
-                success
-                text={strings.stake}
-                loading={loading}
-                onClick={handleStake}
-              />
-            )}
-            {tab === 'chill' && (
-              <Uik.Button
-                danger
-                text={strings.staking_chill}
-                loading={loading}
-                disabled={stakeNumber === 0}
-                onClick={handleChill}
-              />
-            )}
-          </Uik.Card>
-        </div>
+        {tab === 'bond' && (
+          <BondTab
+            bondAmount={bondAmount}
+            setBondAmount={setBondAmount}
+            bondMaxValue={bondMaxValue}
+            stakeNumber={stakeNumber}
+            loading={loading}
+            handleBond={handleBond}
+            handleUnbond={handleUnbond}
+            redeemableBalance={redeemableBalance}
+            remainingEras={remainingEras}
+            withdrawText={withdrawText}
+            handleWithdraw={handleWithdraw}
+          />
+        )}
+        {tab === 'staking' && (
+          <StakingTab
+            stakeAmount={stakeAmount}
+            setStakeAmount={setStakeAmount}
+            stakingMaxValue={stakingMaxValue}
+            loading={loading}
+            handleStake={handleStake}
+          />
+        )}
+        {tab === 'chill' && (
+          <ChillTab
+            stakeNumber={stakeNumber}
+            loading={loading}
+            handleChill={handleChill}
+          />
+        )}
       </div>
     </OverlayAction>
   );
