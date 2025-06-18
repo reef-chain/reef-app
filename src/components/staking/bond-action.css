@@ -7,6 +7,7 @@
 .bond-action-card {
   background: #E6E2F1;
 }
+
 .bond-action-card-button {
   display: flex;
   justify-content: center;
@@ -15,9 +16,29 @@
   width: 100%;
 }
 
+/* Center button text inside cards */
+.bond-action-card-button .uik-card__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Increase width of amount input */
 .bond-action-card .uik-input__input {
   width: 18ch;
+  text-align: right;
+}
+
+/* Align input container to the right */
+.bond-action-card .uik-pool-actions-token__value {
+  margin-left: auto;
+}
+
+/* Center token container inside cards */
+.bond-action-card .uik-pool-actions-token__token {
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
 }
 
 
