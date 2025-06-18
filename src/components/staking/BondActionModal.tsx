@@ -18,10 +18,11 @@ interface Props {
   onClose(): void;
   api: ApiPromise;
   accountAddress: string;
+  stakeNumber: number;
 }
 
-export default function BondActionModal({ isOpen, onClose, api, accountAddress }: Props): JSX.Element {
-  const [tab, setTab] = useState<'bond' | 'unbond' | 'chill'>('bond');
+export default function BondActionModal({ isOpen, onClose, api, accountAddress, stakeNumber }: Props): JSX.Element {
+  const [tab, setTab] = useState<'bond' | 'chill'>('bond');
   const [availableBalance, setAvailableBalance] = useState<BN>(new BN(0));
   const [stakedBalance, setStakedBalance] = useState<BN>(new BN(0));
   const [amount, setAmount] = useState(0);
@@ -107,18 +108,16 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress }
     );
   };
 
-  const maxValue = tab === 'bond' ? availableBalance.toNumber() : stakedBalance.toNumber();
-  const stakeNumber = stakedBalance.toNumber();
+  const maxValue = stakeNumber > 0 ? stakedBalance.toNumber() : availableBalance.toNumber();
 
   return (
     <OverlayAction isOpen={isOpen} onClose={onClose} title={strings.staking_bond_unbond} className="overlay-swap">
       <div className="uik-pool-actions pool-actions">
         <Uik.Tabs
           value={tab}
-          onChange={(v: string) => { setTab(v as 'bond' | 'unbond' | 'chill'); setAmount(0); }}
+          onChange={(v: string) => { setTab(v as 'bond' | 'chill'); setAmount(0); }}
           options={[
-            { value: 'bond', text: strings.staking_bond },
-            { value: 'unbond', text: strings.staking_unbond },
+            { value: 'bond', text: strings.staking_bond_unbond },
             { value: 'chill', text: strings.staking_chill },
           ]}
         />
@@ -157,19 +156,9 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress }
             {tab === 'bond' && (
               <Uik.Button
                 success
-                text={strings.staking_bond}
+                text={stakeNumber === 0 ? strings.staking_bond : strings.staking_unbond}
                 loading={loading}
-                disabled={stakeNumber > 0}
-                onClick={handleBond}
-              />
-            )}
-            {tab === 'unbond' && (
-              <Uik.Button
-                success
-                text={strings.staking_unbond}
-                loading={loading}
-                disabled={stakeNumber === 0}
-                onClick={handleUnbond}
+                onClick={stakeNumber === 0 ? handleBond : handleUnbond}
               />
             )}
             {tab === 'chill' && (

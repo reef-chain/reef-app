@@ -145,7 +145,7 @@ const Active: React.FC = () => {
           setLoading(false);
           return;
         }
-        const addresses: string[] = overview.validators;
+        const addresses: string[] = overview.validators.map((a: any) => a.toString());
         const vals: ValidatorInfo[] = [];
         for (const addr of addresses) {
           const [info, exposure, prefs] = await Promise.all([
@@ -180,7 +180,7 @@ const Active: React.FC = () => {
             identity,
             totalBonded: (exposure as any)?.total?.toString() || '0',
             commission: prefs?.commission?.toString() || '0',
-            isActive: overview.validators.includes(addr),
+            isActive: addresses.includes(addr),
             minRequired,
           });
         }
