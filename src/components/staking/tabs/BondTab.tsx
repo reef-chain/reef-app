@@ -7,7 +7,8 @@ import { localizedStrings as strings } from '../../../l10n/l10n';
 interface Props {
   bondAmount: number;
   setBondAmount(value: number): void;
-  bondMaxValue: number;
+  availableAmount: number;
+  lockedAmount: number;
   stakeNumber: number;
   loading: boolean;
   handleBond(): void;
@@ -21,7 +22,8 @@ interface Props {
 export default function BondTab({
   bondAmount,
   setBondAmount,
-  bondMaxValue,
+  availableAmount,
+  lockedAmount,
   stakeNumber,
   loading,
   handleBond,
@@ -31,6 +33,7 @@ export default function BondTab({
   withdrawText,
   handleWithdraw,
 }: Props): JSX.Element {
+  const maxValue = stakeNumber === 0 ? availableAmount : lockedAmount;
   return (
     <div className="bond-action-wrapper">
       <Uik.Card className="bond-action-card">
@@ -45,7 +48,7 @@ export default function BondTab({
                 type="number"
                 value={bondAmount.toString()}
                 min={0}
-                max={bondMaxValue}
+                max={maxValue}
                 onInput={(e) =>
                   setBondAmount(Number((e.target as HTMLInputElement).value))
                 }
@@ -56,7 +59,7 @@ export default function BondTab({
       </Uik.Card>
       <Uik.Card className="bond-action-card">
         <PercentSlider
-          max={bondMaxValue}
+          max={maxValue}
           value={bondAmount}
           onChange={setBondAmount}
         />

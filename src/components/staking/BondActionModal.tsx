@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Components } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import { ApiPromise } from '@polkadot/api';
@@ -10,6 +10,7 @@ import StakingTab from './tabs/StakingTab';
 import ChillTab from './tabs/ChillTab';
 import './bond-action.css';
 import { localizedStrings as strings } from '../../l10n/l10n';
+import ReefSigners from '../../context/ReefSigners';
 
 const { OverlayAction } = Components;
 const { web3Enable, web3FromSource } = reefExt;
@@ -24,6 +25,7 @@ interface Props {
 }
 
 export default function BondActionModal({ isOpen, onClose, api, accountAddress, stakeNumber }: Props): JSX.Element {
+  const { selectedSigner } = useContext(ReefSigners);
   const [tab, setTab] = useState<'bond' | 'staking' | 'chill'>('bond');
   const [availableBalance, setAvailableBalance] = useState<BN>(new BN(0));
   const [stakedBalance, setStakedBalance] = useState<BN>(new BN(0));
@@ -39,17 +41,10 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
     setBondAmount(0);
     setStakeAmount(0);
 
-    let unsubBalance: () => void;
-
-    api.query.system
-      .account(accountAddress, (acc) => {
-        const free = new BN((acc.data as any).free.toString());
-        setAvailableBalance(free.div(DECIMALS));
-      })
-      .then((unsub) => {
-        unsubBalance = unsub;
-      })
-      .catch(() => {});
+    if (selectedSigner) {
+      setAvailableBalance(new BN(selectedSigner.freeBalance.toString()).div(DECIMALS));
+      setStakedBalance(new BN(selectedSigner.lockedBalance.toString()).div(DECIMALS));
+    }
 
     api.derive.staking
       .account(accountAddress)
@@ -64,7 +59,6 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
         setRemainingEras(unlockInfo);
       })
       .catch(() => {});
-
     (async () => {
       try {
         await web3Enable('reef-app');
@@ -75,10 +69,8 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
       }
     })();
 
-    return () => {
-      if (unsubBalance) unsubBalance();
-    };
-  }, [isOpen, api, accountAddress]);
+    return undefined;
+  }, [isOpen, api, accountAddress, selectedSigner]);
 
   const sendTx = async (extrinsic: any, success: string, error: string): Promise<void> => {
     try {
@@ -144,7 +136,8 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
   };
 
   const feeReserve = 10;
-  const bondMaxValue = stakeNumber > 0 ? stakedBalance.toNumber() : availableBalance.toNumber();
+  const bondAvailable = availableBalance.toNumber();
+  const bondLocked = stakedBalance.toNumber();
   const stakingMaxValue = Math.max(0, availableBalance.toNumber() - feeReserve);
 
   return (
@@ -167,7 +160,8 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
           <BondTab
             bondAmount={bondAmount}
             setBondAmount={setBondAmount}
-            bondMaxValue={bondMaxValue}
+            availableAmount={bondAvailable}
+            lockedAmount={bondLocked}
             stakeNumber={stakeNumber}
             loading={loading}
             handleBond={handleBond}
