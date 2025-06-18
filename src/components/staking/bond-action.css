@@ -10,5 +10,19 @@
 .bond-action-card-button {
   display: flex;
   justify-content: center;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+/* Increase width of amount input */
+.bond-action-card .uik-input__input {
+  width: 18ch;
+}
+
+
+.bond-action-warning {
+  text-align: center;
+  color: #e74c3c;
 }
 

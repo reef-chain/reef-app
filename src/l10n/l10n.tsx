@@ -113,6 +113,10 @@ export const localizedStrings = new LocalizedStrings({
     staking_unbond_error: 'Unbond failed',
     staking_chill_success: 'Chill submitted',
     staking_chill_error: 'Chill failed',
+    staking_withdraw_success: 'Withdraw submitted',
+    staking_withdraw_error: 'Withdraw failed',
+    staking_tab: 'Staking',
+    staking_fees_warning: 'Leave at least 10 REEF for fees',
   },
   hi: {
     bonds: 'बॉन्ड',
@@ -223,6 +227,10 @@ export const localizedStrings = new LocalizedStrings({
     staking_unbond_error: 'अनबॉन्ड असफल',
     staking_chill_success: 'चिल भेजा गया',
     staking_chill_error: 'चिल असफल',
+    staking_withdraw_success: 'निकासी भेजी गई',
+    staking_withdraw_error: 'निकासी विफल',
+    staking_tab: 'स्टेकिंग',
+    staking_fees_warning: 'कृपया फीस के लिए कम से कम 10 रीफ छोड़ें',
   },
 });
 

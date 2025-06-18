@@ -22,9 +22,10 @@ interface Props {
 }
 
 export default function BondActionModal({ isOpen, onClose, api, accountAddress, stakeNumber }: Props): JSX.Element {
-  const [tab, setTab] = useState<'bond' | 'chill'>('bond');
+  const [tab, setTab] = useState<'bond' | 'staking' | 'chill'>('bond');
   const [availableBalance, setAvailableBalance] = useState<BN>(new BN(0));
   const [stakedBalance, setStakedBalance] = useState<BN>(new BN(0));
+  const [redeemableBalance, setRedeemableBalance] = useState<BN>(new BN(0));
   const [amount, setAmount] = useState(0);
   const [loading, setLoading] = useState(false);
 
@@ -48,6 +49,8 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
       .then((info: any) => {
         const active = new BN(info.stakingLedger?.active?.toString() || '0');
         setStakedBalance(active.div(DECIMALS));
+        const redeemable = new BN(info.redeemable?.toString() || '0');
+        setRedeemableBalance(redeemable.div(DECIMALS));
       })
       .catch(() => {});
 
@@ -91,12 +94,29 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
     );
   };
 
+  const handleStake = (): void => {
+    const valueBN = bnToBn(amount).mul(DECIMALS);
+    sendTx(
+      api.tx.staking.bondExtra(valueBN),
+      strings.staking_bond_success,
+      strings.staking_bond_error,
+    );
+  };
+
   const handleUnbond = (): void => {
     const valueBN = bnToBn(amount).mul(DECIMALS);
     sendTx(
       api.tx.staking.unbond(valueBN),
       strings.staking_unbond_success,
       strings.staking_unbond_error,
+    );
+  };
+
+  const handleWithdraw = (): void => {
+    sendTx(
+      api.tx.staking.withdrawUnbonded(0),
+      strings.staking_withdraw_success,
+      strings.staking_withdraw_error,
     );
   };
 
@@ -108,16 +128,26 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
     );
   };
 
-  const maxValue = stakeNumber > 0 ? stakedBalance.toNumber() : availableBalance.toNumber();
+  const feeReserve = 10;
+  const maxValue = (() => {
+    if (tab === 'staking') {
+      return Math.max(0, availableBalance.toNumber() - feeReserve);
+    }
+    if (stakeNumber > 0) {
+      return stakedBalance.toNumber();
+    }
+    return availableBalance.toNumber();
+  })();
 
   return (
     <OverlayAction isOpen={isOpen} onClose={onClose} title={strings.staking_bond_unbond} className="overlay-swap">
       <div className="uik-pool-actions pool-actions">
         <Uik.Tabs
           value={tab}
-          onChange={(v: string) => { setTab(v as 'bond' | 'chill'); setAmount(0); }}
+          onChange={(v: string) => { setTab(v as 'bond' | 'staking' | 'chill'); setAmount(0); }}
           options={[
             { value: 'bond', text: strings.staking_bond_unbond },
+            { value: 'staking', text: strings.staking_tab },
             { value: 'chill', text: strings.staking_chill },
           ]}
         />
@@ -152,13 +182,37 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
             </Uik.Card>
           )}
 
+          {tab === 'staking' && (
+            <Uik.Text type="mini" className="bond-action-warning">
+              {strings.staking_fees_warning}
+            </Uik.Text>
+          )}
+
           <Uik.Card className="bond-action-card bond-action-card-button">
             {tab === 'bond' && (
+              <>
+                <Uik.Button
+                  success
+                  text={stakeNumber === 0 ? strings.staking_bond : strings.staking_unbond}
+                  loading={loading}
+                  onClick={stakeNumber === 0 ? handleBond : handleUnbond}
+                />
+                {redeemableBalance.gt(new BN(0)) && (
+                  <Uik.Button
+                    success
+                    text={strings.withdraw}
+                    loading={loading}
+                    onClick={handleWithdraw}
+                  />
+                )}
+              </>
+            )}
+            {tab === 'staking' && (
               <Uik.Button
                 success
-                text={stakeNumber === 0 ? strings.staking_bond : strings.staking_unbond}
+                text={strings.stake}
                 loading={loading}
-                onClick={stakeNumber === 0 ? handleBond : handleUnbond}
+                onClick={handleStake}
               />
             )}
             {tab === 'chill' && (
