@@ -29,11 +29,14 @@
   gap: 0.25rem;
 }
 
-.validators-page__stake {
-  margin-bottom: 20px;
+.validators-page__stake-info {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
-.validators-page__stake .uik-reef-icon {
+.validators-page__stake-info .uik-reef-icon {
   height: 1em;
   width: 1em;
   margin-left: 0.25rem;
@@ -60,6 +63,13 @@
   display: flex;
   justify-content: flex-end;
   margin-bottom: 10px;
+}
+
+.validators-page__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 20px;
 }
 
 .dashboard__balance-text {

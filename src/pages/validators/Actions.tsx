@@ -184,20 +184,28 @@ const Actions: React.FC = () => {
   return (
     <div>
       {selectedSigner && (
-        <div className="validators-page__stake">
-          <Uik.Text type="lead" className="uik-text--lead">{strings.your_stake}</Uik.Text>
-          <Uik.Text type="headline" className="dashboard__sub-balance-value">
-            <span className="dashboard__balance-text">{formattedStake}</span>
-            <Uik.ReefIcon />
-            <span className="validators-page__stake-usd">
-              (
-              {formattedStakeUsd}
-              )
-            </span>
-          </Uik.Text>
-          <Uik.Button text="My nominations" fill onClick={() => setNominationsOpen(true)} />
-          <Uik.Button text={strings.staking_bond_unbond} fill onClick={() => setBondOpen(true)} />
-        </div>
+        <>
+          <div className="validators-page__stake-info">
+            <Uik.Text type="lead" className="uik-text--lead">{strings.your_stake}</Uik.Text>
+            <Uik.Text type="headline" className="dashboard__sub-balance-value">
+              <span className="dashboard__balance-text">{formattedStake}</span>
+              <Uik.ReefIcon />
+              <span className="validators-page__stake-usd">
+                (
+                {formattedStakeUsd}
+                )
+              </span>
+            </Uik.Text>
+          </div>
+          <div className="validators-page__actions">
+            <Uik.Button text="My nominations" fill onClick={() => setNominationsOpen(true)} />
+            <Uik.Button
+              text={strings.staking_bond_unbond}
+              fill
+              onClick={() => setBondOpen(true)}
+            />
+          </div>
+        </>
       )}
       <OverlayAction
         isOpen={isNominationsOpen}
