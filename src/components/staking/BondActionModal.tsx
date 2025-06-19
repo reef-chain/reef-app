@@ -30,9 +30,9 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
   const [availableBalance, setAvailableBalance] = useState<BN>(new BN(0));
   const [stakedBalance, setStakedBalance] = useState<BN>(new BN(0));
   const [redeemableBalance, setRedeemableBalance] = useState<BN>(new BN(0));
+  const [unbondingInitiated, setUnbondingInitiated] = useState(false);
   const [bondAmount, setBondAmount] = useState(0);
   const [stakeAmount, setStakeAmount] = useState(0);
-  const [remainingEras, setRemainingEras] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -46,19 +46,17 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
       setStakedBalance(new BN(selectedSigner.lockedBalance.toString()).div(DECIMALS));
     }
 
-    api.derive.staking
-      .account(accountAddress)
-      .then((info: any) => {
-        const active = new BN(info.stakingLedger?.active?.toString() || '0');
-        setStakedBalance(active.div(DECIMALS));
-        const redeemable = new BN(info.redeemable?.toString() || '0');
-        setRedeemableBalance(redeemable.div(DECIMALS));
-        const unlockInfo = Array.isArray(info.unlocking) && info.unlocking.length > 0
-          ? info.unlocking[0].remainingEras?.toNumber()
-          : null;
-        setRemainingEras(unlockInfo);
+    api.query.staking
+      .ledger(accountAddress)
+      .then((ledger: any) => {
+        const data = ledger?.toJSON();
+        const unlocking = data?.unlocking;
+        setUnbondingInitiated(Array.isArray(unlocking) && unlocking.length > 0);
+        setRedeemableBalance(new BN(data?.redeemable || '0').div(DECIMALS));
       })
-      .catch(() => {});
+      .catch(() => {
+        setUnbondingInitiated(false);
+      });
     (async () => {
       try {
         await web3Enable('reef-app');
@@ -123,9 +121,6 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
     );
   };
 
-  const withdrawText = remainingEras && remainingEras > 0
-    ? `${strings.withdraw} (${remainingEras} eras)`
-    : strings.withdraw;
 
   const handleChill = (): void => {
     sendTx(
@@ -167,8 +162,7 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
             handleBond={handleBond}
             handleUnbond={handleUnbond}
             redeemableBalance={redeemableBalance}
-            remainingEras={remainingEras}
-            withdrawText={withdrawText}
+            unbondingInitiated={unbondingInitiated}
             handleWithdraw={handleWithdraw}
           />
         )}
