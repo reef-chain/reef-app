@@ -1,0 +1,28 @@
+.bond-action-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  margin-top: 20px;
+}
+.bond-action-card {
+  background: #E6E2F1;
+}
+.bond-action-card-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  width: 100%;
+}
+
+/* Increase width of amount input */
+.bond-action-card .uik-input__input {
+  width: 18ch;
+}
+
+
+.bond-action-warning {
+  text-align: center;
+  color: #e74c3c;
+}
+

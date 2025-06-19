@@ -19,6 +19,7 @@ import {
   CachedValidator,
 } from '../../utils/validatorsCache';
 import './validators.css';
+import BondActionModal from '../../components/staking/BondActionModal';
 
 const { OverlayAction } = Components;
 
@@ -55,6 +56,7 @@ const Actions: React.FC = () => {
   }$US`;
   const formattedStakeUsd = useMemo(() => formatCompactUSD(stakeUsd), [stakeUsd]);
   const [isNominationsOpen, setNominationsOpen] = useState(false);
+  const [isBondOpen, setBondOpen] = useState(false);
 
   useEffect(() => {
     const load = async (): Promise<void> => {
@@ -71,7 +73,7 @@ const Actions: React.FC = () => {
           setLoading(false);
           return;
         }
-        const addresses: string[] = overview.validators;
+        const addresses: string[] = overview.validators.map((a: any) => a.toString());
         const vals: ValidatorInfo[] = [];
         for (const addr of addresses) {
           const [info, exposure, prefs] = await Promise.all([
@@ -94,7 +96,7 @@ const Actions: React.FC = () => {
             identity,
             totalBonded: (exposure as any)?.total?.toString() || '0',
             commission: prefs?.commission?.toString() || '0',
-            isActive: overview.validators.includes(addr),
+            isActive: addresses.includes(addr),
             minRequired: '0',
           });
         }
@@ -155,6 +157,7 @@ const Actions: React.FC = () => {
             </span>
           </Uik.Text>
           <Uik.Button text="My nominations" fill onClick={() => setNominationsOpen(true)} />
+          <Uik.Button text={strings.staking_bond_unbond} fill onClick={() => setBondOpen(true)} />
         </div>
       )}
       <OverlayAction
@@ -181,6 +184,13 @@ const Actions: React.FC = () => {
           </Uik.TBody>
         </Uik.Table>
       </OverlayAction>
+      <BondActionModal
+        isOpen={isBondOpen}
+        onClose={() => setBondOpen(false)}
+        api={provider?.api as ApiPromise}
+        accountAddress={selectedSigner?.address || ''}
+        stakeNumber={stakeNumber}
+      />
     </div>
   );
 };
