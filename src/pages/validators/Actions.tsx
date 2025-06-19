@@ -16,14 +16,12 @@ import {
   saveValidators,
   loadCachedValidators,
   CACHE_ACTIVE_KEY,
-  CachedValidator,
+  ValidatorInfo,
 } from '../../utils/validatorsCache';
 import './validators.css';
 import BondActionModal from '../../components/staking/BondActionModal';
 
 const { OverlayAction } = Components;
-
-type ValidatorInfo = CachedValidator;
 
 const Actions: React.FC = () => {
   const { provider, selectedSigner } = useContext(ReefSigners);

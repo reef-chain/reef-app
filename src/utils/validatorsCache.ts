@@ -7,9 +7,13 @@ export interface CachedValidator {
   minRequired: string;
 }
 
+export interface ValidatorInfo extends CachedValidator {
+  apy?: number;
+}
+
 interface CacheEntry {
   era: string;
-  validators: CachedValidator[];
+  validators: ValidatorInfo[];
 }
 
 export const CACHE_ACTIVE_KEY = 'cached-active-validators';
@@ -17,7 +21,7 @@ export const CACHE_ACTIVE_KEY = 'cached-active-validators';
 export const saveValidators = (
   key: string,
   era: string,
-  validators: CachedValidator[],
+  validators: ValidatorInfo[],
 ): void => {
   try {
     const data: CacheEntry = { era, validators };
@@ -30,7 +34,7 @@ export const saveValidators = (
 export const loadValidators = (
   key: string,
   era: string,
-): CachedValidator[] | null => {
+): ValidatorInfo[] | null => {
   try {
     const raw = localStorage.getItem(key);
     if (!raw) return null;
@@ -44,7 +48,7 @@ export const loadValidators = (
 
 export const loadCachedValidators = (
   key: string,
-): CachedValidator[] | null => {
+): ValidatorInfo[] | null => {
   try {
     const raw = localStorage.getItem(key);
     if (!raw) return null;
