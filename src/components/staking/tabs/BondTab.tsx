@@ -14,8 +14,7 @@ interface Props {
   handleBond(): void;
   handleUnbond(): void;
   redeemableBalance: BN;
-  remainingEras: number | null;
-  withdrawText: string;
+  unbondingInitiated: boolean;
   handleWithdraw(): void;
 }
 
@@ -29,8 +28,7 @@ export default function BondTab({
   handleBond,
   handleUnbond,
   redeemableBalance,
-  remainingEras,
-  withdrawText,
+  unbondingInitiated,
   handleWithdraw,
 }: Props): JSX.Element {
   const maxValue = stakeNumber === 0 ? availableAmount : lockedAmount;
@@ -72,11 +70,9 @@ export default function BondTab({
             loading={loading}
             onClick={stakeNumber === 0 ? handleBond : handleUnbond}
           />
-          {(redeemableBalance.gt(new BN(0)) || (remainingEras && remainingEras > 0)) && (
+          {unbondingInitiated && (
             <Uik.Button
-              success
-              text={withdrawText}
-              loading={loading}
+              text="Withdraw"
               disabled={!redeemableBalance.gt(new BN(0))}
               onClick={handleWithdraw}
             />
