@@ -51,6 +51,17 @@
   align-items: center;
 }
 
+.my-nominations .overlay-action__slot {
+  position: relative;
+}
+
+.my-nominations__btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
 .dashboard__balance-text {
   display: inline-flex;
 }
