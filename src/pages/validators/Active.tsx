@@ -56,7 +56,6 @@ const Active: React.FC = () => {
     }
   };
 
-
   const sortedValidators = useMemo(() => {
     const vals = [...validators];
     if (!sortBy) return vals;
@@ -143,13 +142,19 @@ const Active: React.FC = () => {
           return;
         }
         const addresses: string[] = overview.validators.map((a: any) => a.toString());
-        const vals: ValidatorInfo[] = [];
-        for (const addr of addresses) {
-          const [info, exposure, prefs] = await Promise.all([
-            api.derive.accounts.info(addr),
-            api.query.staking.erasStakers(overview.activeEra as any, addr),
-            api.query.staking.validators(addr),
-          ]);
+        const [infos, exposures, prefs] = await Promise.all([
+          Promise.all(addresses.map((addr) => api.derive.accounts.info(addr))),
+          api.query.staking.erasStakers.multi(
+            addresses.map((addr) => [overview.activeEra as any, addr]),
+          ),
+          api.query.staking.validators.multi(addresses),
+        ]);
+
+        const vals: ValidatorInfo[] = addresses.map((addr, idx) => {
+          const info = infos[idx];
+          const exposure = exposures[idx];
+          const pref = prefs[idx];
+
           let identity = '';
           if (info.identity) {
             const parent = (info.identity as any).displayParent;
@@ -160,6 +165,7 @@ const Active: React.FC = () => {
               identity = display;
             }
           }
+
           const others = (exposure as any)?.others || [];
           let minRequired = '0';
           if (others.length) {
@@ -172,15 +178,16 @@ const Active: React.FC = () => {
               minRequired = last.toString();
             }
           }
-          vals.push({
+
+          return {
             address: addr,
             identity,
             totalBonded: (exposure as any)?.total?.toString() || '0',
-            commission: prefs?.commission?.toString() || '0',
+            commission: (pref as any)?.commission?.toString() || '0',
             isActive: addresses.includes(addr),
             minRequired,
-          });
-        }
+          };
+        });
         const avgPoints = vals.length ? TOTAL_POINTS_TARGET / vals.length : 0;
         const withApy = vals.map((v) => ({
           ...v,
@@ -204,8 +211,6 @@ const Active: React.FC = () => {
     };
     load();
   }, [provider]);
-
-
 
   return (
     <Uik.Table seamless>
