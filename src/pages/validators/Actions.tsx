@@ -6,7 +6,6 @@ import { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
 import { utils, Components } from '@reef-chain/react-lib';
 import { utils as ethUtils } from 'ethers';
-import { extension as reefExt } from '@reef-chain/util-lib';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import ReefSigners from '../../context/ReefSigners';
 import { localizedStrings as strings } from '../../l10n/l10n';
@@ -20,10 +19,9 @@ import {
   CachedValidator,
 } from '../../utils/validatorsCache';
 import './validators.css';
-import BondModal from '../../components/staking/BondModal';
+import BondActionModal from '../../components/staking/BondActionModal';
 
 const { OverlayAction } = Components;
-const { web3Enable, web3FromSource } = reefExt;
 
 type ValidatorInfo = CachedValidator;
 
@@ -59,8 +57,16 @@ const Actions: React.FC = () => {
   const formattedStakeUsd = useMemo(() => formatCompactUSD(stakeUsd), [stakeUsd]);
   const [isNominationsOpen, setNominationsOpen] = useState(false);
   const [isBondOpen, setBondOpen] = useState(false);
-  const [nominationsToggle, setNominationsToggle] = useState<Record<string, boolean>>({});
-  const [txLoading, setTxLoading] = useState(false);
+  const [nominationMap, setNominationMap] = useState<Record<string, boolean>>({});
+  const [changingNoms, setChangingNoms] = useState(false);
+
+  useEffect(() => {
+    const map: Record<string, boolean> = {};
+    validators.forEach((v) => {
+      map[v.address] = nominations.includes(v.address);
+    });
+    setNominationMap(map);
+  }, [validators, nominations]);
 
   useEffect(() => {
     const load = async (): Promise<void> => {
@@ -77,7 +83,7 @@ const Actions: React.FC = () => {
           setLoading(false);
           return;
         }
-        const addresses: string[] = overview.validators;
+        const addresses: string[] = overview.validators.map((a: any) => a.toString());
         const vals: ValidatorInfo[] = [];
         for (const addr of addresses) {
           const [info, exposure, prefs] = await Promise.all([
@@ -86,7 +92,33 @@ const Actions: React.FC = () => {
             api.query.staking.validators(addr),
           ]);
           let identity = '';
-@@ -112,86 +116,143 @@ const Actions: React.FC = () => {
+          if (info.identity) {
+            const parent = (info.identity as any).displayParent;
+            const { display } = info.identity;
+            if (parent) {
+              identity = `${parent}/${display}`;
+            } else if (display) {
+              identity = display;
+            }
+          }
+          vals.push({
+            address: addr,
+            identity,
+            totalBonded: (exposure as any)?.total?.toString() || '0',
+            commission: prefs?.commission?.toString() || '0',
+            isActive: addresses.includes(addr),
+            minRequired: '0',
+          });
+        }
+        setValidators(vals);
+        saveValidators(cacheKey, era, vals);
+        setLoading(false);
+      } catch (e) {
+        console.warn('Error loading validators', e);
+        setLoading(false);
+      }
+    };
+    load();
   }, [provider]);
 
   useEffect(() => {
@@ -113,15 +145,6 @@ const Actions: React.FC = () => {
   }, [provider, selectedSigner]);
 
   useEffect(() => {
-    if (!isNominationsOpen) return;
-    const toggles: Record<string, boolean> = {};
-    validators.forEach((v) => {
-      toggles[v.address] = nominations.includes(v.address);
-    });
-    setNominationsToggle(toggles);
-  }, [isNominationsOpen, nominations, validators]);
-
-  useEffect(() => {
     if (selectedSigner?.lockedBalance) {
       setNominatorStake(selectedSigner.lockedBalance.toString());
     } else {
@@ -129,29 +152,31 @@ const Actions: React.FC = () => {
     }
   }, [selectedSigner]);
 
-  const submitNominations = async (): Promise<void> => {
+  const toggleNomination = (addr: string): void => {
+    setNominationMap({
+      ...nominationMap,
+      [addr]: !nominationMap[addr],
+    });
+  };
+
+  const handleChangeNominations = async (): Promise<void> => {
     if (!provider?.api || !selectedSigner) return;
     const api = provider.api as ApiPromise;
+    const targets = Object.keys(nominationMap).filter((a) => nominationMap[a]);
     try {
-      await web3Enable('reef-app');
-      const injector = await web3FromSource('polkadot-js');
-      api.setSigner(injector.signer);
-    } catch {
-      // ignore
-    }
-    const targets = Object.keys(nominationsToggle).filter((addr) => nominationsToggle[addr]);
-    try {
-      setTxLoading(true);
-      await api.tx.staking.nominate(targets).signAndSend(selectedSigner.address, ({ status }: any) => {
-        if (status.isInBlock || status.isFinalized) {
-          Uik.notify.success('Nominations updated');
-          setTxLoading(false);
-          setNominations(targets);
-          setNominationsOpen(false);
-        }
-      });
-    } catch {
-      setTxLoading(false);
+      setChangingNoms(true);
+      await api.tx.staking
+        .nominate(targets)
+        .signAndSend(selectedSigner.address, ({ status }: any) => {
+          if (status.isInBlock || status.isFinalized) {
+            Uik.notify.success('Nominations updated');
+            setChangingNoms(false);
+            setNominations(targets);
+            setNominationsOpen(false);
+          }
+        });
+    } catch (e) {
+      setChangingNoms(false);
       Uik.notify.danger('Failed to update nominations');
     }
   };
@@ -182,17 +207,18 @@ const Actions: React.FC = () => {
       >
         <div className="my-nominations__btn-container">
           <Uik.Button
-            success
             text="Change Nominations"
-            loading={txLoading}
-            onClick={submitNominations}
+            loading={changingNoms}
+            onClick={handleChangeNominations}
+            success
+            fill
           />
         </div>
         <Uik.Table seamless>
           <Uik.THead>
             <Uik.Tr>
               <Uik.Th>Validator</Uik.Th>
-              <Uik.Th>Status</Uik.Th>
+              <Uik.Th>Nominate</Uik.Th>
             </Uik.Tr>
           </Uik.THead>
           <Uik.TBody>
@@ -207,11 +233,8 @@ const Actions: React.FC = () => {
                   <Uik.Toggle
                     onText="Enabled"
                     offText="Disabled"
-                    value={nominationsToggle[v.address] || false}
-                    onChange={(e) => setNominationsToggle({
-                      ...nominationsToggle,
-                      [v.address]: e,
-                    })}
+                    value={nominationMap[v.address]}
+                    onChange={() => toggleNomination(v.address)}
                   />
                 </Uik.Td>
               </Uik.Tr>
@@ -219,11 +242,12 @@ const Actions: React.FC = () => {
           </Uik.TBody>
         </Uik.Table>
       </OverlayAction>
-      <BondModal
+      <BondActionModal
         isOpen={isBondOpen}
         onClose={() => setBondOpen(false)}
         api={provider?.api as ApiPromise}
         accountAddress={selectedSigner?.address || ''}
+        stakeNumber={stakeNumber}
       />
     </div>
   );
