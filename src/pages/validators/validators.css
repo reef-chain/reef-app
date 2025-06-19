@@ -67,12 +67,9 @@
 
 .validators-page__actions {
   display: flex;
-  gap: 1rem;
+  justify-content: flex-end;
+  gap: 0.5rem;
   margin-bottom: 20px;
-}
-
-.validators-page__actions .bond-button {
-  margin-left: auto;
 }
 
 .dashboard__balance-text {

@@ -203,7 +203,6 @@ const Actions: React.FC = () => {
               text={strings.staking_bond_unbond}
               fill
               onClick={() => setBondOpen(true)}
-              className="bond-button"
             />
           </div>
         </>
