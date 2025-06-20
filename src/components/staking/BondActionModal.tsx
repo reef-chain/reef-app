@@ -1,8 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
 import { Components } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import { ApiPromise } from '@polkadot/api';
 import BN from 'bn.js';
+import BigNumber from 'bignumber.js';
 import { bnToBn } from '@polkadot/util';
 import { extension as reefExt } from '@reef-chain/util-lib';
 import BondTab from './tabs/BondTab';
@@ -15,6 +16,7 @@ import ReefSigners from '../../context/ReefSigners';
 const { OverlayAction } = Components;
 const { web3Enable, web3FromSource } = reefExt;
 const DECIMALS = new BN(10).pow(new BN(18));
+const DECIMALS_BIG = new BigNumber(10).pow(18);
 
 interface Props {
   isOpen: boolean;
@@ -31,9 +33,14 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
   const [stakedBalance, setStakedBalance] = useState<BN>(new BN(0));
   const [redeemableBalance, setRedeemableBalance] = useState<BN>(new BN(0));
   const [unbondingInitiated, setUnbondingInitiated] = useState(false);
+  const [unbondingAmount, setUnbondingAmount] = useState<BigNumber>(new BigNumber(0));
   const [bondAmount, setBondAmount] = useState(0);
   const [stakeAmount, setStakeAmount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const activeStake = useMemo(
+    () => new BigNumber(stakedBalance.toString()).minus(unbondingAmount),
+    [stakedBalance, unbondingAmount],
+  );
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -53,9 +60,20 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
         const unlocking = data?.unlocking;
         setUnbondingInitiated(Array.isArray(unlocking) && unlocking.length > 0);
         setRedeemableBalance(new BN(data?.redeemable || '0').div(DECIMALS));
+        if (Array.isArray(unlocking)) {
+          const total = unlocking.reduce(
+            (acc: BigNumber, item: any) =>
+              acc.plus(new BigNumber(item?.value || 0).dividedBy(DECIMALS_BIG)),
+            new BigNumber(0),
+          );
+          setUnbondingAmount(total);
+        } else {
+          setUnbondingAmount(new BigNumber(0));
+        }
       })
       .catch(() => {
         setUnbondingInitiated(false);
+        setUnbondingAmount(new BigNumber(0));
       });
     (async () => {
       try {
@@ -132,7 +150,7 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
 
   const feeReserve = 10;
   const bondAvailable = availableBalance.toNumber();
-  const bondLocked = stakedBalance.toNumber();
+  const bondLocked = activeStake.toNumber();
   const stakingMaxValue = Math.max(0, availableBalance.toNumber() - feeReserve);
 
   return (
@@ -156,7 +174,8 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
             bondAmount={bondAmount}
             setBondAmount={setBondAmount}
             availableAmount={bondAvailable}
-            lockedAmount={bondLocked}
+            activeStake={bondLocked}
+            unbondingAmount={unbondingAmount}
             stakeNumber={stakeNumber}
             loading={loading}
             handleBond={handleBond}
