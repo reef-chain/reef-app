@@ -82,13 +82,27 @@ const Actions: React.FC = () => {
           return;
         }
         const addresses: string[] = overview.validators.map((a: any) => a.toString());
-        const [infos, exposures, prefs] = await Promise.all([
-          Promise.all(addresses.map((addr) => api.derive.accounts.info(addr))),
-          api.query.staking.erasStakers.multi(
-            addresses.map((addr) => [overview.activeEra as any, addr]),
-          ),
-          api.query.staking.validators.multi(addresses),
-        ]);
+        const infos = await Promise.all(
+          addresses.map((addr) => api.derive.accounts.info(addr)),
+        );
+
+        const exposures: any[] = [];
+        for (let i = 0; i < addresses.length; i += 50) {
+          const chunk = addresses.slice(i, i + 50);
+          // eslint-disable-next-line no-await-in-loop
+          const res = await api.query.staking.erasStakers.multi(
+            chunk.map((addr) => [overview.activeEra as any, addr]),
+          );
+          exposures.push(...res);
+        }
+
+        const prefs: any[] = [];
+        for (let i = 0; i < addresses.length; i += 50) {
+          const chunk = addresses.slice(i, i + 50);
+          // eslint-disable-next-line no-await-in-loop
+          const res = await api.query.staking.validators.multi(chunk);
+          prefs.push(...res);
+        }
 
         const vals: ValidatorInfo[] = addresses.map((addr, idx) => {
           const info = infos[idx];
