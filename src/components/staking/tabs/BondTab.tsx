@@ -1,14 +1,17 @@
 import React from 'react';
 import Uik from '@reef-chain/ui-kit';
+import BigNumber from 'bignumber.js';
 import BN from 'bn.js';
 import PercentSlider from '../PercentSlider';
 import { localizedStrings as strings } from '../../../l10n/l10n';
+import { displayBalance } from '../../../utils/displayBalance';
 
 interface Props {
   bondAmount: number;
   setBondAmount(value: number): void;
   availableAmount: number;
-  lockedAmount: number;
+  activeStake: number;
+  unbondingAmount: BigNumber;
   stakeNumber: number;
   loading: boolean;
   handleBond(): void;
@@ -22,7 +25,8 @@ export default function BondTab({
   bondAmount,
   setBondAmount,
   availableAmount,
-  lockedAmount,
+  activeStake,
+  unbondingAmount,
   stakeNumber,
   loading,
   handleBond,
@@ -31,7 +35,7 @@ export default function BondTab({
   unbondingInitiated,
   handleWithdraw,
 }: Props): JSX.Element {
-  const maxValue = stakeNumber === 0 ? availableAmount : lockedAmount;
+  const maxValue = stakeNumber === 0 ? availableAmount : activeStake;
   return (
     <div className="bond-action-wrapper">
       <Uik.Card className="bond-action-card">
@@ -62,6 +66,11 @@ export default function BondTab({
           onChange={setBondAmount}
         />
       </Uik.Card>
+      {unbondingAmount.isGreaterThan(0) && (
+        <Uik.Text type="mini">
+          Unbonding: {`${displayBalance(unbondingAmount.toFixed())} REEF`}
+        </Uik.Text>
+      )}
       <Uik.Card className="bond-action-card bond-action-card-button">
         <>
           <Uik.Button
