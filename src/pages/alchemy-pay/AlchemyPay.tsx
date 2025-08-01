@@ -13,7 +13,7 @@ function AlchemyPay(): JSX.Element {
 
   const signer: ReefSigner | undefined | null = useContext(ReefSigners).selectedSigner;
 
-  const ALCHEMY_PAY_ENDPOINT = "http://localhost:3001/alchemy-pay/signature";
+  const ALCHEMY_PAY_ENDPOINT = "https://api.reefscan.com/alchemy-pay/signature";
 
   // https://alchemypay.notion.site/REEF-2234bb38a28080ae8e17dd65a6ea5822
   const MIN_AMOUNT = 15;
