@@ -6,13 +6,6 @@ import "./index.css"
 import Hero from './Hero';
 import axios from 'axios';
 
-// todo
-// 1. display the selected account address ✅
-// 2. enter the amount to buy ✅
-// 3. a button below it which should make request to the endpoint ✅
-// 4. should generate a random id for merchant id ✅
-// 5. retrieve the url and integrate it in iframe ✅
-
 function AlchemyPay(): JSX.Element {
   const [amount, setAmount] = useState('0');
   const [alchemyPayUrl, setAlchemyPayUrl] = useState(undefined);
