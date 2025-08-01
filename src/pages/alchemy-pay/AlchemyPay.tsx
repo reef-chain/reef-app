@@ -27,7 +27,7 @@ function AlchemyPay(): JSX.Element {
       return;
     }
 
-    setError(''); // clear error if valid
+    setError('');
 
     try {
       const merchantOrderNo = Date.now().toString() + signer?.address;
