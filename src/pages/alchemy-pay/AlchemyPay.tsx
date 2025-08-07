@@ -40,7 +40,7 @@ function AlchemyPay(): JSX.Element {
           network: 'REEF'
         }
       });
-      setAlchemyPayUrl(response.data.link);
+      setAlchemyPayUrl(response.data.data);
     } catch (error: any) {
       Uik.notify.danger(error.message);
     }
