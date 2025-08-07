@@ -1,22 +1,23 @@
-import { Token,Components } from '@reef-chain/react-lib';
+import { Token, Components } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext } from 'react';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
+import { extension as reefExt } from '@reef-chain/util-lib';
 import TokenPricesContext from '../../context/TokenPricesContext';
 import { BUY_URL, CREATE_ERC20_TOKEN_URL } from '../../urls';
 import { localizedStrings } from '../../l10n/l10n';
 import './loading-animation.css';
+import TokenCardWithTooltip from './TokenCardWithTooltip';
 import ReefSigners from '../../context/ReefSigners';
 import { isReefswapUI, useDexConfig } from '../../environment';
 import PoolContext from '../../context/PoolContext';
 import HideBalance from '../../context/HideBalance';
 import useConnectedWallet from '../../hooks/useConnectedWallet';
-import { extension as reefExt } from '@reef-chain/util-lib';
 import useWcPreloader from '../../hooks/useWcPreloader';
 
-const {Skeleton,TokenCard} = Components;
+const { Skeleton } = Components;
 
 interface TokenBalances {
     tokens: Token[];
@@ -40,21 +41,23 @@ const balanceValue = (token: Token, price = 0): number => (new BigNumber(token.b
 
 export const TokenBalances = ({ tokens }: TokenBalances): JSX.Element => {
   const tokenPrices = useContext(TokenPricesContext);
-  const { selectedSigner, network,accounts,provider } = useContext(ReefSigners);
+  const {
+    selectedSigner, network, accounts, provider,
+  } = useContext(ReefSigners);
   const pools = useContext(PoolContext);
-  const hidebalance = useContext(HideBalance)
-  const {selExtensionName} = useConnectedWallet();
-  const {setLoading:setWcPreloader} = useWcPreloader();
+  const hidebalance = useContext(HideBalance);
+  const { selExtensionName } = useConnectedWallet();
+  const { setLoading: setWcPreloader } = useWcPreloader();
   const { walletSelectorOptions } = Components;
 
-  const isWalletConnect = selExtensionName == walletSelectorOptions[reefExt.REEF_WALLET_CONNECT_IDENT].name
+  const isWalletConnect = selExtensionName == walletSelectorOptions[reefExt.REEF_WALLET_CONNECT_IDENT].name;
 
-  const handleWalletConnectModal = (hasStarted:boolean)=>{
-      setWcPreloader({
-value:hasStarted,
-message:"waiting for transaction approval"
-      })
-  }
+  const handleWalletConnectModal = (hasStarted:boolean) => {
+    setWcPreloader({
+      value: hasStarted,
+      message: 'waiting for transaction approval',
+    });
+  };
 
   const isReefBalanceZero = selectedSigner?.balance._hex === '0x00';
 
@@ -85,22 +88,22 @@ message:"waiting for transaction approval"
     })
     .map((token) => (
       <div key={token.address}>
-        <TokenCard
-        accounts={accounts}
-        hideBalance={hidebalance}
-        isReefswapUI={isReefswapUI}
-        nw={network}
-        pools={pools}
-        price={tokenPrices[token.address] || 0}
-        token={token}
-        tokens={tokens}
-        useDexConfig={useDexConfig}
-        provider={provider}
-        selectedSigner={selectedSigner}
-        signer={selectedSigner}
-        tokenPrices={tokenPrices}
-        isWalletConnect={isWalletConnect}
-        handleWalletConnectModal={handleWalletConnectModal}
+        <TokenCardWithTooltip
+          accounts={accounts}
+          hideBalance={hidebalance}
+          isReefswapUI={isReefswapUI}
+          nw={network}
+          pools={pools}
+          price={tokenPrices[token.address] || 0}
+          token={token}
+          tokens={tokens}
+          useDexConfig={useDexConfig}
+          provider={provider}
+          selectedSigner={selectedSigner}
+          signer={selectedSigner}
+          tokenPrices={tokenPrices}
+          isWalletConnect={isWalletConnect}
+          handleWalletConnectModal={handleWalletConnectModal}
         />
       </div>
     ));
@@ -138,7 +141,7 @@ message:"waiting for transaction approval"
                       : (
                         <>
                           {tokenCards}
-                          {tokens.length > 1 && isReefswapUI&&<CreateTokenButton />}
+                          {tokens.length > 1 && isReefswapUI && <CreateTokenButton />}
                         </>
                       )
                   )
