@@ -9,13 +9,14 @@ import { ReefSigner } from '@reef-chain/react-lib';
 function AlchemyPay(): JSX.Element {
   const [amount, setAmount] = useState('0');
   const [error, setError] = useState('');
+  const [isIframeLoaded, setIsIframeLoaded] = useState(false);
+  const [isIframeLoading, setIsIframeLoading] = useState(false);
   const [alchemyPayUrl, setAlchemyPayUrl] = useState<string | undefined>(undefined);
 
   const signer: ReefSigner | undefined | null = useContext(ReefSigners).selectedSigner;
 
   const ALCHEMY_PAY_ENDPOINT = "https://api.reefscan.com/alchemy-pay/signature";
 
-  // https://alchemypay.notion.site/REEF-2234bb38a28080ae8e17dd65a6ea5822
   const MIN_AMOUNT = 15;
   const MAX_AMOUNT = 2000;
 
@@ -27,6 +28,8 @@ function AlchemyPay(): JSX.Element {
       return;
     }
 
+    setIsIframeLoading(true);
+    setIsIframeLoaded(false);
     setError('');
 
     try {
@@ -42,12 +45,15 @@ function AlchemyPay(): JSX.Element {
       });
       setAlchemyPayUrl(response.data.data);
     } catch (error: any) {
+      setIsIframeLoading(false);
       Uik.notify.danger(error.message);
     }
   };
 
   const resetPage = () => {
     setAlchemyPayUrl(undefined);
+    setIsIframeLoading(false);
+    setIsIframeLoaded(false);
     setAmount('0');
     setError('');
   };
@@ -58,8 +64,8 @@ function AlchemyPay(): JSX.Element {
         <Hero title="Buy Reef" subtitle="Top up your Reef wallet in few clicks!" isLoading={signer == undefined} />
 
         <div className={`${alchemyPayUrl ? 'alchemy-' : ''}form-wrapper`}>
-          {alchemyPayUrl ? (
-            <div className='alchemy-pay-iframe'>
+          {alchemyPayUrl && (
+            <div className='alchemy-pay-iframe' style={{ display: isIframeLoaded ? 'flex' : 'none' }}>
               <iframe
                 src={alchemyPayUrl}
                 height="580px"
@@ -67,10 +73,13 @@ function AlchemyPay(): JSX.Element {
                 frameBorder="0"
                 style={{ marginTop: '20px' }}
                 title="AlchemyPay Ramp"
+                onLoad={() => setIsIframeLoaded(true)}
               ></iframe>
               <Uik.Button text='Reset' onClick={resetPage} fill className="wide-button" />
             </div>
-          ) : (
+          )}
+
+          {!isIframeLoaded && (
             <>
               <Uik.Input
                 label='Amount (USD)'
@@ -92,7 +101,12 @@ function AlchemyPay(): JSX.Element {
 
               <br />
 
-              <Uik.Button text='Purchase' onClick={getAlchemyPayUrl} fill className="wide-button" />
+              <Uik.Button
+                text={isIframeLoading ? 'Purchasing' : 'Purchase'}
+                onClick={getAlchemyPayUrl}
+                fill
+                className="wide-button"
+              />
             </>
           )}
         </div>
