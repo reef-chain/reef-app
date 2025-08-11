@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {
   useEffect, useState, useContext, useMemo,
 } from 'react';
@@ -36,7 +37,6 @@ const Actions: React.FC = () => {
       return [];
     }
   });
-  const [loading, setLoading] = useState<boolean>(false);
   const [nominations, setNominations] = useState<string[]>([]);
   const [nominatorStake, setNominatorStake] = useState<string>('0');
   const stakeNumber = Number(ethUtils.formatUnits(nominatorStake || '0', 18));
@@ -57,6 +57,7 @@ const Actions: React.FC = () => {
   const [isBondOpen, setBondOpen] = useState(false);
   const [nominationMap, setNominationMap] = useState<Record<string, boolean>>({});
   const [changingNoms, setChangingNoms] = useState(false);
+  const [showWaiting, setShowWaiting] = useState(false);
 
   useEffect(() => {
     const map: Record<string, boolean> = {};
@@ -71,74 +72,112 @@ const Actions: React.FC = () => {
       if (!provider?.api) return;
       const api = provider.api as ApiPromise;
       try {
-        setLoading(true);
         const overview: any = await api.derive.staking.overview();
         const era = overview.activeEra?.toString() || `${overview.activeEra}`;
         const cacheKey = CACHE_ACTIVE_KEY;
         const cached = loadValidators(cacheKey, era) as ValidatorInfo[] | null;
+
+        let activeVals: ValidatorInfo[];
+        let activeAddresses: string[] = [];
         if (cached) {
-          setValidators(cached);
-          setLoading(false);
-          return;
-        }
-        const addresses: string[] = overview.validators.map((a: any) => a.toString());
-        const infos = await Promise.all(
-          addresses.map((addr) => api.derive.accounts.info(addr)),
-        );
-
-        const exposures: any[] = [];
-        for (let i = 0; i < addresses.length; i += 50) {
-          const chunk = addresses.slice(i, i + 50);
-          // eslint-disable-next-line no-await-in-loop
-          const res = await api.query.staking.erasStakers.multi(
-            chunk.map((addr) => [overview.activeEra as any, addr]),
+          activeVals = cached;
+          activeAddresses = cached.map((v) => v.address);
+        } else {
+          activeAddresses = overview.validators.map((a: any) => a.toString());
+          const infos = await Promise.all(
+            activeAddresses.map((addr) => api.derive.accounts.info(addr)),
           );
-          exposures.push(...res);
-        }
 
-        const prefs: any[] = [];
-        for (let i = 0; i < addresses.length; i += 50) {
-          const chunk = addresses.slice(i, i + 50);
-          // eslint-disable-next-line no-await-in-loop
-          const res = await api.query.staking.validators.multi(chunk);
-          prefs.push(...res);
-        }
-
-        const vals: ValidatorInfo[] = addresses.map((addr, idx) => {
-          const info = infos[idx];
-          const exposure = exposures[idx];
-          const pref = prefs[idx];
-
-          let identity = '';
-          if (info.identity) {
-            const parent = (info.identity as any).displayParent;
-            const { display } = info.identity;
-            if (parent) {
-              identity = `${parent}/${display}`;
-            } else if (display) {
-              identity = display;
-            }
+          const exposures: any[] = [];
+          for (let i = 0; i < activeAddresses.length; i += 50) {
+            const chunk = activeAddresses.slice(i, i + 50);
+            // eslint-disable-next-line no-await-in-loop
+            const res = await api.query.staking.erasStakers.multi(
+              chunk.map((addr) => [overview.activeEra as any, addr]),
+            );
+            exposures.push(...res);
           }
 
-          return {
-            address: addr,
-            identity,
-            totalBonded: (exposure as any)?.total?.toString() || '0',
-            commission: (pref as any)?.commission?.toString() || '0',
-            isActive: addresses.includes(addr),
-            minRequired: '0',
-          };
-        });
-        setValidators(vals);
-        saveValidators(cacheKey, era, vals);
-        setLoading(false);
+          const prefs: any[] = [];
+          for (let i = 0; i < activeAddresses.length; i += 50) {
+            const chunk = activeAddresses.slice(i, i + 50);
+            // eslint-disable-next-line no-await-in-loop
+            const res = await api.query.staking.validators.multi(chunk);
+            prefs.push(...res);
+          }
+
+          activeVals = activeAddresses.map((addr, idx) => {
+            const info = infos[idx];
+            const exposure = exposures[idx];
+            const pref = prefs[idx];
+
+            let identity = '';
+            if (info.identity) {
+              const parent = (info.identity as any).displayParent;
+              const { display } = info.identity;
+              if (parent) {
+                identity = `${parent}/${display}`;
+              } else if (display) {
+                identity = display;
+              }
+            }
+
+            return {
+              address: addr,
+              identity,
+              totalBonded: (exposure as any)?.total?.toString() || '0',
+              commission: (pref as any)?.commission?.toString() || '0',
+              isActive: true,
+              minRequired: '0',
+            };
+          });
+
+          saveValidators(cacheKey, era, activeVals);
+        }
+
+        let waitingVals: ValidatorInfo[] = [];
+        if (showWaiting) {
+          const allValidatorKeys = await api.query.staking.validators.keys();
+          const allAddresses = allValidatorKeys.map((k) => k.args[0].toString());
+          const waitingAddresses = allAddresses.filter(
+            (addr) => !activeAddresses.includes(addr),
+          );
+
+          const waitingInfos = await Promise.all(
+            waitingAddresses.map((addr) => api.derive.accounts.info(addr)),
+          );
+          waitingVals = waitingAddresses.map((addr, idx) => {
+            const info = waitingInfos[idx];
+
+            let identity = '';
+            if (info.identity) {
+              const parent = (info.identity as any).displayParent;
+              const { display } = info.identity;
+              if (parent) {
+                identity = `${parent}/${display}`;
+              } else if (display) {
+                identity = display;
+              }
+            }
+
+            return {
+              address: addr,
+              identity,
+              totalBonded: '0',
+              commission: '0',
+              isActive: false,
+              minRequired: '0',
+            };
+          });
+        }
+
+        setValidators([...activeVals, ...waitingVals]);
       } catch (e) {
         console.warn('Error loading validators', e);
-        setLoading(false);
       }
     };
     load();
-  }, [provider]);
+  }, [provider, showWaiting]);
 
   useEffect(() => {
     const loadNominations = async (): Promise<void> => {
@@ -241,6 +280,12 @@ const Actions: React.FC = () => {
             fill
           />
         </div>
+        <Uik.Checkbox
+          value={showWaiting}
+          onChange={setShowWaiting}
+          label={strings.show_waiting_validators}
+          className="my-nominations__show-waiting"
+        />
         <Uik.Table seamless>
           <Uik.THead>
             <Uik.Tr>
@@ -249,23 +294,25 @@ const Actions: React.FC = () => {
             </Uik.Tr>
           </Uik.THead>
           <Uik.TBody>
-            {validators.map((v) => (
-              <Uik.Tr key={v.address}>
-                <Uik.Td>
-                  <div className="validators-page__id">
-                    {v.identity || shortAddress(v.address)}
-                  </div>
-                </Uik.Td>
-                <Uik.Td>
-                  <Uik.Toggle
-                    onText="Enabled"
-                    offText="Disabled"
-                    value={nominationMap[v.address]}
-                    onChange={() => toggleNomination(v.address)}
-                  />
-                </Uik.Td>
-              </Uik.Tr>
-            ))}
+            {validators
+              .filter((v) => showWaiting || v.isActive)
+              .map((v) => (
+                <Uik.Tr key={v.address}>
+                  <Uik.Td>
+                    <div className="validators-page__id">
+                      {v.identity || shortAddress(v.address)}
+                    </div>
+                  </Uik.Td>
+                  <Uik.Td>
+                    <Uik.Toggle
+                      onText="Enabled"
+                      offText="Disabled"
+                      value={nominationMap[v.address]}
+                      onChange={() => toggleNomination(v.address)}
+                    />
+                  </Uik.Td>
+                </Uik.Tr>
+              ))}
           </Uik.TBody>
         </Uik.Table>
       </OverlayAction>
