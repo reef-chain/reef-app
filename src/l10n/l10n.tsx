@@ -117,6 +117,7 @@ export const localizedStrings = new LocalizedStrings({
     staking_withdraw_error: 'Withdraw failed',
     staking_tab: 'Staking',
     staking_fees_warning: 'Leave at least 10 REEF for fees',
+    show_waiting_validators: 'Show waiting validators',
   },
   hi: {
     bonds: 'बॉन्ड',
@@ -231,6 +232,7 @@ export const localizedStrings = new LocalizedStrings({
     staking_withdraw_error: 'निकासी विफल',
     staking_tab: 'स्टेकिंग',
     staking_fees_warning: 'कृपया फीस के लिए कम से कम 10 रीफ छोड़ें',
+    show_waiting_validators: 'वेटिंग वैलिडेटरों को दिखाएँ',
   },
 });
 
