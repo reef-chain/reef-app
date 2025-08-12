@@ -17,7 +17,8 @@ export const CREATE_ERC20_TOKEN_URL = '/create-token';
 export const BONDS_URL = '/bonds';
 export const BIND_URL = '/bind/:address1';
 export const BUY_URL = '/buy';
-export const ONRAMP_URL = BUY_URL;
+export const ALCHEMY_PAY_URL = BUY_URL;
+// export const ONRAMP_URL = BUY_URL;
 export const SNAP_URL = '/snap';
 
 export const addressReplacer = (url: string, address1: string, address2?: string): string => {

@@ -8,12 +8,13 @@ import TokenContext from '../context/TokenContext';
 import TokenPrices from '../context/TokenPricesContext';
 import {
   ADD_LIQUIDITY_URL,
+  ALCHEMY_PAY_URL,
   BIND_URL,
   BONDS_URL,
   BUY_URL,
   CREATE_ERC20_TOKEN_URL,
   DASHBOARD_URL,
-  ONRAMP_URL,
+  // ONRAMP_URL,
   POOL_CHART_URL,
   POOLS_URL,
   REMOVE_LIQUIDITY_URL,
@@ -38,6 +39,7 @@ import ReefSigners from '../context/ReefSigners';
 import Snap from './snap/Snap';
 import { utils } from '@reef-chain/react-lib';
 import {tokenPriceUtils, tokenUtil} from '@reef-chain/util-lib';
+import AlchemyPay from './alchemy-pay/AlchemyPay';
 
 const ContentRouter = (): JSX.Element => {
   const { reefState, selectedSigner } = useContext(ReefSigners);
@@ -80,8 +82,9 @@ const ContentRouter = (): JSX.Element => {
                   <Route exact path={CREATE_ERC20_TOKEN_URL} component={Creator} />
                   <Route exact path={BONDS_URL} component={Bonds} />
                   <Route path={BIND_URL} component={Bind} />
-                  <Route path={BUY_URL} component={Onramp} />
-                  <Route path={ONRAMP_URL} component={Onramp} />
+                  {/* <Route path={BUY_URL} component={Buy} /> */}
+                  <Route path={ALCHEMY_PAY_URL} component={AlchemyPay} />
+                  {/* <Route path={ONRAMP_URL} component={Onramp} /> */}
                   <Route path={SNAP_URL} component={Snap} />
                   <Route path="/" render={() => (<Redirect to={DASHBOARD_URL} />)} />
                 </Switch>
@@ -100,8 +103,9 @@ const ContentRouter = (): JSX.Element => {
                   <Route exact path={CREATE_ERC20_TOKEN_URL} component={Creator} />
                   <Route exact path={BONDS_URL} component={Bonds} />
                   <Route path={BIND_URL} component={Bind} />
-                  <Route path={BUY_URL} component={Buy} />
-                  <Route path={ONRAMP_URL} component={Onramp} />
+                  {/* <Route path={BUY_URL} component={Buy} /> */}
+                  <Route path={ALCHEMY_PAY_URL} component={AlchemyPay} />
+                  {/* <Route path={ONRAMP_URL} component={Onramp} /> */}
                   <Route path={SNAP_URL} component={Snap} />
                   <Route path="/" render={() => (<Redirect to={DASHBOARD_URL} />)} />
                 </Switch>

@@ -1,0 +1,43 @@
+
+.hero {
+    position: relative;
+    background: linear-gradient(to right, var(--primary), var(--secondary));
+    overflow: hidden;
+    border-radius: 1rem;
+    text-align: center;
+  }
+  
+  .hero-image {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+  }
+  
+  .headline-wrapper {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .hero-headline {
+    padding-top: 2rem;
+    font-size: 1.8rem;
+    color: white;
+  }
+  
+  .hero-subtitle {
+    padding-bottom: 4rem;
+    color: white;
+  }
+  
+  @media only screen and (min-width: 769px) {
+    .hero-headline {
+      padding-top: 2rem;
+      font-size: 2.8rem;
+    }
+    
+    .hero-image {
+      height: auto;
+      max-width: 100%;
+    }
+  }
