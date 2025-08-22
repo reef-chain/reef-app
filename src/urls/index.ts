@@ -1,9 +1,9 @@
 import { utils } from '@reef-chain/react-lib';
 
-export interface UrlAddressParams {
+export type UrlAddressParams = {
   address1: string;
   address2: string;
-}
+};
 
 export const SPECIFIED_SWAP_URL = '/swap/:address1/:address2';
 export const POOLS_URL = '/pools';

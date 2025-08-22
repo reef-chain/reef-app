@@ -2,7 +2,7 @@ import {
   Components, hooks, Settings, store, Token,
 } from '@reef-chain/react-lib';
 import React, { useContext, useReducer } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from "react-router-dom";
 import axios, { AxiosInstance } from 'axios';
 import { network as libNet } from '@reef-chain/util-lib';
 import TokenContext from '../../context/TokenContext';
@@ -15,21 +15,21 @@ import { useDexConfig } from '../../environment';
 const { SwapComponent } = Components;
 
 const Swap = (): JSX.Element => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { tokens } = useContext(TokenContext);
   const tokenPrices = useContext(TokenPricesContext);
   const { address1, address2 } = useParams<UrlAddressParams>();
 
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
-  const network:libNet.DexProtocolv2|undefined = useDexConfig(nw);
+  const network: libNet.DexProtocolv2 | undefined = useDexConfig(nw);
   const httpClient: AxiosInstance = axios;
 
   const [state, dispatch] = useReducer(store.swapReducer, store.initialSwapState);
   // hook manages all necessary swap updates
   hooks.useSwapState({
-    address1,
-    address2,
+    address1: address1 ?? "",
+    address2: address2 ?? "",
     dispatch,
     httpClient,
     state,
@@ -49,30 +49,30 @@ const Swap = (): JSX.Element => {
     onSuccess: () => {
       // do nothing
     },
-    updateTokenState: async () => {}, // eslint-disable-line
+    updateTokenState: async () => { }, // eslint-disable-line
   });
   const onSwitch = (): void => {
     dispatch(store.switchTokensAction());
     dispatch(store.clearTokenAmountsAction());
-    history.push(addressReplacer(SPECIFIED_SWAP_URL, state.token2.address, state.token1.address));
+    navigate(addressReplacer(SPECIFIED_SWAP_URL, state.token2.address, state.token1.address));
   };
   const selectToken1 = (token: Token): void => {
     dispatch(store.setToken1Action(token));
     dispatch(store.clearTokenAmountsAction());
-    history.push(addressReplacer(SPECIFIED_SWAP_URL, token.address, state.token2.address));
+    navigate(addressReplacer(SPECIFIED_SWAP_URL, token.address, state.token2.address));
   };
   const selectToken2 = (token: Token): void => {
     dispatch(store.setToken2Action(token));
     dispatch(store.clearTokenAmountsAction());
-    history.push(addressReplacer(SPECIFIED_SWAP_URL, state.token1.address, token.address));
+    navigate(addressReplacer(SPECIFIED_SWAP_URL, state.token1.address, token.address));
   };
   const setSettings = (settings: Settings): void => dispatch(store.setSettingsAction(settings));
   const setToken1Amount = (amount: string): void => dispatch(store.setToken1AmountAction(amount));
   const setToken2Amount = (amount: string): void => dispatch(store.setToken2AmountAction(amount));
 
   const actions: store.SwapComponentActions = {
-    onAddressChange: async () => {}, // eslint-disable-line
-    setPercentage: () => {}, // eslint-disable-line
+    onAddressChange: async () => { }, // eslint-disable-line
+    setPercentage: () => { }, // eslint-disable-line
     onSwap,
     onSwitch,
     selectToken1,

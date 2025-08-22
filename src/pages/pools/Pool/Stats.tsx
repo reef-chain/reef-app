@@ -94,7 +94,7 @@ const Token = ({ token, price }: TokenStatsProps): JSX.Element => {
   )
 };
 
-interface UrlParams {
+type UrlParams= {
   address: string;
 }
 
@@ -203,7 +203,7 @@ const Stats = ({
       />
 
       <PoolTransactions
-        address={address}
+        address={address!}
         reefscanUrl={reefscanUrl}
         isOpen={isTransactionsOpen}
         onClose={() => setTransactionsOpen(false)}

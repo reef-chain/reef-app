@@ -1,6 +1,6 @@
 import { ReefSigner, defaultOptions, hooks } from '@reef-chain/react-lib';
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Uik from '@reef-chain/ui-kit';
@@ -103,7 +103,7 @@ const App = (): JSX.Element => {
     }
   },[selectedReefSigner,signers])
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
   const hideBalance = {
     isHidden: isBalanceHidden,
@@ -123,7 +123,7 @@ const App = (): JSX.Element => {
 
   useEffect(() => {
     if (selExtensionName === reefExt.REEF_SNAP_IDENT && error?.code === 2) {
-      history.push(SNAP_URL);
+      navigate(SNAP_URL);
     }
   }, [extension, error]);
   
@@ -232,7 +232,7 @@ useEffect(()=>{
         )
         : (
         <>
-          <OptionContext.Provider value={{ ...defaultOptions, back: history.goBack, notify }}>
+          <OptionContext.Provider value={{ ...defaultOptions, back: ()=>navigate(-1), notify }}>
             <ReefSignersContext.Provider value={{
               accounts,
               selectedSigner,
