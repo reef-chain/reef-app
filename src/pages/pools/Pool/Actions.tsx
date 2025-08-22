@@ -5,7 +5,7 @@ import Uik from '@reef-chain/ui-kit';
 import React, {
   useContext, useEffect, useReducer, useState,
 } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios, { AxiosInstance } from 'axios';
 import { network as libNet } from '@reef-chain/util-lib';
 import PoolContext from '../../../context/PoolContext';
@@ -209,10 +209,10 @@ interface ActionsWrapperProps extends ActionsProps {
 const ActionsWrapper = ({
   token1, token2, poolAddress, tab,
 }: ActionsWrapperProps): JSX.Element => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const selectTab = (newTab: ActionTabs): void => {
-    history.push(
+    navigate(
       POOL_CHART_URL
         .replace(':address', poolAddress)
         .replace(':action', newTab.toLowerCase()),

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Components } from '@reef-chain/react-lib';
 import { network as nw, extension as reefExt } from '@reef-chain/util-lib';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
 import { AccountCreationData, Extension } from '@reef-chain/ui-kit/dist/ui-kit/components/organisms/AccountSelector/AccountSelector';
 import { saveAs } from 'file-saver';
@@ -26,7 +26,7 @@ export interface Nav {
 }
 
 const Nav = ({ selectExtension }: Nav): JSX.Element => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const { accounts, provider, selectedSigner, network, reefState, selExtName, extension } = useContext(ReefSigners);
   const mainnetSelected = network == null || network?.rpcUrl === nw.AVAILABLE_NETWORKS.mainnet.rpcUrl;
@@ -75,7 +75,7 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
   const selectNetwork = (key: 'mainnet' | 'testnet'): void => {
     const toSelect = appAvailableNetworks.find((item) => item.name === key);
     networkSwitch.setSwitching(true);
-    history.push(DASHBOARD_URL);
+    navigate(DASHBOARD_URL);
 
     if (toSelect) {
       reefState.setSelectedNetwork(toSelect);
@@ -85,7 +85,7 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
   const selectLanguage = (key: 'en'|'hi'):void => {
     localizedStrings.setLanguage(key);
     localStorage.setItem('app-language', key);
-    history.push(DASHBOARD_URL);
+    navigate(DASHBOARD_URL);
   };
 
   const menuItemsView = menuItems
@@ -169,7 +169,7 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
   return (
     <div className="nav-content navigation d-flex d-flex-space-between">
       <div className="navigation__wrapper">
-        <button type="button" className="logo-btn" onClick={() => { history.push('/'); }}>
+        <button type="button" className="logo-btn" onClick={() => { navigate('/'); }}>
           {mainnetSelected ? <Uik.ReefLogo className="navigation__logo" /> : <Uik.ReefTestnetLogo className="navigation__logo" />}
           {isReefswapUI && <span className="navigation__logo-suffix">swap</span>}
         </button>
