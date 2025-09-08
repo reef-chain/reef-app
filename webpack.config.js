@@ -58,6 +58,7 @@ module.exports = {
     fallback: {
       'crypto': require.resolve('crypto-browserify'),
       'stream': require.resolve('stream-browserify'),
+      'buffer': require.resolve("buffer/"),
       'vm': false,
     },
   },
@@ -77,7 +78,8 @@ module.exports = {
       favicon: path.join(__dirname, "public", "favicon.ico")
     }),
     new webpack.ProvidePlugin({
-      process: 'process/browser'
+      process: 'process/browser',
+      Buffer: ["buffer", "Buffer"],
     })
   ],
 }
