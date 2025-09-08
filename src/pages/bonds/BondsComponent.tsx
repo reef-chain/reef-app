@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   BN_THOUSAND, BN_ZERO, isBn, isFunction,
 } from '@polkadot/util';

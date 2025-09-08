@@ -17,9 +17,10 @@ import { localizedStrings } from '../../l10n/l10n';
 import GetReefTestnetButton from './GetReefTestnetButton';
 import ReefSigners from '../../context/ReefSigners';
 import useAccountSelector from '../../hooks/useAccountSelector';
+import {retrieveLedger} from "../../ledger";
 
 const Dashboard = (): JSX.Element => {
-  const { network } = useContext(ReefSigners);
+  const { network,provider } = useContext(ReefSigners);
   const { nfts } = useContext(NftContext);
   const { selectedSigner} = useContext(ReefSigners);
   const {setIsAccountSelectorOpen} = useAccountSelector();
@@ -49,6 +50,7 @@ const Dashboard = (): JSX.Element => {
     <div className="dashboard">
       <div className="dashboard__top">
         <div className="dashboard__top-left">
+        <div><button onClick={()=>retrieveLedger(provider!.api)}>clcik me</button></div>
           <Balance balance={totalBalance} loading={loading} />
           {/* <Rewards rewards={0} /> */}
         </div>
