@@ -1,0 +1,34 @@
+.alchemy-pay-container {
+    width: 80vw;
+}
+
+.form-wrapper {
+    position: relative;
+    background: linear-gradient(to bottom, white, var(--bg));
+    padding: 2rem;
+    margin: -40px auto;
+    max-width: 50rem;
+    border-radius: 0.8rem;
+    box-shadow: 0 -40px 32px rgba(136, 136, 136, 0.05);
+  }
+
+  .alchemy-form-wrapper {
+    position: relative;
+    background: white;
+    padding: 2rem;
+    margin: -40px auto;
+    max-width: 50rem;
+    border-radius: 0.8rem;
+    box-shadow: 0 -40px 32px rgba(136, 136, 136, 0.05);
+  }
+
+  .alchemy-pay-iframe{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  .wide-button{
+    width: 100%;
+  }

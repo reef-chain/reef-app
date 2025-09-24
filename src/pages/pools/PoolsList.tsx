@@ -2,7 +2,7 @@ import { faArrowUpFromBracket, faCoins, faRepeat } from '@fortawesome/free-solid
 import { hooks, Token } from '@reef-chain/react-lib';
 import Uik from '@reef-chain/ui-kit';
 import React, { useContext, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import BigNumber from 'bignumber.js';
 import axios, { AxiosInstance } from 'axios';
 import TokenPricesContext from '../../context/TokenPricesContext';
@@ -35,11 +35,11 @@ const PoolsList = ({ tokens }: Props): JSX.Element => {
     queryType: 'All',
   });
 
-  const history = useHistory();
+  const navigate = useNavigate();
   const openPool = (
     address: string,
     action: 'trade' | 'stake' | 'unstake' = 'trade',
-  ): void => history.push(
+  ): void => navigate(
     POOL_CHART_URL
       .replace(':address', address)
       .replace(':action', action),

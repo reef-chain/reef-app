@@ -1,0 +1,118 @@
+import React, { useContext, useState } from 'react';
+import ReefSigners from '../../context/ReefSigners';
+import Uik from "@reef-chain/ui-kit";
+import "./index.css"
+import Hero from './Hero';
+import axios from 'axios';
+import { ReefSigner } from '@reef-chain/react-lib';
+
+function AlchemyPay(): JSX.Element {
+  const [amount, setAmount] = useState('0');
+  const [error, setError] = useState('');
+  const [isIframeLoaded, setIsIframeLoaded] = useState(false);
+  const [isIframeLoading, setIsIframeLoading] = useState(false);
+  const [alchemyPayUrl, setAlchemyPayUrl] = useState<string | undefined>(undefined);
+
+  const signer: ReefSigner | undefined | null = useContext(ReefSigners).selectedSigner;
+
+  const ALCHEMY_PAY_ENDPOINT = "https://api.reefscan.com/alchemy-pay/signature";
+
+  const MIN_AMOUNT = 15;
+  const MAX_AMOUNT = 2000;
+
+  const getAlchemyPayUrl = async () => {
+    const numericAmount = parseFloat(amount);
+
+    if (isNaN(numericAmount) || numericAmount < MIN_AMOUNT || numericAmount > MAX_AMOUNT) {
+      setError(`Amount must be between $${MIN_AMOUNT} and $${MAX_AMOUNT}`);
+      return;
+    }
+
+    setIsIframeLoading(true);
+    setIsIframeLoaded(false);
+    setError('');
+
+    try {
+      const merchantOrderNo = Date.now().toString() + signer?.address;
+      const response = await axios.get(ALCHEMY_PAY_ENDPOINT, {
+        params: {
+          crypto: 'REEF',
+          fiat: 'USD',
+          fiatAmount: numericAmount,
+          merchantOrderNo,
+          network: 'REEF'
+        }
+      });
+      setAlchemyPayUrl(response.data.data);
+    } catch (error: any) {
+      setIsIframeLoading(false);
+      Uik.notify.danger(error.message);
+    }
+  };
+
+  const resetPage = () => {
+    setAlchemyPayUrl(undefined);
+    setIsIframeLoading(false);
+    setIsIframeLoaded(false);
+    setAmount('0');
+    setError('');
+  };
+
+  return (
+    <div className='alchemy-pay-container'>
+      <div>
+        <Hero title="Buy Reef" subtitle="Top up your Reef wallet in few clicks!" isLoading={signer == undefined} />
+
+        <div className={`${alchemyPayUrl ? 'alchemy-' : ''}form-wrapper`}>
+          {alchemyPayUrl && (
+            <div className='alchemy-pay-iframe' style={{ display: isIframeLoaded ? 'flex' : 'none' }}>
+              <iframe
+                src={alchemyPayUrl}
+                height="580px"
+                width="50%"
+                frameBorder="0"
+                style={{ marginTop: '20px' }}
+                title="AlchemyPay Ramp"
+                onLoad={() => setIsIframeLoaded(true)}
+              ></iframe>
+              <Uik.Button text='Reset' onClick={resetPage} fill className="wide-button" />
+            </div>
+          )}
+
+          {!isIframeLoaded && (
+            <>
+              <Uik.Input
+                label='Amount (USD)'
+                value={amount}
+                onInput={(e) => setAmount(e.target.value)}
+                error={error}
+              />
+
+              {signer && (
+                <>
+                  <br />
+                  <Uik.Input
+                    label='Selected Address'
+                    value={signer?.address}
+                    disabled
+                  />
+                </>
+              )}
+
+              <br />
+
+              <Uik.Button
+                text={isIframeLoading ? 'Purchasing' : 'Purchase'}
+                onClick={getAlchemyPayUrl}
+                fill
+                className="wide-button"
+              />
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default AlchemyPay;
