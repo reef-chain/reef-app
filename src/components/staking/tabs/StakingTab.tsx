@@ -59,7 +59,7 @@ export default function StakingTab({
   const sliderValue = clampValue(stakeAmount);
 
   return (
-    <div className="bond-action-wrapper">
+    <div className="bond-action-wrapper staking-tab">
       <Uik.Card className="bond-action-card">
         <div className="uik-pool-actions-token">
           <div className="uik-pool-actions-token__token">

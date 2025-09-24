@@ -34,7 +34,8 @@ export default function BondTab({
   unbondingInitiated,
   handleWithdraw,
 }: Props): JSX.Element {
-  const maxValue = stakeNumber === 0 ? availableAmount : activeStake;
+  const isBonding = stakeNumber === 0;
+  const maxValue = isBonding ? availableAmount : activeStake;
   const roundToTwo = (val: number): number => {
     if (!Number.isFinite(val)) return 0;
     return Math.round(val * 100) / 100;
@@ -76,6 +77,7 @@ export default function BondTab({
 
   const sliderValue = clampValue(roundToTwo(bondAmount));
   const canWithdraw = redeemableBalance.isGreaterThan(0);
+  const canUnbond = !isBonding && maxValue > 0;
   return (
     <div className="bond-action-wrapper">
       <Uik.Card className="bond-action-card">
@@ -113,9 +115,10 @@ export default function BondTab({
         <>
           <Uik.Button
             success
-            text={stakeNumber === 0 ? strings.staking_bond : strings.staking_unbond}
+            text={isBonding ? strings.staking_bond : strings.staking_unbond}
             loading={loading}
-            onClick={stakeNumber === 0 ? handleBond : handleUnbond}
+            disabled={!isBonding && !canUnbond}
+            onClick={isBonding ? handleBond : handleUnbond}
           />
           {unbondingInitiated && (
             <Uik.Button

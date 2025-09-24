@@ -66,7 +66,6 @@ export default function RebondTab({
   };
 
   const sliderValue = clampValue(roundToTwo(rebondAmount));
-  const canWithdraw = redeemableBalance.isGreaterThan(0);
   const canRebond = maxValue > 0 && rebondAmount > 0 && rebondAmount <= maxValue;
 
   return (
@@ -108,12 +107,6 @@ export default function RebondTab({
             loading={loading}
             disabled={!canRebond}
             onClick={handleRebond}
-          />
-          <Uik.Button
-            text="Withdraw"
-            fill={canWithdraw}
-            disabled={!canWithdraw}
-            onClick={handleWithdraw}
           />
         </>
       </Uik.Card>

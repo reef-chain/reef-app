@@ -25,7 +25,9 @@
 
 /* Increase width of amount input */
 .bond-action-card .uik-input__input {
-  width: 18ch;
+  width: 220px;
+  max-width: 220px;
+  min-width: 220px;
   text-align: right;
 }
 
