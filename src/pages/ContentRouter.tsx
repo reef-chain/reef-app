@@ -40,7 +40,6 @@ import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
 import Snap from './snap/Snap';
 import { utils } from '@reef-chain/react-lib';
-import {tokenPriceUtils, tokenUtil} from '@reef-chain/util-lib';
 import AlchemyPay from './alchemy-pay/AlchemyPay';
 import Validators from './validators/Validators';
 

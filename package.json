@@ -1,8 +1,7 @@
 {
   "name": "reef-app",
-  "version": "4.0.2",
+  "version": "4.1.0",
   "private": true,
-  "packageManager": "yarn@4.9.2",
   "type": "commonjs",
   "dependencies": {
     "@fortawesome/free-regular-svg-icons": "^6.1.0",
