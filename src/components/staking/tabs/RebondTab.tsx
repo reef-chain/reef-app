@@ -6,76 +6,69 @@ import { localizedStrings as strings } from '../../../l10n/l10n';
 import { displayBalance } from '../../../utils/displayBalance';
 
 interface Props {
-  bondAmount: number;
-  setBondAmount(value: number): void;
-  availableAmount: number;
-  activeStake: number;
+  rebondAmount: number;
+  setRebondAmount(value: number): void;
   unbondingAmount: BigNumber;
-  stakeNumber: number;
   loading: boolean;
-  handleBond(): void;
-  handleUnbond(): void;
+  handleRebond(): void;
   redeemableBalance: BigNumber;
-  unbondingInitiated: boolean;
   handleWithdraw(): void;
 }
 
-export default function BondTab({
-  bondAmount,
-  setBondAmount,
-  availableAmount,
-  activeStake,
+export default function RebondTab({
+  rebondAmount,
+  setRebondAmount,
   unbondingAmount,
-  stakeNumber,
   loading,
-  handleBond,
-  handleUnbond,
+  handleRebond,
   redeemableBalance,
-  unbondingInitiated,
   handleWithdraw,
 }: Props): JSX.Element {
-  const maxValue = stakeNumber === 0 ? availableAmount : activeStake;
+  const maxValue = Math.max(0, unbondingAmount.toNumber());
+
   const roundToTwo = (val: number): number => {
     if (!Number.isFinite(val)) return 0;
     return Math.round(val * 100) / 100;
   };
+
   const clampValue = (val: number): number => {
     if (!Number.isFinite(val)) return 0;
-    const upperBound = Math.max(0, maxValue);
-    return Math.min(upperBound, Math.max(0, val));
+    return Math.min(maxValue, Math.max(0, val));
   };
 
-  const [inputValue, setInputValue] = useState(roundToTwo(bondAmount).toFixed(2));
+  const [inputValue, setInputValue] = useState(roundToTwo(rebondAmount).toFixed(2));
 
   useEffect(() => {
-    const rounded = roundToTwo(bondAmount);
+    const rounded = roundToTwo(rebondAmount);
     const clamped = clampValue(rounded);
     setInputValue(clamped.toFixed(2));
-    if (clamped !== bondAmount) {
-      setBondAmount(clamped);
+    if (clamped !== rebondAmount) {
+      setRebondAmount(clamped);
     }
-  }, [bondAmount, maxValue, setBondAmount]);
+  }, [rebondAmount, maxValue, setRebondAmount]);
 
   const handleInputChange = (value: string): void => {
     setInputValue(value);
     if (value === '') {
-      setBondAmount(0);
+      setRebondAmount(0);
       return;
     }
     const parsed = Number(value);
     if (!Number.isFinite(parsed)) return;
     const clamped = clampValue(roundToTwo(parsed));
-    setBondAmount(clamped);
+    setRebondAmount(clamped);
   };
 
   const handleSliderChange = (value: number): void => {
     const clamped = clampValue(roundToTwo(value));
-    setBondAmount(clamped);
+    setRebondAmount(clamped);
     setInputValue(clamped.toFixed(2));
   };
 
-  const sliderValue = clampValue(roundToTwo(bondAmount));
+  const sliderValue = clampValue(roundToTwo(rebondAmount));
   const canWithdraw = redeemableBalance.isGreaterThan(0);
+  const canRebond = maxValue > 0 && rebondAmount > 0 && rebondAmount <= maxValue;
+
   return (
     <div className="bond-action-wrapper">
       <Uik.Card className="bond-action-card">
@@ -104,27 +97,24 @@ export default function BondTab({
           onChange={handleSliderChange}
         />
       </Uik.Card>
-      {unbondingAmount.isGreaterThan(0) && (
-        <Uik.Text type="mini">
-          Unbonding: {`${displayBalance(unbondingAmount.toFixed())} REEF`}
-        </Uik.Text>
-      )}
+      <Uik.Text type="mini">
+        Unbonded: {`${displayBalance(unbondingAmount.toFixed())} REEF`}
+      </Uik.Text>
       <Uik.Card className="bond-action-card bond-action-card-button">
         <>
           <Uik.Button
             success
-            text={stakeNumber === 0 ? strings.staking_bond : strings.staking_unbond}
+            text={strings.staking_rebond}
             loading={loading}
-            onClick={stakeNumber === 0 ? handleBond : handleUnbond}
+            disabled={!canRebond}
+            onClick={handleRebond}
           />
-          {unbondingInitiated && (
-            <Uik.Button
-              text="Withdraw"
-              fill={canWithdraw}
-              disabled={!canWithdraw}
-              onClick={handleWithdraw}
-            />
-          )}
+          <Uik.Button
+            text="Withdraw"
+            fill={canWithdraw}
+            disabled={!canWithdraw}
+            onClick={handleWithdraw}
+          />
         </>
       </Uik.Card>
     </div>
