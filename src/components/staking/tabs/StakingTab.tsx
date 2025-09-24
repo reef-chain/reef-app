@@ -20,15 +20,24 @@ export default function StakingTab({
 }: Props): JSX.Element {
   const roundToTwo = (val: number): number => {
     if (!Number.isFinite(val)) return 0;
-    return Math.max(0, Math.round(val * 100) / 100);
+    return Math.round(val * 100) / 100;
   };
 
-  const displayStakeAmount = roundToTwo(stakeAmount);
-  const [inputValue, setInputValue] = useState(displayStakeAmount.toFixed(2));
+  const maxValue = Math.max(0, stakingMaxValue);
+  const clampValue = (val: number): number => {
+    if (!Number.isFinite(val)) return 0;
+    return Math.min(maxValue, Math.max(0, roundToTwo(val)));
+  };
+
+  const [inputValue, setInputValue] = useState(clampValue(stakeAmount).toFixed(2));
 
   useEffect(() => {
-    setInputValue(displayStakeAmount.toFixed(2));
-  }, [displayStakeAmount]);
+    const clamped = clampValue(stakeAmount);
+    setInputValue(clamped.toFixed(2));
+    if (clamped !== stakeAmount) {
+      setStakeAmount(clamped);
+    }
+  }, [stakeAmount, maxValue, setStakeAmount]);
 
   const handleInputChange = (value: string): void => {
     setInputValue(value);
@@ -37,16 +46,17 @@ export default function StakingTab({
       return;
     }
     const parsed = Number(value);
-    if (Number.isFinite(parsed)) {
-      setStakeAmount(roundToTwo(parsed));
-    }
+    if (!Number.isFinite(parsed)) return;
+    setStakeAmount(clampValue(parsed));
   };
 
   const handleSliderChange = (value: number): void => {
-    const rounded = roundToTwo(value);
-    setStakeAmount(rounded);
-    setInputValue(rounded.toFixed(2));
+    const clamped = clampValue(value);
+    setStakeAmount(clamped);
+    setInputValue(clamped.toFixed(2));
   };
+
+  const sliderValue = clampValue(stakeAmount);
 
   return (
     <div className="bond-action-wrapper">
@@ -62,7 +72,7 @@ export default function StakingTab({
                 type="number"
                 value={inputValue}
                 min={0}
-                max={stakingMaxValue}
+                max={maxValue}
                 onChange={(e) => handleInputChange((e.target as HTMLInputElement).value)}
               />
             </div>
@@ -71,8 +81,8 @@ export default function StakingTab({
       </Uik.Card>
       <Uik.Card className="bond-action-card">
         <PercentSlider
-          max={stakingMaxValue}
-          value={roundToTwo(stakeAmount)}
+          max={maxValue}
+          value={sliderValue}
           onChange={handleSliderChange}
         />
       </Uik.Card>
