@@ -75,3 +75,11 @@
 .dashboard__balance-text {
   display: inline-flex;
 }
+
+.my-nominations__show-waiting {
+  --border-color: var(--text);
+  --border-color--h: var(--text--h);
+  --border-color--s: var(--text--s);
+  --border-color--l: var(--text--l);
+}
+
