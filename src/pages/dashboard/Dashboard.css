@@ -442,3 +442,14 @@
     padding-bottom: 0.5em;
     padding-top: 0.8em;
 }
+
+.reef-swap-ui-btn-group{
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mr-1{
+    margin-right: 1rem;
+}
