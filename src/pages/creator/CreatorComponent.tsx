@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { faCheckCircle, faXmarkCircle } from '@fortawesome/free-regular-svg-icons';
 import { faArrowUpRightFromSquare, faCoins } from '@fortawesome/free-solid-svg-icons';
 import { Contract, ContractFactory, utils } from 'ethers';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
 import { verifyContract } from '../../utils/contract';
 import { DeployContractData, deployTokens } from './tokensDeployData';
@@ -291,7 +291,7 @@ export const CreatorComponent = ({
 
   const [icon, setIcon] = useState('');
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   // @ts-ignore
   return (
@@ -510,7 +510,7 @@ export const CreatorComponent = ({
                         text={strings.create_a_pool}
                         icon={faCoins}
                         size="large"
-                        onClick={() => history.push('/pools')}
+                        onClick={() => navigate('/pools')}
                       />
                     ) : <div style={{ cursor: 'progress' }}><Uik.Button text={strings.create_a_pool} icon={faCoins} size="large" disabled /></div>
                 }

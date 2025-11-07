@@ -11,7 +11,7 @@ import './pool.css';
 import Stats from './Stats';
 import ReefSigners from '../../../context/ReefSigners';
 
-interface Params {
+type Params= {
   address: string;
   action: ActionTabs;
 }
@@ -51,7 +51,7 @@ const Pool = (): JSX.Element => {
   const { selectedSigner: signer, network: nw } = useContext(ReefSigners);
 
   const [poolInfo] = hooks.usePoolInfo(
-    address,
+    address!,
     signer?.address || '',
     tokenPrices,
     axios,
@@ -63,7 +63,7 @@ const Pool = (): JSX.Element => {
   const decimals2 = (poolInfo ? poolInfo.firstToken.decimals : 0) || 0;
 
   const [poolData] = hooks.usePoolData({
-    address,
+    address:address??"",
     decimals1,
     decimals2,
     price1: tokenPrice1,

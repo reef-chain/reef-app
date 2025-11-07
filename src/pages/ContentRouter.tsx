@@ -1,8 +1,6 @@
-import {
-  AddressToNumber, hooks, TokenWithAmount, utils,
-} from '@reef-chain/react-lib';
-import React, { useContext } from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { AddressToNumber, hooks, TokenWithAmount } from '@reef-chain/react-lib';
+import React, { useContext} from 'react';
+import { Routes, Route, Navigate } from "react-router-dom";
 import axios from 'axios';
 import { tokenPriceUtils, tokenUtil } from '@reef-chain/util-lib';
 import NftContext from '../context/NftContext';
@@ -11,13 +9,14 @@ import TokenContext from '../context/TokenContext';
 import TokenPrices from '../context/TokenPricesContext';
 import {
   ADD_LIQUIDITY_URL,
+  ALCHEMY_PAY_URL,
   BIND_URL,
   BONDS_URL,
   VALIDATORS_URL,
   BUY_URL,
   CREATE_ERC20_TOKEN_URL,
   DASHBOARD_URL,
-  ONRAMP_URL,
+  // ONRAMP_URL,
   POOL_CHART_URL,
   POOLS_URL,
   REMOVE_LIQUIDITY_URL,
@@ -40,6 +39,8 @@ import { isReefswapUI } from '../environment';
 import Onramp from './onramp/Onramp';
 import ReefSigners from '../context/ReefSigners';
 import Snap from './snap/Snap';
+import { utils } from '@reef-chain/react-lib';
+import AlchemyPay from './alchemy-pay/AlchemyPay';
 import Validators from './validators/Validators';
 
 const ContentRouter = (): JSX.Element => {
@@ -71,44 +72,46 @@ const ContentRouter = (): JSX.Element => {
             <PoolContext.Provider value={pools}>
               <TokenPrices.Provider value={tokenPrices as AddressToNumber<number>}>
                 {!isReefswapUI && (
-                <Switch>
-                  <Route path={SPECIFIED_SWAP_URL} component={Swap} />
+                <Routes>
+                  <Route path={SPECIFIED_SWAP_URL} element={<Swap/>} />
                   {/* <Route exact path={POOLS_URL} component={Pools} /> */}
-                  <Route exact path={DASHBOARD_URL} component={Dashboard} />
+                  <Route path={DASHBOARD_URL} element={<Dashboard/>} />
                   {/* <Route path={ADD_LIQUIDITY_URL} component={AddPoolLiquidity} /> */}
                   {/* <Route exact path={ADD_LIQUIDITY_URL} component={AddPoolLiquidity} /> */}
                   {/* <Route path={POOL_CHART_URL} component={Pool} /> */}
                   {/* <Route path={REMOVE_LIQUIDITY_URL} component={RemoveLiquidity} /> */}
-                  <Route exact path={TRANSFER_TOKEN} component={Transfer} />
-                  <Route exact path={CREATE_ERC20_TOKEN_URL} component={Creator} />
-                  <Route exact path={BONDS_URL} component={Bonds} />
-                  <Route exact path={VALIDATORS_URL} component={Validators} />
-                  <Route path={BIND_URL} component={Bind} />
-                  <Route path={BUY_URL} component={Onramp} />
-                  <Route path={ONRAMP_URL} component={Onramp} />
-                  <Route path={SNAP_URL} component={Snap} />
-                  <Route path="/" render={() => (<Redirect to={DASHBOARD_URL} />)} />
-                </Switch>
+                  <Route  path={TRANSFER_TOKEN} element={<Transfer/>} />
+                  <Route  path={CREATE_ERC20_TOKEN_URL} element={<Creator/>} />
+                  <Route  path={BONDS_URL} element={<Bonds/>} />
+                  <Route path={BIND_URL} element={<Bind/>} />
+                    <Route path={VALIDATORS_URL} element={<Validators/>} />
+                  {/* <Route path={BUY_URL} component={Buy} /> */}
+                  <Route path={ALCHEMY_PAY_URL} element={<AlchemyPay/>} />
+                  {/* <Route path={ONRAMP_URL} component={Onramp} /> */}
+                  <Route path={SNAP_URL} element={<Snap/>} />
+                  <Route path="/" element={<Navigate to={DASHBOARD_URL} />}  />
+                </Routes>
                 )}
 
                 {isReefswapUI && (
-                <Switch>
-                  <Route path={SPECIFIED_SWAP_URL} component={Swap} />
-                  <Route exact path={POOLS_URL} component={Pools} />
-                  <Route exact path={DASHBOARD_URL} component={Dashboard} />
-                  <Route path={ADD_LIQUIDITY_URL} component={AddPoolLiquidity} />
-                  <Route exact path={ADD_LIQUIDITY_URL} component={AddPoolLiquidity} />
-                  <Route path={POOL_CHART_URL} component={Pool} />
-                  <Route path={REMOVE_LIQUIDITY_URL} component={RemoveLiquidity} />
-                  <Route exact path={TRANSFER_TOKEN} component={Transfer} />
-                  <Route exact path={CREATE_ERC20_TOKEN_URL} component={Creator} />
-                  <Route exact path={BONDS_URL} component={Bonds} />
-                  <Route path={BIND_URL} component={Bind} />
-                  <Route path={BUY_URL} component={Buy} />
-                  <Route path={ONRAMP_URL} component={Onramp} />
-                  <Route path={SNAP_URL} component={Snap} />
-                  <Route path="/" render={() => (<Redirect to={DASHBOARD_URL} />)} />
-                </Switch>
+                <Routes>
+                  <Route path={SPECIFIED_SWAP_URL} element={<Swap/>} />
+                  <Route path={POOLS_URL} element={<Pools/>} />
+                  <Route path={DASHBOARD_URL} element={<Dashboard/>} />
+                  <Route path={ADD_LIQUIDITY_URL} element={<AddPoolLiquidity/>} />
+                  <Route path={ADD_LIQUIDITY_URL} element={<AddPoolLiquidity/>} />
+                  <Route path={POOL_CHART_URL} element={<Pool/>} />
+                  <Route path={REMOVE_LIQUIDITY_URL} element={<RemoveLiquidity/>} />
+                  <Route path={TRANSFER_TOKEN} element={<Transfer/>} />
+                  <Route path={CREATE_ERC20_TOKEN_URL} element={<Creator/>} />
+                  <Route path={BONDS_URL} element={<Bonds/>} />
+                  <Route path={BIND_URL} element={<Bind/>} />
+                  {/* <Route path={BUY_URL} component={Buy} /> */}
+                  <Route path={ALCHEMY_PAY_URL} element={<AlchemyPay/>} />
+                  {/* <Route path={ONRAMP_URL} component={Onramp} /> */}
+                  <Route path={SNAP_URL} element={<Snap/>} />
+                  <Route path="/" element={<Navigate to={DASHBOARD_URL} />} />
+                </Routes>
                 )}
               </TokenPrices.Provider>
             </PoolContext.Provider>

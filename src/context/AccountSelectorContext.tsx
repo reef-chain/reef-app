@@ -1,5 +1,5 @@
 import React,{ ReactNode, createContext, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { SNAP_URL } from "../urls";
 
 interface AccountSelectorContextProps {
@@ -11,8 +11,8 @@ const AccountSelectorContext = createContext<AccountSelectorContextProps | undef
 
 
 export const AccountSelectorProvider = ({ children }: { children: ReactNode }) => {  
-    const history = useHistory();
-    const [isAccountSelectorOpen, setIsAccountSelectorOpen] = useState<boolean>(history.location.pathname !== SNAP_URL);
+    const location = useLocation();
+    const [isAccountSelectorOpen, setIsAccountSelectorOpen] = useState<boolean>(location.pathname !== SNAP_URL);
   
     return (
       <AccountSelectorContext.Provider value={{isAccountSelectorOpen, setIsAccountSelectorOpen}}>

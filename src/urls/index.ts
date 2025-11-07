@@ -1,9 +1,9 @@
 import { utils } from '@reef-chain/react-lib';
 
-export interface UrlAddressParams {
+export type UrlAddressParams = {
   address1: string;
   address2: string;
-}
+};
 
 export const SPECIFIED_SWAP_URL = '/swap/:address1/:address2';
 export const POOLS_URL = '/pools';
@@ -18,7 +18,8 @@ export const BONDS_URL = '/bonds';
 export const VALIDATORS_URL = '/validators';
 export const BIND_URL = '/bind/:address1';
 export const BUY_URL = '/buy';
-export const ONRAMP_URL = BUY_URL;
+export const ALCHEMY_PAY_URL = BUY_URL;
+// export const ONRAMP_URL = BUY_URL;
 export const SNAP_URL = '/snap';
 
 export const addressReplacer = (url: string, address1: string, address2?: string): string => {
