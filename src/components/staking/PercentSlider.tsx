@@ -8,10 +8,17 @@ interface Props {
 }
 
 const PercentSlider = ({ max, value, onChange }: Props): JSX.Element => {
-  const percent = max === 0 ? 0 : Math.round((value / max) * 100);
+  const safeMax = Number.isFinite(max) && max > 0 ? max : 0;
+  const percent = safeMax === 0
+    ? 0
+    : Math.min(100, Math.max(0, Math.round((value / safeMax) * 100)));
   const handleChange = (p: number): void => {
-    const newVal = Math.round((p / 100) * max);
-    onChange(newVal);
+    if (safeMax === 0) {
+      onChange(0);
+      return;
+    }
+    const newVal = (p / 100) * safeMax;
+    onChange(Number.isFinite(newVal) ? newVal : 0);
   };
   return (
     <Uik.Slider

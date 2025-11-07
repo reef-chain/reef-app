@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Uik from '@reef-chain/ui-kit';
 import PercentSlider from '../PercentSlider';
 import { localizedStrings as strings } from '../../../l10n/l10n';
@@ -18,8 +18,48 @@ export default function StakingTab({
   loading,
   handleStake,
 }: Props): JSX.Element {
+  const roundToTwo = (val: number): number => {
+    if (!Number.isFinite(val)) return 0;
+    return Math.round(val * 100) / 100;
+  };
+
+  const maxValue = Math.max(0, stakingMaxValue);
+  const clampValue = (val: number): number => {
+    if (!Number.isFinite(val)) return 0;
+    return Math.min(maxValue, Math.max(0, roundToTwo(val)));
+  };
+
+  const [inputValue, setInputValue] = useState(clampValue(stakeAmount).toFixed(2));
+
+  useEffect(() => {
+    const clamped = clampValue(stakeAmount);
+    setInputValue(clamped.toFixed(2));
+    if (clamped !== stakeAmount) {
+      setStakeAmount(clamped);
+    }
+  }, [stakeAmount, maxValue, setStakeAmount]);
+
+  const handleInputChange = (value: string): void => {
+    setInputValue(value);
+    if (value === '') {
+      setStakeAmount(0);
+      return;
+    }
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) return;
+    setStakeAmount(clampValue(parsed));
+  };
+
+  const handleSliderChange = (value: number): void => {
+    const clamped = clampValue(value);
+    setStakeAmount(clamped);
+    setInputValue(clamped.toFixed(2));
+  };
+
+  const sliderValue = clampValue(stakeAmount);
+
   return (
-    <div className="bond-action-wrapper">
+    <div className="bond-action-wrapper staking-tab">
       <Uik.Card className="bond-action-card">
         <div className="uik-pool-actions-token">
           <div className="uik-pool-actions-token__token">
@@ -30,12 +70,10 @@ export default function StakingTab({
             <div className="uik-pool-actions-token__value">
               <Uik.Input
                 type="number"
-                value={stakeAmount.toString()}
+                value={inputValue}
                 min={0}
-                max={stakingMaxValue}
-                onInput={(e) =>
-                  setStakeAmount(Number((e.target as HTMLInputElement).value))
-                }
+                max={maxValue}
+                onChange={(e) => handleInputChange((e.target as HTMLInputElement).value)}
               />
             </div>
           </div>
@@ -43,9 +81,9 @@ export default function StakingTab({
       </Uik.Card>
       <Uik.Card className="bond-action-card">
         <PercentSlider
-          max={stakingMaxValue}
-          value={stakeAmount}
-          onChange={setStakeAmount}
+          max={maxValue}
+          value={sliderValue}
+          onChange={handleSliderChange}
         />
       </Uik.Card>
       <Uik.Text type="mini" className="bond-action-warning">

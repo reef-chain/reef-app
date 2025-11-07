@@ -25,7 +25,9 @@
 
 /* Increase width of amount input */
 .bond-action-card .uik-input__input {
-  width: 18ch;
+  width: 220px;
+  max-width: 220px;
+  min-width: 220px;
   text-align: right;
 }
 
@@ -41,9 +43,20 @@
   align-items: center;
 }
 
+.bond-action-card .uik-pool-actions-token__select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+}
+
+.bond-action-card .uik-pool-actions-token__select-wrapper svg {
+  width: 24px;
+  height: 24px;
+}
+
 
 .bond-action-warning {
   text-align: center;
   color: #e74c3c;
 }
-

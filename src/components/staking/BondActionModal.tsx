@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 import { bnToBn } from '@polkadot/util';
 import { extension as reefExt } from '@reef-chain/util-lib';
 import BondTab from './tabs/BondTab';
+import RebondTab from './tabs/RebondTab';
 import StakingTab from './tabs/StakingTab';
 import ChillTab from './tabs/ChillTab';
 import './bond-action.css';
@@ -15,7 +16,6 @@ import ReefSigners from '../../context/ReefSigners';
 
 const { OverlayAction } = Components;
 const { web3Enable, web3FromSource } = reefExt;
-const DECIMALS = new BN(10).pow(new BN(18));
 const DECIMALS_BIG = new BigNumber(10).pow(18);
 
 interface Props {
@@ -28,53 +28,99 @@ interface Props {
 
 export default function BondActionModal({ isOpen, onClose, api, accountAddress, stakeNumber }: Props): JSX.Element {
   const { selectedSigner } = useContext(ReefSigners);
-  const [tab, setTab] = useState<'bond' | 'staking' | 'chill'>('bond');
-  const [availableBalance, setAvailableBalance] = useState<BN>(new BN(0));
-  const [stakedBalance, setStakedBalance] = useState<BN>(new BN(0));
-  const [redeemableBalance, setRedeemableBalance] = useState<BN>(new BN(0));
+  const [tab, setTab] = useState<'bond' | 'rebond' | 'staking' | 'chill'>('bond');
+  const [availableBalance, setAvailableBalance] = useState<BigNumber>(new BigNumber(0));
+  const [stakedBalance, setStakedBalance] = useState<BigNumber>(new BigNumber(0));
+  const [redeemableBalance, setRedeemableBalance] = useState<BigNumber>(new BigNumber(0));
   const [unbondingInitiated, setUnbondingInitiated] = useState(false);
   const [unbondingAmount, setUnbondingAmount] = useState<BigNumber>(new BigNumber(0));
   const [bondAmount, setBondAmount] = useState(0);
+  const [rebondAmount, setRebondAmount] = useState(0);
   const [stakeAmount, setStakeAmount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const activeStake = useMemo(
-    () => new BigNumber(stakedBalance.toString()).minus(unbondingAmount),
-    [stakedBalance, unbondingAmount],
-  );
+
+  const activeStake = useMemo(() => {
+    const result = stakedBalance.minus(unbondingAmount);
+    return result.isNegative() ? new BigNumber(0) : result;
+  }, [stakedBalance, unbondingAmount]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
 
     setBondAmount(0);
+    setRebondAmount(0);
     setStakeAmount(0);
 
     if (selectedSigner) {
-      setAvailableBalance(new BN(selectedSigner.freeBalance.toString()).div(DECIMALS));
-      setStakedBalance(new BN(selectedSigner.lockedBalance.toString()).div(DECIMALS));
+      setAvailableBalance(new BigNumber(selectedSigner.freeBalance.toString()).dividedBy(DECIMALS_BIG));
+      setStakedBalance(new BigNumber(selectedSigner.lockedBalance.toString()).dividedBy(DECIMALS_BIG));
     }
 
-    api.query.staking
-      .ledger(accountAddress)
-      .then((ledger: any) => {
-        const data = ledger?.toJSON();
-        const unlocking = data?.unlocking;
-        setUnbondingInitiated(Array.isArray(unlocking) && unlocking.length > 0);
-        setRedeemableBalance(new BN(data?.redeemable || '0').div(DECIMALS));
-        if (Array.isArray(unlocking)) {
-          const total = unlocking.reduce(
-            (acc: BigNumber, item: any) =>
-              acc.plus(new BigNumber(item?.value || 0).dividedBy(DECIMALS_BIG)),
-            new BigNumber(0),
-          );
-          setUnbondingAmount(total);
-        } else {
-          setUnbondingAmount(new BigNumber(0));
+    let isMounted = true;
+    (async () => {
+      try {
+        await api.isReady;
+        if (!isMounted) return;
+
+        const [ledgerOption, currentEraRaw] = await Promise.all([
+          api.query.staking.ledger(accountAddress),
+          api.query.staking.currentEra(),
+        ]);
+
+        type UnlockingJson = {
+          value?: string | number;
+          era?: string | number;
+        };
+
+        const ledgerData = (ledgerOption as any)?.isSome ? (ledgerOption as any).unwrap() : undefined;
+
+        const unlockingEntries: UnlockingJson[] = ledgerData?.unlocking
+          ? (ledgerData.unlocking.map((item: any) => ({
+              value: item?.value?.toString(),
+              era: item?.era?.toString(),
+            })) as UnlockingJson[])
+          : [];
+
+        const activeBn = ledgerData?.active
+          ? new BigNumber(ledgerData.active.toString())
+          : new BigNumber(0);
+
+        const currentEra = currentEraRaw ? new BigNumber(currentEraRaw.toString()) : undefined;
+
+        let totalUnlockingPlanck = new BigNumber(0);
+        let totalUnlockingReef = new BigNumber(0);
+        let totalRedeemable = new BigNumber(0);
+
+        unlockingEntries.forEach((item) => {
+          const valuePlanck = item?.value ? new BigNumber(item.value) : new BigNumber(0);
+          const valueReef = valuePlanck.dividedBy(DECIMALS_BIG);
+          totalUnlockingPlanck = totalUnlockingPlanck.plus(valuePlanck);
+          totalUnlockingReef = totalUnlockingReef.plus(valueReef);
+
+          if (currentEra && item?.era) {
+            const era = new BigNumber(item.era);
+            if (era.lte(currentEra)) {
+              totalRedeemable = totalRedeemable.plus(valueReef);
+            }
+          }
+        });
+
+        const totalLockedPlanck = activeBn.plus(totalUnlockingPlanck);
+
+        if (isMounted) {
+          setUnbondingInitiated(unlockingEntries.length > 0);
+          setUnbondingAmount(totalUnlockingReef);
+          setRedeemableBalance(totalRedeemable);
+          setStakedBalance(totalLockedPlanck.dividedBy(DECIMALS_BIG));
         }
-      })
-      .catch(() => {
+      } catch (error) {
+        if (!isMounted) return;
         setUnbondingInitiated(false);
         setUnbondingAmount(new BigNumber(0));
-      });
+        setRedeemableBalance(new BigNumber(0));
+      }
+    })();
+
     (async () => {
       try {
         await web3Enable('reef-app');
@@ -85,8 +131,19 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
       }
     })();
 
-    return undefined;
+    return () => {
+      isMounted = false;
+    };
   }, [isOpen, api, accountAddress, selectedSigner]);
+
+  const hasUnbonding = unbondingAmount.isGreaterThan(0);
+
+  useEffect(() => {
+    if (tab === 'rebond' && !hasUnbonding) {
+      setTab('bond');
+      setRebondAmount(0);
+    }
+  }, [tab, hasUnbonding]);
 
   const sendTx = async (extrinsic: any, success: string, error: string): Promise<void> => {
     try {
@@ -104,17 +161,31 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
     }
   };
 
+  const toPlanck = (amount: number): BN => {
+    const normalized = new BigNumber(amount);
+    if (!normalized.isFinite() || normalized.isNegative()) {
+      return new BN(0);
+    }
+    const planck = normalized.multipliedBy(DECIMALS_BIG).integerValue(BigNumber.ROUND_FLOOR);
+    return bnToBn(planck.toFixed(0));
+  };
+
   const handleBond = (): void => {
-    const valueBN = bnToBn(bondAmount).mul(DECIMALS);
+    const valueBN = toPlanck(bondAmount);
+    const bondExtrinsic = (api.tx.staking.bond as unknown as (
+      controller: string,
+      value: BN,
+      payee: any
+    ) => any)(accountAddress, valueBN, 'Staked');
     sendTx(
-      api.tx.staking.bond(valueBN, 'Staked'),
+      bondExtrinsic,
       strings.staking_bond_success,
       strings.staking_bond_error,
     );
   };
 
   const handleStake = (): void => {
-    const valueBN = bnToBn(stakeAmount).mul(DECIMALS);
+    const valueBN = toPlanck(stakeAmount);
     sendTx(
       api.tx.staking.bondExtra(valueBN),
       strings.staking_bond_success,
@@ -123,11 +194,20 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
   };
 
   const handleUnbond = (): void => {
-    const valueBN = bnToBn(bondAmount).mul(DECIMALS);
+    const valueBN = toPlanck(bondAmount);
     sendTx(
       api.tx.staking.unbond(valueBN),
       strings.staking_unbond_success,
       strings.staking_unbond_error,
+    );
+  };
+
+  const handleRebond = (): void => {
+    const valueBN = toPlanck(rebondAmount);
+    sendTx(
+      api.tx.staking.rebond(valueBN),
+      strings.staking_rebond_success,
+      strings.staking_rebond_error,
     );
   };
 
@@ -149,9 +229,15 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
   };
 
   const feeReserve = 10;
-  const bondAvailable = availableBalance.toNumber();
-  const bondLocked = activeStake.toNumber();
-  const stakingMaxValue = Math.max(0, availableBalance.toNumber() - feeReserve);
+  const bondAvailable = Math.max(0, availableBalance.toNumber());
+  const bondLocked = Math.max(0, activeStake.toNumber());
+  const stakingMaxValue = Math.max(0, availableBalance.minus(feeReserve).toNumber());
+  const tabOptions = [
+    { value: 'bond', text: strings.staking_bond_unbond },
+    ...(hasUnbonding ? [{ value: 'rebond', text: strings.staking_rebond }] : []),
+    { value: 'staking', text: strings.staking_tab },
+    { value: 'chill', text: strings.staking_chill },
+  ];
 
   return (
     <OverlayAction isOpen={isOpen} onClose={onClose} title={strings.staking_bond_unbond} className="overlay-swap">
@@ -159,15 +245,12 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
         <Uik.Tabs
           value={tab}
           onChange={(v: string) => {
-            setTab(v as 'bond' | 'staking' | 'chill');
+            setTab(v as 'bond' | 'rebond' | 'staking' | 'chill');
             setBondAmount(0);
+            setRebondAmount(0);
             setStakeAmount(0);
           }}
-          options={[
-            { value: 'bond', text: strings.staking_bond_unbond },
-            { value: 'staking', text: strings.staking_tab },
-            { value: 'chill', text: strings.staking_chill },
-          ]}
+          options={tabOptions}
         />
         {tab === 'bond' && (
           <BondTab
@@ -182,6 +265,17 @@ export default function BondActionModal({ isOpen, onClose, api, accountAddress, 
             handleUnbond={handleUnbond}
             redeemableBalance={redeemableBalance}
             unbondingInitiated={unbondingInitiated}
+            handleWithdraw={handleWithdraw}
+          />
+        )}
+        {tab === 'rebond' && hasUnbonding && (
+          <RebondTab
+            rebondAmount={rebondAmount}
+            setRebondAmount={setRebondAmount}
+            unbondingAmount={unbondingAmount}
+            loading={loading}
+            handleRebond={handleRebond}
+            redeemableBalance={redeemableBalance}
             handleWithdraw={handleWithdraw}
           />
         )}
