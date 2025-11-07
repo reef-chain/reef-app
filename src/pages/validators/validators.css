@@ -1,0 +1,85 @@
+.validators-page {
+  width: 100%;
+  padding: 2.5rem 3.5rem;
+}
+
+.validators-page__title {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.validators-page__filter {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 1rem;
+}
+
+.validators-page__id {
+  word-break: break-all;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.validators-page__sortable {
+  cursor: pointer;
+  user-select: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.validators-page__stake-info {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.validators-page__stake-info .uik-reef-icon {
+  height: 1em;
+  width: 1em;
+  margin-left: 0.25rem;
+}
+
+.validators-page__stake-usd {
+  margin-left: 0.25rem;
+}
+.dashboard__sub-balance-value.uik-text--headline {
+  font-size: 2rem;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.my-nominations .overlay-action__slot {
+  position: relative;
+}
+
+.my-nominations__btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+
+.validators-page__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-bottom: 20px;
+}
+
+.dashboard__balance-text {
+  display: inline-flex;
+}
+
+.my-nominations__show-waiting {
+  --border-color: var(--text);
+  --border-color--h: var(--text--h);
+  --border-color--s: var(--text--s);
+  --border-color--l: var(--text--l);
+}
+

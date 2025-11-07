@@ -2,6 +2,7 @@ import Uik from '@reef-chain/ui-kit';
 import BigNumber from 'bignumber.js';
 import React, { useContext, useMemo, useState } from 'react';
 import { network as nw } from '@reef-chain/util-lib';
+import { utils } from '@reef-chain/react-lib';
 import NftContext from '../../context/NftContext';
 import TokenContext from '../../context/TokenContext';
 import TokenPricesContext from '../../context/TokenPricesContext';
@@ -34,22 +35,39 @@ const Dashboard = (): JSX.Element => {
 
   const [tab, setTab] = useState<string>(tabs[0].value);
 
-  const totalBalance = useMemo(() => tokens.reduce(
-    (acc, { balance, decimals, address }) => acc.plus(
-      new BigNumber(balance.toString())
-        .div(new BigNumber(10).pow(decimals))
-        .multipliedBy(Number.isNaN(+tokenPrices[address]) ? 0 : tokenPrices[address]),
-    ),
-    new BigNumber(0),
-  ).toNumber(),
-  [tokenPrices, tokens]);
+  const { REEF_ADDRESS } = utils;
+
+  const reefPrice = tokenPrices[REEF_ADDRESS] || 0;
+
+  const tokensWithoutReefValue = useMemo(() => tokens
+    .filter(({ address }) => address !== REEF_ADDRESS)
+    .reduce(
+      (acc, { balance, decimals, address }) => acc.plus(
+        new BigNumber(balance.toString())
+          .div(new BigNumber(10).pow(decimals))
+          .multipliedBy(Number.isNaN(+tokenPrices[address]) ? 0 : tokenPrices[address]),
+      ),
+      new BigNumber(0),
+    ).toNumber(), [tokenPrices, tokens]);
+
+  const availableBalance = useMemo(() => new BigNumber((selectedSigner as any)?.freeBalance?.toString() || 0)
+    .div(new BigNumber(10).pow(18))
+    .multipliedBy(reefPrice)
+    .toNumber() + tokensWithoutReefValue, [reefPrice, selectedSigner, tokensWithoutReefValue]);
+
+  const stakedBalance = useMemo(() => new BigNumber((selectedSigner as any)?.lockedBalance?.toString() || 0)
+    .div(new BigNumber(10).pow(18))
+    .multipliedBy(reefPrice)
+    .toNumber(), [reefPrice, selectedSigner]);
+
+  const totalBalance = availableBalance + stakedBalance;
 
   return (
     selectedSigner?
     <div className="dashboard">
       <div className="dashboard__top">
         <div className="dashboard__top-left">
-          <Balance balance={totalBalance} loading={loading} />
+          <Balance total={totalBalance} available={availableBalance} staked={stakedBalance} loading={loading} />
           {/* <Rewards rewards={0} /> */}
         </div>
         <div className="dashboard__top-right">

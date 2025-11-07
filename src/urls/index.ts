@@ -15,6 +15,7 @@ export const REMOVE_LIQUIDITY_URL = '/remove-supply/:address1/:address2';
 export const TRANSFER_TOKEN = '/send';
 export const CREATE_ERC20_TOKEN_URL = '/create-token';
 export const BONDS_URL = '/bonds';
+export const VALIDATORS_URL = '/validators';
 export const BIND_URL = '/bind/:address1';
 export const BUY_URL = '/buy';
 export const ALCHEMY_PAY_URL = BUY_URL;

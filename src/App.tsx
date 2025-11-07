@@ -1,4 +1,5 @@
 import { ReefSigner, defaultOptions, hooks } from '@reef-chain/react-lib';
+import { SignerWithLocked } from './types/SignerWithLocked';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -61,8 +62,8 @@ export const connectWalletConnect = async(ident:string,setSelExtensionName:any,s
 const App = (): JSX.Element => {
   const {selExtensionName,setSelExtensionName} = useConnectedWallet();
   const {loading:wcPreloader,setLoading:setWcPreloader} = useWcPreloader()
-  const [accounts,setAccounts] = useState<ReefSigner[]>([]);
-  const [selectedSigner,setSelectedSigner] = useState<ReefSigner | undefined>(undefined);
+  const [accounts,setAccounts] = useState<SignerWithLocked[]>([]);
+  const [selectedSigner,setSelectedSigner] = useState<SignerWithLocked | undefined>(undefined);
 
  
   const {
@@ -73,35 +74,34 @@ const App = (): JSX.Element => {
 
   const accountsBalances = hooks.useObservableState(reefState.accounts$);
 
-  useEffect(()=>{
-    let updatedAccountsList:any = []
-    if(signers && accountsBalances){
-      signers.forEach((sgnr,idx)=>{
-        let accountUpdatedBal = {
+  useEffect(() => {
+    const updatedAccountsList: SignerWithLocked[] = [];
+    if (signers && accountsBalances) {
+      signers.forEach((sgnr, idx) => {
+        updatedAccountsList.push({
           ...sgnr,
-          freeBalance: accountsBalances[idx].freeBalance?? BigNumber.from("0"),
-          lockedBalance:accountsBalances[idx].lockedBalance?? BigNumber.from("0")
-        }
-        updatedAccountsList.push(accountUpdatedBal);
-      })
-    
+          freeBalance: accountsBalances[idx].freeBalance ?? BigNumber.from('0'),
+          lockedBalance: accountsBalances[idx].lockedBalance ?? BigNumber.from('0'),
+        });
+      });
       setAccounts(updatedAccountsList);
+      if (selectedReefSigner) {
+        const found = updatedAccountsList.find((acc) => acc.address === selectedReefSigner.address);
+        if (found) setSelectedSigner(found);
+      }
     }
-  },[accountsBalances,signers])
+  }, [accountsBalances, signers, selectedReefSigner]);
 
   useEffect(()=>{
     setAccounts([]);
     setSelectedSigner(undefined);
   },[selExtensionName])
 
-  useEffect(()=>{
-    setSelectedSigner(selectedReefSigner);
-
-    // if account connected , hide preloader & set account address
-    if(signers?.length && signers?.indexOf(selectedReefSigner!)==-1){
-      reefState.setSelectedAddress(signers[0].address)
+  useEffect(() => {
+    if (selectedReefSigner && signers?.length && signers.indexOf(selectedReefSigner) === -1) {
+      reefState.setSelectedAddress(signers[0].address);
     }
-  },[selectedReefSigner,signers])
+  }, [selectedReefSigner, signers]);
 
   const navigate = useNavigate();
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
