@@ -15,6 +15,7 @@ import './creator.css';
 import IconUpload from './IconUpload';
 import ConfirmToken from './ConfirmToken';
 import { localizedStrings as strings } from '../../l10n/l10n';
+import { IFormoAnalytics, TransactionStatus, useFormo } from '@formo/analytics';
 
 interface CreatorComponent {
   signer: ReefSigner | undefined;
@@ -35,25 +36,26 @@ interface ResultMessage {
 }
 
 interface UpdateTokenBalance {
-  visibility:boolean;
-  message:string;
-  complete:boolean;
+  visibility: boolean;
+  message: string;
+  complete: boolean;
 }
 
 interface CreateToken {
   signer?: ReefSigner;
   setResultMessage: (result: ResultMessage) => void;
   setUpdateTokensBalance: (updateTokensBalance: UpdateTokenBalance) => void;
-  updateTokensBalance:UpdateTokenBalance;
+  updateTokensBalance: UpdateTokenBalance;
   tokenName: string;
   symbol: string;
   initialSupply: string;
-  icon?:string;
+  icon?: string;
   tokenOptions: ITokenOptions;
   network: nw.Network;
   onTxUpdate?: reefUtils.TxStatusHandler;
   setVerifiedContract: (contract: Contract) => void;
   setDeployedContract: (contract: Contract) => void;
+  analytics: IFormoAnalytics;
 }
 
 async function verify(
@@ -61,7 +63,7 @@ async function verify(
   args: string[],
   network: nw.Network,
   contractData: DeployContractData,
-  icon:string,
+  icon: string,
 ): Promise<boolean> {
   const contractDataSettings = contractData.metadata.settings;
   const { compilationTarget } = contractDataSettings;
@@ -103,6 +105,7 @@ const createToken = async ({
   updateTokensBalance,
   setVerifiedContract,
   setDeployedContract,
+  analytics,
 }: CreateToken): Promise<void> => {
   if (!signer) {
     console.log('signer not set ');
@@ -112,6 +115,11 @@ const createToken = async ({
     complete: false,
     title: strings.deploying_token,
     message: strings.sending_token_contract,
+  });
+  analytics.transaction({
+    status: TransactionStatus.STARTED,
+    address: signer.address,
+    chainId: 13939
   });
   const args = [
     tokenName,
@@ -146,6 +154,11 @@ const createToken = async ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (onTxUpdate) {
+      analytics.transaction({
+        status: TransactionStatus.REJECTED,
+        address: signer.address,
+        chainId: 13939
+      });
       onTxUpdate({
         txIdent,
         error: {
@@ -168,14 +181,19 @@ const createToken = async ({
   }
   setDeployedContract(contract);
   if (onTxUpdate) {
+    analytics.transaction({
+      status: TransactionStatus.BROADCASTED,
+      address: signer.address,
+      transactionHash: contract.hash,
+      chainId: 13939
+    });
     onTxUpdate({
       txIdent,
       txHash: contract.hash,
       isInBlock: true,
       txTypeEvm: true,
-      url: `https://${
-        network === nw.AVAILABLE_NETWORKS.mainnet ? '' : `${network.name}.`
-      }reefscan.com/extrinsic/${contract.hash}`,
+      url: `https://${network === nw.AVAILABLE_NETWORKS.mainnet ? '' : `${network.name}.`
+        }reefscan.com/extrinsic/${contract.hash}`,
       addresses: [signer.address],
     });
   }
@@ -190,6 +208,12 @@ const createToken = async ({
     console.log('verify err=', err);
   }
   if (verified) {
+    analytics.transaction({
+      status: TransactionStatus.CONFIRMED,
+      address: signer.address,
+      transactionHash: contract.hash,
+      chainId: 13939
+    });
     setVerifiedContract(contract);
     setResultMessage({
       complete: true,
@@ -207,7 +231,7 @@ const createToken = async ({
           message: 'Token balances updated',
           visibility: true,
           complete:
-          true,
+            true,
         });
         tokenBalancesSub.unsubscribe();
       }
@@ -217,6 +241,11 @@ const createToken = async ({
       complete: true,
       title: 'Error verifying token',
       message: `Verifying deployed contract ${contract.address} failed.`,
+    });
+    analytics.transaction({
+      status: TransactionStatus.REVERTED,
+      address: signer.address,
+      chainId: 13939
     });
   }
 };
@@ -292,6 +321,7 @@ export const CreatorComponent = ({
   const [icon, setIcon] = useState('');
 
   const navigate = useNavigate();
+  const analytics: IFormoAnalytics = useFormo();
 
   // @ts-ignore
   return (
@@ -373,22 +403,22 @@ export const CreatorComponent = ({
                     {
                       !!icon
                       && (
-                      <img
-                        src={icon}
-                        alt={strings.token_icon}
-                        key={icon}
-                      />
+                        <img
+                          src={icon}
+                          alt={strings.token_icon}
+                          key={icon}
+                        />
                       )
                     }
                   </div>
                   <div className="creator__preview-token-info">
-                    <div className="creator__preview-token-name">{ tokenName }</div>
-                    <div className="creator__preview-token-symbol">{ symbol }</div>
+                    <div className="creator__preview-token-name">{tokenName}</div>
+                    <div className="creator__preview-token-symbol">{symbol}</div>
                   </div>
 
                   {
                     !!initialSupply
-                    && <Uik.Text className="creator__preview-token-supply" type="headline">{ Uik.utils.formatHumanAmount(initialSupply) }</Uik.Text>
+                    && <Uik.Text className="creator__preview-token-supply" type="headline">{Uik.utils.formatHumanAmount(initialSupply)}</Uik.Text>
                   }
                 </div>
 
@@ -401,14 +431,14 @@ export const CreatorComponent = ({
                   <Uik.Container flow="start">
                     <Uik.Icon icon={tokenOptions.burnable ? faCheckCircle : faXmarkCircle} />
                     <Uik.Text>
-                      { !tokenOptions.burnable && `${strings.not} `}
+                      {!tokenOptions.burnable && `${strings.not} `}
                       {strings.burnable}
                     </Uik.Text>
                   </Uik.Container>
                   <Uik.Text type="mini">
                     {strings.existing_tokens}
                     {' '}
-                    { tokenOptions.burnable ? strings.can : `${strings.can} ${strings.not}` }
+                    {tokenOptions.burnable ? strings.can : `${strings.can} ${strings.not}`}
                     {' '}
                     {strings.be_destroyed}
                   </Uik.Text>
@@ -423,14 +453,14 @@ export const CreatorComponent = ({
                   <Uik.Container flow="start">
                     <Uik.Icon icon={tokenOptions.mintable ? faCheckCircle : faXmarkCircle} />
                     <Uik.Text>
-                      { !tokenOptions.mintable && `${strings.not} ` }
+                      {!tokenOptions.mintable && `${strings.not} `}
                       {strings.mintable}
                     </Uik.Text>
                   </Uik.Container>
                   <Uik.Text type="mini">
                     {strings.new_tokens}
                     {' '}
-                    { tokenOptions.mintable ? strings.can : `${strings.can} ${strings.not}` }
+                    {tokenOptions.mintable ? strings.can : `${strings.can} ${strings.not}`}
                     {' '}
                     {strings.be_created}
                   </Uik.Text>
@@ -470,6 +500,7 @@ export const CreatorComponent = ({
             updateTokensBalance,
             setVerifiedContract,
             setDeployedContract,
+            analytics
           })}
         />
       </>
@@ -477,61 +508,61 @@ export const CreatorComponent = ({
       {
         resultMessage
         && (
-        <div className="creator">
-          <div className="creator__creating" key={resultMessage.title}>
-            { !resultMessage.complete && <Uik.Loading /> }
+          <div className="creator">
+            <div className="creator__creating" key={resultMessage.title}>
+              {!resultMessage.complete && <Uik.Loading />}
 
-            <Uik.Text type="headline">{ resultMessage.title }</Uik.Text>
-            <Uik.Text>{ resultMessage.message }</Uik.Text>
+              <Uik.Text type="headline">{resultMessage.title}</Uik.Text>
+              <Uik.Text>{resultMessage.message}</Uik.Text>
 
-            { updateTokensBalance.visibility && (
-            <div className="creator__updating-token-balance">
-              {updateTokensBalance.complete ? <Uik.Icon icon={faCheckCircle} /> : <Uik.Loading size="small" />}
-              <Uik.Text className="creator__updating-token-balance--text">{ updateTokensBalance.message }</Uik.Text>
+              {updateTokensBalance.visibility && (
+                <div className="creator__updating-token-balance">
+                  {updateTokensBalance.complete ? <Uik.Icon icon={faCheckCircle} /> : <Uik.Loading size="small" />}
+                  <Uik.Text className="creator__updating-token-balance--text">{updateTokensBalance.message}</Uik.Text>
+                </div>
+              )}
+
+              {
+                !!resultMessage.contract
+                && resultMessage.complete
+                && (
+                  <div className="creator__creating-cta">
+                    <Uik.Button
+                      text={strings.view_in_explorer}
+                      icon={faArrowUpRightFromSquare}
+                      size="large"
+                      onClick={() => window.open(`${network.reefscanUrl}/contract/${resultMessage.contract?.address}`)}
+                    />
+                    {
+                      updateTokensBalance.complete
+                        ? (
+                          <Uik.Button
+                            fill
+                            text={strings.create_a_pool}
+                            icon={faCoins}
+                            size="large"
+                            onClick={() => navigate('/pools')}
+                          />
+                        ) : <div style={{ cursor: 'progress' }}><Uik.Button text={strings.create_a_pool} icon={faCoins} size="large" disabled /></div>
+                    }
+                  </div>
+                )
+              }
+
+              {
+                resultMessage.title === strings.create_a_pool
+                && (
+                  <div className="creator__creating-cta">
+                    <Uik.Button
+                      text={strings.return_to_creator}
+                      size="large"
+                      onClick={init}
+                    />
+                  </div>
+                )
+              }
             </div>
-            ) }
-
-            {
-              !!resultMessage.contract
-              && resultMessage.complete
-              && (
-              <div className="creator__creating-cta">
-                <Uik.Button
-                  text={strings.view_in_explorer}
-                  icon={faArrowUpRightFromSquare}
-                  size="large"
-                  onClick={() => window.open(`${network.reefscanUrl}/contract/${resultMessage.contract?.address}`)}
-                />
-                {
-                  updateTokensBalance.complete
-                    ? (
-                      <Uik.Button
-                        fill
-                        text={strings.create_a_pool}
-                        icon={faCoins}
-                        size="large"
-                        onClick={() => navigate('/pools')}
-                      />
-                    ) : <div style={{ cursor: 'progress' }}><Uik.Button text={strings.create_a_pool} icon={faCoins} size="large" disabled /></div>
-                }
-              </div>
-              )
-            }
-
-            {
-              resultMessage.title === strings.create_a_pool
-              && (
-              <div className="creator__creating-cta">
-                <Uik.Button
-                  text={strings.return_to_creator}
-                  size="large"
-                  onClick={init}
-                />
-              </div>
-              )
-            }
           </div>
-        </div>
         )
       }
     </>

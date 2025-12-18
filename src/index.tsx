@@ -11,17 +11,23 @@ import { version } from '../package.json';
 import { ConnectedWalletProvider } from './context/ConnectedWalletContext';
 import { AccountSelectorProvider } from './context/AccountSelectorContext';
 import { WcPreloaderProvider } from './context/WcPreloaderContext';
+import { FormoAnalyticsProvider } from '@formo/analytics';
+import { formoApiKey } from './environment';
 
 console.log(`Reef-app version: ${version}`);
 
-createRoot(document.getElementById('root')!).render(<React.StrictMode><Router>
-  <AccountSelectorProvider>
-  <ConnectedWalletProvider>
-  <WcPreloaderProvider>
-  <App />
-  </WcPreloaderProvider>
-  </ConnectedWalletProvider>
-  </AccountSelectorProvider>
-  </Router></React.StrictMode>);
+createRoot(document.getElementById('root')!).render(<React.StrictMode>
+    <Router>
+  <FormoAnalyticsProvider writeKey={formoApiKey}>
+      <AccountSelectorProvider>
+        <ConnectedWalletProvider>
+          <WcPreloaderProvider>
+            <App />
+          </WcPreloaderProvider>
+        </ConnectedWalletProvider>
+      </AccountSelectorProvider>
+  </FormoAnalyticsProvider>
+    </Router>
+</React.StrictMode>);
 
 reportWebVitals();

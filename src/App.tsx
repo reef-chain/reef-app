@@ -25,6 +25,7 @@ import useConnectedWallet from './hooks/useConnectedWallet';
 import useWcPreloader from './hooks/useWcPreloader';
 import WcPreloader from './common/WcPreloader';
 import useAccountSelector from './hooks/useAccountSelector';
+import { useFormo } from "@formo/analytics";
 
 const { WalletSelector, walletSelectorOptions } = Components;
 
@@ -64,6 +65,7 @@ const App = (): JSX.Element => {
   const {loading:wcPreloader,setLoading:setWcPreloader} = useWcPreloader()
   const [accounts,setAccounts] = useState<SignerWithLocked[]>([]);
   const [selectedSigner,setSelectedSigner] = useState<SignerWithLocked | undefined>(undefined);
+  const analytics = useFormo();
 
  
   const {
@@ -71,6 +73,13 @@ const App = (): JSX.Element => {
   } = hooks.useInitReefStateExtension(
     'Reef App', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl },
   );
+
+  useEffect(() => {
+    if (selectedReefSigner && analytics) {
+      console.log("Identifying user in formo analytics",selectedReefSigner.address);
+      analytics.identify({ address:selectedReefSigner.address });
+    }
+  }, [selectedReefSigner, analytics]);
 
   const accountsBalances = hooks.useObservableState(reefState.accounts$);
 
