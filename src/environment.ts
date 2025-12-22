@@ -10,7 +10,7 @@ export const getIpfsGatewayUrl = (hash: string): string => `https://reef.infura-
 export const appAvailableNetworks = [nw.AVAILABLE_NETWORKS.mainnet, nw.AVAILABLE_NETWORKS.testnet];
 export const binanceConnectApiUrl = 'https://onramp.reefscan.info';
 
-export const formoApiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmlnaW4iOiJodHRwczovL2FwcC5yZWVmLmlvIiwicHJvamVjdF9pZCI6IjNSQWZuNGZrR0o4dnI3bERmMHFGZCIsImlhdCI6MTc2NjA3MzgwOH0.1coWZO-PV7JHv5_duD9Wmkyd4ivVygrHqtsaUZEF1S8";
+export const formoApiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmlnaW4iOiJodHRwczovL2FwcC5yZWVmLmlvIiwicHJvamVjdF9pZCI6IlFtM3ZxTGd4dUZOblpVMmlHV3g2YSIsImlhdCI6MTc2NjE1MTg3Nn0.FZ6x8vm7s72MAtGj4MYOBm3p1R5oFVGPEGPBZO2mj8Y";
 
 export const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
