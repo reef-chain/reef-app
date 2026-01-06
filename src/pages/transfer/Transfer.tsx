@@ -4,6 +4,7 @@ import TokenContext from '../../context/TokenContext';
 import ReefSigners from '../../context/ReefSigners';
 import { notify } from '../../utils/utils';
 import Uik from "@reef-chain/ui-kit";
+import { IFormoAnalytics, useFormo } from '@formo/analytics';
 
 function Transfer() {
   const {OverlaySend} = Components;
@@ -11,6 +12,7 @@ function Transfer() {
   const { tokens } = useContext(TokenContext);
   const { selectedSigner, provider, accounts } = useContext(ReefSigners);
   const token = tokens?tokens[0]:undefined
+  const analyticsFormo:IFormoAnalytics = useFormo();
   
   if(!token){
     return <Uik.Loading />
@@ -25,6 +27,7 @@ function Transfer() {
         provider={provider}
         accounts={accounts}
         notify={notify}
+        analytics_formo={analyticsFormo}
       />
   )
 }

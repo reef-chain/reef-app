@@ -24,7 +24,7 @@ import { connectWc } from './utils/walletConnect';
 import useConnectedWallet from './hooks/useConnectedWallet';
 import useWcPreloader from './hooks/useWcPreloader';
 import WcPreloader from './common/WcPreloader';
-import { useFormo } from "@formo/analytics";
+import { IFormoAnalytics, useFormo } from "@formo/analytics";
 
 const { WalletSelector, walletSelectorOptions } = Components;
 
@@ -64,7 +64,7 @@ const App = (): JSX.Element => {
   const {loading:wcPreloader,setLoading:setWcPreloader} = useWcPreloader()
   const [accounts,setAccounts] = useState<SignerWithLocked[]>([]);
   const [selectedSigner,setSelectedSigner] = useState<SignerWithLocked | undefined>(undefined);
-  const analyticsFormo = useFormo();
+  const analyticsFormo:IFormoAnalytics = useFormo();
 
  
   const {
