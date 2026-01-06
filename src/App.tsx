@@ -78,7 +78,7 @@ const App = (): JSX.Element => {
       console.log("Identifying user in formo analytics",selectedReefSigner.address);
       analyticsFormo.identify({ 
         address:selectedReefSigner.evmAddress??ZERO_ADDRESS,
-        providerName:extension,
+        providerName:extension.toString(),
         userId:selectedReefSigner.address 
       });
     }
