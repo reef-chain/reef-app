@@ -55,7 +55,7 @@ interface CreateToken {
   onTxUpdate?: reefUtils.TxStatusHandler;
   setVerifiedContract: (contract: Contract) => void;
   setDeployedContract: (contract: Contract) => void;
-  analytics: IFormoAnalytics;
+  analyticsFormo: IFormoAnalytics;
 }
 
 async function verify(
@@ -105,7 +105,7 @@ const createToken = async ({
   updateTokensBalance,
   setVerifiedContract,
   setDeployedContract,
-  analytics,
+  analyticsFormo,
 }: CreateToken): Promise<void> => {
   if (!signer) {
     console.log('signer not set ');
@@ -116,7 +116,7 @@ const createToken = async ({
     title: strings.deploying_token,
     message: strings.sending_token_contract,
   });
-  analytics.transaction({
+  analyticsFormo.transaction({
     status: TransactionStatus.STARTED,
     address: signer.address,
     chainId: 13939
@@ -154,7 +154,7 @@ const createToken = async ({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (onTxUpdate) {
-      analytics.transaction({
+      analyticsFormo.transaction({
         status: TransactionStatus.REJECTED,
         address: signer.address,
         chainId: 13939
@@ -181,7 +181,7 @@ const createToken = async ({
   }
   setDeployedContract(contract);
   if (onTxUpdate) {
-    analytics.transaction({
+    analyticsFormo.transaction({
       status: TransactionStatus.BROADCASTED,
       address: signer.address,
       transactionHash: contract.hash,
@@ -208,7 +208,7 @@ const createToken = async ({
     console.log('verify err=', err);
   }
   if (verified) {
-    analytics.transaction({
+    analyticsFormo.transaction({
       status: TransactionStatus.CONFIRMED,
       address: signer.address,
       transactionHash: contract.hash,
@@ -242,7 +242,7 @@ const createToken = async ({
       title: 'Error verifying token',
       message: `Verifying deployed contract ${contract.address} failed.`,
     });
-    analytics.transaction({
+    analyticsFormo.transaction({
       status: TransactionStatus.REVERTED,
       address: signer.address,
       chainId: 13939
@@ -321,7 +321,7 @@ export const CreatorComponent = ({
   const [icon, setIcon] = useState('');
 
   const navigate = useNavigate();
-  const analytics: IFormoAnalytics = useFormo();
+  const analyticsFormo: IFormoAnalytics = useFormo();
 
   // @ts-ignore
   return (
@@ -500,7 +500,7 @@ export const CreatorComponent = ({
             updateTokensBalance,
             setVerifiedContract,
             setDeployedContract,
-            analytics
+            analyticsFormo
           })}
         />
       </>

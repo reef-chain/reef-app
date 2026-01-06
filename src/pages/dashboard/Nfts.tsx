@@ -5,6 +5,7 @@ import Uik from '@reef-chain/ui-kit';
 import SqwidButton from './SqwidButton/SqwidButton';
 import { localizedStrings } from '../../l10n/l10n';
 import ReefSigners from '../../context/ReefSigners';
+import { IFormoAnalytics, useFormo } from '@formo/analytics';
 
 const {NFTCard,OverlayNFT} = Components;
 
@@ -24,6 +25,7 @@ interface NftsProps {
 export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
   const { accounts, selectedSigner, provider } = useContext(ReefSigners);
   const [selectedNFT, setSelectedNFT] = useState<NFTData | undefined>(undefined);
+  const analyticsFormo:IFormoAnalytics = useFormo()
 
   return (
     <div className="nfts">
@@ -68,6 +70,7 @@ export const Nfts = ({ nfts }: NftsProps): JSX.Element => {
                   accounts={accounts}
                   selectedSigner={selectedSigner}
                   provider={provider}
+                  analytics_formo={analyticsFormo}
                 />
               )}
             </div>

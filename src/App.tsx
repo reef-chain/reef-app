@@ -24,7 +24,7 @@ import { connectWc } from './utils/walletConnect';
 import useConnectedWallet from './hooks/useConnectedWallet';
 import useWcPreloader from './hooks/useWcPreloader';
 import WcPreloader from './common/WcPreloader';
-import { useFormo } from "@formo/analytics";
+import { IFormoAnalytics, useFormo } from "@formo/analytics";
 
 const { WalletSelector, walletSelectorOptions } = Components;
 
@@ -64,7 +64,7 @@ const App = (): JSX.Element => {
   const {loading:wcPreloader,setLoading:setWcPreloader} = useWcPreloader()
   const [accounts,setAccounts] = useState<SignerWithLocked[]>([]);
   const [selectedSigner,setSelectedSigner] = useState<SignerWithLocked | undefined>(undefined);
-  const analytics = useFormo();
+  const analyticsFormo:IFormoAnalytics = useFormo();
 
  
   const {
@@ -74,15 +74,15 @@ const App = (): JSX.Element => {
   );
 
   useEffect(() => {
-    if (selectedReefSigner && analytics && selExtensionName) {
+    if (selectedReefSigner && analyticsFormo && selExtensionName) {
       console.log("Identifying user in formo analytics",selectedReefSigner.address);
-      analytics.identify({ 
+      analyticsFormo.identify({ 
         address:selectedReefSigner.evmAddress??ZERO_ADDRESS,
-        providerName:extension,
+        providerName:extension.toString(),
         userId:selectedReefSigner.address 
       });
     }
-  }, [selectedReefSigner, analytics, selExtensionName]);
+  }, [selectedReefSigner, analyticsFormo, selExtensionName]);
 
   const accountsBalances = hooks.useObservableState(reefState.accounts$);
 
