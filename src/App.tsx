@@ -64,7 +64,7 @@ const App = (): JSX.Element => {
   const {loading:wcPreloader,setLoading:setWcPreloader} = useWcPreloader()
   const [accounts,setAccounts] = useState<SignerWithLocked[]>([]);
   const [selectedSigner,setSelectedSigner] = useState<SignerWithLocked | undefined>(undefined);
-  const analytics = useFormo();
+  const analyticsFormo = useFormo();
 
  
   const {
@@ -74,15 +74,15 @@ const App = (): JSX.Element => {
   );
 
   useEffect(() => {
-    if (selectedReefSigner && analytics && selExtensionName) {
+    if (selectedReefSigner && analyticsFormo && selExtensionName) {
       console.log("Identifying user in formo analytics",selectedReefSigner.address);
-      analytics.identify({ 
+      analyticsFormo.identify({ 
         address:selectedReefSigner.evmAddress??ZERO_ADDRESS,
         providerName:extension,
         userId:selectedReefSigner.address 
       });
     }
-  }, [selectedReefSigner, analytics, selExtensionName]);
+  }, [selectedReefSigner, analyticsFormo, selExtensionName]);
 
   const accountsBalances = hooks.useObservableState(reefState.accounts$);
 
