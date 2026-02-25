@@ -1,0 +1,5 @@
+.points__you-row td {
+  background-color: rgba(169, 49, 133, 0.08);
+  font-weight: 600;
+  color: var(--primary);
+}
