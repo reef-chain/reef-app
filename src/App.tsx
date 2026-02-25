@@ -263,9 +263,11 @@ useEffect(()=>{
                   <MetaMaskProvider>
                     <div className="App d-flex w-100 h-100">
                       <div className="w-100 main-content">
-                <Nav selectExtension={(extName) => onExtensionSelected(extName)} />
-                        
+                        {!isPointsRoute && (
+                          <Nav selectExtension={(extName) => onExtensionSelected(extName)} />
+                        )}
                         <ContentRouter />
+                        {!isPointsRoute && (
                           <>
                             <NetworkSwitching isOpen={isNetworkSwitching} />
                             <WcPreloader wcPreloader={wcPreloader} />
@@ -282,6 +284,7 @@ useEffect(()=>{
                             />
                             <Bind />
                           </>
+                        )}
                       </div>
                     </div>
                   </MetaMaskProvider>
