@@ -50,7 +50,8 @@ const ContentRouter = (): JSX.Element => {
   // Its not appropriate to have token state in this component, but the problem was apollo client.
   // Once its declared properly in App move TokenContext in the parent component (App.tsx)
 
-  const tokens = hooks.useObservableState<TokenWithAmount[]|null>(reefState.selectedTokenPrices$, []);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const tokens = hooks.useObservableState<TokenWithAmount[]|null>(reefState.selectedTokenPrices$ as any, []);
 
   const [nfts, nftsLoading] = hooks.useAllNfts();
   const pools = hooks.useAllPools(axios);
