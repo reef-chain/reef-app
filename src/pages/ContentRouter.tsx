@@ -43,7 +43,7 @@ import Snap from './snap/Snap';
 import { utils } from '@reef-chain/react-lib';
 import AlchemyPay from './alchemy-pay/AlchemyPay';
 import Validators from './validators/Validators';
-import Points from './points/Points';
+import PointsRoot from './points/PointsRoot';
 
 const ContentRouter = (): JSX.Element => {
   const { reefState, selectedSigner } = useContext(ReefSigners);
@@ -91,6 +91,7 @@ const ContentRouter = (): JSX.Element => {
                   {/* <Route path={BUY_URL} component={Buy} /> */}
                   <Route path={ALCHEMY_PAY_URL} element={<AlchemyPay/>} />
                   {/* <Route path={ONRAMP_URL} component={Onramp} /> */}
+                  <Route path={POINTS_URL} element={<PointsRoot/>} />
                   <Route path={SNAP_URL} element={<Snap/>} />
                   <Route path="/" element={<Navigate to={DASHBOARD_URL} />}  />
                 </Routes>
@@ -110,7 +111,7 @@ const ContentRouter = (): JSX.Element => {
                   <Route path={BONDS_URL} element={<Bonds/>} />
                   <Route path={BIND_URL} element={<Bind/>} />
                   {/* <Route path={BUY_URL} component={Buy} /> */}
-                  <Route path={POINTS_URL} element={<Points/>} />
+                  <Route path={POINTS_URL} element={<PointsRoot/>} />
                   <Route path={ALCHEMY_PAY_URL} element={<AlchemyPay/>} />
                   {/* <Route path={ONRAMP_URL} component={Onramp} /> */}
                   <Route path={SNAP_URL} element={<Snap/>} />
