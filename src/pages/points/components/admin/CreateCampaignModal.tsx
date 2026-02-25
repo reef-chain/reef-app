@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Uik from '@reef-chain/ui-kit';
 import apiService from '../../api/apiService';
 import { Campaign } from './CampaignTable';
+import './createCampaignModal.css';
 
 interface CreateCampaignModalProps {
   isOpen: boolean;
@@ -40,6 +41,15 @@ type RawPoolOption = string | {
   token1Symbol?: string;
   poolType?: string;
 };
+
+type EligibilityKey = 'bootstrappingEligible' | 'earlySznEligible' | 'memeSznEligible';
+type DateKey =
+  | 'bootstrappingStartDate'
+  | 'bootstrappingEndDate'
+  | 'earlySznStartDate'
+  | 'earlySznEndDate'
+  | 'memeSznStartDate'
+  | 'memeSznEndDate';
 
 function normalizePoolOption(option: RawPoolOption): PoolOption | null {
   if (typeof option === 'string') {
@@ -87,6 +97,14 @@ function truncateAddress(address: string): string {
   return `${address.slice(0, 10)}...${address.slice(-8)}`;
 }
 
+function toDateInputValue(date?: string): string {
+  if (!date) return '';
+  if (/^\d{4}-\d{2}-\d{2}$/.test(date)) return date;
+  const parsed = new Date(date);
+  if (Number.isNaN(parsed.getTime())) return date.slice(0, 10);
+  return parsed.toISOString().slice(0, 10);
+}
+
 function CreateCampaignModal({ isOpen, editingCampaign, onClose, onSuccess }: CreateCampaignModalProps) {
   const poolDropdownRef = useRef<HTMLDivElement | null>(null);
   const [form, setForm] = useState<Campaign>(emptyForm());
@@ -97,6 +115,7 @@ function CreateCampaignModal({ isOpen, editingCampaign, onClose, onSuccess }: Cr
   const [isPoolDropdownOpen, setIsPoolDropdownOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const modalTitle = editingCampaign ? 'Edit Campaign' : 'Create New Campaign';
 
   const selectedPool = useMemo(
     () => pools.find((pool) => pool.poolAddress === form.poolAddress),
@@ -121,7 +140,15 @@ function CreateCampaignModal({ isOpen, editingCampaign, onClose, onSuccess }: Cr
       return;
     }
 
-    setForm(editingCampaign ? { ...editingCampaign } : emptyForm());
+    setForm(editingCampaign ? {
+      ...editingCampaign,
+      bootstrappingStartDate: toDateInputValue(editingCampaign.bootstrappingStartDate),
+      bootstrappingEndDate: toDateInputValue(editingCampaign.bootstrappingEndDate),
+      earlySznStartDate: toDateInputValue(editingCampaign.earlySznStartDate),
+      earlySznEndDate: toDateInputValue(editingCampaign.earlySznEndDate),
+      memeSznStartDate: toDateInputValue(editingCampaign.memeSznStartDate),
+      memeSznEndDate: toDateInputValue(editingCampaign.memeSznEndDate),
+    } : emptyForm());
     setError(null);
     setPoolsError(null);
     setPoolSearchQuery('');
@@ -174,6 +201,21 @@ function CreateCampaignModal({ isOpen, editingCampaign, onClose, onSuccess }: Cr
   const setField = <K extends keyof Campaign>(key: K, value: Campaign[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }));
 
+  const setEligibility = (key: EligibilityKey, enabled: boolean) => {
+    setField(key, enabled);
+  };
+
+  const setDateField = (key: DateKey, value: string) => {
+    setField(key, value);
+  };
+
+  const handleClose = () => {
+    setIsPoolDropdownOpen(false);
+    setPoolSearchQuery('');
+    setError(null);
+    onClose();
+  };
+
   const handleSubmit = async () => {
     if (!form.poolAddress) {
       setError('Pool address is required');
@@ -188,7 +230,7 @@ function CreateCampaignModal({ isOpen, editingCampaign, onClose, onSuccess }: Cr
         await apiService.createCampaign([form]);
       }
       onSuccess();
-      onClose();
+      handleClose();
     } catch (err: any) {
       setError(err.message || 'Failed to save campaign');
     } finally {
@@ -198,53 +240,68 @@ function CreateCampaignModal({ isOpen, editingCampaign, onClose, onSuccess }: Cr
 
   return (
     <Uik.Modal
-      title={editingCampaign ? 'Edit Campaign' : 'Create Campaign'}
+      title={modalTitle}
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
+      className="points-admin-modal"
       footer={
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-          <Uik.Button text="Cancel" onClick={onClose} />
-          <Uik.Button fill text={editingCampaign ? 'Update' : 'Create'} loading={loading} onClick={handleSubmit} />
+        <div className="points-admin-modal__footer">
+          <button
+            type="button"
+            className="points-admin-modal__btn points-admin-modal__btn--cancel"
+            onClick={handleClose}
+            disabled={loading}
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            className="points-admin-modal__btn points-admin-modal__btn--primary"
+            onClick={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (editingCampaign ? 'Updating...' : 'Creating...') : (editingCampaign ? 'Update Campaign' : 'Create Campaign')}
+          </button>
         </div>
       }
     >
-      <Uik.Form>
-        {error && <Uik.Alert type="danger" text={error} />}
+      <div className="points-admin-modal__content">
+        {error && <div className="points-admin-modal__error">{error}</div>}
 
         {editingCampaign ? (
-          <Uik.Input label="Pool Address" value={form.poolAddress} readOnly />
+          <div className="points-admin-modal__pool-group">
+            <label className="points-admin-modal__label">Pool Address</label>
+            <div className="points-admin-modal__readonly">{form.poolAddress}</div>
+          </div>
         ) : (
-          <div ref={poolDropdownRef} style={{ position: 'relative' }}>
-            <Uik.Input
-              label="Pool Address"
-              value={selectedPool?.label || form.poolAddress}
-              placeholder={poolsLoading ? 'Loading pools...' : 'Select a pool'}
-              readOnly
-              onFocus={() => setIsPoolDropdownOpen(true)}
-              error={poolsError || undefined}
-            />
+          <div ref={poolDropdownRef} className="points-admin-modal__pool-group">
+            <label className="points-admin-modal__label">
+              Select Pool <span className="points-admin-modal__required">*</span>
+            </label>
+            <button
+              type="button"
+              className={`points-admin-modal__select-trigger ${poolsError ? 'points-admin-modal__select-trigger--error' : ''}`}
+              onClick={() => setIsPoolDropdownOpen((prev) => !prev)}
+              disabled={poolsLoading}
+            >
+              <span className={`points-admin-modal__select-value ${!selectedPool ? 'points-admin-modal__select-value--placeholder' : ''}`}>
+                {poolsLoading ? 'Loading pools...' : selectedPool?.label || 'Choose a pool'}
+              </span>
+              <span className={`points-admin-modal__select-caret ${isPoolDropdownOpen ? 'points-admin-modal__select-caret--open' : ''}`}>⌄</span>
+            </button>
+            {poolsError && <div className="points-admin-modal__field-error">{poolsError}</div>}
 
             {isPoolDropdownOpen && !poolsLoading && (
-              <div
-                style={{
-                  position: 'absolute',
-                  zIndex: 20,
-                  width: '100%',
-                  marginTop: '0.35rem',
-                  borderRadius: '10px',
-                  border: '1px solid #d8dce8',
-                  background: '#fff',
-                  boxShadow: '0 10px 28px rgba(25, 29, 44, 0.16)',
-                }}
-              >
-                <div style={{ padding: '0.65rem 0.65rem 0.4rem' }}>
-                  <Uik.Input
+              <div className="points-admin-modal__select-dropdown">
+                <div className="points-admin-modal__search-wrap">
+                  <input
                     value={poolSearchQuery}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPoolSearchQuery(e.target.value)}
                     placeholder="Search by address or pair"
+                    className="points-admin-modal__search-input"
                   />
                 </div>
-                <div style={{ maxHeight: '220px', overflowY: 'auto', paddingBottom: '0.35rem' }}>
+                <div className="points-admin-modal__options-list">
                   {filteredPools.length > 0 ? (
                     filteredPools.map((pool) => (
                       <button
@@ -256,26 +313,17 @@ function CreateCampaignModal({ isOpen, editingCampaign, onClose, onSuccess }: Cr
                           setPoolSearchQuery('');
                           setError(null);
                         }}
-                        style={{
-                          width: '100%',
-                          textAlign: 'left',
-                          border: 'none',
-                          background: form.poolAddress === pool.poolAddress ? 'rgba(169, 49, 133, 0.12)' : 'transparent',
-                          padding: '0.6rem 0.75rem',
-                          cursor: 'pointer',
-                        }}
+                        className={`points-admin-modal__option-btn ${form.poolAddress === pool.poolAddress ? 'points-admin-modal__option-btn--active' : ''}`}
                       >
-                        <div style={{ fontWeight: 600 }}>{pool.label}</div>
-                        <div style={{ fontSize: '0.8rem', opacity: 0.68 }}>
+                        <div className="points-admin-modal__option-main">{pool.label}</div>
+                        <div className="points-admin-modal__option-meta">
                           {truncateAddress(pool.poolAddress)}
                           {pool.poolType ? ` • ${pool.poolType}` : ''}
                         </div>
                       </button>
                     ))
                   ) : (
-                    <div style={{ padding: '0.75rem', fontSize: '0.88rem', opacity: 0.7 }}>
-                      No pools found
-                    </div>
+                    <div className="points-admin-modal__option-empty">No pools found</div>
                   )}
                 </div>
               </div>
@@ -283,74 +331,131 @@ function CreateCampaignModal({ isOpen, editingCampaign, onClose, onSuccess }: Cr
           </div>
         )}
 
-        <Uik.Divider text="Eligibility" />
+        <h3 className="points-admin-modal__section-title">Season Configuration</h3>
 
-        <Uik.Checkbox
-          label="Bootstrapping Eligible"
-          value={!!form.bootstrappingEligible}
-          onChange={(checked: boolean) => setField('bootstrappingEligible', checked)}
-        />
+        <div className="points-admin-modal__season-card points-admin-modal__season-card--boot">
+          <div className="points-admin-modal__season-meta">
+            <span className="points-admin-modal__season-icon points-admin-modal__season-icon--boot">B</span>
+            <div>
+              <h4 className="points-admin-modal__season-title">Bootstrapping Season</h4>
+              <p className="points-admin-modal__season-subtitle">Enable early adoption rewards</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className={`points-admin-modal__switch ${form.bootstrappingEligible ? 'points-admin-modal__switch--on' : ''}`}
+            onClick={() => setEligibility('bootstrappingEligible', !Boolean(form.bootstrappingEligible))}
+            aria-checked={Boolean(form.bootstrappingEligible)}
+            role="switch"
+          >
+            <span className="points-admin-modal__switch-thumb" />
+          </button>
+        </div>
         {form.bootstrappingEligible && (
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <Uik.Input
-              label="Bootstrapping Start"
-              type="date"
-              value={form.bootstrappingStartDate || ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setField('bootstrappingStartDate', e.target.value)}
-            />
-            <Uik.Input
-              label="Bootstrapping End"
-              type="date"
-              value={form.bootstrappingEndDate || ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setField('bootstrappingEndDate', e.target.value)}
-            />
+          <div className="points-admin-modal__dates-row">
+            <label className="points-admin-modal__date-field">
+              <span>Bootstrapping Start</span>
+              <input
+                className="points-admin-modal__date-input"
+                type="date"
+                value={form.bootstrappingStartDate || ''}
+                onChange={(e) => setDateField('bootstrappingStartDate', e.target.value)}
+              />
+            </label>
+            <label className="points-admin-modal__date-field">
+              <span>Bootstrapping End</span>
+              <input
+                className="points-admin-modal__date-input"
+                type="date"
+                value={form.bootstrappingEndDate || ''}
+                onChange={(e) => setDateField('bootstrappingEndDate', e.target.value)}
+              />
+            </label>
           </div>
         )}
 
-        <Uik.Checkbox
-          label="Early Season Eligible"
-          value={!!form.earlySznEligible}
-          onChange={(checked: boolean) => setField('earlySznEligible', checked)}
-        />
+        <div className="points-admin-modal__season-card points-admin-modal__season-card--early">
+          <div className="points-admin-modal__season-meta">
+            <span className="points-admin-modal__season-icon points-admin-modal__season-icon--early">E</span>
+            <div>
+              <h4 className="points-admin-modal__season-title">Early Season</h4>
+              <p className="points-admin-modal__season-subtitle">Reward early participants</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className={`points-admin-modal__switch ${form.earlySznEligible ? 'points-admin-modal__switch--on' : ''}`}
+            onClick={() => setEligibility('earlySznEligible', !Boolean(form.earlySznEligible))}
+            aria-checked={Boolean(form.earlySznEligible)}
+            role="switch"
+          >
+            <span className="points-admin-modal__switch-thumb" />
+          </button>
+        </div>
         {form.earlySznEligible && (
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <Uik.Input
-              label="Early Szn Start"
-              type="date"
-              value={form.earlySznStartDate || ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setField('earlySznStartDate', e.target.value)}
-            />
-            <Uik.Input
-              label="Early Szn End"
-              type="date"
-              value={form.earlySznEndDate || ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setField('earlySznEndDate', e.target.value)}
-            />
+          <div className="points-admin-modal__dates-row">
+            <label className="points-admin-modal__date-field">
+              <span>Early Szn Start</span>
+              <input
+                className="points-admin-modal__date-input"
+                type="date"
+                value={form.earlySznStartDate || ''}
+                onChange={(e) => setDateField('earlySznStartDate', e.target.value)}
+              />
+            </label>
+            <label className="points-admin-modal__date-field">
+              <span>Early Szn End</span>
+              <input
+                className="points-admin-modal__date-input"
+                type="date"
+                value={form.earlySznEndDate || ''}
+                onChange={(e) => setDateField('earlySznEndDate', e.target.value)}
+              />
+            </label>
           </div>
         )}
 
-        <Uik.Checkbox
-          label="Meme Season Eligible"
-          value={!!form.memeSznEligible}
-          onChange={(checked: boolean) => setField('memeSznEligible', checked)}
-        />
+        <div className="points-admin-modal__season-card points-admin-modal__season-card--meme">
+          <div className="points-admin-modal__season-meta">
+            <span className="points-admin-modal__season-icon points-admin-modal__season-icon--meme">M</span>
+            <div>
+              <h4 className="points-admin-modal__season-title">Meme Season</h4>
+              <p className="points-admin-modal__season-subtitle">Special meme token rewards</p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className={`points-admin-modal__switch ${form.memeSznEligible ? 'points-admin-modal__switch--on' : ''}`}
+            onClick={() => setEligibility('memeSznEligible', !Boolean(form.memeSznEligible))}
+            aria-checked={Boolean(form.memeSznEligible)}
+            role="switch"
+          >
+            <span className="points-admin-modal__switch-thumb" />
+          </button>
+        </div>
         {form.memeSznEligible && (
-          <div style={{ display: 'flex', gap: '1rem' }}>
-            <Uik.Input
-              label="Meme Szn Start"
-              type="date"
-              value={form.memeSznStartDate || ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setField('memeSznStartDate', e.target.value)}
-            />
-            <Uik.Input
-              label="Meme Szn End"
-              type="date"
-              value={form.memeSznEndDate || ''}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setField('memeSznEndDate', e.target.value)}
-            />
+          <div className="points-admin-modal__dates-row">
+            <label className="points-admin-modal__date-field">
+              <span>Meme Szn Start</span>
+              <input
+                className="points-admin-modal__date-input"
+                type="date"
+                value={form.memeSznStartDate || ''}
+                onChange={(e) => setDateField('memeSznStartDate', e.target.value)}
+              />
+            </label>
+            <label className="points-admin-modal__date-field">
+              <span>Meme Szn End</span>
+              <input
+                className="points-admin-modal__date-input"
+                type="date"
+                value={form.memeSznEndDate || ''}
+                onChange={(e) => setDateField('memeSznEndDate', e.target.value)}
+              />
+            </label>
           </div>
         )}
-      </Uik.Form>
+      </div>
     </Uik.Modal>
   );
 }

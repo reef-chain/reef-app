@@ -1,0 +1,419 @@
+.points-admin-modal .uik-modal__container {
+  padding: 1.2rem;
+}
+
+.points-admin-modal .uik-modal__popup {
+  width: min(760px, 100%);
+  border-radius: 18px;
+  background: #fcfcfe;
+  box-shadow: 0 24px 80px -32px rgba(25, 20, 59, 0.5);
+  border: 1px solid rgba(139, 148, 169, 0.18);
+}
+
+.points-admin-modal .uik-modal__head {
+  padding: 1.35rem 1.6rem 1rem;
+  border-bottom: none;
+}
+
+.points-admin-modal .uik-modal__title {
+  font-size: 1.72rem;
+  font-weight: 700;
+  color: #131b31;
+}
+
+.points-admin-modal .uik-modal__close-btn {
+  border-radius: 999px;
+  color: #7d859a;
+}
+
+.points-admin-modal .uik-modal__body {
+  padding: 0 1.6rem 0.5rem;
+}
+
+.points-admin-modal .uik-modal__footer {
+  padding: 1rem 1.6rem 1.5rem;
+  border-top: 1px solid #eef1f6;
+}
+
+.points-admin-modal__content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.points-admin-modal__error {
+  padding: 0.65rem 0.8rem;
+  border-radius: 10px;
+  border: 1px solid #f7c9d0;
+  background: #fff4f6;
+  color: #b23853;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.points-admin-modal__pool-group {
+  position: relative;
+}
+
+.points-admin-modal__label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  color: #2b3448;
+  font-size: 0.94rem;
+  font-weight: 600;
+}
+
+.points-admin-modal__required {
+  color: #d63d5a;
+}
+
+.points-admin-modal__readonly {
+  border: 1px solid #d6dbe8;
+  border-radius: 12px;
+  min-height: 56px;
+  padding: 0.95rem 1rem;
+  color: #34415c;
+  background: #f8f9fd;
+  font-size: 0.96rem;
+  word-break: break-all;
+}
+
+.points-admin-modal__select-trigger {
+  width: 100%;
+  border: 1px solid #d6dbe8;
+  border-radius: 12px;
+  min-height: 56px;
+  padding: 0.85rem 1rem;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  cursor: pointer;
+}
+
+.points-admin-modal__select-trigger:hover {
+  border-color: #c0c9dd;
+}
+
+.points-admin-modal__select-trigger:disabled {
+  opacity: 0.62;
+  cursor: not-allowed;
+}
+
+.points-admin-modal__select-trigger--error {
+  border-color: #f2b1bf;
+}
+
+.points-admin-modal__field-error {
+  margin-top: 0.35rem;
+  color: #b23853;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.points-admin-modal__select-value {
+  color: #2c3650;
+  font-size: 0.94rem;
+  font-weight: 500;
+}
+
+.points-admin-modal__select-value--placeholder {
+  color: #7d859a;
+  font-weight: 400;
+}
+
+.points-admin-modal__select-caret {
+  font-size: 1.3rem;
+  color: #8e95ab;
+  transition: transform 150ms ease;
+}
+
+.points-admin-modal__select-caret--open {
+  transform: rotate(180deg);
+}
+
+.points-admin-modal__select-dropdown {
+  position: absolute;
+  z-index: 30;
+  width: 100%;
+  margin-top: 0.45rem;
+  border: 1px solid #d3daeb;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 18px 38px -24px rgba(22, 30, 61, 0.42);
+  overflow: hidden;
+}
+
+.points-admin-modal__search-wrap {
+  border-bottom: 1px solid #eef1f8;
+  padding: 0.55rem;
+}
+
+.points-admin-modal__search-input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #d5dceb;
+  border-radius: 10px;
+  padding: 0 0.8rem;
+  font-size: 0.94rem;
+  color: #28334b;
+}
+
+.points-admin-modal__search-input:focus {
+  outline: none;
+  border-color: #8e53ee;
+  box-shadow: 0 0 0 2px rgba(142, 83, 238, 0.12);
+}
+
+.points-admin-modal__options-list {
+  max-height: 240px;
+  overflow-y: auto;
+  padding: 0.3rem;
+}
+
+.points-admin-modal__option-btn {
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 0.6rem 0.65rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.points-admin-modal__option-btn:hover {
+  background: #f5f7fd;
+}
+
+.points-admin-modal__option-btn--active {
+  background: rgba(126, 63, 239, 0.12);
+}
+
+.points-admin-modal__option-main {
+  color: #1d2740;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.points-admin-modal__option-meta {
+  margin-top: 0.12rem;
+  color: #66718a;
+  font-size: 0.78rem;
+}
+
+.points-admin-modal__option-empty {
+  padding: 0.8rem 0.65rem;
+  color: #727c95;
+  font-size: 0.87rem;
+}
+
+.points-admin-modal__section-title {
+  margin: 0.35rem 0 0.1rem;
+  color: #151e35;
+  font-size: 1.42rem;
+  font-weight: 700;
+}
+
+.points-admin-modal__season-card {
+  border: 1px solid #dbe1ec;
+  border-radius: 12px;
+  padding: 0.95rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+}
+
+.points-admin-modal__season-card--boot {
+  background: #edf4ff;
+}
+
+.points-admin-modal__season-card--early {
+  background: #edf9f1;
+}
+
+.points-admin-modal__season-card--meme {
+  background: #faeef6;
+}
+
+.points-admin-modal__season-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.72rem;
+}
+
+.points-admin-modal__season-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.points-admin-modal__season-icon--boot {
+  background: #d9e8ff;
+  color: #487ad8;
+}
+
+.points-admin-modal__season-icon--early {
+  background: #d7f1de;
+  color: #3d9a5f;
+}
+
+.points-admin-modal__season-icon--meme {
+  background: #f8ddeb;
+  color: #c3528a;
+}
+
+.points-admin-modal__season-title {
+  margin: 0;
+  color: #161f35;
+  font-size: 0.98rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.points-admin-modal__season-subtitle {
+  margin: 0.15rem 0 0;
+  color: #4f5b77;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  font-weight: 500;
+}
+
+.points-admin-modal__switch {
+  width: 50px;
+  min-width: 50px;
+  height: 30px;
+  border-radius: 999px;
+  border: none;
+  background: #d7dce5;
+  padding: 4px;
+  cursor: pointer;
+  transition: background-color 140ms ease;
+}
+
+.points-admin-modal__switch--on {
+  background: linear-gradient(120deg, #7f3ff0 0%, #df267f 100%);
+}
+
+.points-admin-modal__switch-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(17, 17, 18, 0.2);
+  display: block;
+  transform: translateX(0);
+  transition: transform 140ms ease;
+}
+
+.points-admin-modal__switch--on .points-admin-modal__switch-thumb {
+  transform: translateX(20px);
+}
+
+.points-admin-modal__dates-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-top: -0.35rem;
+}
+
+.points-admin-modal__date-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: #2b3349;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.points-admin-modal__date-input {
+  height: 44px;
+  border: 1px solid #d6dbe8;
+  border-radius: 10px;
+  padding: 0 0.7rem;
+  font-size: 0.9rem;
+  color: #2c3550;
+  background: #ffffff;
+}
+
+.points-admin-modal__date-input:focus {
+  outline: none;
+  border-color: #8f54ef;
+  box-shadow: 0 0 0 2px rgba(143, 84, 239, 0.12);
+}
+
+.points-admin-modal__footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem;
+}
+
+.points-admin-modal__btn {
+  height: 50px;
+  border-radius: 11px;
+  border: none;
+  font-size: 0.94rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.points-admin-modal__btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.64;
+}
+
+.points-admin-modal__btn--cancel {
+  background: #ffffff;
+  color: #3a445b;
+  border: 1px solid #d8deea;
+}
+
+.points-admin-modal__btn--primary {
+  background: linear-gradient(110deg, #7a38ec 0%, #da2d8c 100%);
+  color: #ffffff;
+  box-shadow: 0 14px 30px -18px rgba(109, 43, 206, 0.72);
+}
+
+@media (max-width: 760px) {
+  .points-admin-modal .uik-modal__head {
+    padding: 1.1rem 1rem 0.7rem;
+  }
+
+  .points-admin-modal .uik-modal__title {
+    font-size: 1.32rem;
+  }
+
+  .points-admin-modal .uik-modal__body {
+    padding: 0 1rem 0.5rem;
+  }
+
+  .points-admin-modal .uik-modal__footer {
+    padding: 0.85rem 1rem 1rem;
+  }
+
+  .points-admin-modal__section-title {
+    font-size: 1.18rem;
+  }
+
+  .points-admin-modal__season-card {
+    padding: 0.82rem;
+  }
+
+  .points-admin-modal__season-title {
+    font-size: 0.9rem;
+  }
+
+  .points-admin-modal__dates-row {
+    grid-template-columns: 1fr;
+  }
+
+  .points-admin-modal__footer {
+    grid-template-columns: 1fr;
+  }
+}
