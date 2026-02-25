@@ -350,7 +350,7 @@
 
 .points-admin-modal__footer {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 0.8rem;
 }
 
@@ -360,6 +360,15 @@
   border: none;
   font-size: 0.94rem;
   font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  padding: 0 1rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
   cursor: pointer;
 }
 
@@ -413,6 +422,12 @@
     grid-template-columns: 1fr;
   }
 
+  .points-admin-modal__footer {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
   .points-admin-modal__footer {
     grid-template-columns: 1fr;
   }
