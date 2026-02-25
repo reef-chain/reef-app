@@ -11,12 +11,29 @@ interface LeaderboardEntry {
   actionPoints: number;
   referralPoints: number;
   totalPoints: number;
-  rank?: number;
+  rank?: number | string;
   isSeparator?: boolean;
 }
 
+interface RawLeaderboardEntry {
+  userAddress?: string;
+  actionPoints?: number | string;
+  referralPoints?: number | string;
+  totalPoints?: number | string;
+  totalActionPoints?: number | string;
+  totalReferralPoints?: number | string;
+  total?: number | string;
+  rank?: number | string;
+}
+
 interface LeaderboardResponse {
-  data: LeaderboardEntry[];
+  data?: RawLeaderboardEntry[];
+  pagination?: {
+    page?: number;
+    limit?: number;
+    total?: number;
+    totalPages?: number;
+  };
   total?: number;
 }
 
@@ -45,13 +62,50 @@ function formatPoints(value: number): string {
   return (value ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
+function toNumber(value: unknown): number {
+  if (typeof value === 'number' && Number.isFinite(value)) return value;
+  if (typeof value === 'string') {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+  }
+  return 0;
+}
+
+function getErrorMessage(error: unknown, fallback: string): string {
+  if (error && typeof error === 'object' && 'message' in error && typeof (error as { message?: unknown }).message === 'string') {
+    return (error as { message: string }).message;
+  }
+  return fallback;
+}
+
+function normalizeLeaderboardEntry(entry: RawLeaderboardEntry): LeaderboardEntry {
+  const actionPoints = toNumber(entry.actionPoints ?? entry.totalActionPoints);
+  const referralPoints = toNumber(entry.referralPoints ?? entry.totalReferralPoints);
+  const totalPoints = toNumber(entry.totalPoints ?? entry.total ?? actionPoints + referralPoints);
+
+  return {
+    userAddress: entry.userAddress || '',
+    actionPoints,
+    referralPoints,
+    totalPoints,
+    rank: entry.rank,
+  };
+}
+
+function normalizeLeaderboardEntries(entries: unknown): LeaderboardEntry[] {
+  if (!Array.isArray(entries)) return [];
+  return entries
+    .map((entry) => normalizeLeaderboardEntry((entry || {}) as RawLeaderboardEntry))
+    .filter((entry) => !!entry.userAddress);
+}
+
 function HomePage() {
   const { selectedSigner } = useContext(ReefSigners);
   const currentAddress = selectedSigner?.evmAddress?.toLowerCase();
 
   // Global leaderboard state (shown when no wallet)
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
-  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -77,10 +131,19 @@ function HomePage() {
         setLoading(true);
         setError(null);
         const response: LeaderboardResponse = await apiService.getLeaderboardPoints(page, PAGE_SIZE);
-        setLeaderboard(response.data || []);
-        setTotal(response.total || 0);
-      } catch (err: any) {
-        setError(err.message || 'Failed to fetch leaderboard');
+        const rows = normalizeLeaderboardEntries(Array.isArray(response) ? response : response?.data);
+        setLeaderboard(rows);
+
+        const resolvedTotal = toNumber(
+          response?.pagination?.total ?? response?.total ?? rows.length
+        );
+        const resolvedTotalPages = toNumber(
+          response?.pagination?.totalPages ?? Math.ceil(resolvedTotal / PAGE_SIZE)
+        );
+
+        setTotalPages(Math.max(1, resolvedTotalPages));
+      } catch (err: unknown) {
+        setError(getErrorMessage(err, 'Failed to fetch leaderboard'));
       } finally {
         setLoading(false);
       }
@@ -106,21 +169,76 @@ function HomePage() {
           apiService.getUserWeeklyStats(currentAddress),
           apiService.getReferralInfo(currentAddress),
         ]);
+        const leaderboardPayload = (leaderboardRes || {}) as {
+          top5?: RawLeaderboardEntry[];
+          aroundUser?: RawLeaderboardEntry[];
+          data?: RawLeaderboardEntry[];
+        };
 
-        // Build user leaderboard with separator rows
-        const entries: LeaderboardEntry[] = leaderboardRes?.data || [];
-        const topEntries = entries.slice(0, 5);
-        const surroundingEntries = entries.slice(5);
-        const combined: LeaderboardEntry[] = [...topEntries];
-        if (surroundingEntries.length > 0) {
-          combined.push({ userAddress: '...', actionPoints: 0, referralPoints: 0, totalPoints: 0, isSeparator: true });
-          combined.push(...surroundingEntries);
+        // Handle both response shapes:
+        // 1) { top5, aroundUser, currentUserRank, ... }
+        // 2) { data: [...] } / [...]
+        let entries: LeaderboardEntry[] = [];
+        if (Array.isArray(leaderboardPayload.top5) || Array.isArray(leaderboardPayload.aroundUser)) {
+          const topEntries = normalizeLeaderboardEntries(leaderboardPayload.top5 || []);
+          const aroundRaw: RawLeaderboardEntry[] = Array.isArray(leaderboardPayload.aroundUser) ? leaderboardPayload.aroundUser : [];
+          const userIndex = aroundRaw.findIndex((item) => (
+            String(item?.rank).toLowerCase() === 'you'
+              || String(item?.userAddress || '').toLowerCase() === currentAddress
+          ));
+          const aroundSlice = userIndex >= 0
+            ? aroundRaw.slice(Math.max(0, userIndex - 2), Math.min(aroundRaw.length, userIndex + 3))
+            : aroundRaw;
+          const surroundingEntries = normalizeLeaderboardEntries(aroundSlice);
+          entries = [...topEntries];
+          if (topEntries.length > 0 && surroundingEntries.length > 0) {
+            entries.push({
+              userAddress: 'separator',
+              actionPoints: 0,
+              referralPoints: 0,
+              totalPoints: 0,
+              isSeparator: true,
+            });
+          }
+          entries.push(...surroundingEntries);
+        } else {
+          const flatEntries = normalizeLeaderboardEntries(
+            Array.isArray(leaderboardRes) ? leaderboardRes : leaderboardPayload.data
+          );
+          const topEntries = flatEntries.slice(0, 5);
+          const surroundingEntries = flatEntries.slice(5);
+          entries = [...topEntries];
+          if (surroundingEntries.length > 0) {
+            entries.push({
+              userAddress: 'separator',
+              actionPoints: 0,
+              referralPoints: 0,
+              totalPoints: 0,
+              isSeparator: true,
+            });
+            entries.push(...surroundingEntries);
+          }
         }
-        setUserLeaderboard(combined);
-        setUserStats(statsRes?.data || statsRes || null);
-        setReferralInfo(referralRes?.data || referralRes || null);
-      } catch (err: any) {
-        setUserDataError(err.message || 'Failed to fetch user data');
+
+        setUserLeaderboard(entries);
+
+        const rawStats = statsRes?.data || statsRes || {};
+        setUserStats({
+          rank: toNumber(rawStats.rank),
+          weeklyChange: toNumber(rawStats.weeklyChange),
+          actionPoints: toNumber(rawStats.actionPoints ?? rawStats.totalActionPoints),
+          referralPoints: toNumber(rawStats.referralPoints ?? rawStats.totalReferralPoints),
+          totalPoints: toNumber(rawStats.totalPoints ?? rawStats.total),
+        });
+
+        const rawReferral = referralRes?.data || referralRes || {};
+        setReferralInfo({
+          referralCode: rawReferral.referralCode || '',
+          totalReferees: toNumber(rawReferral.totalReferees ?? rawReferral.totalValueOfReferees),
+          referralPoints: toNumber(rawReferral.referralPoints ?? rawReferral.totalReferralPoints),
+        });
+      } catch (err: unknown) {
+        setUserDataError(getErrorMessage(err, 'Failed to fetch user data'));
       } finally {
         setUserDataLoading(false);
       }
@@ -132,7 +250,7 @@ function HomePage() {
   const renderLeaderboardTable = (entries: LeaderboardEntry[], withPagination = false) => (
     <Uik.Table
       seamless
-      pagination={withPagination ? { current: page, count: Math.ceil(total / PAGE_SIZE), onChange: setPage } : undefined}
+      pagination={withPagination ? { current: page, count: totalPages, onChange: setPage } : undefined}
     >
       <Uik.THead>
         <Uik.Tr>
@@ -153,10 +271,10 @@ function HomePage() {
               </Uik.Tr>
             );
           }
-          const rank = entry.rank ?? (page - 1) * PAGE_SIZE + index + 1;
+          const rank = entry.rank ?? (withPagination ? (page - 1) * PAGE_SIZE + index + 1 : index + 1);
           const isCurrentUser = !!currentAddress && entry.userAddress?.toLowerCase() === currentAddress;
           return (
-            <Uik.Tr key={entry.userAddress} className={isCurrentUser ? 'points__you-row' : ''}>
+            <Uik.Tr key={`${entry.userAddress}-${entry.rank ?? index}`} className={isCurrentUser ? 'points__you-row' : ''}>
               <Uik.Td align="center">{isCurrentUser ? 'You' : rank}</Uik.Td>
               <Uik.Td>{truncateAddress(entry.userAddress)}</Uik.Td>
               <Uik.Td align="right">{formatPoints(entry.actionPoints)}</Uik.Td>
