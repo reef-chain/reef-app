@@ -1,7 +1,7 @@
 import { ReefSigner, defaultOptions, hooks } from '@reef-chain/react-lib';
 import { SignerWithLocked } from './types/SignerWithLocked';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Uik from '@reef-chain/ui-kit';
@@ -116,6 +116,9 @@ const App = (): JSX.Element => {
   }, [selectedReefSigner, signers]);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const isPointsRoute = location.pathname === '/points' || location.pathname.startsWith('/points/');
+
   const [isBalanceHidden, setBalanceHidden] = useState(getStoredPref());
   const hideBalance = {
     isHidden: isBalanceHidden,
@@ -260,25 +263,25 @@ useEffect(()=>{
                   <MetaMaskProvider>
                     <div className="App d-flex w-100 h-100">
                       <div className="w-100 main-content">
-                         <Nav selectExtension={(extName) => onExtensionSelected(extName)} 
-                         />
+                <Nav selectExtension={(extName) => onExtensionSelected(extName)} />
+                        
                         <ContentRouter />
-                        <NetworkSwitching isOpen={isNetworkSwitching} />
-                        <WcPreloader wcPreloader={wcPreloader} />
-
-                        <ToastContainer
-                          draggable
-                          newestOnTop
-                          closeOnClick
-                          hideProgressBar
-                          position={toast.POSITION.BOTTOM_LEFT}
-                          autoClose={5000}
-                          rtl={false}
-                          pauseOnFocusLoss={false}
-                          pauseOnHover={false}
-                        />
-
-                        <Bind />
+                          <>
+                            <NetworkSwitching isOpen={isNetworkSwitching} />
+                            <WcPreloader wcPreloader={wcPreloader} />
+                            <ToastContainer
+                              draggable
+                              newestOnTop
+                              closeOnClick
+                              hideProgressBar
+                              position={toast.POSITION.BOTTOM_LEFT}
+                              autoClose={5000}
+                              rtl={false}
+                              pauseOnFocusLoss={false}
+                              pauseOnHover={false}
+                            />
+                            <Bind />
+                          </>
                       </div>
                     </div>
                   </MetaMaskProvider>
