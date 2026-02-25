@@ -16,6 +16,7 @@ import {
   BUY_URL,
   CREATE_ERC20_TOKEN_URL,
   DASHBOARD_URL,
+  POINTS_URL,
   // ONRAMP_URL,
   POOL_CHART_URL,
   POOLS_URL,
@@ -42,6 +43,7 @@ import Snap from './snap/Snap';
 import { utils } from '@reef-chain/react-lib';
 import AlchemyPay from './alchemy-pay/AlchemyPay';
 import Validators from './validators/Validators';
+import Points from './points/Points';
 
 const ContentRouter = (): JSX.Element => {
   const { reefState, selectedSigner } = useContext(ReefSigners);
@@ -108,6 +110,7 @@ const ContentRouter = (): JSX.Element => {
                   <Route path={BONDS_URL} element={<Bonds/>} />
                   <Route path={BIND_URL} element={<Bind/>} />
                   {/* <Route path={BUY_URL} component={Buy} /> */}
+                  <Route path={POINTS_URL} element={<Points/>} />
                   <Route path={ALCHEMY_PAY_URL} element={<AlchemyPay/>} />
                   {/* <Route path={ONRAMP_URL} component={Onramp} /> */}
                   <Route path={SNAP_URL} element={<Snap/>} />
