@@ -1,5 +1,129 @@
+.points {
+  padding: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.points__hero {
+  margin-bottom: 1.5rem;
+}
+
+.points__season-banner {
+  margin-top: 1rem;
+  border-radius: 20px;
+  padding: 1.5rem 1.75rem;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(115deg, #2d0057 0%, #3e0774 52%, #270044 100%);
+  box-shadow: 0 20px 45px -26px rgba(62, 7, 116, 0.85);
+}
+
+.points__season-banner::before,
+.points__season-banner::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.points__season-banner::before {
+  width: 260px;
+  height: 260px;
+  right: -70px;
+  top: -95px;
+  background: radial-gradient(circle at center, rgba(199, 91, 255, 0.24), rgba(199, 91, 255, 0));
+}
+
+.points__season-banner::after {
+  width: 320px;
+  height: 320px;
+  right: -120px;
+  bottom: -220px;
+  background: radial-gradient(circle at center, rgba(86, 32, 212, 0.46), rgba(86, 32, 212, 0));
+}
+
+.points__season-content {
+  position: relative;
+  z-index: 1;
+  max-width: 560px;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.points__season-tag {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.points__season-copy {
+  margin: 0;
+  max-width: 420px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
 .points__you-row td {
   background-color: rgba(169, 49, 133, 0.08);
   font-weight: 600;
   color: var(--primary);
+}
+
+@media (max-width: 900px) {
+  .points__season-banner {
+    min-height: 150px;
+    padding: 1.15rem 1.1rem;
+  }
+
+  .points__season-content {
+    gap: 0.8rem;
+  }
+
+  .points__season-tag {
+    font-size: 1.5rem;
+  }
+
+  .points__season-copy {
+    font-size: 1.15rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .points {
+    padding: 1rem;
+  }
+
+  .points__season-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    min-height: 0;
+  }
+
+  .points__season-content {
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 100%;
+    gap: 0.55rem;
+  }
+
+  .points__season-tag {
+    font-size: 1.3rem;
+  }
+
+  .points__season-copy {
+    max-width: 100%;
+    font-size: 1rem;
+  }
 }

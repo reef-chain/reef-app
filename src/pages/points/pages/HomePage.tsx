@@ -288,8 +288,18 @@ function HomePage() {
   );
 
   return (
-    <div className="points" style={{ padding: '1.5rem', maxWidth: '1100px', margin: '0 auto' }}>
-      <Uik.Text type="title" text="Points Leaderboard" />
+    <div className="points">
+      <div className="points__hero">
+        <Uik.Text type="title" text="ReefSwap Points" />
+        <div className="points__season-banner">
+          <div className="points__season-content">
+            <h2 className="points__season-tag">Season 1</h2>
+            <p className="points__season-copy">
+              Earn points by providing liquidity, swapping, and referring
+            </p>
+          </div>
+        </div>
+      </div>
 
       {error && <Uik.Alert type="danger" text={error} />}
 
