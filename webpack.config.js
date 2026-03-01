@@ -15,7 +15,7 @@ module.exports = {
     rules: [
       {
         test: /\.?js$/,
-        exclude: /node_modules/,
+        exclude: /node_modules\/(?!(viem|@formo)\/).*/,
         loader: "babel-loader",
       },
       {
@@ -60,7 +60,8 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.cjs'],
+    extensions: ['.ts', '.tsx', '.js', '.cjs', '.mjs'],
+    mainFields: ['browser', 'module', 'main'],
     fallback: {
       'crypto': require.resolve('crypto-browserify'),
       'stream': require.resolve('stream-browserify'),

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Uik from '@reef-chain/ui-kit';
+import { useFormo } from '@formo/analytics';
+import ReefSigners from '../../../../context/ReefSigners';
 
 interface ReferralCodeCardProps {
   referralCode: string;
@@ -12,6 +14,24 @@ function formatPoints(value: number): string {
 }
 
 function ReferralCodeCard({ referralCode, totalReferees, referralPoints }: ReferralCodeCardProps) {
+  const analyticsFormo = useFormo();
+  const { network: nw } = useContext(ReefSigners);
+  
+  const handleCopyCode = async () => {
+    if (!referralCode) return;
+    
+    try {
+      await navigator.clipboard.writeText(referralCode);
+      
+      analyticsFormo.track('referral_code_copied', {
+        referral_code: referralCode,
+        network: nw?.name || 'mainnet',
+      });
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
+  };
+  
   return (
     <Uik.Card title="Your Referral">
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
@@ -19,7 +39,11 @@ function ReferralCodeCard({ referralCode, totalReferees, referralPoints }: Refer
           <Uik.Text type="mini" text="Referral Code" />
           <Uik.Text type="lead" text={referralCode || '—'} />
           {referralCode && (
-            <Uik.CopyButton value={referralCode} notification="Referral code copied!" />
+            <Uik.Button 
+              size="small" 
+              text="Copy" 
+              onClick={handleCopyCode}
+            />
           )}
         </div>
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>

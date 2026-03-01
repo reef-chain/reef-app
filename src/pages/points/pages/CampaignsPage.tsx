@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
 import { useAuth } from '../contexts/AuthContext';
+import { useFormo } from '@formo/analytics';
+import ReefSigners from '../../../context/ReefSigners';
 import apiService from '../api/apiService';
 import CampaignTable, { Campaign } from '../components/admin/CampaignTable';
 import CreateCampaignModal from '../components/admin/CreateCampaignModal';
@@ -16,6 +18,8 @@ const NAV_TABS = [
 
 function CampaignsPage() {
   const { user, logout } = useAuth();
+  const analyticsFormo = useFormo();
+  const { network: nw } = useContext(ReefSigners);
   const navigate = useNavigate();
 
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
@@ -75,7 +79,13 @@ function CampaignsPage() {
         <Uik.Card
           title="All Campaigns"
           head={
-            <Uik.Button fill text="+ Create Campaign" onClick={() => { setEditingCampaign(null); setCreateModalOpen(true); }} />
+            <Uik.Button fill text="+ Create Campaign" onClick={() => {
+              analyticsFormo.track('campaign_create_clicked', {
+                network: nw?.name || 'mainnet',
+              });
+              setEditingCampaign(null);
+              setCreateModalOpen(true);
+            }} />
           }
         >
           {error && <Uik.Alert type="danger" text={error} />}

@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Uik from '@reef-chain/ui-kit';
+import { useFormo } from '@formo/analytics';
+import ReefSigners from '../../../../context/ReefSigners';
 
 export interface Campaign {
   poolAddress: string;
@@ -45,6 +47,19 @@ function CampaignTable({
   onEdit,
   onDelete,
 }: CampaignTableProps) {
+  const analyticsFormo = useFormo();
+  const { network: nw } = useContext(ReefSigners);
+  
+  const handleEditClick = (campaign: Campaign) => {
+    analyticsFormo.track('campaign_edit_clicked', {
+      campaign_id: campaign.poolAddress,
+      campaign_name: `${campaign.poolAddress}`,
+      network: nw?.name || 'mainnet',
+    });
+    
+    onEdit(campaign);
+  };
+  
   if (loading) return <Uik.Loading />;
 
   return (
@@ -102,7 +117,7 @@ function CampaignTable({
               </Uik.Td>
               <Uik.Td align="right">
                 <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-                  <Uik.Button size="small" text="Edit" onClick={() => onEdit(campaign)} />
+                  <Uik.Button size="small" text="Edit" onClick={() => handleEditClick(campaign)} />
                   <Uik.Button size="small" danger text="Delete" onClick={() => onDelete(campaign)} />
                 </div>
               </Uik.Td>

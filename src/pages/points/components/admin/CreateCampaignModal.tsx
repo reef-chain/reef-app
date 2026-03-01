@@ -1,5 +1,7 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState, useContext } from 'react';
 import Uik from '@reef-chain/ui-kit';
+import { useFormo } from '@formo/analytics';
+import ReefSigners from '../../../../context/ReefSigners';
 import apiService from '../../api/apiService';
 import { Campaign } from './CampaignTable';
 import './createCampaignModal.css';
@@ -106,6 +108,8 @@ function toDateInputValue(date?: string): string {
 }
 
 function CreateCampaignModal({ isOpen, editingCampaign, onClose, onSuccess }: CreateCampaignModalProps) {
+  const analyticsFormo = useFormo();
+  const { network: nw } = useContext(ReefSigners);
   const poolDropdownRef = useRef<HTMLDivElement | null>(null);
   const [form, setForm] = useState<Campaign>(emptyForm());
   const [pools, setPools] = useState<PoolOption[]>([]);
@@ -223,15 +227,57 @@ function CreateCampaignModal({ isOpen, editingCampaign, onClose, onSuccess }: Cr
     }
     setLoading(true);
     setError(null);
+    
+    const selectedPool = pools.find((p) => p.poolAddress === form.poolAddress);
+    const campaignName = selectedPool 
+      ? `${selectedPool.token0Symbol || ''}/${selectedPool.token1Symbol || ''}`.replace(/^\/|\/$/g, '') || form.poolAddress
+      : form.poolAddress;
+    
     try {
       if (editingCampaign) {
+        analyticsFormo.track('campaign_update_clicked', {
+          campaign_id: form.poolAddress,
+          campaign_name: campaignName,
+          network: nw?.name || 'mainnet',
+        });
+        
         await apiService.updateCampaign(form.poolAddress, form);
+        
+        analyticsFormo.track('campaign_update_success', {
+          campaign_id: form.poolAddress,
+          campaign_name: campaignName,
+          network: nw?.name || 'mainnet',
+        });
       } else {
         await apiService.createCampaign([form]);
+        
+        analyticsFormo.track('campaign_create_success', {
+          campaign_id: form.poolAddress,
+          campaign_name: campaignName,
+          network: nw?.name || 'mainnet',
+        });
       }
       onSuccess();
       handleClose();
     } catch (err: any) {
+      if (editingCampaign) {
+        analyticsFormo.track('campaign_update_failed', {
+          campaign_id: form.poolAddress,
+          campaign_name: campaignName,
+          error_code: (err as any)?.response?.status || (err as any)?.code || 'UNKNOWN',
+          error_message: (err as any)?.response?.data?.message || (err as any)?.message || 'Failed to update campaign',
+          network: nw?.name || 'mainnet',
+        });
+      } else {
+        analyticsFormo.track('campaign_create_failed', {
+          campaign_id: form.poolAddress,
+          campaign_name: campaignName,
+          error_code: (err as any)?.response?.status || (err as any)?.code || 'UNKNOWN',
+          error_message: (err as any)?.response?.data?.message || (err as any)?.message || 'Failed to create campaign',
+          network: nw?.name || 'mainnet',
+        });
+      }
+      
       setError(err.message || 'Failed to save campaign');
     } finally {
       setLoading(false);

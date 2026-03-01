@@ -18,7 +18,12 @@ console.log(`Reef-app version: ${version}`);
 
 createRoot(document.getElementById('root')!).render(<React.StrictMode>
     <Router>
-  <FormoAnalyticsProvider writeKey={formoApiKey}>
+  <FormoAnalyticsProvider 
+    writeKey={formoApiKey}
+    options={{
+      tracking: true,
+    }}
+  >
       <AccountSelectorProvider>
         <ConnectedWalletProvider>
           <WcPreloaderProvider>
