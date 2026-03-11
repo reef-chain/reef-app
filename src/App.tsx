@@ -17,7 +17,7 @@ import HideBalance, { getStoredPref, toggleHidden } from './context/HideBalance'
 import NetworkSwitch, { setSwitching } from './context/NetworkSwitch';
 import Bind from './common/Bind/Bind';
 import NetworkSwitching from './common/NetworkSwitching';
-import { getIpfsGatewayUrl, ZERO_ADDRESS } from './environment';
+import { appAvailableNetworks, getIpfsGatewayUrl, ZERO_ADDRESS } from './environment';
 import { MetaMaskProvider } from './context/MetamaskContext';
 import { SNAP_URL } from './urls';
 import { connectWc } from './utils/walletConnect';
@@ -70,7 +70,9 @@ const App = (): JSX.Element => {
   const {
     loading, error, signers, selectedReefSigner, network, provider, reefState, extension
   } = hooks.useInitReefStateExtension(
-    'Reef App', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl },
+    'Reef App', selExtensionName, { ipfsHashResolverFn: getIpfsGatewayUrl,
+      // forcefully set network to mainnet as testnet is down
+      network:appAvailableNetworks[0]},
   );
 
   useEffect(() => {
