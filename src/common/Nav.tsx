@@ -193,8 +193,8 @@ const Nav = ({ selectExtension }: Nav): JSX.Element => {
             onLanguageSelect={selectLanguage}
             isBalanceHidden={hideBalance.isHidden}
             showBalance={hideBalance.toggle}
-            // availableNetworks={appAvailableNetworks.map((net) => net.name as unknown as Components.Network)}
-            availableNetworks={['mainnet', 'testnet']}
+            availableNetworks={appAvailableNetworks.map((net) => net.name as unknown as Components.Network)}
+            // availableNetworks={['mainnet', 'testnet']}
             showSnapOptions={true}
             onRename={renameAccount}
             onExport={exportAccount}
