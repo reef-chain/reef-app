@@ -272,7 +272,7 @@ const BuyReefButton = (): JSX.Element => {
             onClick={() => navigate(LETS_EXCHANGE_URL)}
           >
             <span className="buy-reef-option__chip">LetsExchange</span>
-            <span className="buy-reef-option__title">{localizedStrings.buy_reef_option_token_to_token || 'Token to token'}</span>
+            <span className="buy-reef-option__title">{localizedStrings.buy_reef_option_token_to_token || 'Crypto to Reef'}</span>
             <span className="buy-reef-option__description">
               {localizedStrings.buy_reef_option_token_to_token_description || 'Swap tokens to REEF using the LetsExchange widget.'}
             </span>
@@ -284,7 +284,7 @@ const BuyReefButton = (): JSX.Element => {
             onClick={() => navigate(ALCHEMY_PAY_URL)}
           >
             <span className="buy-reef-option__chip">Alchemy Pay</span>
-            <span className="buy-reef-option__title">{localizedStrings.buy_reef_option_fiat_to_token || 'Fiat to token'}</span>
+            <span className="buy-reef-option__title">{localizedStrings.buy_reef_option_fiat_to_token || 'Fiat to Reef'}</span>
             <span className="buy-reef-option__description">
               {localizedStrings.buy_reef_option_fiat_to_token_description || 'Buy REEF with card or bank transfer via Alchemy Pay.'}
             </span>

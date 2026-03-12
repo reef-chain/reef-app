@@ -6,14 +6,18 @@ import Hero from '../alchemy-pay/Hero';
 import './index.css';
 
 const LETS_EXCHANGE_WIDGET_URL = (() => {
-  const params = new URLSearchParams({ to: 'reef' });
+  const params = new URLSearchParams();
   // Keep source currency open ("any"), but force destination to REEF.
-  params.set('default_coin_to', 'reef');
+  // LetsExchange has multiple query aliases across widget versions, so set all.
+  params.set('to', 'REEF');
+  params.set('coin_to', 'REEF');
+  params.set('default_coin_to', 'REEF');
+  params.set('cex_default_coin_to', 'REEF');
   if (letsExchangeAffiliateId) {
     params.set('affiliate_id', letsExchangeAffiliateId);
     params.set('ref_id', letsExchangeAffiliateId);
   }
-  return `https://letsexchange.io/widget?${params.toString()}`;
+  return `https://my.letsexchange.io/v2/widget?${params.toString()}`;
 })();
 
 function LetsExchange(): JSX.Element {
