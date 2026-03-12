@@ -1,10 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Uik from '@reef-chain/ui-kit';
 import './buy-reef-button.css';
-import { BUY_URL, 
-  // ONRAMP_URL
- } from '../../urls';
+import { ALCHEMY_PAY_URL, LETS_EXCHANGE_URL } from '../../urls';
 import { localizedStrings } from '../../l10n/l10n';
 
 const Shape = (): JSX.Element => (
@@ -238,29 +236,62 @@ C226.3,333.5,225.4,331.3,224.1,329.3z"
 
 const BuyReefButton = (): JSX.Element => {
   const navigator = useNavigate();
-  const navigate = (): void => {
-    // fetch('https://ipapi.co/json/')
-    //   .then((response) => response.json()).then((data) => {
-    //     if (data.country === 'IN' || data.country === 'AE' || data.country === 'TR') {
-    //       history.push(ONRAMP_URL);
-    //     } else {
-    //       history.push(BUY_URL);
-    //     }
-    //   });
-    navigator(BUY_URL);
+  const [isBuyOptionsOpen, setIsBuyOptionsOpen] = useState(false);
+
+  const closeBuyOptions = (): void => setIsBuyOptionsOpen(false);
+  const openBuyOptions = (): void => setIsBuyOptionsOpen(true);
+
+  const navigate = (url: string): void => {
+    closeBuyOptions();
+    navigator(url);
   };
 
   return (
-    <button
-      type="button"
-      className="buy-reef-btn"
-      onClick={navigate}
-    >
-      <Uik.ReefSign className="buy-reef-btn__icon" />
-      <span className="buy-reef-btn__text">{localizedStrings.buy_reef_tokens}</span>
-      <Uik.Bubbles />
-      <Shape />
-    </button>
+    <>
+      <button
+        type="button"
+        className="buy-reef-btn"
+        onClick={openBuyOptions}
+      >
+        <Uik.ReefSign className="buy-reef-btn__icon" />
+        <span className="buy-reef-btn__text">{localizedStrings.buy_reef_tokens}</span>
+        <Uik.Bubbles />
+        <Shape />
+      </button>
+
+      <Uik.Modal
+        className="buy-reef-options-modal"
+        title={localizedStrings.buy_reef_options_title || 'Choose how you want to buy REEF'}
+        isOpen={isBuyOptionsOpen}
+        onClose={closeBuyOptions}
+      >
+        <div className="buy-reef-options">
+          <button
+            type="button"
+            className="buy-reef-option"
+            onClick={() => navigate(LETS_EXCHANGE_URL)}
+          >
+            <span className="buy-reef-option__chip">LetsExchange</span>
+            <span className="buy-reef-option__title">{localizedStrings.buy_reef_option_token_to_token || 'Token to token'}</span>
+            <span className="buy-reef-option__description">
+              {localizedStrings.buy_reef_option_token_to_token_description || 'Swap tokens to REEF using the LetsExchange widget.'}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            className="buy-reef-option"
+            onClick={() => navigate(ALCHEMY_PAY_URL)}
+          >
+            <span className="buy-reef-option__chip">Alchemy Pay</span>
+            <span className="buy-reef-option__title">{localizedStrings.buy_reef_option_fiat_to_token || 'Fiat to token'}</span>
+            <span className="buy-reef-option__description">
+              {localizedStrings.buy_reef_option_fiat_to_token_description || 'Buy REEF with card or bank transfer via Alchemy Pay.'}
+            </span>
+          </button>
+        </div>
+      </Uik.Modal>
+    </>
   );
 };
 
