@@ -8,9 +8,15 @@ interface Props{
     title:string;
     subtitle:string;
     isLoading:boolean;
+    imageAlt?:string;
 }
 
-function Hero({title,subtitle,isLoading}:Props) {
+function Hero({
+  title,
+  subtitle,
+  isLoading,
+  imageAlt = 'Reef x Alchemy Pay banner',
+}: Props) {
   return (
     <div className='hero'>
       <div className='headline-wrapper'>
@@ -29,7 +35,7 @@ function Hero({title,subtitle,isLoading}:Props) {
       <Bubbles />
       <img className='hero-image' 
            src={'/img/buy.jpg'} 
-           alt="Reef x Alchemy Pay banner" 
+           alt={imageAlt}
       />
     </div>
   );

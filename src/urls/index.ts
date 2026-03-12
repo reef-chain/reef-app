@@ -19,6 +19,7 @@ export const VALIDATORS_URL = '/validators';
 export const BIND_URL = '/bind/:address1';
 export const BUY_URL = '/buy';
 export const ALCHEMY_PAY_URL = BUY_URL;
+export const LETS_EXCHANGE_URL = `${BUY_URL}/token-to-token`;
 // export const ONRAMP_URL = BUY_URL;
 export const SNAP_URL = '/snap';
 

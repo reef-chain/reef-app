@@ -16,6 +16,7 @@ import {
   BUY_URL,
   CREATE_ERC20_TOKEN_URL,
   DASHBOARD_URL,
+  LETS_EXCHANGE_URL,
   // ONRAMP_URL,
   POOL_CHART_URL,
   POOLS_URL,
@@ -41,6 +42,7 @@ import ReefSigners from '../context/ReefSigners';
 import Snap from './snap/Snap';
 import { utils } from '@reef-chain/react-lib';
 import AlchemyPay from './alchemy-pay/AlchemyPay';
+import LetsExchange from './letsexchange/LetsExchange';
 import Validators from './validators/Validators';
 
 const ContentRouter = (): JSX.Element => {
@@ -87,6 +89,7 @@ const ContentRouter = (): JSX.Element => {
                     <Route path={VALIDATORS_URL} element={<Validators/>} />
                   {/* <Route path={BUY_URL} component={Buy} /> */}
                   <Route path={ALCHEMY_PAY_URL} element={<AlchemyPay/>} />
+                  <Route path={LETS_EXCHANGE_URL} element={<LetsExchange/>} />
                   {/* <Route path={ONRAMP_URL} component={Onramp} /> */}
                   <Route path={SNAP_URL} element={<Snap/>} />
                   <Route path="/" element={<Navigate to={DASHBOARD_URL} />}  />
@@ -108,6 +111,7 @@ const ContentRouter = (): JSX.Element => {
                   <Route path={BIND_URL} element={<Bind/>} />
                   {/* <Route path={BUY_URL} component={Buy} /> */}
                   <Route path={ALCHEMY_PAY_URL} element={<AlchemyPay/>} />
+                  <Route path={LETS_EXCHANGE_URL} element={<LetsExchange/>} />
                   {/* <Route path={ONRAMP_URL} component={Onramp} /> */}
                   <Route path={SNAP_URL} element={<Snap/>} />
                   <Route path="/" element={<Navigate to={DASHBOARD_URL} />} />
