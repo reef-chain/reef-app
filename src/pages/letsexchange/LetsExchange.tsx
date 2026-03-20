@@ -1,5 +1,6 @@
 import React, {
   ChangeEvent,
+  useDeferredValue,
   useContext,
   useEffect,
   useRef,
@@ -22,19 +23,27 @@ import {
 import './index.css';
 
 const FINAL_TRANSACTION_STATUSES = ['success', 'failed', 'refund', 'overdue'];
+const CURRENCIES_PAGE_SIZE = 250;
+const BACKGROUND_SYNC_DELAY_MS = 250;
 const DEFAULT_SEND_AMOUNT = '0.001';
 const DEFAULT_REEF_AMOUNT = '100000';
 
 function LetsExchange(): JSX.Element {
   const signer: ReefSigner | undefined | null = useContext(ReefSigners).selectedSigner;
   const assetDropdownRef = useRef<HTMLDivElement | null>(null);
+  const assetSearchInputRef = useRef<HTMLInputElement | null>(null);
   const [mode, setMode] = useState<'from' | 'to'>('from');
   const [currencies, setCurrencies] = useState<LetsExchangeCurrency[]>([]);
+  const [baseCurrencyCount, setBaseCurrencyCount] = useState(0);
+  const [currenciesHasMore, setCurrenciesHasMore] = useState(true);
   const [currenciesLoading, setCurrenciesLoading] = useState(false);
+  const [currenciesLoadingMore, setCurrenciesLoadingMore] = useState(false);
   const [currenciesError, setCurrenciesError] = useState('');
   const [selectedSymbol, setSelectedSymbol] = useState('');
   const [selectedNetwork, setSelectedNetwork] = useState('');
   const [assetMenuOpen, setAssetMenuOpen] = useState(false);
+  const [assetSearch, setAssetSearch] = useState('');
+  const deferredAssetSearch = useDeferredValue(assetSearch.trim());
   const [sendAmount, setSendAmount] = useState(DEFAULT_SEND_AMOUNT);
   const [targetReefAmount, setTargetReefAmount] = useState(DEFAULT_REEF_AMOUNT);
   const [withdrawalAddress, setWithdrawalAddress] = useState('');
@@ -46,17 +55,10 @@ function LetsExchange(): JSX.Element {
   const [transaction, setTransaction] = useState<LetsExchangeTransaction | null>(null);
   const [transactionStatus, setTransactionStatus] = useState('');
 
-  const symbolOptions = Array.from(new Set(currencies.map((currency) => currency.symbol))).map((symbol) => {
-    const currency = currencies.find((item) => item.symbol === symbol);
-    return {
-      value: symbol,
-      label: `${symbol} - ${currency?.name || symbol}`,
-      name: currency?.name || symbol,
-      icon: currency?.icon,
-    };
-  });
-  const quickAssetOptions = symbolOptions.slice(0, 6);
-  const selectedSymbolOption = symbolOptions.find((option) => option.value === selectedSymbol);
+  const baseSymbolOptions = buildSymbolOptions(currencies);
+  const assetMenuOptions = filterSymbolOptions(baseSymbolOptions, deferredAssetSearch);
+  const quickAssetOptions = baseSymbolOptions.slice(0, 6);
+  const selectedSymbolOption = baseSymbolOptions.find((option) => option.value === selectedSymbol);
 
   const networkOptions = currencies
     .filter((currency) => currency.symbol === selectedSymbol)
@@ -68,6 +70,7 @@ function LetsExchange(): JSX.Element {
   const selectedCurrency = currencies.find(
     (currency) => currency.symbol === selectedSymbol && currency.network === selectedNetwork,
   );
+  const isInitialCurrenciesLoading = currenciesLoading && baseSymbolOptions.length === 0;
 
   const activeAmount = mode === 'from' ? sendAmount : targetReefAmount;
   const parsedActiveAmount = parsePositiveNumber(activeAmount);
@@ -95,29 +98,74 @@ function LetsExchange(): JSX.Element {
     && isValidReefAddress(withdrawalAddress),
   );
 
-  function selectSourceSymbol(symbol: string): void {
-    setSelectedSymbol(symbol);
+  function closeAssetMenu(): void {
     setAssetMenuOpen(false);
+    setAssetSearch('');
+  }
 
+  function selectSourceSymbol(symbol: string): void {
     const symbolCurrencies = currencies.filter((currency) => currency.symbol === symbol);
+
+    setSelectedSymbol(symbol);
+    closeAssetMenu();
+
     const defaultNetwork = symbolCurrencies.find((currency) => currency.isDefaultNetwork)?.network
       || symbolCurrencies[0]?.network
       || '';
     setSelectedNetwork(defaultNetwork);
   }
 
-  async function loadCurrencies(): Promise<void> {
-    setCurrenciesLoading(true);
-    setCurrenciesError('');
+  async function fetchCurrencyPage(offset = 0): Promise<LetsExchangeCurrency[]> {
+    return listCurrencies({
+      limit: CURRENCIES_PAGE_SIZE,
+      offset,
+    });
+  }
+
+  async function loadCurrenciesPage(
+    offset = 0,
+    options: { append?: boolean } = {},
+  ): Promise<void> {
+    const { append = false } = options;
+
+    if (append) {
+      setCurrenciesLoadingMore(true);
+    } else {
+      setCurrenciesLoading(true);
+      setCurrenciesError('');
+    }
 
     try {
-      const data = await listCurrencies();
-      setCurrencies(data);
+      const data = await fetchCurrencyPage(offset);
+      const nextCount = offset + data.length;
+
+      setCurrencies((previous) => (append ? mergeCurrencies(previous, data) : data));
+      setBaseCurrencyCount(nextCount);
+      setCurrenciesHasMore(data.length === CURRENCIES_PAGE_SIZE);
     } catch (error) {
-      setCurrenciesError(getErrorMessage(error, 'Failed to load LetsExchange currencies'));
+      const message = getErrorMessage(error, 'Failed to load LetsExchange currencies');
+
+      if (append) {
+        setCurrenciesHasMore(false);
+        Uik.notify.danger(message);
+      } else {
+        setCurrenciesError(message);
+      }
     } finally {
-      setCurrenciesLoading(false);
+      if (append) {
+        setCurrenciesLoadingMore(false);
+      } else {
+        setCurrenciesLoading(false);
+      }
     }
+  }
+
+  async function loadMoreCurrencies(): Promise<void> {
+    if (currenciesLoading || currenciesLoadingMore || !currenciesHasMore || baseCurrencyCount <= 0) {
+      return;
+    }
+
+    await loadCurrenciesPage(baseCurrencyCount, { append: true });
   }
 
   async function onQuote(): Promise<void> {
@@ -228,7 +276,7 @@ function LetsExchange(): JSX.Element {
       }
 
       if (!assetDropdownRef.current.contains(event.target as Node)) {
-        setAssetMenuOpen(false);
+        closeAssetMenu();
       }
     };
 
@@ -239,20 +287,36 @@ function LetsExchange(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    loadCurrencies().catch(() => undefined);
+    loadCurrenciesPage().catch(() => undefined);
   }, []);
 
   useEffect(() => {
-    if (!selectedSymbol && symbolOptions[0]?.value) {
-      setSelectedSymbol(symbolOptions[0].value);
+    if (currenciesLoading || currenciesLoadingMore || !currenciesHasMore || baseCurrencyCount <= 0) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      loadMoreCurrencies().catch(() => undefined);
+    }, BACKGROUND_SYNC_DELAY_MS);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [baseCurrencyCount, currenciesHasMore, currenciesLoading, currenciesLoadingMore]);
+
+  useEffect(() => {
+    const defaultSymbol = buildSymbolOptions(currencies)[0]?.value;
+
+    if (!selectedSymbol && defaultSymbol) {
+      setSelectedSymbol(defaultSymbol);
       return;
     }
 
-    const symbolExists = symbolOptions.some((option) => option.value === selectedSymbol);
+    const symbolExists = currencies.some((currency) => currency.symbol === selectedSymbol);
     if (!symbolExists) {
-      setSelectedSymbol(symbolOptions[0]?.value || '');
+      setSelectedSymbol(defaultSymbol || '');
     }
-  }, [selectedSymbol, symbolOptions]);
+  }, [currencies, selectedSymbol]);
 
   useEffect(() => {
     const currentNetworks = currencies.filter((currency) => currency.symbol === selectedSymbol);
@@ -291,6 +355,20 @@ function LetsExchange(): JSX.Element {
       window.clearInterval(interval);
     };
   }, [transaction?.transaction_id, transaction?.status, transactionStatus]);
+
+  useEffect(() => {
+    if (!assetMenuOpen) {
+      return undefined;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      assetSearchInputRef.current?.focus();
+    }, 0);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+    };
+  }, [assetMenuOpen]);
 
   const summarySendAmount = mode === 'from'
     ? formatTokenDisplay(sendAmount, selectedSymbol, 8)
@@ -391,14 +469,24 @@ function LetsExchange(): JSX.Element {
                     <button
                       id="letsexchange-symbol"
                       type="button"
-                      className="letsexchange-select-trigger"
+                      className={`letsexchange-select-trigger ${isInitialCurrenciesLoading ? 'is-loading' : ''}`}
                       aria-haspopup="listbox"
                       aria-expanded={assetMenuOpen}
-                      onClick={() => setAssetMenuOpen((previous) => !previous)}
-                      disabled={currenciesLoading || symbolOptions.length === 0}
+                      onClick={() => {
+                        if (assetMenuOpen) {
+                          closeAssetMenu();
+                        } else {
+                          setAssetMenuOpen(true);
+                        }
+                      }}
+                      disabled={isInitialCurrenciesLoading || baseSymbolOptions.length === 0}
                     >
                       <span className="letsexchange-select-leading" aria-hidden="true">
-                        {selectedSymbolOption?.icon ? (
+                        {isInitialCurrenciesLoading ? (
+                          <span className="letsexchange-select-loader">
+                            <Uik.Loading size="small" />
+                          </span>
+                        ) : selectedSymbolOption?.icon ? (
                           <img
                             className="letsexchange-select-icon"
                             src={selectedSymbolOption.icon}
@@ -411,13 +499,48 @@ function LetsExchange(): JSX.Element {
                         )}
                       </span>
                       <span className="letsexchange-select-trigger__text">
-                        <strong>{selectedSymbolOption?.value || 'Select asset'}</strong>
-                        <small>{selectedSymbolOption?.name || 'Choose a source asset'}</small>
+                        <strong>{isInitialCurrenciesLoading ? 'Loading assets...' : selectedSymbolOption?.value || 'Select asset'}</strong>
+                        <small>
+                          {isInitialCurrenciesLoading
+                            ? 'Fetching supported currencies from LetsExchange'
+                            : selectedSymbolOption?.name || 'Choose a source asset'}
+                        </small>
                       </span>
                     </button>
                     {assetMenuOpen && (
-                      <div className="letsexchange-asset-menu" role="listbox" aria-labelledby="letsexchange-symbol">
-                        {symbolOptions.map((option) => (
+                      <div
+                        className="letsexchange-asset-menu"
+                        role="listbox"
+                        aria-labelledby="letsexchange-symbol"
+                        onScroll={(event) => {
+                          const menu = event.currentTarget;
+                          const reachedMenuEnd = menu.scrollTop + menu.clientHeight >= menu.scrollHeight - 72;
+
+                          if (reachedMenuEnd) {
+                            loadMoreCurrencies().catch(() => undefined);
+                          }
+                        }}
+                      >
+                        <div className="letsexchange-asset-menu__search">
+                          <input
+                            ref={assetSearchInputRef}
+                            className="letsexchange-asset-menu__search-input"
+                            type="search"
+                            value={assetSearch}
+                            onChange={(event: ChangeEvent<HTMLInputElement>) => setAssetSearch(event.target.value)}
+                            placeholder="Search BTC, ETH, USDT, SOL..."
+                          />
+                        </div>
+
+                        {assetMenuOptions.length === 0 && (
+                          <p className="letsexchange-asset-menu__empty">
+                            {deferredAssetSearch
+                              ? `No assets found for "${deferredAssetSearch}".`
+                              : 'No source assets available right now.'}
+                          </p>
+                        )}
+
+                        {assetMenuOptions.map((option) => (
                           <button
                             key={option.value}
                             type="button"
@@ -437,9 +560,30 @@ function LetsExchange(): JSX.Element {
                             </span>
                           </button>
                         ))}
+
+                        {(currenciesLoadingMore || currenciesHasMore || assetMenuOptions.length > 0) && (
+                          <div className="letsexchange-asset-menu__footer">
+                            <span className="letsexchange-asset-menu__footer-label">
+                              {currenciesLoadingMore
+                                ? deferredAssetSearch
+                                  ? `${assetMenuOptions.length} matches loaded while syncing more assets...`
+                                  : `Loading full asset list... ${baseSymbolOptions.length} loaded`
+                                : deferredAssetSearch
+                                  ? `${assetMenuOptions.length} matching assets`
+                                  : currenciesHasMore
+                                    ? `${baseSymbolOptions.length} loaded so far`
+                                    : `All ${baseSymbolOptions.length} assets loaded`}
+                            </span>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
+                  {isInitialCurrenciesLoading && (
+                    <p className="letsexchange-hint letsexchange-hint--info">
+                      Loading supported source assets...
+                    </p>
+                  )}
                 </div>
 
                 <div className="letsexchange-field">
@@ -930,4 +1074,104 @@ async function copyToClipboard(value: string, successMessage: string): Promise<v
   } catch (error) {
     Uik.notify.danger(getErrorMessage(error, 'Failed to copy value'));
   }
+}
+
+function buildSymbolOptions(currencies: LetsExchangeCurrency[]): Array<{
+  value: string;
+  label: string;
+  name: string;
+  icon?: string;
+}> {
+  const seenSymbols = new Set<string>();
+
+  return currencies.reduce((options, currency) => {
+    if (seenSymbols.has(currency.symbol)) {
+      return options;
+    }
+
+    seenSymbols.add(currency.symbol);
+    options.push({
+      value: currency.symbol,
+      label: `${currency.symbol} - ${currency.name || currency.symbol}`,
+      name: currency.name || currency.symbol,
+      icon: currency.icon,
+    });
+
+    return options;
+  }, [] as Array<{ value: string; label: string; name: string; icon?: string }>);
+}
+
+function filterSymbolOptions(
+  options: Array<{ value: string; label: string; name: string; icon?: string }>,
+  search: string,
+): Array<{ value: string; label: string; name: string; icon?: string }> {
+  if (!search) {
+    return options;
+  }
+
+  const normalizedSearch = search.trim().toLowerCase();
+  if (!normalizedSearch) {
+    return options;
+  }
+
+  return [...options]
+    .filter((option) => {
+      const searchableFields = [
+        option.value,
+        option.name,
+        option.label,
+      ];
+
+      return searchableFields.some((field) => field.toLowerCase().includes(normalizedSearch));
+    })
+    .sort((left, right) => {
+      const leftSymbol = left.value.toLowerCase();
+      const rightSymbol = right.value.toLowerCase();
+      const leftName = left.name.toLowerCase();
+      const rightName = right.name.toLowerCase();
+
+      const getRank = (symbol: string, name: string): number => {
+        if (symbol === normalizedSearch) {
+          return 0;
+        }
+        if (symbol.startsWith(normalizedSearch)) {
+          return 1;
+        }
+        if (name.startsWith(normalizedSearch)) {
+          return 2;
+        }
+        if (name.includes(normalizedSearch)) {
+          return 3;
+        }
+        return 4;
+      };
+
+      return getRank(leftSymbol, leftName) - getRank(rightSymbol, rightName)
+        || left.value.localeCompare(right.value);
+    });
+}
+
+function mergeCurrencies(
+  currentCurrencies: LetsExchangeCurrency[],
+  incomingCurrencies: LetsExchangeCurrency[],
+): LetsExchangeCurrency[] {
+  if (incomingCurrencies.length === 0) {
+    return currentCurrencies;
+  }
+
+  const seenCurrencies = new Set(currentCurrencies.map((currency) => `${currency.symbol}:${currency.network}`));
+  const mergedCurrencies = [...currentCurrencies];
+
+  incomingCurrencies.forEach((currency) => {
+    const currencyKey = `${currency.symbol}:${currency.network}`;
+
+    if (seenCurrencies.has(currencyKey)) {
+      return;
+    }
+
+    seenCurrencies.add(currencyKey);
+    mergedCurrencies.push(currency);
+  });
+
+  return mergedCurrencies;
 }

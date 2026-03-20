@@ -93,11 +93,20 @@ const toError = (error: unknown, fallbackMessage: string): Error => {
   return new Error(fallbackMessage);
 };
 
-export const listCurrencies = async (search?: string): Promise<LetsExchangeCurrency[]> => {
+export const listCurrencies = async ({
+  search,
+  limit = 500,
+  offset = 0,
+}: {
+  search?: string;
+  limit?: number;
+  offset?: number;
+} = {}): Promise<LetsExchangeCurrency[]> => {
   try {
     const response = await letsexchangeApi.get<ApiEnvelope<LetsExchangeCurrency[]>>('/listcurrencies', {
       params: {
-        limit: search ? 500 : 500,
+        limit,
+        offset: offset || undefined,
         search: search || undefined,
       },
     });
