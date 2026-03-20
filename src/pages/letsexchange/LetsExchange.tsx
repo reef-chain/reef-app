@@ -599,9 +599,12 @@ function LetsExchange(): JSX.Element {
                         {(selectedNetwork || 'NET').slice(0, 6)}
                       </span>
                     </div>
+                    <span className="letsexchange-select-shell__eyebrow" aria-hidden="true">
+                      Deposit chain
+                    </span>
                     <select
                       id="letsexchange-network"
-                      className="letsexchange-select"
+                      className="letsexchange-select letsexchange-select--network"
                       value={selectedNetwork}
                       onChange={(event) => setSelectedNetwork(event.target.value)}
                       disabled={currenciesLoading || networkOptions.length === 0}
