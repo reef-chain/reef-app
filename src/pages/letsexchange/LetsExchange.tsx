@@ -2,6 +2,7 @@ import React, {
   ChangeEvent,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { ReefSigner } from '@reef-chain/react-lib';
@@ -26,12 +27,14 @@ const DEFAULT_REEF_AMOUNT = '100000';
 
 function LetsExchange(): JSX.Element {
   const signer: ReefSigner | undefined | null = useContext(ReefSigners).selectedSigner;
+  const assetDropdownRef = useRef<HTMLDivElement | null>(null);
   const [mode, setMode] = useState<'from' | 'to'>('from');
   const [currencies, setCurrencies] = useState<LetsExchangeCurrency[]>([]);
   const [currenciesLoading, setCurrenciesLoading] = useState(false);
   const [currenciesError, setCurrenciesError] = useState('');
   const [selectedSymbol, setSelectedSymbol] = useState('');
   const [selectedNetwork, setSelectedNetwork] = useState('');
+  const [assetMenuOpen, setAssetMenuOpen] = useState(false);
   const [sendAmount, setSendAmount] = useState(DEFAULT_SEND_AMOUNT);
   const [targetReefAmount, setTargetReefAmount] = useState(DEFAULT_REEF_AMOUNT);
   const [withdrawalAddress, setWithdrawalAddress] = useState('');
@@ -48,16 +51,12 @@ function LetsExchange(): JSX.Element {
     return {
       value: symbol,
       label: `${symbol} - ${currency?.name || symbol}`,
-    };
-  });
-  const quickAssetOptions = symbolOptions.slice(0, 6).map((option) => {
-    const currency = currencies.find((item) => item.symbol === option.value);
-    return {
-      ...option,
-      name: currency?.name || option.value,
+      name: currency?.name || symbol,
       icon: currency?.icon,
     };
   });
+  const quickAssetOptions = symbolOptions.slice(0, 6);
+  const selectedSymbolOption = symbolOptions.find((option) => option.value === selectedSymbol);
 
   const networkOptions = currencies
     .filter((currency) => currency.symbol === selectedSymbol)
@@ -98,6 +97,7 @@ function LetsExchange(): JSX.Element {
 
   function selectSourceSymbol(symbol: string): void {
     setSelectedSymbol(symbol);
+    setAssetMenuOpen(false);
 
     const symbolCurrencies = currencies.filter((currency) => currency.symbol === symbol);
     const defaultNetwork = symbolCurrencies.find((currency) => currency.isDefaultNetwork)?.network
@@ -220,6 +220,23 @@ function LetsExchange(): JSX.Element {
       setWithdrawalAddress((previous) => previous || signer.address);
     }
   }, [signer?.address]);
+
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!assetDropdownRef.current) {
+        return;
+      }
+
+      if (!assetDropdownRef.current.contains(event.target as Node)) {
+        setAssetMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+    };
+  }, []);
 
   useEffect(() => {
     loadCurrencies().catch(() => undefined);
@@ -367,33 +384,61 @@ function LetsExchange(): JSX.Element {
                   <p className="letsexchange-field-caption">
                     Choose the token you want to convert into REEF.
                   </p>
-                  <div className="letsexchange-select-shell">
-                    <div className="letsexchange-select-leading" aria-hidden="true">
-                      {selectedCurrency?.icon ? (
-                        <img
-                          className="letsexchange-select-icon"
-                          src={selectedCurrency.icon}
-                          alt=""
-                        />
-                      ) : (
-                        <span className="letsexchange-select-badge">
-                          {(selectedSymbol || 'ASSET').slice(0, 4)}
-                        </span>
-                      )}
-                    </div>
-                    <select
+                  <div
+                    ref={assetDropdownRef}
+                    className={`letsexchange-select-shell letsexchange-select-shell--asset ${assetMenuOpen ? 'is-open' : ''}`}
+                  >
+                    <button
                       id="letsexchange-symbol"
-                      className="letsexchange-select"
-                      value={selectedSymbol}
-                      onChange={(event) => selectSourceSymbol(event.target.value)}
+                      type="button"
+                      className="letsexchange-select-trigger"
+                      aria-haspopup="listbox"
+                      aria-expanded={assetMenuOpen}
+                      onClick={() => setAssetMenuOpen((previous) => !previous)}
                       disabled={currenciesLoading || symbolOptions.length === 0}
                     >
-                      {symbolOptions.map((option) => (
-                        <option key={option.value} value={option.value}>
-                          {option.label}
-                        </option>
-                      ))}
-                    </select>
+                      <span className="letsexchange-select-leading" aria-hidden="true">
+                        {selectedSymbolOption?.icon ? (
+                          <img
+                            className="letsexchange-select-icon"
+                            src={selectedSymbolOption.icon}
+                            alt=""
+                          />
+                        ) : (
+                          <span className="letsexchange-select-badge">
+                            {(selectedSymbol || 'ASSET').slice(0, 4)}
+                          </span>
+                        )}
+                      </span>
+                      <span className="letsexchange-select-trigger__text">
+                        <strong>{selectedSymbolOption?.value || 'Select asset'}</strong>
+                        <small>{selectedSymbolOption?.name || 'Choose a source asset'}</small>
+                      </span>
+                    </button>
+                    {assetMenuOpen && (
+                      <div className="letsexchange-asset-menu" role="listbox" aria-labelledby="letsexchange-symbol">
+                        {symbolOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            role="option"
+                            aria-selected={selectedSymbol === option.value}
+                            className={`letsexchange-asset-option ${selectedSymbol === option.value ? 'is-active' : ''}`}
+                            onClick={() => selectSourceSymbol(option.value)}
+                          >
+                            {option.icon ? (
+                              <img className="letsexchange-asset-option__icon" src={option.icon} alt="" />
+                            ) : (
+                              <span className="letsexchange-asset-option__badge">{option.value.slice(0, 4)}</span>
+                            )}
+                            <span className="letsexchange-asset-option__text">
+                              <strong>{option.value}</strong>
+                              <small>{option.name}</small>
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
 
