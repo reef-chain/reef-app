@@ -274,7 +274,7 @@ const BuyReefButton = (): JSX.Element => {
             <span className="buy-reef-option__chip">LetsExchange</span>
             <span className="buy-reef-option__title">{localizedStrings.buy_reef_option_token_to_token || 'Crypto to Reef'}</span>
             <span className="buy-reef-option__description">
-              {localizedStrings.buy_reef_option_token_to_token_description || 'Swap tokens to REEF using the LetsExchange widget.'}
+              {localizedStrings.buy_reef_option_token_to_token_description || 'Swap tokens to REEF using LetsExchange.'}
             </span>
           </button>
 
