@@ -46,11 +46,11 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "webpack-dev-server -d source-map --output-pathinfo",
-    "start:clean": "yarn clean && yarn start",
+    "start": "node init && webpack-dev-server -d source-map --output-pathinfo",
+    "start:clean": "node init && yarn clean && yarn start",
     "postinstall": "node scripts/add-global-process.js",
     "clean": "rm -rf node_modules&&rm -f yarn.lock&&yarn install",
-    "build": "webpack --mode production",
+    "build": "node init && webpack --mode production",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint --fix --ext .ts,.tsx ./src/"
